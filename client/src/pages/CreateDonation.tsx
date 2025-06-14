@@ -55,6 +55,15 @@ export default function CreateDonation() {
   const { isConnected, user, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [countryRestrictions, setCountryRestrictions] = useState<{
+    restriction: "all" | "selected" | "exclude";
+    allowedCountries?: string[];
+    excludedCountries?: string[];
+  }>({
+    restriction: "all",
+    allowedCountries: undefined,
+    excludedCountries: undefined,
+  });
 
   // Get user data to determine organization type and permissions
   const { data: userData } = useQuery({
@@ -107,6 +116,9 @@ export default function CreateDonation() {
         country: data.country || 'TUR',
         isUnlimited: data.isUnlimited,
         endDate: data.endDate || null,
+        countryRestriction: countryRestrictions.restriction,
+        allowedCountries: countryRestrictions.allowedCountries ? JSON.stringify(countryRestrictions.allowedCountries) : null,
+        excludedCountries: countryRestrictions.excludedCountries ? JSON.stringify(countryRestrictions.excludedCountries) : null,
       };
 
       // For unlimited donations with startup fee, handle payment first
@@ -437,6 +449,14 @@ export default function CreateDonation() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* International Country Filtering System */}
+              <CountrySelector
+                value={countryRestrictions}
+                onChange={setCountryRestrictions}
+                label="Ülke Kısıtlamaları"
+                description="Bu bağış kampanyası için katılım ülke kısıtlamaları belirleyin"
+              />
 
               {/* Important Notice */}
               <Card className="bg-white border-2 border-red-400 shadow-lg">
