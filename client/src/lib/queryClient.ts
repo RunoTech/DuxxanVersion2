@@ -47,8 +47,10 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn({ on401: "throw" }),
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 dakika cache
-      gcTime: 10 * 60 * 1000, // 10 dakika garbage collection
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      staleTime: 15 * 60 * 1000, // 15 dakika cache
+      gcTime: 30 * 60 * 1000, // 30 dakika garbage collection
       retry: 1,
       retryDelay: 1000,
     },

@@ -13,6 +13,7 @@ export function useWallet() {
     // Check if demo wallet was previously connected
     const isDemoConnected = localStorage.getItem('demo_wallet_connected');
     const savedAddress = localStorage.getItem('demo_wallet_address');
+    const savedUser = localStorage.getItem('demo_user_data');
     
     if (isDemoConnected === 'true' && savedAddress) {
       const demoConnection = {
@@ -21,7 +22,17 @@ export function useWallet() {
         signer: null as any
       };
       setConnection(demoConnection);
-      fetchUser(savedAddress);
+      
+      // Use cached user data first
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          fetchUser(savedAddress);
+        }
+      } else {
+        fetchUser(savedAddress);
+      }
     }
   }, []);
 
@@ -39,6 +50,8 @@ export function useWallet() {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+        // Cache user data
+        localStorage.setItem('demo_user_data', JSON.stringify(userData));
       }
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -152,6 +165,8 @@ export function useWallet() {
       
       const userData = await response.json();
       setUser(userData);
+      // Cache user data
+      localStorage.setItem('demo_user_data', JSON.stringify(userData));
     } catch (error) {
       console.error('Failed to create/get user:', error);
     }
@@ -161,9 +176,10 @@ export function useWallet() {
     setConnection(null);
     setUser(null);
     
-    // Clear demo wallet data
+    // Clear all demo wallet data including cache
     localStorage.removeItem('demo_wallet_connected');
     localStorage.removeItem('demo_wallet_address');
+    localStorage.removeItem('demo_user_data');
     
     toast({
       title: 'Demo Wallet Disconnected',
@@ -178,6 +194,8 @@ export function useWallet() {
       const response = await apiRequest('PUT', '/api/users/me', updates);
       const updatedUser = await response.json();
       setUser(updatedUser);
+      // Cache updated user data
+      localStorage.setItem('demo_user_data', JSON.stringify(updatedUser));
       
       toast({
         title: 'Profile Updated',
