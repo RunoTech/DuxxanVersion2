@@ -711,7 +711,7 @@ export default function Community() {
                     >
                       {channel.isSubscribed ? (
                         <>
-                          <CheckCircle className="h-4 w-4 mr-2 text-blue-400" />
+                          <CheckCircle className="h-5 w-5 mr-2 text-blue-600 font-bold stroke-2" />
                           Abonesin
                         </>
                       ) : (
