@@ -406,9 +406,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Chat routes
+  // Winner-Organization Private Chat Routes
   app.get('/api/raffles/:id/chat', getUser, async (req: any, res) => {
     try {
       const raffleId = parseInt(req.params.id);
+      const raffle = await storage.getRaffleById(raffleId);
+      
+      if (!raffle) {
+        return res.status(404).json({ message: 'Raffle not found' });
+      }
+
+      // Check if raffle has a winner (chat only available after winner is announced)
+      if (!raffle.winnerId) {
+        return res.status(400).json({ message: 'Chat not available until winner is announced' });
+      }
+
+      // Check if user is either the winner or the organization creator
+      if (req.user.id !== raffle.winnerId && req.user.id !== raffle.creatorId) {
+        return res.status(403).json({ message: 'Access denied to this chat' });
+      }
+
       const messages = await storage.getChatMessages(raffleId);
       res.json(messages);
     } catch (error) {
@@ -419,19 +436,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/raffles/:id/chat', getUser, async (req: any, res) => {
     try {
       const raffleId = parseInt(req.params.id);
-      const { receiverId, message } = req.body;
+      const { message } = req.body;
+
+      if (!message || typeof message !== 'string' || message.trim().length === 0) {
+        return res.status(400).json({ message: 'Message is required' });
+      }
+
+      if (message.length > 1000) {
+        return res.status(400).json({ message: 'Message too long (max 1000 characters)' });
+      }
+
+      const raffle = await storage.getRaffleById(raffleId);
       
+      if (!raffle) {
+        return res.status(404).json({ message: 'Raffle not found' });
+      }
+
+      // Check if raffle has a winner
+      if (!raffle.winnerId) {
+        return res.status(400).json({ message: 'Chat not available until winner is announced' });
+      }
+
+      // Check if user is either the winner or the organization creator
+      if (req.user.id !== raffle.winnerId && req.user.id !== raffle.creatorId) {
+        return res.status(403).json({ message: 'Access denied to this chat' });
+      }
+
+      // Determine receiver (if sender is winner, receiver is creator and vice versa)
+      const receiverId = req.user.id === raffle.winnerId ? raffle.creatorId : raffle.winnerId;
+
       const chatMessage = await storage.createChatMessage({
         raffleId,
         senderId: req.user.id,
         receiverId,
-        message,
+        message: message.trim()
       });
-      
-      broadcast({ type: 'CHAT_MESSAGE', data: chatMessage });
+
+      // Broadcast to WebSocket clients for real-time updates
+      broadcast({ 
+        type: 'CHAT_MESSAGE', 
+        data: { 
+          raffleId, 
+          message: chatMessage,
+          chatType: 'winner_organization'
+        } 
+      });
+
       res.status(201).json(chatMessage);
     } catch (error) {
       res.status(500).json({ message: 'Failed to send message' });
+    }
+  });
+
+  // Admin route to assign winner (for demo purposes)
+  app.post('/api/raffles/:id/assign-winner', getUser, async (req: any, res) => {
+    try {
+      const raffleId = parseInt(req.params.id);
+      const { winnerId } = req.body;
+
+      const raffle = await storage.getRaffleById(raffleId);
+      
+      if (!raffle) {
+        return res.status(404).json({ message: 'Raffle not found' });
+      }
+
+      // Check if user is the creator (only creator can assign winner)
+      if (req.user.id !== raffle.creatorId) {
+        return res.status(403).json({ message: 'Only raffle creator can assign winner' });
+      }
+
+      // Update raffle with winner
+      const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
+
+      // Broadcast winner announcement
+      broadcast({ 
+        type: 'WINNER_ANNOUNCED', 
+        data: { 
+          raffleId, 
+          winnerId,
+          raffle: updatedRaffle
+        } 
+      });
+
+      res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to assign winner' });
     }
   });
 

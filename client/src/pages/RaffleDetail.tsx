@@ -24,6 +24,7 @@ import {
   Calendar,
   DollarSign
 } from 'lucide-react';
+import { WinnerOrgChat } from '@/components/WinnerOrgChat';
 
 export default function RaffleDetail() {
   const { id } = useParams();
@@ -398,6 +399,9 @@ export default function RaffleDetail() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Winner-Organization Private Chat */}
+            <WinnerOrgChat raffleId={parseInt(id!)} raffle={raffle} />
           </div>
         </div>
       </div>
