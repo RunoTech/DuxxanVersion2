@@ -224,20 +224,17 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
     try {
-      // Get all active donations
-      const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
+      // Get active donations first
+      const donationList = await db.select().from(donations).where(eq(donations.isActive, true));
       
       // Get all users
-      const userResults = await db.select().from(users);
-      const userMap = new Map(userResults.map(user => [user.id, user]));
+      const userList = await db.select().from(users);
+      const userMap = new Map(userList.map(user => [user.id, user]));
       
-      // Filter by end date and combine with creators
-      const activeDonations = donationResults
-        .filter(donation => {
-          const endDate = new Date(donation.endDate);
-          const now = new Date();
-          return endDate > now;
-        })
+      // Combine and filter
+      const now = new Date();
+      const activeDonations = donationList
+        .filter(donation => new Date(donation.endDate) > now)
         .map(donation => {
           const creator = userMap.get(donation.creatorId);
           if (!creator) return null;
@@ -247,13 +244,13 @@ export class DatabaseStorage implements IStorage {
             creator
           };
         })
-        .filter((donation): donation is Donation & { creator: User } => donation !== null)
+        .filter((item): item is Donation & { creator: User } => item !== null)
         .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
-      
+
       return activeDonations;
     } catch (error) {
       console.error('Error in getActiveDonations:', error);
-      throw new Error('Failed to fetch active donations');
+      return [];
     }
   }
 
