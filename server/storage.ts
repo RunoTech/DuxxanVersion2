@@ -50,11 +50,19 @@ export interface IStorage {
   getTicketsByUser(userId: number): Promise<(Ticket & { raffle: Raffle })[]>;
   
   // Donations
-  getDonations(limit?: number, offset?: number): Promise<(Donation & { creator: User })[]>;
+  getDonations(limit?: number, offset?: number, filter?: string): Promise<(Donation & { creator: User })[]>;
   getDonationById(id: number): Promise<(Donation & { creator: User }) | undefined>;
   createDonation(donation: InsertDonation & { creatorId: number }): Promise<Donation>;
   updateDonation(id: number, updates: Partial<Donation>): Promise<Donation>;
   getActiveDonations(): Promise<(Donation & { creator: User })[]>;
+  getDonationsByOrganizationType(orgType: string): Promise<(Donation & { creator: User })[]>;
+  processStartupFeePayment(donationId: number, transactionHash: string): Promise<void>;
+  getDonationStats(): Promise<{
+    totalDonations: number;
+    totalCommissionCollected: string;
+    organizationDonations: number;
+    individualDonations: number;
+  }>;
   
   // Donation Contributions
   createDonationContribution(contribution: InsertDonationContribution & { userId: number }): Promise<DonationContribution>;
@@ -183,7 +191,7 @@ export class DatabaseStorage implements IStorage {
       .then(rows => rows.map(row => ({ ...row.tickets, raffle: row.raffles })));
   }
 
-  async getDonations(limit = 20, offset = 0): Promise<(Donation & { creator: User })[]> {
+  async getDonations(limit = 20, offset = 0, filter?: string): Promise<(Donation & { creator: User })[]> {
     const result = await db
       .select({
         donation: donations,
@@ -213,7 +221,33 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createDonation(donation: InsertDonation & { creatorId: number }): Promise<Donation> {
-    const [newDonation] = await db.insert(donations).values(donation).returning();
+    // Get user info to determine commission rate and startup fee
+    const [user] = await db.select().from(users).where(eq(users.id, donation.creatorId));
+    
+    let commissionRate = "10.00"; // Default 10% for individuals
+    let startupFee = "0";
+    
+    if (user && user.organizationType !== "individual") {
+      commissionRate = "2.00"; // 2% for organizations
+      if (donation.isUnlimited) {
+        startupFee = "100.000000"; // 100 USDT startup fee for unlimited donations
+      }
+    }
+    
+    const donationData = {
+      creatorId: donation.creatorId,
+      title: donation.title,
+      description: donation.description,
+      goalAmount: donation.goalAmount,
+      endDate: donation.endDate ? new Date(donation.endDate) : null,
+      isUnlimited: donation.isUnlimited || false,
+      category: donation.category || "general",
+      country: donation.country || null,
+      commissionRate,
+      startupFee,
+    };
+    
+    const [newDonation] = await db.insert(donations).values(donationData).returning();
     return newDonation;
   }
 
@@ -343,6 +377,77 @@ export class DatabaseStorage implements IStorage {
       totalPrizePool: raffleStats.totalPrizePool || "0",
       totalDonations: donationStats.totalDonations || "0",
       activeUsers: userStats.activeUsers || 0,
+    };
+  }
+
+  async getDonationsByOrganizationType(orgType: string): Promise<(Donation & { creator: User })[]> {
+    const results = await db
+      .select({
+        donation: donations,
+        creator: users,
+      })
+      .from(donations)
+      .innerJoin(users, eq(donations.creatorId, users.id))
+      .where(and(
+        eq(donations.isActive, true),
+        eq(users.organizationType, orgType)
+      ))
+      .orderBy(desc(donations.createdAt));
+    
+    return results.map(result => ({
+      ...result.donation,
+      creator: result.creator
+    }));
+  }
+
+  async processStartupFeePayment(donationId: number, transactionHash: string): Promise<void> {
+    await db
+      .update(donations)
+      .set({ startupFeePaid: true })
+      .where(eq(donations.id, donationId));
+  }
+
+  async getDonationStats(): Promise<{
+    totalDonations: number;
+    totalCommissionCollected: string;
+    organizationDonations: number;
+    individualDonations: number;
+  }> {
+    const [totalStats] = await db
+      .select({
+        totalDonations: sql<number>`count(*)`,
+        totalCommissionCollected: sql<string>`sum(${donations.totalCommissionCollected})`,
+      })
+      .from(donations)
+      .where(eq(donations.isActive, true));
+
+    const [orgStats] = await db
+      .select({
+        organizationDonations: sql<number>`count(*)`,
+      })
+      .from(donations)
+      .innerJoin(users, eq(donations.creatorId, users.id))
+      .where(and(
+        eq(donations.isActive, true),
+        sql`${users.organizationType} != 'individual'`
+      ));
+
+    const [indivStats] = await db
+      .select({
+        individualDonations: sql<number>`count(*)`,
+      })
+      .from(donations)
+      .innerJoin(users, eq(donations.creatorId, users.id))
+      .where(and(
+        eq(donations.isActive, true),
+        eq(users.organizationType, "individual")
+      ));
+
+    return {
+      totalDonations: totalStats.totalDonations || 0,
+      totalCommissionCollected: totalStats.totalCommissionCollected || "0",
+      organizationDonations: orgStats.organizationDonations || 0,
+      individualDonations: indivStats.individualDonations || 0,
     };
   }
 }

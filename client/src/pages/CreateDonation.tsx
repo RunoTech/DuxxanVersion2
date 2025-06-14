@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -7,19 +7,47 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { insertDonationSchema } from '@shared/schema';
 import { Link, useLocation } from 'wouter';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { CalendarIcon, InfoIcon, AlertTriangleIcon } from 'lucide-react';
 
 const createDonationSchema = insertDonationSchema.extend({
-  endDate: z.string().min(1, 'End date is required'),
+  endDate: z.string().optional(),
+  isUnlimited: z.boolean().default(false),
 });
 
 type CreateDonationForm = z.infer<typeof createDonationSchema>;
+
+const DONATION_CATEGORIES = [
+  { value: 'health', label: 'Sağlık' },
+  { value: 'education', label: 'Eğitim' },
+  { value: 'disaster', label: 'Afet Yardımı' },
+  { value: 'environment', label: 'Çevre' },
+  { value: 'animal', label: 'Hayvan Hakları' },
+  { value: 'community', label: 'Toplum' },
+  { value: 'technology', label: 'Teknoloji' },
+  { value: 'general', label: 'Genel' },
+];
+
+const COUNTRIES = [
+  { value: 'TUR', label: '🇹🇷 Türkiye' },
+  { value: 'USA', label: '🇺🇸 Amerika' },
+  { value: 'GER', label: '🇩🇪 Almanya' },
+  { value: 'FRA', label: '🇫🇷 Fransa' },
+  { value: 'GBR', label: '🇬🇧 İngiltere' },
+  { value: 'JPN', label: '🇯🇵 Japonya' },
+  { value: 'CHN', label: '🇨🇳 Çin' },
+  { value: 'IND', label: '🇮🇳 Hindistan' },
+];
 
 export default function CreateDonation() {
   const [, navigate] = useLocation();
@@ -27,59 +55,110 @@ export default function CreateDonation() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Get user data to determine organization type and permissions
+  const { data: userData } = useQuery({
+    queryKey: ['/api/users/me'],
+    enabled: isConnected,
+  });
+
   const form = useForm<CreateDonationForm>({
     resolver: zodResolver(createDonationSchema),
     defaultValues: {
       title: '',
       description: '',
       goalAmount: '',
+      category: 'general',
+      country: 'TUR',
+      isUnlimited: false,
       endDate: '',
     },
   });
 
+  const isUnlimited = form.watch('isUnlimited');
+  const isOrganization = userData?.organizationType !== 'individual';
+  const canCreateUnlimited = isOrganization && userData?.organizationVerified;
+
+  // Calculate commission rate and startup fee
+  const commissionRate = isOrganization ? 2 : 10;
+  const startupFee = isUnlimited && isOrganization ? 100 : 0;
+
   const createDonationMutation = useMutation({
     mutationFn: async (data: CreateDonationForm) => {
-      // Convert endDate string to Date object
+      if (!isConnected || !user) {
+        throw new Error('Cüzdan bağlantısı gerekli');
+      }
+
+      // Validate unlimited donation permissions
+      if (data.isUnlimited && !canCreateUnlimited) {
+        throw new Error('Sınırsız bağış oluşturmak için doğrulanmış organizasyon hesabı gerekli');
+      }
+
+      // Validate end date for timed donations
+      if (!data.isUnlimited && !data.endDate) {
+        throw new Error('Süreli bağışlar için bitiş tarihi zorunludur');
+      }
+
       const donationData = {
-        ...data,
-        endDate: new Date(data.endDate),
-        goalAmount: data.goalAmount.toString(),
+        title: data.title,
+        description: data.description,
+        goalAmount: data.goalAmount,
+        category: data.category || 'general',
+        country: data.country || 'TUR',
+        isUnlimited: data.isUnlimited,
+        endDate: data.endDate || null,
       };
 
-      // First, create blockchain transaction
-      const endTime = Math.floor(new Date(data.endDate).getTime() / 1000);
-      const transactionHash = await blockchainService.createDonation(
-        data.goalAmount.toString(),
-        endTime
-      );
+      // For unlimited donations with startup fee, handle payment first
+      if (data.isUnlimited && startupFee > 0) {
+        try {
+          // Process startup fee payment through blockchain
+          const startupFeeWei = (startupFee * 1e6).toString(); // Convert to USDT wei (6 decimals)
+          const txHash = await blockchainService.transferUSDT(
+            process.env.VITE_PLATFORM_WALLET || '0x0000000000000000000000000000000000000000',
+            startupFeeWei
+          );
+          
+          toast({
+            title: "Başlangıç Ücreti Ödendi",
+            description: `100 USDT başlangıç ücreti başarıyla ödendi. İşlem: ${txHash.slice(0, 10)}...`,
+          });
+        } catch (error) {
+          throw new Error('Başlangıç ücreti ödemesi başarısız oldu');
+        }
+      }
 
-      // Then create in database
-      const response = await apiRequest('POST', '/api/donations', donationData);
+      // Create donation via API
+      const response = await apiRequest('POST', '/api/donations', donationData, getApiHeaders());
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Bağış oluşturulamadı');
+      }
+
       return response.json();
     },
-    onSuccess: (donation) => {
+    onSuccess: (data) => {
       toast({
-        title: 'Campaign Created!',
-        description: 'Your donation campaign has been successfully created and is now live.',
+        title: "Bağış Oluşturuldu",
+        description: "Bağışınız başarıyla oluşturuldu!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/donations'] });
       navigate('/donations');
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
-        title: 'Creation Failed',
-        description: error.message || 'Failed to create donation campaign',
-        variant: 'destructive',
+        title: "Hata",
+        description: error.message,
+        variant: "destructive",
       });
     },
   });
 
   const onSubmit = async (data: CreateDonationForm) => {
-    if (!isConnected || !user) {
+    if (!isConnected) {
       toast({
-        title: 'Wallet Required',
-        description: 'Please connect your wallet to create a donation campaign',
-        variant: 'destructive',
+        title: "Cüzdan Bağlantısı Gerekli",
+        description: "Bağış oluşturmak için cüzdanınızı bağlayın",
+        variant: "destructive",
       });
       return;
     }
@@ -92,227 +171,318 @@ export default function CreateDonation() {
     }
   };
 
-  const getDaysFromNow = (days: number) => {
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    return date.toISOString().slice(0, 16);
-  };
-
-  const setPresetDuration = (days: number) => {
-    form.setValue('endDate', getDaysFromNow(days));
-  };
-
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-200">
-        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-md mx-4">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Cüzdanınızı Bağlayın</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Bağış kampanyası oluşturmak için lütfen cüzdanınızı bağlayın.
-            </p>
-            <Link href="/">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                Ana Sayfaya Dön
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">
+        <div className="container mx-auto px-4">
+          <Card className="max-w-2xl mx-auto">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold text-yellow-600">
+                Cüzdan Bağlantısı Gerekli
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Bağış oluşturmak için öncelikle cüzdanınızı bağlayın
+              </p>
+              <Link href="/">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-2">
+                  Ana Sayfaya Dön
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-duxxan-dark py-8">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Start Donation Campaign</h1>
-          <p className="text-duxxan-text-secondary">
-            Create a transparent donation campaign and make a positive impact. 
-            <span className="text-duxxan-yellow font-semibold"> Creation fee: 25 USDT</span>
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Yeni Bağış Oluştur
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Toplumsal fayda için bağış kampanyası başlatın
+            </p>
+          </div>
 
-        <Card className="duxxan-card">
-          <CardHeader>
-            <CardTitle className="text-xl">Campaign Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Campaign Title</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., Clean Water Initiative for Rural Communities"
-                          className="bg-duxxan-dark border-duxxan-border text-white"
-                          {...field}
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Main Form */}
+            <div className="lg:col-span-2">
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-xl text-yellow-600">Bağış Detayları</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              Bağış Başlığı *
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Bağışınız için açıklayıcı bir başlık"
+                                className="border-yellow-200 focus:border-yellow-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              Açıklama *
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Bağışınızın amacını ve detaylarını açıklayın..."
+                                className="border-yellow-200 focus:border-yellow-500 min-h-[120px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="goalAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                                Hedef Miktar (USDT) *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  step="0.000001"
+                                  min="1"
+                                  placeholder="1000"
+                                  className="border-yellow-200 focus:border-yellow-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Campaign Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Explain your cause, how the funds will be used, and the impact you aim to make. Be transparent about your goals and how donors can make a difference..."
-                          className="bg-duxxan-dark border-duxxan-border text-white min-h-[120px]"
-                          {...field}
+                        <FormField
+                          control={form.control}
+                          name="category"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                                Kategori *
+                              </FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="border-yellow-200 focus:border-yellow-500">
+                                    <SelectValue placeholder="Kategori seçin" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {DONATION_CATEGORIES.map((category) => (
+                                    <SelectItem key={category.value} value={category.value}>
+                                      {category.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="goalAmount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Fundraising Goal (USDT)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="50000"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="country"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              Ülke
+                            </FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger className="border-yellow-200 focus:border-yellow-500">
+                                  <SelectValue placeholder="Ülke seçin" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {COUNTRIES.map((country) => (
+                                  <SelectItem key={country.value} value={country.value}>
+                                    {country.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Campaign End Date</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="datetime-local"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
-                            min={new Date().toISOString().slice(0, 16)}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                      {/* Unlimited Donation Toggle */}
+                      <FormField
+                        control={form.control}
+                        name="isUnlimited"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border border-yellow-200 p-4">
+                            <div className="space-y-0.5">
+                              <FormLabel className="text-base text-yellow-700 dark:text-yellow-400">
+                                Sınırsız Bağış
+                              </FormLabel>
+                              <FormDescription>
+                                {canCreateUnlimited 
+                                  ? "Süresiz bağış kampanyası (Sadece doğrulanmış organizasyonlar)"
+                                  : "Bu özellik sadece doğrulanmış organizasyonlar için mevcuttur"}
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={!canCreateUnlimited}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
 
-                {/* Quick Duration Buttons */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Quick Duration</label>
-                  <div className="flex gap-2">
-                    {[
-                      { days: 30, label: '30 Days' },
-                      { days: 60, label: '60 Days' },
-                      { days: 90, label: '90 Days' },
-                      { days: 180, label: '6 Months' },
-                    ].map(({ days, label }) => (
+                      {/* End Date - Only show for timed donations */}
+                      {!isUnlimited && (
+                        <FormField
+                          control={form.control}
+                          name="endDate"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                                Bitiş Tarihi *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="datetime-local"
+                                  className="border-yellow-200 focus:border-yellow-500"
+                                  min={new Date().toISOString().slice(0, 16)}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
                       <Button
-                        key={days}
-                        type="button"
-                        onClick={() => setPresetDuration(days)}
-                        variant="outline"
-                        size="sm"
-                        className="duxxan-button-secondary text-xs"
+                        type="submit"
+                        disabled={isSubmitting || createDonationMutation.isPending}
+                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 text-lg font-semibold"
                       >
-                        {label}
+                        {isSubmitting || createDonationMutation.isPending ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                            Oluşturuluyor...
+                          </div>
+                        ) : (
+                          'Bağış Oluştur'
+                        )}
                       </Button>
-                    ))}
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Info Sidebar */}
+            <div className="space-y-4">
+              {/* Account Info */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-lg text-yellow-600">Hesap Bilgileri</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Hesap Türü:</span>
+                    <Badge variant={isOrganization ? "default" : "secondary"}>
+                      {isOrganization ? "Organizasyon" : "Bireysel"}
+                    </Badge>
                   </div>
-                </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Doğrulama:</span>
+                    <Badge variant={userData?.organizationVerified ? "default" : "destructive"}>
+                      {userData?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Komisyon Oranı:</span>
+                    <span className="text-sm font-semibold text-yellow-600">%{commissionRate}</span>
+                  </div>
+                </CardContent>
+              </Card>
 
-                {/* Campaign Preview */}
-                {form.watch('goalAmount') && (
-                  <Card className="bg-duxxan-dark border-duxxan-border">
-                    <CardContent className="p-4">
-                      <h4 className="font-semibold mb-3 text-duxxan-success">Campaign Impact</h4>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <div className="text-duxxan-text-secondary">Fundraising Goal</div>
-                          <div className="font-bold text-duxxan-success">
-                            ${parseFloat(form.watch('goalAmount') || '0').toLocaleString()} USDT
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-duxxan-text-secondary">Platform Fee (10%)</div>
-                          <div className="font-bold text-duxxan-warning">
-                            ${(parseFloat(form.watch('goalAmount') || '0') * 0.1).toLocaleString()} USDT
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-3 pt-3 border-t border-duxxan-border">
-                        <div className="text-duxxan-text-secondary text-xs">Net Amount to Cause</div>
-                        <div className="font-bold text-white">
-                          ${(parseFloat(form.watch('goalAmount') || '0') * 0.9).toLocaleString()} USDT
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+              {/* Fee Information */}
+              <Card className="border-2 border-blue-200 dark:border-blue-800">
+                <CardHeader>
+                  <CardTitle className="text-lg text-blue-600 flex items-center">
+                    <InfoIcon className="w-5 h-5 mr-2" />
+                    Ücret Bilgileri
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="mb-2">
+                      <strong>Bireysel Hesaplar:</strong> %10 komisyon, maksimum 30 gün süre
+                    </p>
+                    <p className="mb-2">
+                      <strong>Organizasyonlar:</strong> %2 komisyon
+                    </p>
+                    <p>
+                      <strong>Sınırsız Bağışlar:</strong> 100 USDT başlangıç ücreti (iade edilmez)
+                    </p>
+                  </div>
+                  {startupFee > 0 && (
+                    <Alert>
+                      <AlertTriangleIcon className="h-4 w-4" />
+                      <AlertDescription>
+                        Bu bağış için 100 USDT başlangıç ücreti gereklidir
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </CardContent>
+              </Card>
 
-                <div className="bg-duxxan-dark border border-duxxan-success rounded-lg p-4">
-                  <h4 className="font-semibold text-duxxan-success mb-2">Transparency & Trust</h4>
-                  <ul className="text-sm text-duxxan-text-secondary space-y-1">
-                    <li>• All donations are recorded on the Binance Smart Chain</li>
-                    <li>• Platform takes 10% commission for operational costs</li>
-                    <li>• Donors can track exactly how their contributions are used</li>
-                    <li>• Real-time updates on campaign progress and milestones</li>
-                    <li>• Smart contract ensures secure and transparent fund distribution</li>
-                  </ul>
-                </div>
-
-                <div className="bg-duxxan-dark border border-duxxan-warning rounded-lg p-4">
-                  <h4 className="font-semibold text-duxxan-warning mb-2">Guidelines & Requirements</h4>
-                  <ul className="text-sm text-duxxan-text-secondary space-y-1">
-                    <li>• Creation fee of 25 USDT will be charged upon submission</li>
-                    <li>• Campaign must comply with local laws and regulations</li>
-                    <li>• Provide regular updates to donors about progress</li>
-                    <li>• Misuse of funds may result in account suspension</li>
-                    <li>• Campaign cannot be modified after creation</li>
-                  </ul>
-                </div>
-
-                <div className="flex gap-4">
-                  <Link href="/donations" className="flex-1">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="duxxan-button-secondary w-full"
-                    >
-                      Cancel
-                    </Button>
-                  </Link>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting || !isConnected}
-                    className="duxxan-button-success flex-1"
-                  >
-                    {isSubmitting ? 'Creating Campaign...' : 'Start Campaign (25 USDT)'}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+              {/* Guidelines */}
+              <Card className="border-2 border-green-200 dark:border-green-800">
+                <CardHeader>
+                  <CardTitle className="text-lg text-green-600">Bağış Kuralları</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                  <p>• Tüm bağışlar USDT (BSC) ile gerçekleştirilir</p>
+                  <p>• Bağış açıklamaları net ve şeffaf olmalıdır</p>
+                  <p>• Yasadışı faaliyetler için bağış açılamaz</p>
+                  <p>• Platform kurallarına uygun davranın</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
