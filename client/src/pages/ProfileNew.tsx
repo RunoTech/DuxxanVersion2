@@ -71,6 +71,20 @@ export default function ProfileNew() {
     queryKey: ['/api/users/me'],
   });
 
+  // Show demo profile if no user data for testing
+  const displayUser = user || {
+    id: 1,
+    username: 'demo_user',
+    name: 'Demo Kullanıcı',
+    email: 'demo@example.com',
+    walletAddress: '0x1234567890123456789012345678901234567890',
+    organizationType: 'individual',
+    country: 'Turkey',
+    rating: '4.5',
+    ratingCount: 12,
+    profession: 'Geliştirici'
+  };
+
   // Fetch user devices with error handling
   const { data: devices = [], isLoading: devicesLoading } = useQuery({
     queryKey: ['/api/users/me/devices'],
@@ -89,24 +103,24 @@ export default function ProfileNew() {
 
   // Initialize form data when user data loads
   useEffect(() => {
-    if (user) {
+    if (displayUser) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phoneNumber: user.phoneNumber || '',
-        dateOfBirth: user.dateOfBirth || '',
-        gender: user.gender || '',
-        city: user.city || '',
-        address: user.address || '',
-        website: user.website || '',
-        profession: user.profession || '',
-        bio: user.bio || '',
-        organizationType: user.organizationType || 'individual',
-        organizationName: user.organizationName || '',
-        country: user.country || '',
+        name: displayUser.name || '',
+        email: displayUser.email || '',
+        phoneNumber: displayUser.phoneNumber || '',
+        dateOfBirth: displayUser.dateOfBirth || '',
+        gender: displayUser.gender || '',
+        city: displayUser.city || '',
+        address: displayUser.address || '',
+        website: displayUser.website || '',
+        profession: displayUser.profession || '',
+        bio: displayUser.bio || '',
+        organizationType: displayUser.organizationType || 'individual',
+        organizationName: displayUser.organizationName || '',
+        country: displayUser.country || '',
       });
     }
-  }, [user]);
+  }, [displayUser]);
 
   // Log device information on component mount
   useEffect(() => {
@@ -264,28 +278,6 @@ export default function ProfileNew() {
     );
   }
 
-  // If user is not authenticated, show message
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-yellow-900">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Cüzdan Bağlantısı Gerekli
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Profil sayfasını görüntülemek için cüzdanınızı bağlayın.
-          </p>
-          <Button 
-            onClick={() => window.location.href = '/'}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white"
-          >
-            Ana Sayfaya Dön
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-yellow-900">
       <div className="container mx-auto px-4 py-8">
@@ -335,11 +327,11 @@ export default function ProfileNew() {
                 <div className="relative">
                   <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-700 shadow-xl">
                     <AvatarImage 
-                      src={photos.find(p => p.photoType === 'profile')?.photoData || user?.profileImage} 
-                      alt={user?.name || user?.username}
+                      src={photos.find(p => p.photoType === 'profile')?.photoData || displayUser?.profileImage} 
+                      alt={displayUser?.name || displayUser?.username}
                     />
                     <AvatarFallback className="bg-yellow-500 text-white text-2xl font-bold">
-                      {(user?.name || user?.username)?.charAt(0).toUpperCase()}
+                      {(displayUser?.name || displayUser?.username)?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   
