@@ -159,19 +159,19 @@ export default function Home() {
             Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
           
-          {/* Live Connected Wallets - Promotional Display */}
-          <div className="mb-12">
-            <div className="inline-flex items-center bg-duxxan-success/10 border border-duxxan-success/30 rounded-full px-6 py-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-duxxan-success rounded-full animate-pulse"></div>
-                <span className="text-duxxan-success font-bold text-lg">
-                  {totalConnectedWallets.toLocaleString()} 
+          {/* Live Connected Wallets - Corner Display */}
+          <div className="fixed top-4 right-4 z-50">
+            <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
+                <span className="text-duxxan-success font-semibold text-sm">
+                  {totalConnectedWallets.toLocaleString()}
                 </span>
-                <span className="text-gray-600 dark:text-duxxan-text-secondary">
-                  cüzdan şu anda bağlı
+                <span className="text-gray-600 dark:text-duxxan-text-secondary text-xs">
+                  bağlı
                 </span>
-                <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30">
-                  CANLI
+                <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30 text-xs px-1.5 py-0.5">
+                  LIVE
                 </Badge>
               </div>
             </div>
