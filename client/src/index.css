@@ -166,6 +166,14 @@
     background-color: var(--duxxan-warning);
   }
 
+  .bg-duxxan-border {
+    background-color: var(--duxxan-border);
+  }
+
+  .bg-duxxan-text-secondary {
+    background-color: var(--duxxan-text-secondary);
+  }
+
   .border-duxxan-border {
     border-color: var(--duxxan-border);
   }
