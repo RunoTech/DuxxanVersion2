@@ -492,14 +492,14 @@ export default function Community() {
 
                 <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
                   <DialogTrigger asChild>
-                    <Button className="duxxan-button-primary">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
                       <Trophy className="h-4 w-4 mr-2" />
                       Çekiliş Duyuru
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-duxxan-surface border-duxxan-border max-w-2xl">
+                  <DialogContent className="bg-white border-2 border-yellow-400 max-w-2xl">
                     <DialogHeader>
-                      <DialogTitle className="text-white">Gelecek Çekiliş Duyurusu</DialogTitle>
+                      <DialogTitle className="text-gray-900">Gelecek Çekiliş Duyurusu</DialogTitle>
                     </DialogHeader>
                     <Form {...raffleForm}>
                       <form onSubmit={raffleForm.handleSubmit((data) => createUpcomingRaffleMutation.mutate(data))} className="space-y-4">
@@ -656,49 +656,49 @@ export default function Community() {
         {activeTab === 'channels' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredChannels.map((channel) => (
-              <Card key={channel.id} className="duxxan-card-hover">
+              <Card key={channel.id} className="bg-white border-2 border-yellow-400 hover:border-yellow-500 transition-colors">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={channel.avatar} alt={channel.creator} />
-                        <AvatarFallback className="bg-duxxan-yellow text-duxxan-dark">
+                        <AvatarFallback className="bg-yellow-500 text-white">
                           {channel.creator.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <CardTitle className="text-white text-lg">{channel.name}</CardTitle>
-                        <p className="text-duxxan-text-secondary text-sm">{channel.creator}</p>
+                        <CardTitle className="text-gray-900 text-lg">{channel.name}</CardTitle>
+                        <p className="text-gray-600 text-sm">{channel.creator}</p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-duxxan-yellow/20 text-duxxan-yellow">
+                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-600 border border-yellow-300">
                       {channel.category}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-duxxan-text-secondary text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {channel.description}
                   </p>
                   
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="text-center">
-                      <div className="text-duxxan-yellow font-bold text-lg">
+                      <div className="text-yellow-600 font-bold text-lg">
                         {channel.subscribers.toLocaleString()}
                       </div>
-                      <div className="text-duxxan-text-secondary text-xs">Abone</div>
+                      <div className="text-gray-500 text-xs">Abone</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-duxxan-success font-bold text-lg">
+                      <div className="text-green-600 font-bold text-lg">
                         {channel.upcomingRaffles}
                       </div>
-                      <div className="text-duxxan-text-secondary text-xs">Gelecek</div>
+                      <div className="text-gray-500 text-xs">Gelecek</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-duxxan-warning font-bold text-lg">
+                      <div className="text-orange-600 font-bold text-lg">
                         ${channel.totalPrizes}
                       </div>
-                      <div className="text-duxxan-text-secondary text-xs">Ödül</div>
+                      <div className="text-gray-500 text-xs">Ödül</div>
                     </div>
                   </div>
 
@@ -706,7 +706,7 @@ export default function Community() {
                     <Button
                       onClick={() => handleSubscribe(channel.id)}
                       variant={channel.isSubscribed ? "outline" : "default"}
-                      className={channel.isSubscribed ? "duxxan-button-secondary flex-1" : "duxxan-button-primary flex-1"}
+                      className={channel.isSubscribed ? "bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
                       disabled={!isConnected}
                     >
                       <Bell className="h-4 w-4 mr-2" />
@@ -715,7 +715,7 @@ export default function Community() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-duxxan-text-secondary hover:text-duxxan-yellow"
+                      className="text-gray-600 hover:text-yellow-600"
                     >
                       <Share2 className="h-4 w-4" />
                     </Button>
@@ -729,51 +729,51 @@ export default function Community() {
         {activeTab === 'upcoming' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredUpcomingRaffles.map((raffle) => (
-              <Card key={raffle.id} className="duxxan-card-hover">
+              <Card key={raffle.id} className="bg-white border-2 border-yellow-400 hover:border-yellow-500 transition-colors">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="text-4xl">{raffle.previewImage}</div>
                       <div>
-                        <CardTitle className="text-white text-lg">{raffle.title}</CardTitle>
-                        <p className="text-duxxan-text-secondary text-sm">{raffle.channel}</p>
+                        <CardTitle className="text-gray-900 text-lg">{raffle.title}</CardTitle>
+                        <p className="text-gray-600 text-sm">{raffle.channel}</p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-duxxan-yellow/20 text-duxxan-yellow">
+                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-600 border border-yellow-300">
                       {raffle.category}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-duxxan-text-secondary text-sm mb-4">
+                  <p className="text-gray-600 text-sm mb-4">
                     {raffle.description}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-duxxan-dark rounded-lg p-3">
-                      <div className="text-duxxan-success font-bold text-lg">
+                    <div className="bg-gray-50 border border-yellow-200 rounded-lg p-3">
+                      <div className="text-green-600 font-bold text-lg">
                         ${raffle.prizeValue}
                       </div>
-                      <div className="text-duxxan-text-secondary text-xs">Ödül Değeri</div>
+                      <div className="text-gray-500 text-xs">Ödül Değeri</div>
                     </div>
-                    <div className="bg-duxxan-dark rounded-lg p-3">
-                      <div className="text-duxxan-yellow font-bold text-lg">
+                    <div className="bg-gray-50 border border-yellow-200 rounded-lg p-3">
+                      <div className="text-yellow-600 font-bold text-lg">
                         {raffle.ticketPrice} USDT
                       </div>
-                      <div className="text-duxxan-text-secondary text-xs">Bilet Fiyatı</div>
+                      <div className="text-gray-500 text-xs">Bilet Fiyatı</div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-duxxan-text-secondary" />
-                      <span className="text-duxxan-text-secondary text-sm">
+                      <Calendar className="h-4 w-4 text-gray-500" />
+                      <span className="text-gray-600 text-sm">
                         {formatDate(raffle.startDate)}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Eye className="h-4 w-4 text-duxxan-text-secondary" />
-                      <span className="text-duxxan-text-secondary text-sm">
+                      <Eye className="h-4 w-4 text-gray-500" />
+                      <span className="text-gray-600 text-sm">
                         {raffle.interestedCount.toLocaleString()} ilgileniyor
                       </span>
                     </div>
