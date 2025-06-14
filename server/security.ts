@@ -51,11 +51,12 @@ export const createRateLimit = createRateLimiter(
 export const progressiveSlowdown = slowDown({
   windowMs: 5 * 60 * 1000, // 5 minutes
   delayAfter: 10, // Allow 10 requests per windowMs without delay
-  delayMs: 500, // Add 500ms delay per request after delayAfter
+  delayMs: () => 500, // Add 500ms delay per request after delayAfter
   maxDelayMs: 10000, // Maximum delay of 10 seconds
   // Skip successful requests to allow normal usage
   skipSuccessfulRequests: false,
   skipFailedRequests: true,
+  validate: { delayMs: false }, // Disable warning
 });
 
 // Security Headers with Helmet
@@ -89,9 +90,9 @@ class SecurityMonitor {
     violations: string[];
   }>();
 
-  private readonly MAX_REQUESTS_PER_SECOND = 10;
-  private readonly BLOCK_DURATION = 30 * 60 * 1000; // 30 minutes
-  private readonly VIOLATION_THRESHOLD = 5;
+  private readonly MAX_REQUESTS_PER_SECOND = 25; // Increased for normal app usage
+  private readonly BLOCK_DURATION = 10 * 60 * 1000; // 10 minutes
+  private readonly VIOLATION_THRESHOLD = 8; // More tolerant threshold
 
   trackRequest(ip: string, userAgent: string = 'unknown'): boolean {
     const now = Date.now();

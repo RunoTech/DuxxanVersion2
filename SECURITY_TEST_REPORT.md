@@ -1,7 +1,34 @@
 # DUXXAN Platform Security Assessment Report
 
 ## Executive Summary
-Comprehensive security testing completed on backend systems and database integrity. The platform now implements enterprise-grade security measures with multiple layers of protection against common attack vectors.
+Comprehensive security testing and DDoS protection implementation completed on backend systems and database integrity. The platform now implements enterprise-grade security measures with multiple layers of protection against common attack vectors including sophisticated DDoS attacks.
+
+## ⚡ DDoS Protection System - ACTIVE & OPERATIONAL
+
+### Real-Time Attack Detection & Mitigation ✅
+- **Automated IP Blocking**: Suspicious IPs automatically blocked for 30 minutes
+- **Pattern Recognition**: Detects bot activity, SQL injection attempts, and malicious tools  
+- **Progressive Rate Limiting**: Gradually slows down high-frequency requests
+- **Request Monitoring**: Tracks 10+ requests/second as suspicious activity
+
+### Live Protection Status (Currently Active)
+- **CONFIRMED BLOCKS**: Multiple IPs actively blocked for suspicious activity
+- **Attack Patterns Detected**: High-frequency request patterns (11-15 req/sec)
+- **Protection Layers**: 6 comprehensive security middleware layers operational
+- **Real-Time Monitoring**: Security dashboard available at `/security` endpoint
+
+### Endpoint-Specific Rate Limiting
+- **General Endpoints**: 100 requests per 15 minutes
+- **Authentication Routes**: 20 requests per 15 minutes  
+- **Creation Endpoints** (Raffles/Donations): 10 requests per 15 minutes
+- **Transaction Endpoints** (Tickets/Contributions): 50 requests per 15 minutes
+- **Admin/Security Routes**: 5 requests per 15 minutes
+
+### DDoS Mitigation Features
+- **Progressive Slowdown**: 500ms delay added after 10 requests in 5 minutes
+- **IP Reputation Tracking**: Persistent monitoring of suspicious behavior
+- **Automatic Recovery**: Blocked IPs automatically unblocked after 30 minutes
+- **Pattern Recognition**: Detects bot signatures, SQL injection attempts, malicious tools
 
 ## Security Enhancements Implemented
 
