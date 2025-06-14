@@ -14,6 +14,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function Home() {
   const { isConnected } = useWallet();
   const { lastMessage } = useWebSocket();
+  const { theme } = useTheme();
   const [liveStats, setLiveStats] = useState({
     totalRaffles: 0,
     totalPrizePool: '0',
