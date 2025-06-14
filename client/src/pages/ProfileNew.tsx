@@ -36,12 +36,8 @@ import {
 interface ProfileFormData {
   name?: string;
   email?: string;
-  phoneNumber?: string;
-  dateOfBirth?: string;
   gender?: string;
   city?: string;
-  address?: string;
-  website?: string;
   profession?: string;
   bio?: string;
   organizationType?: string;
@@ -96,16 +92,12 @@ export default function ProfileNew() {
     rating: '4.5',
     ratingCount: 12,
     profession: 'Geliştirici',
-    phoneNumber: '+90 555 123 4567',
     city: 'İstanbul',
     bio: 'Blockchain teknolojileri ve kripto para alanında uzman geliştirici.',
-    website: 'https://example.com',
     isVerified: false,
     organizationVerified: false,
     profileImage: undefined,
-    dateOfBirth: undefined,
     gender: undefined,
-    address: undefined,
     organizationName: undefined
   } as any;
 
@@ -156,12 +148,8 @@ export default function ProfileNew() {
       setFormData({
         name: displayUser.name || '',
         email: displayUser.email || '',
-        phoneNumber: displayUser.phoneNumber || '',
-        dateOfBirth: displayUser.dateOfBirth || '',
         gender: displayUser.gender || '',
         city: displayUser.city || '',
-        address: displayUser.address || '',
-        website: displayUser.website || '',
         profession: displayUser.profession || '',
         bio: displayUser.bio || '',
         organizationType: displayUser.organizationType || 'individual',
@@ -585,37 +573,6 @@ export default function ProfileNew() {
                     )}
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefon</Label>
-                    {isEditing ? (
-                      <Input
-                        id="phone"
-                        value={formData.phoneNumber || ''}
-                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
-                        placeholder="Telefon numarası"
-                      />
-                    ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.phoneNumber || 'Belirtilmemiş'}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="birthDate">Doğum Tarihi</Label>
-                    {isEditing ? (
-                      <Input
-                        id="birthDate"
-                        type="date"
-                        value={formData.dateOfBirth ? new Date(formData.dateOfBirth).toISOString().split('T')[0] : ''}
-                        onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
-                      />
-                    ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.dateOfBirth ? new Date(displayUser.dateOfBirth).toLocaleDateString('tr-TR') : 'Belirtilmemiş'}
-                      </p>
-                    )}
-                  </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="gender">Cinsiyet</Label>
@@ -663,43 +620,7 @@ export default function ProfileNew() {
                     )}
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Adres</Label>
-                    {isEditing ? (
-                      <Textarea
-                        id="address"
-                        value={formData.address || ''}
-                        onChange={(e) => setFormData({...formData, address: e.target.value})}
-                        placeholder="Adres"
-                        rows={3}
-                      />
-                    ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.address || 'Belirtilmemiş'}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
-                    {isEditing ? (
-                      <Input
-                        id="website"
-                        type="url"
-                        value={formData.website || ''}
-                        onChange={(e) => setFormData({...formData, website: e.target.value})}
-                        placeholder="https://example.com"
-                      />
-                    ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.website ? (
-                          <a href={displayUser.website} target="_blank" rel="noopener noreferrer" className="text-yellow-600 dark:text-yellow-400 hover:underline">
-                            {displayUser.website}
-                          </a>
-                        ) : 'Belirtilmemiş'}
-                      </p>
-                    )}
-                  </div>
+
                 </CardContent>
               </Card>
 
