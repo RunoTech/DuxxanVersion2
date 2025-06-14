@@ -42,16 +42,16 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   const timeLeft = endDate.getTime() - Date.now();
   const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
 
-  const getCategoryIcon = (slug: string) => {
-    const icons: Record<string, string> = {
-      'cars': '🏎️',
-      'electronics': '📱',
-      'jewelry': '💎',
-      'real-estate': '🏠',
-      'art': '🎨',
-      'home': '🏡',
+  const getCategoryImage = (slug: string) => {
+    const images: Record<string, string> = {
+      'cars': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop&crop=center',
+      'electronics': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=600&h=400&fit=crop&crop=center',
+      'jewelry': 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&h=400&fit=crop&crop=center',
+      'real-estate': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop&crop=center',
+      'art': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center',
+      'home': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&crop=center',
     };
-    return icons[slug] || '🎁';
+    return images[slug] || 'https://images.unsplash.com/photo-1549399597-07e1f647b045?w=600&h=400&fit=crop&crop=center';
   };
 
   const getCategoryColor = (slug: string) => {
@@ -108,12 +108,18 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   return (
     <Link href={`/raffles/${raffle.id}`}>
       <Card className="bg-white dark:bg-duxxan-surface border-2 border-duxxan-yellow/80 dark:border-duxxan-border hover:shadow-lg hover:border-duxxan-yellow dark:hover:border-duxxan-yellow transition-all duration-300 cursor-pointer">
-        <div className={`h-48 bg-gradient-to-br ${getCategoryColor(raffle.category.slug)} flex items-center justify-center relative overflow-hidden`}>
-          <div className="text-center">
-            <div className="text-4xl mb-2">{getCategoryIcon(raffle.category.slug)}</div>
-            <Badge variant="secondary" className="bg-black bg-opacity-50 text-white">
-              {raffle.category.name}
-            </Badge>
+        <div className="h-48 relative overflow-hidden rounded-t-lg">
+          <img 
+            src={getCategoryImage(raffle.category.slug)} 
+            alt={raffle.category.name}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <Badge variant="secondary" className="bg-duxxan-yellow text-black font-semibold">
+                {raffle.category.name}
+              </Badge>
+            </div>
           </div>
         </div>
       
