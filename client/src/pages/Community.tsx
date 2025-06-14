@@ -320,14 +320,14 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-white transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             <span className="text-yellow-500">Topluluk</span> Merkezi
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
+          <p className="text-gray-600 text-lg">
             İçerik üreticilerini takip edin, gelecek çekilişleri keşfedin ve kendi kanalınızı oluşturun.
           </p>
         </div>
@@ -337,35 +337,28 @@ export default function Community() {
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Search Bar */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-duxxan-yellow" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-yellow-500" />
               <Input
                 placeholder={activeTab === 'channels' ? "Kanal ara..." : "Çekiliş ara..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-duxxan-surface/50 border border-duxxan-yellow/30 text-white placeholder:text-duxxan-text-secondary rounded-lg focus:border-duxxan-yellow focus:ring-1 focus:ring-duxxan-yellow transition-all"
+                className="pl-10 pr-4 py-2 bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500 rounded-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
               />
             </div>
             
             {/* Category Filter */}
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-duxxan-yellow" />
+              <Filter className="h-4 w-4 text-yellow-500" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-duxxan-surface border border-duxxan-yellow/30 text-white rounded-lg px-3 py-2 min-w-[140px] focus:border-duxxan-yellow focus:ring-1 focus:ring-duxxan-yellow transition-all"
-                style={{
-                  background: 'var(--duxxan-surface)',
-                  color: 'white',
-                }}
+                className="bg-white border-2 border-yellow-400 text-gray-900 rounded-lg px-3 py-2 min-w-[140px] focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
               >
                 {categories.map((category) => (
                   <option 
                     key={category.value} 
                     value={category.value}
-                    style={{
-                      backgroundColor: 'var(--duxxan-surface)',
-                      color: 'white',
-                    }}
+                    className="bg-white text-gray-900"
                   >
                     {category.label}
                   </option>
@@ -382,7 +375,7 @@ export default function Community() {
                   setSearchQuery('');
                   setSelectedCategory('all');
                 }}
-                className="bg-duxxan-surface/50 border-duxxan-yellow/30 text-duxxan-text-secondary hover:text-duxxan-yellow hover:border-duxxan-yellow transition-all"
+                className="bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-all"
               >
                 Temizle
               </Button>
@@ -392,11 +385,11 @@ export default function Community() {
 
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-          <div className="flex space-x-1 bg-duxxan-surface rounded-lg p-1">
+          <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 border-2 border-yellow-200">
             <Button
               variant={activeTab === 'channels' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('channels')}
-              className={activeTab === 'channels' ? 'duxxan-button-primary' : 'text-duxxan-text-secondary'}
+              className={activeTab === 'channels' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 hover:text-gray-900'}
             >
               <Users className="h-4 w-4 mr-2" />
               Kanallar ({filteredChannels.length})
@@ -404,7 +397,7 @@ export default function Community() {
             <Button
               variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('upcoming')}
-              className={activeTab === 'upcoming' ? 'duxxan-button-primary' : 'text-duxxan-text-secondary'}
+              className={activeTab === 'upcoming' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 hover:text-gray-900'}
             >
               <Calendar className="h-4 w-4 mr-2" />
               Gelecek Çekilişler ({filteredUpcomingRaffles.length})
