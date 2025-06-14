@@ -141,7 +141,7 @@ export default function RaffleDetail() {
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-duxxan-text flex items-center gap-2">
+                  <CardTitle className="text-gray-900 dark:text-duxxan-yellow flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-duxxan-yellow" />
                     Katılım Analizi
                   </CardTitle>
@@ -221,7 +221,7 @@ export default function RaffleDetail() {
             {/* Saatlik Satış Grafiği */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bilet Satışları</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Saatlik Bilet Satışları</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -264,7 +264,7 @@ export default function RaffleDetail() {
             {/* Açıklama */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Çekiliş Detayları</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Çekiliş Detayları</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-duxxan-text-secondary leading-relaxed">
@@ -318,11 +318,11 @@ export default function RaffleDetail() {
             {/* Bilet Satın Al */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Bilet Satın Al</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Bilet Satın Al</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="tickets" className="text-gray-900 dark:text-duxxan-text">Bilet Adedi</Label>
+                  <Label htmlFor="tickets" className="text-gray-900 dark:text-duxxan-yellow">Bilet Adedi</Label>
                   <Input
                     id="tickets"
                     type="number"
@@ -336,16 +336,16 @@ export default function RaffleDetail() {
                 
                 <div className="bg-gray-100 dark:bg-duxxan-dark p-3 rounded-lg">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-duxxan-text-secondary">Bilet Fiyatı:</span>
-                    <span className="text-duxxan-text">{raffle.ticketPrice} USDT</span>
+                    <span className="text-gray-600 dark:text-duxxan-yellow">Bilet Fiyatı:</span>
+                    <span className="text-gray-900 dark:text-duxxan-yellow">{raffle.ticketPrice} USDT</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-duxxan-text-secondary">Miktar:</span>
-                    <span className="text-duxxan-text">{ticketCount} adet</span>
+                    <span className="text-gray-600 dark:text-duxxan-yellow">Miktar:</span>
+                    <span className="text-gray-900 dark:text-duxxan-yellow">{ticketCount} adet</span>
                   </div>
-                  <Separator className="my-2 bg-duxxan-border" />
+                  <Separator className="my-2 bg-gray-200 dark:bg-duxxan-border" />
                   <div className="flex justify-between font-semibold">
-                    <span className="text-duxxan-text">Toplam:</span>
+                    <span className="text-gray-900 dark:text-duxxan-yellow">Toplam:</span>
                     <span className="text-duxxan-yellow">
                       {(Number(raffle.ticketPrice) * ticketCount).toFixed(2)} USDT
                     </span>
@@ -370,7 +370,7 @@ export default function RaffleDetail() {
             {/* İlerleme */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Çekiliş İlerlemesi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Çekiliş İlerlemesi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -388,7 +388,7 @@ export default function RaffleDetail() {
             {/* Yaratıcı */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Çekiliş Sahibi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Çekiliş Sahibi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
@@ -423,7 +423,7 @@ export default function RaffleDetail() {
             {/* Son Katılımcılar */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Son Katılımcılar</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Son Katılımcılar</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
