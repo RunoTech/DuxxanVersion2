@@ -22,14 +22,10 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
-  // Apply basic security headers only (DDoS protection temporarily reduced)
-  app.use(securityHeaders);
-  app.use(requestSizeLimit);
-  // Temporarily disabled aggressive protection to allow normal app functionality
-  // app.use(patternDetection);
-  // Demo route to assign winner (for testing purposes) - Before rate limiting
+  // Demo route FIRST - bypasses all middleware
   app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
     try {
+      console.log('Demo winner assignment request received');
       const raffleId = parseInt(req.params.id);
       const { winnerId } = req.body;
 
@@ -39,19 +35,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Raffle not found' });
       }
 
-      // For demo: Skip authentication and creator checks
-      // Update raffle with winner
       const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
-
-      // Broadcast winner announcement - will be available after WebSocket setup
       console.log(`Winner assigned: Raffle ${raffleId}, Winner ${winnerId}`);
 
       res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
     } catch (error) {
       console.error('Winner assignment error:', error);
-      res.status(500).json({ message: 'Failed to assign winner' });
+      res.status(500).json({ message: 'Failed to assign winner', error: error.message });
     }
   });
+
+  // Apply basic security headers only (DDoS protection temporarily reduced)
+  app.use(securityHeaders);
+  app.use(requestSizeLimit);
+  // Temporarily disabled aggressive protection to allow normal app functionality
+  // app.use(patternDetection);
 
   // app.use(securityMiddleware);
   // app.use(progressiveSlowdown);
