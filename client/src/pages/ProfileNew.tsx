@@ -105,23 +105,27 @@ export default function ProfileNew() {
   // Log device information on component mount
   useEffect(() => {
     const logDevice = async () => {
+      // Only log device if user is loaded and authenticated
+      if (!user || userLoading) return;
+      
       try {
         const deviceInfo = {
           deviceType: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 
                      /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' : 'desktop',
           deviceName: navigator.platform,
-          browser: navigator.userAgent.split(' ').find(item => item.includes('Chrome') || item.includes('Firefox') || item.includes('Safari')),
+          browser: navigator.userAgent.split(' ').find(item => item.includes('Chrome') || item.includes('Firefox') || item.includes('Safari')) || 'Unknown',
           operatingSystem: navigator.platform,
         };
 
         await apiRequest('POST', '/api/users/me/devices', deviceInfo);
       } catch (error) {
+        // Silently handle device logging errors to prevent UI disruption
         console.error('Failed to log device:', error);
       }
     };
 
     logDevice();
-  }, []);
+  }, [user, userLoading]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
@@ -250,6 +254,28 @@ export default function ProfileNew() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-yellow-900">
         <div className="animate-spin w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  // If user is not authenticated, show message
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-yellow-900">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Cüzdan Bağlantısı Gerekli
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Profil sayfasını görüntülemek için cüzdanınızı bağlayın.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/'}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white"
+          >
+            Ana Sayfaya Dön
+          </Button>
+        </div>
       </div>
     );
   }
