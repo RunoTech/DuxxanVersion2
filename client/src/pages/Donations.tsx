@@ -81,7 +81,7 @@ export default function Donations() {
             </p>
           </div>
           <Link href="/create-donation">
-            <Button className="bg-green-500 hover:bg-green-600 text-white mt-4 md:mt-0">
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
               Yeni Kampanya Başlat
             </Button>
           </Link>
@@ -195,7 +195,7 @@ export default function Donations() {
                   setSortBy('newest');
                 }}
                 variant="outline"
-                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white"
               >
                 Filtreleri Temizle
               </Button>
@@ -254,13 +254,13 @@ export default function Donations() {
                   <Button
                     onClick={() => setSearchTerm('')}
                     variant="outline"
-                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white"
                   >
                     Aramayı Temizle
                   </Button>
                 )}
                 <Link href="/create-donation">
-                  <Button className="bg-green-500 hover:bg-green-600 text-white">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
                     Kampanya Başlat
                   </Button>
                 </Link>
@@ -272,7 +272,7 @@ export default function Donations() {
         {/* Load More Button (if needed for pagination) */}
         {filteredDonations.length > 0 && filteredDonations.length < donations.length && (
           <div className="text-center mt-12">
-            <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <Button variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white">
               Daha Fazla Kampanya Yükle
             </Button>
           </div>
@@ -288,11 +288,11 @@ export default function Donations() {
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/create-donation">
-                <Button className="bg-green-500 hover:bg-green-600 text-white">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
                   Kampanyanızı Başlatın
                 </Button>
               </Link>
-              <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <Button variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white">
                 Daha Fazla Öğren
               </Button>
             </div>

@@ -25,7 +25,7 @@
   --radius: 0.5rem;
   
   /* DUXXAN Theme Colors */
-  --duxxan-yellow: hsl(47, 96%, 56%);
+  --duxxan-yellow: hsl(45, 100%, 58%);
   --duxxan-dark: hsl(216, 13%, 5%);
   --duxxan-surface: hsl(220, 13%, 13%);
   --duxxan-card: hsl(217, 13%, 8%);
@@ -33,7 +33,7 @@
   --duxxan-text-secondary: hsl(212, 13%, 73%);
   --duxxan-success: hsl(159, 94%, 35%);
   --duxxan-error: hsl(349, 89%, 63%);
-  --duxxan-warning: hsl(45, 93%, 47%);
+  --duxxan-warning: hsl(45, 100%, 58%);
 }
 
 .dark {
