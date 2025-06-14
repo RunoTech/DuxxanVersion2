@@ -13,7 +13,7 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(47, 96%, 56%);
+  --primary: hsl(45, 100%, 58%);
   --primary-foreground: hsl(20, 14.3%, 4.1%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
@@ -47,7 +47,7 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(47, 96%, 56%);
+  --primary: hsl(45, 100%, 58%);
   --primary-foreground: hsl(20, 14.3%, 4.1%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
@@ -98,15 +98,15 @@
   }
 
   .duxxan-button-primary {
-    @apply duxxan-button bg-duxxan-yellow text-duxxan-dark hover:bg-yellow-400;
+    @apply duxxan-button bg-yellow-500 text-white hover:bg-yellow-600 border-2 border-yellow-500;
   }
 
   .duxxan-button-success {
-    @apply duxxan-button bg-duxxan-success text-white hover:bg-green-600;
+    @apply duxxan-button bg-yellow-500 text-white hover:bg-yellow-600 border-2 border-yellow-500;
   }
 
   .duxxan-button-secondary {
-    @apply duxxan-button bg-duxxan-surface border border-duxxan-border text-white hover:bg-duxxan-border;
+    @apply duxxan-button border-2 border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white;
   }
 
   .duxxan-card {

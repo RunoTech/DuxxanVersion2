@@ -74,7 +74,7 @@ export default function Raffles() {
             </p>
           </div>
           <Link href="/create-raffle">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black mt-4 md:mt-0">
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
               Yeni Çekiliş Oluştur
             </Button>
           </Link>

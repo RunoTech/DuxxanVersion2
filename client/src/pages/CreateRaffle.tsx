@@ -427,7 +427,7 @@ export default function CreateRaffle() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                      className="w-full border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white"
                     >
                       İptal
                     </Button>
@@ -435,7 +435,7 @@ export default function CreateRaffle() {
                   <Button
                     type="submit"
                     disabled={isSubmitting || !isConnected}
-                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 font-semibold"
                   >
                     {isSubmitting ? 'Çekiliş Oluşturuluyor...' : 'Çekiliş Oluştur (25 USDT)'}
                   </Button>
