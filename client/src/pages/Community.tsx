@@ -44,6 +44,7 @@ export default function Community() {
   const [showCreateRaffle, setShowCreateRaffle] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2])); // Channel 2 is initially subscribed
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -287,10 +288,24 @@ export default function Community() {
       return;
     }
 
-    toast({
-      title: "Başarılı!",
-      description: "Kanala abone oldunuz.",
-    });
+    const isCurrentlySubscribed = subscribedChannels.has(channelId);
+    const newSubscribedChannels = new Set(subscribedChannels);
+    
+    if (isCurrentlySubscribed) {
+      newSubscribedChannels.delete(channelId);
+      toast({
+        title: "Abonelik İptal Edildi",
+        description: "Kanaldan aboneliğiniz iptal edildi.",
+      });
+    } else {
+      newSubscribedChannels.add(channelId);
+      toast({
+        title: "Başarılı!",
+        description: "Kanala abone oldunuz.",
+      });
+    }
+    
+    setSubscribedChannels(newSubscribedChannels);
   };
 
   const handleInterest = async (raffleId: number) => {
@@ -709,7 +724,7 @@ export default function Community() {
                       className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"
                       disabled={!isConnected}
                     >
-                      {channel.isSubscribed ? (
+                      {subscribedChannels.has(channel.id) ? (
                         <>
                           <CheckCircle className="h-5 w-5 mr-2 text-blue-600 font-bold stroke-2" />
                           Abonesin
