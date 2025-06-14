@@ -38,13 +38,8 @@ export function Navigation() {
     <nav className="bg-duxxan-surface border-b border-duxxan-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="relative group">
-            <div className="text-2xl font-bold text-duxxan-yellow tracking-wide">
-              DUXXAN
-            </div>
-            <div className="absolute -bottom-1 -right-2 text-[10px] font-light text-duxxan-yellow/60 transform rotate-12 origin-bottom-left tracking-widest uppercase">
-              good luck
-            </div>
+          <Link href="/" className="text-2xl font-bold text-duxxan-yellow">
+            DUXXAN
           </Link>
 
           {/* Desktop Navigation */}
