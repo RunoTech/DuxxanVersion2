@@ -301,10 +301,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/donations/active', async (req, res) => {
     try {
       const activeDonations = await storage.getActiveDonations();
-      res.json(activeDonations);
+      res.json(activeDonations || []);
     } catch (error) {
       console.error('Error fetching active donations:', error);
-      res.status(500).json({ message: 'Failed to fetch active donations' });
+      // Return empty array instead of error to prevent frontend crashes
+      res.json([]);
     }
   });
 

@@ -31,7 +31,7 @@ export const globalRateLimit = createRateLimiter(
 
 export const strictRateLimit = createRateLimiter(
   5 * 60 * 1000, // 5 minutes
-  50, // 50 requests per IP
+  100, // 100 requests per IP - increased for normal usage
   'Rate limit exceeded. Please slow down your requests.'
 );
 
@@ -43,7 +43,7 @@ export const authRateLimit = createRateLimiter(
 
 export const createRateLimit = createRateLimiter(
   10 * 60 * 1000, // 10 minutes
-  5, // 5 creation attempts per IP
+  20, // 20 creation attempts per IP - more reasonable for normal usage
   'Too many creation attempts. Please wait before creating more content.'
 );
 
