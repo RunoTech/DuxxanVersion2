@@ -69,7 +69,7 @@ export const donations = pgTable("donations", {
   isActive: boolean("is_active").default(true),
   // New donation system fields
   isUnlimited: boolean("is_unlimited").default(false),
-  commissionRate: decimal("commission_rate", { precision: 3, scale: 2 }).default("10.0"), // 10% for individual, 2% for organizations
+  commissionRate: decimal("commission_rate", { precision: 5, scale: 2 }).default("10.00"), // 10% for individual, 2% for organizations
   startupFee: decimal("startup_fee", { precision: 10, scale: 6 }).default("0"), // 100 USDT for unlimited
   startupFeePaid: boolean("startup_fee_paid").default(false),
   totalCommissionCollected: decimal("total_commission_collected", { precision: 10, scale: 6 }).default("0"),
@@ -83,8 +83,8 @@ export const donationContributions = pgTable("donation_contributions", {
   donationId: integer("donation_id").references(() => donations.id).notNull(),
   userId: integer("user_id").references(() => users.id).notNull(),
   amount: decimal("amount", { precision: 10, scale: 6 }).notNull(),
-  commissionAmount: decimal("commission_amount", { precision: 10, scale: 6 }).notNull(),
-  netAmount: decimal("net_amount", { precision: 10, scale: 6 }).notNull(), // amount - commission
+  commissionAmount: decimal("commission_amount", { precision: 10, scale: 6 }).default("0"),
+  netAmount: decimal("net_amount", { precision: 10, scale: 6 }).default("0"), // amount - commission
   transactionHash: varchar("transaction_hash", { length: 66 }),
   blockNumber: integer("block_number"),
   donorCountry: varchar("donor_country", { length: 3 }), // For live chart display
@@ -165,6 +165,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
   profession: true,
   bio: true,
   profileImage: true,
+  organizationType: true,
+  organizationName: true,
+  verificationUrl: true,
+  country: true,
 }).extend({
   walletAddress: z.string()
     .regex(/^0x[a-fA-F0-9]{40}$/, "Invalid Ethereum wallet address format")
@@ -177,6 +181,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
   name: z.string().max(100, "Name must be less than 100 characters").optional(),
   profession: z.string().max(100, "Profession must be less than 100 characters").optional(),
   bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  organizationType: z.enum(["individual", "foundation", "association", "official"]).default("individual"),
+  organizationName: z.string().max(200, "Organization name must be less than 200 characters").optional(),
+  verificationUrl: z.string().url("Must be a valid URL").optional(),
+  country: z.string().length(3, "Country code must be 3 characters").optional(),
 });
 
 export const insertRaffleSchema = createInsertSchema(raffles).pick({
@@ -215,6 +223,23 @@ export const insertDonationSchema = createInsertSchema(donations).pick({
   description: true,
   goalAmount: true,
   endDate: true,
+  isUnlimited: true,
+  category: true,
+  country: true,
+}).extend({
+  title: z.string()
+    .min(5, "Title must be at least 5 characters")
+    .max(200, "Title must be less than 200 characters"),
+  description: z.string()
+    .min(10, "Description must be at least 10 characters")
+    .max(2000, "Description must be less than 2000 characters"),
+  goalAmount: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Goal amount must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) > 0 && parseFloat(val) <= 100000000, "Goal amount must be between 1 and 100,000,000 USDT"),
+  endDate: z.string().datetime().optional(),
+  isUnlimited: z.boolean().default(false),
+  category: z.string().max(50, "Category must be less than 50 characters").default("general"),
+  country: z.string().length(3, "Country code must be 3 characters").optional(),
 });
 
 export const insertTicketSchema = createInsertSchema(tickets).pick({
@@ -227,7 +252,22 @@ export const insertTicketSchema = createInsertSchema(tickets).pick({
 export const insertDonationContributionSchema = createInsertSchema(donationContributions).pick({
   donationId: true,
   amount: true,
+  commissionAmount: true,
+  netAmount: true,
   transactionHash: true,
+  blockNumber: true,
+  donorCountry: true,
+}).extend({
+  amount: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Amount must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) > 0, "Amount must be greater than 0"),
+  commissionAmount: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Commission amount must be a valid number")
+    .optional(),
+  netAmount: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Net amount must be a valid number")
+    .optional(),
+  donorCountry: z.string().length(3, "Country code must be 3 characters").optional(),
 });
 
 export const insertUserRatingSchema = createInsertSchema(userRatings).pick({
