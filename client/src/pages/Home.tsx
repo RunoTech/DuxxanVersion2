@@ -148,14 +148,14 @@ export default function Home() {
   }, [lastMessage]);
 
   return (
-    <div className="min-h-screen bg-duxxan-dark">
+    <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark">
       {/* Hero Section */}
-      <section className="duxxan-gradient py-20">
+      <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 dark:text-white">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
-          <p className="text-xl text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
             Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
           
@@ -167,7 +167,7 @@ export default function Home() {
                 <span className="text-duxxan-success font-bold text-lg">
                   {totalConnectedWallets.toLocaleString()} 
                 </span>
-                <span className="text-duxxan-text-secondary">
+                <span className="text-gray-600 dark:text-duxxan-text-secondary">
                   cüzdan şu anda bağlı
                 </span>
                 <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30">
@@ -207,9 +207,9 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Key metrics */}
                 <div className="space-y-4">
-                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-duxxan-text-secondary">Aktif Çekilişler</span>
+                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Aktif Çekilişler</span>
                       <span className="text-xs text-duxxan-success">+5.2%</span>
                     </div>
                     <div className="text-2xl font-bold text-duxxan-yellow">
@@ -217,9 +217,9 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-duxxan-text-secondary">Ödül Havuzu</span>
+                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Ödül Havuzu</span>
                       <span className="text-xs text-duxxan-success">+12.8%</span>
                     </div>
                     <div className="text-2xl font-bold text-duxxan-success">
@@ -227,9 +227,9 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-duxxan-text-secondary">Bağışlar</span>
+                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Bağışlar</span>
                       <span className="text-xs text-duxxan-success">+8.4%</span>
                     </div>
                     <div className="text-2xl font-bold text-duxxan-warning">
@@ -239,11 +239,11 @@ export default function Home() {
                 </div>
                 
                 {/* Main Chart */}
-                <div className="lg:col-span-2 bg-gradient-to-br from-duxxan-dark/40 to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-border/30 backdrop-blur-sm">
+                <div className="lg:col-span-2 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-gray-200 dark:border-duxxan-border/30 backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-6">
                     <div>
-                      <div className="text-lg font-semibold text-white mb-1">24 Saatlik Aktivite Grafiği</div>
-                      <div className="text-xs text-duxxan-text-secondary">Gerçek zamanlı platform veriler</div>
+                      <div className="text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
+                      <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Gerçek zamanlı platform veriler</div>
                     </div>
                     <div className="flex items-center space-x-2 px-3 py-1 bg-duxxan-success/20 rounded-full">
                       <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
