@@ -198,14 +198,14 @@ export default function CreateDonation() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Yeni Bağış Oluştur
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-600">
               Toplumsal fayda için bağış kampanyası başlatın
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function CreateDonation() {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Main Form */}
             <div className="lg:col-span-2">
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-xl text-yellow-600">Bağış Detayları</CardTitle>
                 </CardHeader>
@@ -225,13 +225,13 @@ export default function CreateDonation() {
                         name="title"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                            <FormLabel className="text-yellow-700 font-medium">
                               Bağış Başlığı *
                             </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Bağışınız için açıklayıcı bir başlık"
-                                className="border-yellow-200 focus:border-yellow-500"
+                                className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
                                 {...field}
                               />
                             </FormControl>
@@ -245,13 +245,13 @@ export default function CreateDonation() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                            <FormLabel className="text-yellow-700 font-medium">
                               Açıklama *
                             </FormLabel>
                             <FormControl>
                               <Textarea
                                 placeholder="Bağışınızın amacını ve detaylarını açıklayın..."
-                                className="border-yellow-200 focus:border-yellow-500 min-h-[120px]"
+                                className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 min-h-[120px]"
                                 {...field}
                               />
                             </FormControl>
@@ -266,7 +266,7 @@ export default function CreateDonation() {
                           name="goalAmount"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              <FormLabel className="text-yellow-700 font-medium">
                                 Hedef Miktar (USDT) *
                               </FormLabel>
                               <FormControl>
@@ -275,7 +275,7 @@ export default function CreateDonation() {
                                   step="0.000001"
                                   min="1"
                                   placeholder="1000"
-                                  className="border-yellow-200 focus:border-yellow-500"
+                                  className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
                                   {...field}
                                 />
                               </FormControl>
@@ -289,16 +289,16 @@ export default function CreateDonation() {
                           name="category"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              <FormLabel className="text-yellow-700 font-medium">
                                 Kategori *
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger className="border-yellow-200 focus:border-yellow-500">
+                                  <SelectTrigger className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent>
+                                <SelectContent className="bg-white border-yellow-400">
                                   {DONATION_CATEGORIES.map((category) => (
                                     <SelectItem key={category.value} value={category.value}>
                                       {category.label}
@@ -317,16 +317,16 @@ export default function CreateDonation() {
                         name="country"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                            <FormLabel className="text-yellow-700 font-medium">
                               Ülke
                             </FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="border-yellow-200 focus:border-yellow-500">
+                                <SelectTrigger className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900">
                                   <SelectValue placeholder="Ülke seçin" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="bg-white border-yellow-400">
                                 {COUNTRIES.map((country) => (
                                   <SelectItem key={country.value} value={country.value}>
                                     {country.label}
@@ -344,9 +344,9 @@ export default function CreateDonation() {
                         control={form.control}
                         name="isUnlimited"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border border-yellow-200 p-4">
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-400 bg-white p-4">
                             <div className="space-y-0.5">
-                              <FormLabel className="text-base text-yellow-700 dark:text-yellow-400">
+                              <FormLabel className="text-base text-yellow-700 font-medium">
                                 Sınırsız Bağış
                               </FormLabel>
                               <FormDescription>
@@ -373,13 +373,13 @@ export default function CreateDonation() {
                           name="endDate"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 dark:text-yellow-400">
+                              <FormLabel className="text-yellow-700 font-medium">
                                 Bitiş Tarihi *
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   type="datetime-local"
-                                  className="border-yellow-200 focus:border-yellow-500"
+                                  className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
                                   min={new Date().toISOString().slice(0, 16)}
                                   {...field}
                                 />
