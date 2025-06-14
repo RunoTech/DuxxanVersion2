@@ -71,14 +71,20 @@ export default function ProfileNew() {
     queryKey: ['/api/users/me'],
   });
 
-  // Fetch user devices
+  // Fetch user devices with error handling
   const { data: devices = [], isLoading: devicesLoading } = useQuery({
     queryKey: ['/api/users/me/devices'],
+    enabled: !!user,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
-  // Fetch user photos
+  // Fetch user photos with error handling
   const { data: photos = [], isLoading: photosLoading } = useQuery({
     queryKey: ['/api/users/me/photos'],
+    enabled: !!user,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   // Initialize form data when user data loads
