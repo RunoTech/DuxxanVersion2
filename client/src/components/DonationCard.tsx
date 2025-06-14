@@ -108,15 +108,16 @@ export function DonationCard({ donation }: DonationCardProps) {
   };
 
   return (
-    <Card className="duxxan-card hover:border-duxxan-success transition-all duration-300">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-xl font-bold mb-2 text-white">{donation.title}</h3>
-            <p className="text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
-              {donation.description}
-            </p>
-          </div>
+    <Link href={`/donations/${donation.id}`}>
+      <Card className="duxxan-card hover:border-duxxan-success transition-all duration-300 cursor-pointer">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 className="text-xl font-bold mb-2 text-white">{donation.title}</h3>
+              <p className="text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
+                {donation.description}
+              </p>
+            </div>
           <div className="ml-4">
             {getStatusBadge()}
           </div>
@@ -202,5 +203,6 @@ export function DonationCard({ donation }: DonationCardProps) {
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 }
