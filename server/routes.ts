@@ -424,5 +424,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User device logging routes
+  app.post('/api/users/me/devices', getUser, async (req: any, res) => {
+    try {
+      const deviceInfo = {
+        ...req.body,
+        userId: req.user.id,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'] || '',
+      };
+
+      const device = await storage.createUserDevice(deviceInfo);
+      res.json(device);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to log device' });
+    }
+  });
+
+  app.get('/api/users/me/devices', getUser, async (req: any, res) => {
+    try {
+      const devices = await storage.getUserDevices(req.user.id);
+      res.json(devices);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch devices' });
+    }
+  });
+
+  // User photo routes
+  app.post('/api/users/me/photos', getUser, async (req: any, res) => {
+    try {
+      const photoData = {
+        ...req.body,
+        userId: req.user.id,
+      };
+
+      const photo = await storage.createUserPhoto(photoData);
+      res.json(photo);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to upload photo' });
+    }
+  });
+
+  app.get('/api/users/me/photos', getUser, async (req: any, res) => {
+    try {
+      const photoType = req.query.type as string;
+      const photos = await storage.getUserPhotos(req.user.id, photoType);
+      res.json(photos);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch photos' });
+    }
+  });
+
+  app.delete('/api/users/me/photos/:id', getUser, async (req: any, res) => {
+    try {
+      const photoId = parseInt(req.params.id);
+      await storage.deleteUserPhoto(photoId, req.user.id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to delete photo' });
+    }
+  });
+
   return httpServer;
 }

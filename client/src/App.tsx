@@ -30,6 +30,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/profile" component={Profile} />
+      <Route path="/profile-new" component={ProfileNew} />
       <Route path="/community" component={Community} />
       <Route path="/raffles" component={Raffles} />
       <Route path="/raffles/:id" component={RaffleDetail} />
