@@ -25,8 +25,8 @@ export function Navigation() {
         <Link
           key={item.href}
           href={item.href}
-          className={`font-medium transition-colors hover:text-white ${
-            location === item.href ? 'text-white' : 'text-duxxan-text-secondary'
+          className={`font-black transition-colors hover:text-duxxan-yellow ${
+            location === item.href ? 'text-duxxan-yellow' : 'text-black dark:text-white'
           } ${mobile ? 'block py-2' : ''}`}
           onClick={() => mobile && setIsOpen(false)}
         >
