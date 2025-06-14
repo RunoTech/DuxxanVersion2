@@ -152,7 +152,7 @@ export default function ProfileNew() {
 
   // Initialize form data when user data loads
   useEffect(() => {
-    if (displayUser && Object.keys(formData).length === 0) {
+    if (displayUser && !formData.name && !formData.email) {
       setFormData({
         name: displayUser.name || '',
         email: displayUser.email || '',
@@ -169,7 +169,7 @@ export default function ProfileNew() {
         country: displayUser.country || '',
       });
     }
-  }, [user]);
+  }, [displayUser]);
 
   // Log device information on component mount
   useEffect(() => {
@@ -904,14 +904,14 @@ export default function ProfileNew() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white">
+                          <h4 className="font-medium text-gray-800 dark:text-gray-200">
                             {device.deviceName || device.deviceType}
                           </h4>
                           <Badge variant="secondary" className="text-xs">
                             {device.deviceType}
                           </Badge>
                         </div>
-                        <div className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
                           <div className="flex items-center gap-1">
                             <Globe className="h-3 w-3" />
                             <span>{device.browser}</span>
@@ -936,7 +936,7 @@ export default function ProfileNew() {
                   {devices.length === 0 && (
                     <div className="text-center py-8">
                       <AlertTriangle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-500 dark:text-gray-400">
+                      <p className="text-gray-600 dark:text-gray-400">
                         Cihaz bilgisi bulunamadı
                       </p>
                     </div>
