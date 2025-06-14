@@ -89,102 +89,102 @@ export default function Donations() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-success mb-2">
+              <div className="text-2xl font-bold text-green-500 mb-2">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-duxxan-text-secondary">Active Campaigns</div>
+              <div className="text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-warning mb-2">
+              <div className="text-2xl font-bold text-orange-500 mb-2">
                 ${getTotalRaised().toLocaleString()}
               </div>
-              <div className="text-duxxan-text-secondary">Total Raised</div>
+              <div className="text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
             </CardContent>
           </Card>
           
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-yellow mb-2">
+              <div className="text-2xl font-bold text-yellow-500 mb-2">
                 {getTotalDonors().toLocaleString()}
               </div>
-              <div className="text-duxxan-text-secondary">Total Donors</div>
+              <div className="text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
             </CardContent>
           </Card>
 
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-white mb-2">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 ${getAverageContribution().toFixed(0)}
               </div>
-              <div className="text-duxxan-text-secondary">Avg Contribution</div>
+              <div className="text-gray-600 dark:text-gray-400">Ortalama Bağış</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Market Cap Display */}
-        <Card className="duxxan-card mb-8">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-duxxan-success" />
-                  Donation Market Cap
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-gray-900 dark:text-white">
+                  <TrendingUp className="w-5 h-5 text-green-500" />
+                  Bağış Pazar Değeri
                 </h3>
-                <div className="text-3xl font-bold text-duxxan-success mb-2">
+                <div className="text-3xl font-bold text-green-500 mb-2">
                   ${getTotalRaised().toLocaleString()} USDT
                 </div>
                 <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-duxxan-success">↗ Live Updates</span>
-                  <span className="text-duxxan-text-secondary">Blockchain Verified</span>
-                  <span className="text-duxxan-text-secondary">
-                    {donations.length} Total Campaigns
+                  <span className="text-green-500">↗ Canlı Güncellemeler</span>
+                  <span className="text-gray-600 dark:text-gray-400">Blockchain Doğrulanmış</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {donations.length} Toplam Kampanya
                   </span>
                 </div>
               </div>
-              <div className="hidden md:block w-32 h-16 bg-duxxan-dark rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-8 h-8 text-duxxan-success" />
+              <div className="hidden md:block w-32 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-8 h-8 text-green-500" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Filters */}
-        <Card className="duxxan-card mb-8">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <Filter className="w-5 h-5" />
-              Filters & Search
+              Filtreler ve Arama
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-duxxan-text-secondary w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="Search campaigns..."
+                  placeholder="Kampanya ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-duxxan-dark border-duxxan-border text-white pl-10"
+                  className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
                 />
               </div>
 
               {/* Sort By */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-duxxan-dark border-duxxan-border text-white">
-                  <SelectValue placeholder="Sort By" />
+                <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Sırala" />
                 </SelectTrigger>
-                <SelectContent className="bg-duxxan-surface border-duxxan-border">
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="ending-soon">Ending Soon</SelectItem>
-                  <SelectItem value="highest-goal">Highest Goal</SelectItem>
-                  <SelectItem value="most-funded">Most Funded</SelectItem>
-                  <SelectItem value="most-donors">Most Donors</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <SelectItem value="newest">En Yeni</SelectItem>
+                  <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
+                  <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
+                  <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
+                  <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -195,9 +195,9 @@ export default function Donations() {
                   setSortBy('newest');
                 }}
                 variant="outline"
-                className="duxxan-button-secondary"
+                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                Clear Filters
+                Filtreleri Temizle
               </Button>
             </div>
           </CardContent>
@@ -205,12 +205,12 @@ export default function Donations() {
 
         {/* Results Info */}
         <div className="flex justify-between items-center mb-6">
-          <p className="text-duxxan-text-secondary">
-            Showing {filteredDonations.length} of {donations.length} campaigns
+          <p className="text-gray-600 dark:text-gray-400">
+            {filteredDonations.length} / {donations.length} kampanya gösteriliyor
           </p>
           {searchTerm && (
-            <p className="text-sm text-duxxan-text-secondary">
-              Search results for "{searchTerm}"
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              "{searchTerm}" için arama sonuçları
             </p>
           )}
         </div>
@@ -219,15 +219,15 @@ export default function Donations() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(4)].map((_, i) => (
-              <Card key={i} className="duxxan-card animate-pulse">
+              <Card key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 animate-pulse">
                 <CardContent className="p-6">
-                  <div className="h-4 bg-duxxan-dark rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-duxxan-dark rounded w-full mb-4"></div>
-                  <div className="h-2 bg-duxxan-dark rounded w-full mb-4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="h-3 bg-duxxan-dark rounded"></div>
-                    <div className="h-3 bg-duxxan-dark rounded"></div>
-                    <div className="h-3 bg-duxxan-dark rounded"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
                   </div>
                 </CardContent>
               </Card>
@@ -240,13 +240,13 @@ export default function Donations() {
             ))}
           </div>
         ) : (
-          <Card className="duxxan-card text-center">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
             <CardContent className="p-12">
-              <h3 className="text-xl font-bold mb-4">No Campaigns Found</h3>
-              <p className="text-duxxan-text-secondary mb-6">
+              <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Kampanya Bulunamadı</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 {searchTerm 
-                  ? 'Try adjusting your search criteria'
-                  : 'Be the first to create a meaningful donation campaign on DUXXAN!'
+                  ? 'Arama kriterlerinizi ayarlamayı deneyin'
+                  : 'DUXXAN\'da anlamlı bir bağış kampanyası oluşturan ilk kişi olun!'
                 }
               </p>
               <div className="flex justify-center gap-4">
@@ -254,14 +254,14 @@ export default function Donations() {
                   <Button
                     onClick={() => setSearchTerm('')}
                     variant="outline"
-                    className="duxxan-button-secondary"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
-                    Clear Search
+                    Aramayı Temizle
                   </Button>
                 )}
                 <Link href="/create-donation">
-                  <Button className="duxxan-button-success">
-                    Start Campaign
+                  <Button className="bg-green-500 hover:bg-green-600 text-white">
+                    Kampanya Başlat
                   </Button>
                 </Link>
               </div>
@@ -272,28 +272,28 @@ export default function Donations() {
         {/* Load More Button (if needed for pagination) */}
         {filteredDonations.length > 0 && filteredDonations.length < donations.length && (
           <div className="text-center mt-12">
-            <Button variant="outline" className="duxxan-button-secondary">
-              Load More Campaigns
+            <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+              Daha Fazla Kampanya Yükle
             </Button>
           </div>
         )}
 
         {/* Call to Action */}
-        <Card className="duxxan-card mt-12">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-12">
           <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold mb-4">Make a Difference Today</h3>
-            <p className="text-duxxan-text-secondary mb-6 max-w-2xl mx-auto">
-              Every donation matters. Join our community of generous donors and help create positive change 
-              in the world through transparent, blockchain-verified contributions.
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Bugün Bir Fark Yaratın</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+              Her bağış önemlidir. Cömert bağışçılar topluluğumuza katılın ve şeffaf, 
+              blockchain doğrulanmış katkılarla dünyada olumlu değişim yaratmaya yardımcı olun.
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/create-donation">
-                <Button className="duxxan-button-success">
-                  Start Your Campaign
+                <Button className="bg-green-500 hover:bg-green-600 text-white">
+                  Kampanyanızı Başlatın
                 </Button>
               </Link>
-              <Button variant="outline" className="duxxan-button-secondary">
-                Learn More
+              <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                Daha Fazla Öğren
               </Button>
             </div>
           </CardContent>
