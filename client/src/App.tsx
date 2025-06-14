@@ -26,28 +26,38 @@ import CountryProfile from "@/pages/CountryProfile";
 
 import NotFound from "@/pages/not-found";
 
-function Router() {
+function ScrollToTop() {
   const [location] = useLocation();
-
+  
   useEffect(() => {
+    // Force immediate scroll to top without any animation
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     window.scrollTo(0, 0);
   }, [location]);
+  
+  return null;
+}
 
+function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/profile-new" component={ProfileNew} />
-      <Route path="/community" component={Community} />
-      <Route path="/raffles" component={Raffles} />
-      <Route path="/raffles/:id" component={RaffleDetail} />
-      <Route path="/donations" component={Donations} />
-      <Route path="/donations/:id" component={DonationDetail} />
-      <Route path="/country/:countryCode" component={CountryProfile} />
-      <Route path="/create-raffle" component={CreateRaffle} />
-      <Route path="/create-donation" component={CreateDonation} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <ScrollToTop />
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/profile-new" component={ProfileNew} />
+        <Route path="/community" component={Community} />
+        <Route path="/raffles" component={Raffles} />
+        <Route path="/raffles/:id" component={RaffleDetail} />
+        <Route path="/donations" component={Donations} />
+        <Route path="/donations/:id" component={DonationDetail} />
+        <Route path="/country/:countryCode" component={CountryProfile} />
+        <Route path="/create-raffle" component={CreateRaffle} />
+        <Route path="/create-donation" component={CreateDonation} />
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
