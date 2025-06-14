@@ -485,5 +485,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Countries API endpoints for international filtering
+  app.get('/api/countries', async (req, res) => {
+    try {
+      const countries = await storage.getCountries();
+      res.json(countries);
+    } catch (error: any) {
+      res.status(500).json({ message: 'Failed to fetch countries: ' + error.message });
+    }
+  });
+
+  app.get('/api/countries/:code', async (req, res) => {
+    try {
+      const country = await storage.getCountryByCode(req.params.code);
+      if (!country) {
+        return res.status(404).json({ message: 'Country not found' });
+      }
+      res.json(country);
+    } catch (error: any) {
+      res.status(500).json({ message: 'Failed to fetch country: ' + error.message });
+    }
+  });
+
   return httpServer;
 }

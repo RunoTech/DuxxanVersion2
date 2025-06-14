@@ -55,9 +55,9 @@ export interface IStorage {
   getCategories(): Promise<Category[]>;
   
   // Countries
-  getCountries(): Promise<any[]>;
-  getCountryByCode(code: string): Promise<any | undefined>;
-  createCountry(country: any): Promise<any>;
+  getCountries(): Promise<Country[]>;
+  getCountryByCode(code: string): Promise<Country | undefined>;
+  createCountry(country: Omit<Country, 'id'>): Promise<Country>;
   
   // Raffles
   getRaffles(limit?: number, offset?: number): Promise<(Raffle & { creator: User; category: Category })[]>;
@@ -134,16 +134,16 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(categories).orderBy(asc(categories.name));
   }
 
-  async getCountries(): Promise<any[]> {
+  async getCountries(): Promise<Country[]> {
     return await db.select().from(countries).where(eq(countries.isActive, true)).orderBy(asc(countries.name));
   }
 
-  async getCountryByCode(code: string): Promise<any | undefined> {
+  async getCountryByCode(code: string): Promise<Country | undefined> {
     const [country] = await db.select().from(countries).where(eq(countries.code, code));
     return country || undefined;
   }
 
-  async createCountry(country: any): Promise<any> {
+  async createCountry(country: Omit<Country, 'id'>): Promise<Country> {
     const [newCountry] = await db.insert(countries).values(country).returning();
     return newCountry;
   }
