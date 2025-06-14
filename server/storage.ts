@@ -349,25 +349,27 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getChatMessages(raffleId: number): Promise<(ChatMessage & { sender: User; receiver: User })[]> {
-    const senderAlias = alias(users, 'sender');
-    const receiverAlias = alias(users, 'receiver');
-    
-    return await db
-      .select({
-        message: chatMessages,
-        sender: senderAlias,
-        receiver: receiverAlias
-      })
+    // Get all chat messages for this raffle
+    const messages = await db
+      .select()
       .from(chatMessages)
-      .innerJoin(senderAlias, eq(chatMessages.senderId, senderAlias.id))
-      .innerJoin(receiverAlias, eq(chatMessages.receiverId, receiverAlias.id))
       .where(eq(chatMessages.raffleId, raffleId))
-      .orderBy(asc(chatMessages.createdAt))
-      .then(rows => rows.map(row => ({ 
-        ...row.message, 
-        sender: row.sender, 
-        receiver: row.receiver 
-      })));
+      .orderBy(asc(chatMessages.createdAt));
+
+    // Get sender and receiver info separately
+    const enrichedMessages = [];
+    for (const message of messages) {
+      const [sender] = await db.select().from(users).where(eq(users.id, message.senderId));
+      const [receiver] = await db.select().from(users).where(eq(users.id, message.receiverId));
+      
+      enrichedMessages.push({
+        ...message,
+        sender,
+        receiver
+      });
+    }
+    
+    return enrichedMessages;
   }
 
   async createChatMessage(message: { raffleId: number; senderId: number; receiverId: number; message: string }): Promise<ChatMessage> {
