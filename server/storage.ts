@@ -349,17 +349,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getChatMessages(raffleId: number): Promise<(ChatMessage & { sender: User; receiver: User })[]> {
+    const senderAlias = alias(users, 'sender');
+    const receiverAlias = alias(users, 'receiver');
+    
     return await db
-      .select()
+      .select({
+        message: chatMessages,
+        sender: senderAlias,
+        receiver: receiverAlias
+      })
       .from(chatMessages)
-      .innerJoin(users, eq(chatMessages.senderId, users.id))
-      .innerJoin(users, eq(chatMessages.receiverId, users.id))
+      .innerJoin(senderAlias, eq(chatMessages.senderId, senderAlias.id))
+      .innerJoin(receiverAlias, eq(chatMessages.receiverId, receiverAlias.id))
       .where(eq(chatMessages.raffleId, raffleId))
       .orderBy(asc(chatMessages.createdAt))
       .then(rows => rows.map(row => ({ 
-        ...row.chat_messages, 
-        sender: row.users, 
-        receiver: row.users 
+        ...row.message, 
+        sender: row.sender, 
+        receiver: row.receiver 
       })));
   }
 

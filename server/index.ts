@@ -54,7 +54,8 @@ app.get('/api/raffles/:id/chat', async (req: any, res) => {
     const messages = await storage.getChatMessages(raffleId);
     res.json(messages);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch chat messages' });
+    console.error('Chat fetch error:', error);
+    res.status(500).json({ message: 'Failed to fetch chat messages', error: error.message });
   }
 });
 
