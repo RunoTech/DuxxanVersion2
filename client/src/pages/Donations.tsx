@@ -4,15 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
-import { Search, Filter, TrendingUp } from 'lucide-react';
+import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield } from 'lucide-react';
 
 export default function Donations() {
   const { isConnected } = useWallet();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [activeTab, setActiveTab] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Fetch donations
   const { data: donations = [], isLoading } = useQuery({
@@ -20,29 +25,71 @@ export default function Donations() {
     refetchInterval: isConnected ? 30000 : false, // Refresh every 30 seconds if connected
   });
 
+  // Organization types and countries
+  const organizationTypes = [
+    { value: 'all', label: 'Tüm Türler', icon: Globe },
+    { value: 'foundation', label: 'Vakıflar', icon: Building2 },
+    { value: 'association', label: 'Dernekler', icon: Users },
+    { value: 'individual', label: 'Bireysel', icon: Heart },
+    { value: 'unlimited', label: 'Sınırsız Bağışlar', icon: Clock },
+    { value: 'timed', label: 'Süreli Bağışlar', icon: Clock },
+  ];
+
+  const countries = [
+    { value: 'all', label: '🌍 Tüm Ülkeler' },
+    { value: 'TUR', label: '🇹🇷 Türkiye' },
+    { value: 'USA', label: '🇺🇸 Amerika' },
+    { value: 'GER', label: '🇩🇪 Almanya' },
+    { value: 'FRA', label: '🇫🇷 Fransa' },
+    { value: 'GBR', label: '🇬🇧 İngiltere' },
+    { value: 'JPN', label: '🇯🇵 Japonya' },
+    { value: 'CHN', label: '🇨🇳 Çin' },
+    { value: 'IND', label: '🇮🇳 Hindistan' },
+  ];
+
+  const categories = [
+    { value: 'all', label: 'Tüm Kategoriler' },
+    { value: 'health', label: 'Sağlık' },
+    { value: 'education', label: 'Eğitim' },
+    { value: 'disaster', label: 'Afet Yardımı' },
+    { value: 'environment', label: 'Çevre' },
+    { value: 'animal', label: 'Hayvan Hakları' },
+    { value: 'community', label: 'Toplum' },
+    { value: 'technology', label: 'Teknoloji' },
+    { value: 'general', label: 'Genel' },
+  ];
+
   // Filter and sort donations
   const filteredDonations = donations
     .filter((donation: any) => {
       const matchesSearch = donation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            donation.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
+      
+      const matchesType = activeTab === 'all' || 
+                         (activeTab === 'unlimited' && donation.isUnlimited) ||
+                         (activeTab === 'timed' && !donation.isUnlimited) ||
+                         (donation.creator?.organizationType === activeTab);
+      
+      const matchesCountry = selectedCountry === 'all' || donation.country === selectedCountry;
+      const matchesCategory = selectedCategory === 'all' || donation.category === selectedCategory;
+      
+      return matchesSearch && matchesType && matchesCountry && matchesCategory;
     })
     .sort((a: any, b: any) => {
       switch (sortBy) {
-        case 'newest':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'ending-soon':
+          if (!a.endDate && !b.endDate) return 0;
+          if (!a.endDate) return 1;
+          if (!b.endDate) return -1;
           return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
         case 'highest-goal':
           return parseFloat(b.goalAmount) - parseFloat(a.goalAmount);
         case 'most-funded':
-          const aProgress = (parseFloat(a.currentAmount) / parseFloat(a.goalAmount)) * 100;
-          const bProgress = (parseFloat(b.currentAmount) / parseFloat(b.goalAmount)) * 100;
-          return bProgress - aProgress;
+          return parseFloat(b.currentAmount) - parseFloat(a.currentAmount);
         case 'most-donors':
           return b.donorCount - a.donorCount;
-        default:
-          return 0;
+        default: // newest
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
     });
 
