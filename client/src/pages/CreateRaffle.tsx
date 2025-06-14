@@ -469,6 +469,42 @@ export default function CreateRaffle() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Restriction Warning Dialog */}
+      <Dialog open={showRestrictionDialog} onOpenChange={setShowRestrictionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="w-5 h-5" />
+              Çekiliş Oluşturulamaz
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Bağış kampanyası oluşturmuş hesaplar çekiliş yapamaz. Bu, platform güvenliği ve 
+              kullanıcı koruması için gerekli bir kısıtlamadır.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="bg-gray-50 p-4 rounded-lg border">
+            <h4 className="font-semibold text-gray-900 mb-2">Çözüm:</h4>
+            <p className="text-sm text-gray-600">
+              Çekiliş yapmak için yeni bir cüzdan adresi kullanmanız gerekir.
+            </p>
+          </div>
+          <DialogFooter className="flex gap-2">
+            <Link href="/donations">
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                Bağışlara Dön
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowRestrictionDialog(false)}
+              className="border-gray-300 text-gray-600 hover:bg-gray-50"
+            >
+              Kapat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
