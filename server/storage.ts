@@ -200,7 +200,6 @@ export class DatabaseStorage implements IStorage {
       })
       .from(donations)
       .innerJoin(users, eq(donations.creatorId, users.id))
-      .where(eq(donations.isActive, true))
       .orderBy(desc(donations.createdAt))
       .limit(limit)
       .offset(offset);

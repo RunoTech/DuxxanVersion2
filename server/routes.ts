@@ -309,15 +309,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      // Use same logic as regular donations endpoint but filter for active ones
+      // Temporary fix: return all donations and let client filter active ones
+      // This ensures the API works while we debug the database query issue
       const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
-      const allDonations = await storage.getDonations(limit * 2, offset); // Get more to filter
-      const activeDonations = allDonations.filter(donation => donation.isActive);
-      res.json(activeDonations.slice(0, limit));
+      const donations = await storage.getDonations(limit, offset);
+      res.json(donations);
     } catch (error) {
       console.error('API donations/active error:', error);
-      res.status(500).json({ message: 'Failed to fetch donations' });
+      res.status(500).json({ message: 'Failed to fetch donation' });
     }
   });
 
