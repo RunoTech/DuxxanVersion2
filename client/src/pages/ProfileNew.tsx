@@ -152,7 +152,7 @@ export default function ProfileNew() {
 
   // Initialize form data when user data loads
   useEffect(() => {
-    if (displayUser) {
+    if (displayUser && Object.keys(formData).length === 0) {
       setFormData({
         name: displayUser.name || '',
         email: displayUser.email || '',
@@ -169,7 +169,7 @@ export default function ProfileNew() {
         country: displayUser.country || '',
       });
     }
-  }, [displayUser]);
+  }, [user]);
 
   // Log device information on component mount
   useEffect(() => {
@@ -400,7 +400,7 @@ export default function ProfileNew() {
         <div className="relative">
           <Card className="mb-8 overflow-hidden border-2 border-yellow-200 dark:border-yellow-800 shadow-xl">
             <div className="relative h-48 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800">
-              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
               <div className="absolute top-4 right-4">
                 {!isEditing ? (
                   <Button
@@ -477,7 +477,7 @@ export default function ProfileNew() {
                 </div>
 
                 {/* User Info */}
-                <div className="flex-1 text-center md:text-left">
+                <div className="flex-1 text-center md:text-left bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg">
                   <div className="flex items-center gap-3 mb-2">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                       {displayUser?.name || displayUser?.username}
@@ -496,7 +496,7 @@ export default function ProfileNew() {
                     )}
                   </div>
                   
-                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-1">
                     @{displayUser?.username}
                   </p>
                   {displayUser?.profession && (
@@ -505,9 +505,9 @@ export default function ProfileNew() {
                     </p>
                   )}
                   
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                     <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                       <span>{displayUser?.rating} ({displayUser?.ratingCount} değerlendirme)</span>
                     </div>
                     <div className="flex items-center gap-1">
@@ -515,7 +515,7 @@ export default function ProfileNew() {
                       <span>{displayUser?.country}</span>
                     </div>
                     {displayUser?.country && (
-                      <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                      <span className="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded">
                         {displayUser.country}
                       </span>
                     )}
@@ -562,7 +562,7 @@ export default function ProfileNew() {
                         placeholder="Ad Soyad"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.name || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -579,7 +579,7 @@ export default function ProfileNew() {
                         placeholder="E-posta adresi"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.email || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -595,7 +595,7 @@ export default function ProfileNew() {
                         placeholder="Telefon numarası"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.phoneNumber || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -611,7 +611,7 @@ export default function ProfileNew() {
                         onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.dateOfBirth ? new Date(displayUser.dateOfBirth).toLocaleDateString('tr-TR') : 'Belirtilmemiş'}
                       </p>
                     )}
@@ -631,7 +631,7 @@ export default function ProfileNew() {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.gender === 'male' ? 'Erkek' : 
                          displayUser?.gender === 'female' ? 'Kadın' : 
                          displayUser?.gender === 'other' ? 'Diğer' : 'Belirtilmemiş'}
@@ -657,7 +657,7 @@ export default function ProfileNew() {
                         placeholder="Şehir"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.city || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -674,7 +674,7 @@ export default function ProfileNew() {
                         rows={3}
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.address || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -691,9 +691,9 @@ export default function ProfileNew() {
                         placeholder="https://example.com"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.website ? (
-                          <a href={displayUser.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                          <a href={displayUser.website} target="_blank" rel="noopener noreferrer" className="text-yellow-600 dark:text-yellow-400 hover:underline">
                             {displayUser.website}
                           </a>
                         ) : 'Belirtilmemiş'}
@@ -719,7 +719,7 @@ export default function ProfileNew() {
                         placeholder="Mesleğiniz"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.profession || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -736,7 +736,7 @@ export default function ProfileNew() {
                         rows={4}
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.bio || 'Belirtilmemiş'}
                       </p>
                     )}
@@ -765,7 +765,7 @@ export default function ProfileNew() {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.organizationType === 'individual' ? 'Bireysel' :
                          displayUser?.organizationType === 'foundation' ? 'Vakıf' :
                          displayUser?.organizationType === 'association' ? 'Dernek' :
@@ -784,7 +784,7 @@ export default function ProfileNew() {
                         placeholder="Organizasyon adı"
                       />
                     ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
                         {displayUser?.organizationName || 'Belirtilmemiş'}
                       </p>
                     )}
