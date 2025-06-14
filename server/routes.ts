@@ -312,6 +312,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const donations = await storage.getActiveDonations();
       res.json(donations);
     } catch (error) {
+      console.error('API donations/active error:', error);
       res.status(500).json({ message: 'Failed to fetch donations' });
     }
   });

@@ -259,22 +259,11 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
     try {
-      const results = await db
-        .select({
-          donation: donations,
-          creator: users,
-        })
-        .from(donations)
-        .innerJoin(users, eq(donations.creatorId, users.id))
-        .where(eq(donations.isActive, true));
-      
-      return results.map(result => ({
-        ...result.donation,
-        creator: result.creator
-      }));
+      // Use the existing working getDonations method instead
+      return await this.getDonations(50, 0);
     } catch (error) {
       console.error('Error in getActiveDonations:', error);
-      return [];
+      throw error;
     }
   }
 
