@@ -223,29 +223,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
-    try {
-      // Simplified query to test
-      const result = await db
-        .select()
-        .from(donations)
-        .where(eq(donations.isActive, true));
-      
-      // Get creators separately
-      const donationsWithCreators = await Promise.all(
-        result.map(async (donation) => {
-          const [creator] = await db
-            .select()
-            .from(users)
-            .where(eq(users.id, donation.creatorId));
-          return { ...donation, creator };
-        })
-      );
-      
-      return donationsWithCreators.filter(d => d.creator);
-    } catch (error) {
-      console.error('Error in getActiveDonations:', error);
-      throw error;
-    }
+    // Simple approach - get all donations and manually join with users
+    const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
+    const userResults = await db.select().from(users);
+    
+    // Create a map for faster lookup
+    const userMap = new Map(userResults.map(user => [user.id, user]));
+    
+    // Combine donations with their creators and filter by end date
+    const activeDonations = donationResults
+      .filter(donation => new Date(donation.endDate) > new Date())
+      .map(donation => ({
+        ...donation,
+        creator: userMap.get(donation.creatorId)!
+      }))
+      .filter(donation => donation.creator)
+      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+    
+    return activeDonations;
   }
 
   async createDonationContribution(contribution: InsertDonationContribution & { userId: number }): Promise<DonationContribution> {

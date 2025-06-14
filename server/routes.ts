@@ -261,13 +261,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      console.log('Fetching active donations...');
-      const donations = await storage.getActiveDonations();
-      console.log('Found donations:', donations.length);
+      // Direct database query for testing
+      const result = await db.execute(sql`
+        SELECT d.*, u.username, u.wallet_address, u.name, u.profession, u.bio, u.profile_image
+        FROM donations d
+        INNER JOIN users u ON d.creator_id = u.id
+        WHERE d.is_active = true AND d.end_date > NOW()
+        ORDER BY d.created_at DESC
+      `);
+      
+      const donations = result.rows.map((row: any) => ({
+        id: row.id,
+        creatorId: row.creator_id,
+        title: row.title,
+        description: row.description,
+        goalAmount: row.goal_amount,
+        currentAmount: row.current_amount,
+        donorCount: row.donor_count,
+        endDate: row.end_date,
+        isActive: row.is_active,
+        createdAt: row.created_at,
+        creator: {
+          id: row.creator_id,
+          username: row.username,
+          walletAddress: row.wallet_address,
+          name: row.name,
+          profession: row.profession,
+          bio: row.bio,
+          profileImage: row.profile_image
+        }
+      }));
+      
       res.json(donations);
     } catch (error) {
       console.error('Error fetching active donations:', error);
-      console.error('Error stack:', error.stack);
       res.status(500).json({ message: 'Failed to fetch active donations' });
     }
   });
