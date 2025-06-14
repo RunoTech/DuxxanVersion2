@@ -106,10 +106,10 @@ export default function RaffleDetail() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-duxxan-text mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
               {raffle.title}
             </h1>
-            <div className="flex items-center gap-4 text-duxxan-text-secondary">
+            <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {daysLeft} gün kaldı
@@ -125,10 +125,10 @@ export default function RaffleDetail() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-duxxan-border">
+            <Button variant="outline" size="sm" className="border-gray-300 dark:border-duxxan-border">
               <Share2 className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="sm" className="border-duxxan-border">
+            <Button variant="outline" size="sm" className="border-gray-300 dark:border-duxxan-border">
               <Heart className="w-4 h-4" />
             </Button>
           </div>
@@ -386,9 +386,9 @@ export default function RaffleDetail() {
             </Card>
 
             {/* Yaratıcı */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Çekiliş Sahibi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Çekiliş Sahibi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
@@ -421,9 +421,9 @@ export default function RaffleDetail() {
             </Card>
 
             {/* Son Katılımcılar */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Son Katılımcılar</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Son Katılımcılar</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -431,13 +431,13 @@ export default function RaffleDetail() {
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-duxxan-border text-duxxan-text text-xs">
+                          <AvatarFallback className="bg-gray-200 dark:bg-duxxan-border text-gray-900 dark:text-duxxan-text text-xs">
                             U{i}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-duxxan-text">user_{i}...abc</span>
+                        <span className="text-sm text-gray-900 dark:text-duxxan-text">user_{i}...abc</span>
                       </div>
-                      <span className="text-xs text-duxxan-text-secondary">
+                      <span className="text-xs text-gray-600 dark:text-duxxan-text-secondary">
                         {i * 5} bilet
                       </span>
                     </div>
