@@ -35,17 +35,17 @@ export function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/raffles" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/raffles" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Çekilişler
                 </Link>
               </li>
               <li>
-                <Link href="/donations" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/donations" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Bağış Kampanyaları
                 </Link>
               </li>
               <li>
-                <Link href="/community" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/community" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Topluluk
                 </Link>
               </li>
