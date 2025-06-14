@@ -7,6 +7,7 @@ import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 export default function Home() {
   const { isConnected } = useWallet();
@@ -17,6 +18,26 @@ export default function Home() {
     totalDonations: '0',
     activeUsers: 0,
   });
+
+  // Live connected wallets counter - starts at 1397 and fluctuates above this number
+  const [connectedWallets, setConnectedWallets] = useState(1397);
+
+  // Simulate live wallet connections for promotional display
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setConnectedWallets(prev => {
+        const baseCount = 1397;
+        const variation = Math.floor(Math.random() * 150) + 1; // 1-150 additional wallets
+        const trend = Math.random() > 0.3 ? 1 : -1; // 70% chance to increase
+        const change = Math.floor(Math.random() * 8) * trend; // Change by 0-7
+        
+        const newCount = Math.max(baseCount, prev + change);
+        return Math.min(newCount, baseCount + variation); // Cap at base + variation
+      });
+    }, 3000 + Math.random() * 4000); // Update every 3-7 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Fetch platform stats
   const { data: stats } = useQuery({

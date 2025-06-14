@@ -224,16 +224,13 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
     try {
-      // Get active donations first
-      const donationList = await db.select().from(donations).where(eq(donations.isActive, true));
+      const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
+      const userResults = await db.select().from(users);
       
-      // Get all users
-      const userList = await db.select().from(users);
-      const userMap = new Map(userList.map(user => [user.id, user]));
+      const userMap = new Map(userResults.map(user => [user.id, user]));
       
-      // Combine and filter
       const now = new Date();
-      const activeDonations = donationList
+      const activeDonations = donationResults
         .filter(donation => new Date(donation.endDate) > now)
         .map(donation => {
           const creator = userMap.get(donation.creatorId);
@@ -244,7 +241,7 @@ export class DatabaseStorage implements IStorage {
             creator
           };
         })
-        .filter((item): item is Donation & { creator: User } => item !== null)
+        .filter((donation): donation is Donation & { creator: User } => donation !== null)
         .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
 
       return activeDonations;
