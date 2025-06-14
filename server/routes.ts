@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { db } from "./db";
+import { db, pool } from "./db";
 import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema, donations, users } from "@shared/schema";
 import { z } from "zod";
 import { sql, eq, desc } from "drizzle-orm";
@@ -309,15 +309,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      // Temporary fix: return all donations and let client filter active ones
-      // This ensures the API works while we debug the database query issue
       const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
       const donations = await storage.getDonations(limit, offset);
-      res.json(donations);
+      // Filter for active donations only
+      const activeDonations = donations.filter(donation => donation.isActive);
+      res.json(activeDonations);
     } catch (error) {
-      console.error('API donations/active error:', error);
-      res.status(500).json({ message: 'Failed to fetch donation' });
+      res.status(500).json({ message: 'Failed to fetch donations' });
     }
   });
 
