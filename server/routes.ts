@@ -263,8 +263,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      const donations = await storage.getActiveDonations();
-      res.json(donations);
+      const donationData = await storage.getActiveDonations();
+      res.json(donationData);
     } catch (error) {
       console.error('Error fetching active donations:', error);
       res.status(500).json({ message: 'Failed to fetch active donations' });
