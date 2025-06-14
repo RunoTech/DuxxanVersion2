@@ -6,6 +6,7 @@ import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
+import { Link } from 'wouter';
 
 interface RaffleCardProps {
   raffle: {
@@ -101,15 +102,16 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   };
 
   return (
-    <Card className="duxxan-card-hover">
-      <div className={`h-48 bg-gradient-to-br ${getCategoryColor(raffle.category.slug)} flex items-center justify-center relative overflow-hidden`}>
-        <div className="text-center">
-          <div className="text-4xl mb-2">{getCategoryIcon(raffle.category.slug)}</div>
-          <Badge variant="secondary" className="bg-black bg-opacity-50 text-white">
-            {raffle.category.name}
-          </Badge>
+    <Link href={`/raffles/${raffle.id}`}>
+      <Card className="duxxan-card-hover cursor-pointer">
+        <div className={`h-48 bg-gradient-to-br ${getCategoryColor(raffle.category.slug)} flex items-center justify-center relative overflow-hidden`}>
+          <div className="text-center">
+            <div className="text-4xl mb-2">{getCategoryIcon(raffle.category.slug)}</div>
+            <Badge variant="secondary" className="bg-black bg-opacity-50 text-white">
+              {raffle.category.name}
+            </Badge>
+          </div>
         </div>
-      </div>
       
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-2">
@@ -194,5 +196,6 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 }

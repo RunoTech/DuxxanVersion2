@@ -8,6 +8,7 @@ import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
+import { Link } from 'wouter';
 
 interface DonationCardProps {
   donation: {
