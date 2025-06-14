@@ -141,35 +141,106 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Live Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            <Card className="duxxan-card">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-duxxan-yellow mb-2">
-                  {liveStats.totalRaffles.toLocaleString()}
+          {/* Trading-Style Chart */}
+          <Card className="duxxan-card mt-16">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">Platform İstatistikleri</h3>
+                <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
+                  <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
+                  <span>Canlı Veriler</span>
                 </div>
-                <div className="text-duxxan-text-secondary">Aktif Çekilişler</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="duxxan-card">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-duxxan-success mb-2">
-                  ${parseFloat(liveStats.totalPrizePool).toLocaleString()}
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Left side - Key metrics */}
+                <div className="space-y-6">
+                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-duxxan-text-secondary">Aktif Çekilişler</span>
+                      <span className="text-xs text-duxxan-success">+5.2%</span>
+                    </div>
+                    <div className="text-2xl font-bold text-duxxan-yellow">
+                      {liveStats.totalRaffles.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-duxxan-text-secondary">Toplam Ödül Havuzu</span>
+                      <span className="text-xs text-duxxan-success">+12.8%</span>
+                    </div>
+                    <div className="text-2xl font-bold text-duxxan-success">
+                      ${parseFloat(liveStats.totalPrizePool).toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-duxxan-text-secondary">Toplanan Bağışlar</span>
+                      <span className="text-xs text-duxxan-success">+8.4%</span>
+                    </div>
+                    <div className="text-2xl font-bold text-duxxan-warning">
+                      ${parseFloat(liveStats.totalDonations).toLocaleString()}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-duxxan-text-secondary">Toplam Ödül Havuzu</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="duxxan-card">
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-duxxan-warning mb-2">
-                  ${parseFloat(liveStats.totalDonations).toLocaleString()}
+                
+                {/* Right side - Visual chart representation */}
+                <div className="bg-duxxan-dark/30 rounded-lg p-4">
+                  <div className="text-sm text-duxxan-text-secondary mb-4">24 Saatlik Aktivite</div>
+                  <div className="space-y-4">
+                    {/* Simulated chart bars */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-duxxan-text-secondary">Çekilişler</span>
+                        <span className="text-duxxan-yellow">{liveStats.totalRaffles}</span>
+                      </div>
+                      <div className="w-full bg-duxxan-border rounded-full h-2">
+                        <div className="bg-duxxan-yellow h-2 rounded-full" style={{width: `${Math.min(parseInt(liveStats.totalRaffles) * 10, 100)}%`}}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-duxxan-text-secondary">Ödül Havuzu ($K)</span>
+                        <span className="text-duxxan-success">${(parseFloat(liveStats.totalPrizePool) / 1000).toFixed(1)}K</span>
+                      </div>
+                      <div className="w-full bg-duxxan-border rounded-full h-2">
+                        <div className="bg-duxxan-success h-2 rounded-full" style={{width: `${Math.min(parseFloat(liveStats.totalPrizePool) / 100, 100)}%`}}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-duxxan-text-secondary">Bağışlar ($K)</span>
+                        <span className="text-duxxan-warning">${(parseFloat(liveStats.totalDonations) / 1000).toFixed(1)}K</span>
+                      </div>
+                      <div className="w-full bg-duxxan-border rounded-full h-2">
+                        <div className="bg-duxxan-warning h-2 rounded-full" style={{width: `${Math.min(parseFloat(liveStats.totalDonations) / 100, 100)}%`}}></div>
+                      </div>
+                    </div>
+                    
+                    {/* Trading volume simulation */}
+                    <div className="mt-6 pt-4 border-t border-duxxan-border">
+                      <div className="text-xs text-duxxan-text-secondary mb-2">İşlem Hacmi (24s)</div>
+                      <div className="flex space-x-1">
+                        {[...Array(20)].map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-2 rounded-sm ${
+                              Math.random() > 0.5 ? 'bg-duxxan-success' : 'bg-duxxan-error'
+                            }`}
+                            style={{height: `${Math.random() * 30 + 10}px`}}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-duxxan-text-secondary">Toplanan Bağışlar</div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
