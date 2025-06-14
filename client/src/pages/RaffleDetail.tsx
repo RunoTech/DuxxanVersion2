@@ -432,9 +432,10 @@ export default function RaffleDetail() {
                             });
                           })
                           .catch((error) => {
+                            console.error('Winner assignment error:', error);
                             toast({
                               title: 'Hata',
-                              description: 'Kazanan atanamadı',
+                              description: `Kazanan atanamadı: ${error.message || 'Bilinmeyen hata'}`,
                               variant: 'destructive',
                             });
                           });
