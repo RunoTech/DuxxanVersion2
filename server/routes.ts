@@ -71,14 +71,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   };
 
-  // Initialize categories
+  // Initialize categories with caching
   app.get('/api/categories', async (req, res) => {
     try {
-      // Create default categories if they don't exist
+      // Cache for 10 minutes
+      res.set('Cache-Control', 'public, max-age=600');
+      
       const categories = await storage.getCategories();
       if (categories.length === 0) {
-        // This would typically be done via database seeding
-        // For now, return hardcoded categories
         const defaultCategories = [
           { id: 1, name: 'Cars', slug: 'cars' },
           { id: 2, name: 'Electronics', slug: 'electronics' },
@@ -96,9 +96,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Platform stats
+  // Platform stats with caching
   app.get('/api/stats', async (req, res) => {
     try {
+      // Cache for 2 minutes - stats update frequently
+      res.set('Cache-Control', 'public, max-age=120');
+      
       const stats = await storage.getPlatformStats();
       res.json(stats);
     } catch (error) {
@@ -488,6 +491,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Countries API endpoints for international filtering
   app.get('/api/countries', async (req, res) => {
     try {
+      // Cache for 1 hour - countries data rarely changes
+      res.set('Cache-Control', 'public, max-age=3600');
+      
       const countries = await storage.getCountries();
       res.json(countries);
     } catch (error: any) {

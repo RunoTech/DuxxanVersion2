@@ -26,6 +26,9 @@ export function useWallet() {
   }, []);
 
   const fetchUser = async (walletAddress: string) => {
+    // Sadece user yoksa fetch et
+    if (user) return;
+    
     try {
       const response = await fetch('/api/users/me', {
         headers: {
