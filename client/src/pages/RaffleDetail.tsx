@@ -9,7 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useWallet } from '@/hooks/useWallet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { 
   Clock, 
@@ -31,6 +31,28 @@ export default function RaffleDetail() {
   const { isConnected } = useWallet();
   const { theme } = useTheme();
   const [ticketCount, setTicketCount] = useState(1);
+  const [chartError, setChartError] = useState(false);
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Error boundary for charts
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (event.error?.message?.includes('appendChild') || 
+          event.error?.message?.includes('chart') ||
+          event.error?.message?.includes('ResponsiveContainer')) {
+        setChartError(true);
+        event.preventDefault();
+        console.warn('Chart render error prevented page refresh');
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
 
   const { data: raffle, isLoading } = useQuery({
     queryKey: [`/api/raffles/${id}`],
@@ -160,45 +182,54 @@ export default function RaffleDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80 w-full">
-                  <ResponsiveContainer width="100%" height={320} minHeight={200}>
-                    <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="participantGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#F3BA2F" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#F3BA2F" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
-                      <XAxis 
-                        dataKey="time" 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                      />
-                      <YAxis 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
-                          border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
-                          borderRadius: '8px',
-                          color: theme === 'dark' ? '#fff' : '#000'
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="participants"
-                        stroke="#F3BA2F"
-                        strokeWidth={2}
-                        fill="url(#participantGradient)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                {chartError ? (
+                  <div className="h-80 w-full flex items-center justify-center bg-gray-50 dark:bg-duxxan-surface border border-duxxan-border rounded-lg">
+                    <div className="text-center">
+                      <TrendingUp className="w-12 h-12 text-duxxan-yellow mx-auto mb-2" />
+                      <p className="text-duxxan-text-secondary">Chart temporarily unavailable</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-80 w-full">
+                    <ResponsiveContainer width="100%" height={320} minHeight={200}>
+                      <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                        <defs>
+                          <linearGradient id="participantGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#F3BA2F" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#F3BA2F" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
+                        <XAxis 
+                          dataKey="time" 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
+                        />
+                        <YAxis 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
+                            border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
+                            borderRadius: '8px',
+                            color: theme === 'dark' ? '#fff' : '#000'
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="participants"
+                          stroke="#F3BA2F"
+                          strokeWidth={2}
+                          fill="url(#participantGradient)"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
                 
                 {/* İstatistikler */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
