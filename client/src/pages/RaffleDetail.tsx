@@ -11,6 +11,9 @@ import { Label } from '@/components/ui/label';
 import { useWallet } from '@/hooks/useWallet';
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
+import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 import { 
   Clock, 
   Users, 
@@ -28,8 +31,10 @@ import { WinnerOrgChat } from '@/components/WinnerOrgChat';
 
 export default function RaffleDetail() {
   const { id } = useParams();
-  const { isConnected } = useWallet();
+  const { isConnected, user } = useWallet();
   const { theme } = useTheme();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [ticketCount, setTicketCount] = useState(1);
   const [isClient, setIsClient] = useState(false);
 
@@ -105,11 +110,14 @@ export default function RaffleDetail() {
     );
   }
 
-  const progress = raffle?.ticketsSold && raffle?.maxTickets 
-    ? (raffle.ticketsSold / raffle.maxTickets) * 100 
+  // Type guard to ensure raffle has required properties
+  const safeRaffle = raffle as any; // Temporary fix for demo
+
+  const progress = safeRaffle?.ticketsSold && safeRaffle?.maxTickets 
+    ? (safeRaffle.ticketsSold / safeRaffle.maxTickets) * 100 
     : 0;
-  const timeLeft = raffle?.endDate 
-    ? new Date(raffle.endDate).getTime() - new Date().getTime() 
+  const timeLeft = safeRaffle?.endDate 
+    ? new Date(safeRaffle.endDate).getTime() - new Date().getTime() 
     : 0;
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
@@ -120,7 +128,7 @@ export default function RaffleDetail() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
-              {raffle.title}
+              {safeRaffle.title}
             </h1>
             <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
               <span className="flex items-center gap-1">
@@ -129,11 +137,11 @@ export default function RaffleDetail() {
               </span>
               <span className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                {raffle.ticketsSold} / {raffle.maxTickets} bilet
+                {safeRaffle.ticketsSold} / {safeRaffle.maxTickets} bilet
               </span>
               <span className="flex items-center gap-1">
                 <Trophy className="w-4 h-4" />
-                {raffle.prizeValue} USDT
+                {safeRaffle.prizeValue} USDT
               </span>
             </div>
           </div>
@@ -400,8 +408,64 @@ export default function RaffleDetail() {
               </CardContent>
             </Card>
 
+            {/* Demo Winner Assignment (for testing) */}
+            {raffle && !raffle.winnerId && user?.id === raffle.creatorId && (
+              <Card className="bg-yellow-50 dark:bg-duxxan-surface border-yellow-200 dark:border-duxxan-border">
+                <CardHeader>
+                  <CardTitle className="text-yellow-800 dark:text-duxxan-yellow">Demo: Kazanan Atama</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-yellow-700 dark:text-duxxan-text-secondary mb-3">
+                    Test için kazanan atayabilirsiniz (demo amaçlı)
+                  </p>
+                  <Button 
+                    onClick={() => {
+                      // Assign current user as winner for demo
+                      apiRequest('POST', `/api/raffles/${id}/assign-winner`, { winnerId: user.id })
+                        .then(() => {
+                          queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+                          toast({
+                            title: 'Kazanan atandı!',
+                            description: 'Chat sistemi artık aktif.',
+                          });
+                        })
+                        .catch((error) => {
+                          toast({
+                            title: 'Hata',
+                            description: 'Kazanan atanamadı',
+                            variant: 'destructive',
+                          });
+                        });
+                    }}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                  >
+                    <Trophy className="w-4 h-4 mr-2" />
+                    Kendimi Kazanan Yap (Demo)
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Winner-Organization Private Chat */}
-            <WinnerOrgChat raffleId={parseInt(id!)} raffle={raffle} />
+            {raffle && (
+              <WinnerOrgChat 
+                raffleId={parseInt(id!)} 
+                raffle={{
+                  id: raffle.id || 0,
+                  title: raffle.title || '',
+                  winnerId: raffle.winnerId,
+                  creatorId: raffle.creatorId || 0,
+                  creator: {
+                    username: raffle.creator?.username || '',
+                    organizationType: raffle.creator?.organizationType,
+                    organizationVerified: raffle.creator?.organizationVerified
+                  },
+                  winner: raffle.winner ? {
+                    username: raffle.winner.username
+                  } : undefined
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
