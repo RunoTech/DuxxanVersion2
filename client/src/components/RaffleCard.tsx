@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -6,7 +7,9 @@ import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
+import { ShareModal } from '@/components/ShareModal';
 import { Link } from 'wouter';
+import { Share2 } from 'lucide-react';
 
 interface RaffleCardProps {
   raffle: {
@@ -32,6 +35,7 @@ interface RaffleCardProps {
 export function RaffleCard({ raffle }: RaffleCardProps) {
   const { isConnected, getApiHeaders } = useWallet();
   const { toast } = useToast();
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
   const endDate = new Date(raffle.endDate);
@@ -187,15 +191,35 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           )}
         </div>
 
-        <div className="mt-4 pt-4 border-t border-duxxan-border text-center">
+        <div className="mt-4 pt-4 border-t border-duxxan-border flex items-center justify-between">
           <span className="text-xs text-duxxan-text-secondary">
             Prize Value: <span className="text-duxxan-yellow font-semibold">
               ${parseFloat(raffle.prizeValue).toLocaleString()}
             </span>
           </span>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowShareModal(true);
+            }}
+            variant="ghost"
+            size="icon"
+            className="text-duxxan-text-secondary hover:text-duxxan-yellow"
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
         </div>
       </CardContent>
     </Card>
+    
+    <ShareModal
+      isOpen={showShareModal}
+      onClose={() => setShowShareModal(false)}
+      title={raffle.title}
+      description={raffle.description}
+      url={`/raffles/${raffle.id}`}
+    />
     </Link>
   );
 }
