@@ -291,12 +291,12 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
         )}
 
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="mt-4 pt-4 border-t border-yellow-200 dark:border-yellow-600 flex items-center justify-between">
           <div className="text-xs text-gray-600 dark:text-gray-400">
-            Oluşturan: <span className="text-white font-medium">{donation.creator.username}</span>
+            Oluşturan: <span className="text-gray-900 dark:text-white font-medium">{donation.creator.username}</span>
           </div>
           <div className="flex items-center space-x-1">
-            <span className="text-yellow-500 text-xs">★</span>
+            <Star className="w-3 h-3 text-yellow-500 fill-current" />
             <span className="text-xs text-gray-600 dark:text-gray-400">{donation.creator.rating}</span>
           </div>
         </div>
