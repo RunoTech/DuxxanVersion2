@@ -20,7 +20,7 @@ import Donations from "@/pages/Donations";
 import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
-import SecurityDashboard from "@/pages/SecurityDashboard";
+
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -35,7 +35,6 @@ function Router() {
       <Route path="/donations/:id" component={DonationDetail} />
       <Route path="/create-raffle" component={CreateRaffle} />
       <Route path="/create-donation" component={CreateDonation} />
-      <Route path="/security" component={SecurityDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -16,7 +16,6 @@ export function Navigation() {
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
     { href: '/community', label: 'Topluluk' },
-    { href: '/security', label: 'Güvenlik' },
   ];
 
   const NavLinks = ({ mobile = false }) => (

@@ -14,6 +14,12 @@ export const users = pgTable("users", {
   isActive: boolean("is_active").default(true),
   rating: decimal("rating", { precision: 2, scale: 1 }).default("5.0"),
   ratingCount: integer("rating_count").default(0),
+  // New organization fields
+  organizationType: varchar("organization_type", { length: 20 }).default("individual"), // individual, foundation, association, official
+  organizationName: varchar("organization_name", { length: 200 }),
+  verificationUrl: text("verification_url"),
+  isVerified: boolean("is_verified").default(false),
+  country: varchar("country", { length: 3 }), // ISO country code
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -59,8 +65,16 @@ export const donations = pgTable("donations", {
   goalAmount: decimal("goal_amount", { precision: 10, scale: 6 }).notNull(),
   currentAmount: decimal("current_amount", { precision: 10, scale: 6 }).default("0"),
   donorCount: integer("donor_count").default(0),
-  endDate: timestamp("end_date").notNull(),
+  endDate: timestamp("end_date"), // Now nullable for unlimited donations
   isActive: boolean("is_active").default(true),
+  // New donation system fields
+  isUnlimited: boolean("is_unlimited").default(false),
+  commissionRate: decimal("commission_rate", { precision: 3, scale: 2 }).default("10.0"), // 10% for individual, 2% for organizations
+  startupFee: decimal("startup_fee", { precision: 10, scale: 6 }).default("0"), // 100 USDT for unlimited
+  startupFeePaid: boolean("startup_fee_paid").default(false),
+  totalCommissionCollected: decimal("total_commission_collected", { precision: 10, scale: 6 }).default("0"),
+  category: varchar("category", { length: 50 }).default("general"), // health, education, disaster, etc.
+  country: varchar("country", { length: 3 }), // For flag display
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -69,7 +83,11 @@ export const donationContributions = pgTable("donation_contributions", {
   donationId: integer("donation_id").references(() => donations.id).notNull(),
   userId: integer("user_id").references(() => users.id).notNull(),
   amount: decimal("amount", { precision: 10, scale: 6 }).notNull(),
+  commissionAmount: decimal("commission_amount", { precision: 10, scale: 6 }).notNull(),
+  netAmount: decimal("net_amount", { precision: 10, scale: 6 }).notNull(), // amount - commission
   transactionHash: varchar("transaction_hash", { length: 66 }),
+  blockNumber: integer("block_number"),
+  donorCountry: varchar("donor_country", { length: 3 }), // For live chart display
   createdAt: timestamp("created_at").defaultNow(),
 });
 
