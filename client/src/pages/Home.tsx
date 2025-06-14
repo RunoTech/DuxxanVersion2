@@ -178,10 +178,10 @@ export default function Home() {
           </div>
           
           {/* Trading-Style Chart */}
-          <Card className="duxxan-card mt-16">
+          <Card className="bg-duxxan-yellow/10 dark:bg-duxxan-surface border-2 border-duxxan-yellow/50 dark:border-duxxan-border mt-16">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">Platform İstatistikleri</h3>
+                <h3 className="text-xl font-black text-black dark:text-white">Platform İstatistikleri</h3>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
                     <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
@@ -342,11 +342,11 @@ export default function Home() {
               </div>
               
               {/* Volume Chart */}
-              <div className="mt-6 bg-gradient-to-r from-duxxan-dark/40 to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-border/30 backdrop-blur-sm">
+              <div className="mt-6 bg-gradient-to-r from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <div className="text-lg font-semibold text-white mb-1">İşlem Hacmi</div>
-                    <div className="text-xs text-duxxan-text-secondary">24 saatlik toplam aktivite</div>
+                    <div className="text-lg font-semibold text-black dark:text-white mb-1">İşlem Hacmi</div>
+                    <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">24 saatlik toplam aktivite</div>
                   </div>
                   <div className="text-sm text-duxxan-yellow font-bold">
                     ${chartData[chartData.length - 1]?.volume.toLocaleString()}
@@ -503,14 +503,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <Card className="duxxan-card text-center">
+            <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border text-center">
               <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4">Aktif Kampanya Yok</h3>
-                <p className="text-duxxan-text-secondary mb-6">
+                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Aktif Kampanya Yok</h3>
+                <p className="text-gray-600 dark:text-duxxan-text-secondary mb-6">
                   İlk bağış kampanyasını başlatın ve fark yaratın!
                 </p>
                 <Link href="/create-donation">
-                  <Button className="duxxan-button-success">
+                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                     İlk Kampanyayı Başlat
                   </Button>
                 </Link>
@@ -529,10 +529,10 @@ export default function Home() {
               Çekilişlere katılmaya ve bağış kampanyalarını desteklemeye başlamak için cüzdanınızı bağlayın.
             </p>
             <div className="flex justify-center space-x-4">
-              <Button className="duxxan-button-primary">
+              <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                 MetaMask Bağla
               </Button>
-              <Button variant="outline" className="duxxan-button-secondary">
+              <Button variant="outline" className="border-duxxan-yellow text-duxxan-yellow hover:bg-duxxan-yellow hover:text-black font-bold">
                 Daha Fazla Bilgi
               </Button>
             </div>
