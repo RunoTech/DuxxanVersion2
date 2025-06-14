@@ -437,6 +437,27 @@ export default function CreateDonation() {
                 </CardContent>
               </Card>
 
+              {/* Important Notice */}
+              <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+                <CardHeader>
+                  <CardTitle className="text-lg text-red-600 flex items-center">
+                    <AlertTriangleIcon className="w-5 h-5 mr-2" />
+                    Önemli Bilgi
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm text-red-700 dark:text-red-300">
+                    <p className="mb-2 font-semibold">
+                      Bağış alan hesaplar çekiliş oluşturamaz
+                    </p>
+                    <p>
+                      Bağış kampanyası oluşturduktan sonra sadece bağış kabul edebilirsiniz. 
+                      Çekiliş yapmak için ayrı bir hesap kullanmanız gerekir.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Fee Information */}
               <Card className="border-2 border-blue-200 dark:border-blue-800">
                 <CardHeader>

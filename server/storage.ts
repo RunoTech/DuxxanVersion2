@@ -55,6 +55,7 @@ export interface IStorage {
   createDonation(donation: InsertDonation & { creatorId: number }): Promise<Donation>;
   updateDonation(id: number, updates: Partial<Donation>): Promise<Donation>;
   getActiveDonations(): Promise<(Donation & { creator: User })[]>;
+  getDonationsByCreator(creatorId: number): Promise<Donation[]>;
   getDonationsByOrganizationType(orgType: string): Promise<(Donation & { creator: User })[]>;
   processStartupFeePayment(donationId: number, transactionHash: string): Promise<void>;
   getDonationStats(): Promise<{
@@ -275,6 +276,10 @@ export class DatabaseStorage implements IStorage {
       console.error('Error in getActiveDonations:', error);
       return [];
     }
+  }
+
+  async getDonationsByCreator(creatorId: number): Promise<Donation[]> {
+    return await db.select().from(donations).where(eq(donations.creatorId, creatorId));
   }
 
   async createDonationContribution(contribution: InsertDonationContribution & { userId: number }): Promise<DonationContribution> {
