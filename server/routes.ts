@@ -126,8 +126,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Raffle routes
   app.get('/api/raffles', async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 20;
-      const offset = parseInt(req.query.offset as string) || 0;
+      const limit = Math.min(parseInt(req.query.limit as string) || 20, 100); // Max 100 items
+      const offset = Math.max(parseInt(req.query.offset as string) || 0, 0); // No negative offset
+      
+      if (isNaN(limit) || isNaN(offset)) {
+        return res.status(400).json({ message: 'Invalid pagination parameters' });
+      }
+      
       const raffles = await storage.getRaffles(limit, offset);
       res.json(raffles);
     } catch (error) {
@@ -147,6 +152,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/raffles/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      
+      if (isNaN(id) || id <= 0) {
+        return res.status(400).json({ message: 'Invalid raffle ID' });
+      }
+      
       const raffle = await storage.getRaffleById(id);
       if (!raffle) {
         return res.status(404).json({ message: 'Raffle not found' });

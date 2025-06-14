@@ -147,6 +147,18 @@ export const insertUserSchema = createInsertSchema(users).pick({
   profession: true,
   bio: true,
   profileImage: true,
+}).extend({
+  walletAddress: z.string()
+    .regex(/^0x[a-fA-F0-9]{40}$/, "Invalid Ethereum wallet address format")
+    .min(42, "Wallet address must be 42 characters")
+    .max(42, "Wallet address must be 42 characters"),
+  username: z.string()
+    .min(3, "Username must be at least 3 characters")
+    .max(50, "Username must be less than 50 characters")
+    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, underscore and dash"),
+  name: z.string().max(100, "Name must be less than 100 characters").optional(),
+  profession: z.string().max(100, "Profession must be less than 100 characters").optional(),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
 });
 
 export const insertRaffleSchema = createInsertSchema(raffles).pick({
@@ -157,6 +169,27 @@ export const insertRaffleSchema = createInsertSchema(raffles).pick({
   ticketPrice: true,
   maxTickets: true,
   endDate: true,
+}).extend({
+  title: z.string()
+    .min(5, "Title must be at least 5 characters")
+    .max(200, "Title must be less than 200 characters")
+    .regex(/^[a-zA-Z0-9\s\-_.!?()&]+$/, "Title contains invalid characters"),
+  description: z.string()
+    .min(10, "Description must be at least 10 characters")
+    .max(2000, "Description must be less than 2000 characters"),
+  prizeValue: z.string()
+    .regex(/^\d+(\.\d{1,2})?$/, "Prize value must be a valid number with up to 2 decimal places")
+    .refine(val => parseFloat(val) > 0 && parseFloat(val) <= 10000000, "Prize value must be between $1 and $10,000,000"),
+  ticketPrice: z.string()
+    .regex(/^\d+(\.\d{1,2})?$/, "Ticket price must be a valid number with up to 2 decimal places")
+    .refine(val => parseFloat(val) >= 0.01 && parseFloat(val) <= 100000, "Ticket price must be between $0.01 and $100,000"),
+  maxTickets: z.number()
+    .int("Max tickets must be a whole number")
+    .min(1, "Must have at least 1 ticket")
+    .max(1000000, "Cannot exceed 1,000,000 tickets"),
+  categoryId: z.number()
+    .int("Category ID must be a whole number")
+    .min(1, "Invalid category selected"),
 });
 
 export const insertDonationSchema = createInsertSchema(donations).pick({
