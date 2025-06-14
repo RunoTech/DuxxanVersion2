@@ -8,6 +8,7 @@ import { useWallet } from '@/hooks/useWallet';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line } from 'recharts';
 
 export default function Home() {
   const { isConnected } = useWallet();
@@ -59,6 +60,41 @@ export default function Home() {
 
   // Total displayed wallet count
   const totalConnectedWallets = demoWalletCount + realConnectedWallets;
+
+  // Chart data for trading-style visualization
+  const [chartData, setChartData] = useState([
+    { name: '00:00', raffles: 2, prizes: 1200, donations: 800, volume: 2000 },
+    { name: '04:00', raffles: 3, prizes: 1800, donations: 1200, volume: 3000 },
+    { name: '08:00', raffles: 5, prizes: 3200, donations: 1800, volume: 5000 },
+    { name: '12:00', raffles: 8, prizes: 7120, donations: 2400, volume: 9520 },
+    { name: '16:00', raffles: 6, prizes: 5800, donations: 2100, volume: 7900 },
+    { name: '20:00', raffles: 7, prizes: 6500, donations: 2800, volume: 9300 },
+    { name: '24:00', raffles: 8, prizes: 7120, donations: 3200, volume: 10320 }
+  ]);
+
+  // Update chart data periodically for live effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChartData(prev => {
+        const newData = [...prev];
+        const lastPoint = newData[newData.length - 1];
+        
+        // Add slight variations to make it look live
+        const variation = (Math.random() - 0.5) * 0.1; // ±5% variation
+        newData[newData.length - 1] = {
+          ...lastPoint,
+          raffles: Math.max(1, parseInt(liveStats.totalRaffles) + Math.floor(variation * 2)),
+          prizes: Math.max(100, parseFloat(liveStats.totalPrizePool) + (variation * 500)),
+          donations: Math.max(100, parseFloat(liveStats.totalDonations) + (variation * 300)),
+          volume: Math.max(1000, lastPoint.volume + (variation * 1000))
+        };
+        
+        return newData;
+      });
+    }, 5000); // Update every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [liveStats]);
 
   // Fetch platform stats
   const { data: stats } = useQuery({
@@ -146,15 +182,31 @@ export default function Home() {
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">Platform İstatistikleri</h3>
-                <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
-                  <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
-                  <span>Canlı Veriler</span>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
+                    <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
+                    <span>Canlı Veriler</span>
+                  </div>
+                  <div className="flex items-center space-x-4 text-xs">
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-duxxan-yellow rounded-full"></div>
+                      <span>Çekilişler</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-duxxan-success rounded-full"></div>
+                      <span>Ödül Havuzu</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-duxxan-warning rounded-full"></div>
+                      <span>Bağışlar</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Left side - Key metrics */}
-                <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Key metrics */}
+                <div className="space-y-4">
                   <div className="bg-duxxan-dark/30 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm text-duxxan-text-secondary">Aktif Çekilişler</span>
@@ -167,7 +219,7 @@ export default function Home() {
                   
                   <div className="bg-duxxan-dark/30 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-duxxan-text-secondary">Toplam Ödül Havuzu</span>
+                      <span className="text-sm text-duxxan-text-secondary">Ödül Havuzu</span>
                       <span className="text-xs text-duxxan-success">+12.8%</span>
                     </div>
                     <div className="text-2xl font-bold text-duxxan-success">
@@ -177,7 +229,7 @@ export default function Home() {
                   
                   <div className="bg-duxxan-dark/30 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-duxxan-text-secondary">Toplanan Bağışlar</span>
+                      <span className="text-sm text-duxxan-text-secondary">Bağışlar</span>
                       <span className="text-xs text-duxxan-success">+8.4%</span>
                     </div>
                     <div className="text-2xl font-bold text-duxxan-warning">
@@ -186,57 +238,102 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* Right side - Visual chart representation */}
-                <div className="bg-duxxan-dark/30 rounded-lg p-4">
-                  <div className="text-sm text-duxxan-text-secondary mb-4">24 Saatlik Aktivite</div>
-                  <div className="space-y-4">
-                    {/* Simulated chart bars */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-duxxan-text-secondary">Çekilişler</span>
-                        <span className="text-duxxan-yellow">{liveStats.totalRaffles}</span>
-                      </div>
-                      <div className="w-full bg-duxxan-border rounded-full h-2">
-                        <div className="bg-duxxan-yellow h-2 rounded-full" style={{width: `${Math.min(parseInt(liveStats.totalRaffles) * 10, 100)}%`}}></div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-duxxan-text-secondary">Ödül Havuzu ($K)</span>
-                        <span className="text-duxxan-success">${(parseFloat(liveStats.totalPrizePool) / 1000).toFixed(1)}K</span>
-                      </div>
-                      <div className="w-full bg-duxxan-border rounded-full h-2">
-                        <div className="bg-duxxan-success h-2 rounded-full" style={{width: `${Math.min(parseFloat(liveStats.totalPrizePool) / 100, 100)}%`}}></div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-duxxan-text-secondary">Bağışlar ($K)</span>
-                        <span className="text-duxxan-warning">${(parseFloat(liveStats.totalDonations) / 1000).toFixed(1)}K</span>
-                      </div>
-                      <div className="w-full bg-duxxan-border rounded-full h-2">
-                        <div className="bg-duxxan-warning h-2 rounded-full" style={{width: `${Math.min(parseFloat(liveStats.totalDonations) / 100, 100)}%`}}></div>
-                      </div>
-                    </div>
-                    
-                    {/* Trading volume simulation */}
-                    <div className="mt-6 pt-4 border-t border-duxxan-border">
-                      <div className="text-xs text-duxxan-text-secondary mb-2">İşlem Hacmi (24s)</div>
-                      <div className="flex space-x-1">
-                        {[...Array(20)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 rounded-sm ${
-                              Math.random() > 0.5 ? 'bg-duxxan-success' : 'bg-duxxan-error'
-                            }`}
-                            style={{height: `${Math.random() * 30 + 10}px`}}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
+                {/* Main Chart */}
+                <div className="lg:col-span-2 bg-duxxan-dark/30 rounded-lg p-4">
+                  <div className="text-sm text-duxxan-text-secondary mb-4">24 Saatlik Aktivite Grafiği</div>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                        <XAxis 
+                          dataKey="name" 
+                          stroke="#9CA3AF" 
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis 
+                          stroke="#9CA3AF" 
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: '#1F2937',
+                            border: '1px solid #374151',
+                            borderRadius: '8px',
+                            color: '#F3F4F6'
+                          }}
+                          labelStyle={{ color: '#9CA3AF' }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="prizes"
+                          stackId="1"
+                          stroke="#10B981"
+                          fill="#10B981"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                          name="Ödül Havuzu ($)"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="donations"
+                          stackId="2"
+                          stroke="#F59E0B"
+                          fill="#F59E0B"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                          name="Bağışlar ($)"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="raffles"
+                          stackId="3"
+                          stroke="#EAB308"
+                          fill="#EAB308"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                          name="Çekilişler"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
                   </div>
+                </div>
+              </div>
+              
+              {/* Volume Chart */}
+              <div className="mt-6 bg-duxxan-dark/30 rounded-lg p-4">
+                <div className="text-sm text-duxxan-text-secondary mb-4">İşlem Hacmi (24 Saat)</div>
+                <div className="h-32">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                      <XAxis 
+                        dataKey="name" 
+                        stroke="#9CA3AF" 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis hide />
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: '#1F2937',
+                          border: '1px solid #374151',
+                          borderRadius: '8px',
+                          color: '#F3F4F6'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="volume" 
+                        fill="#3B82F6"
+                        radius={[2, 2, 0, 0]}
+                        name="İşlem Hacmi ($)"
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </CardContent>
