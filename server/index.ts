@@ -35,6 +35,63 @@ app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
   }
 });
 
+// Mutual approval routes BEFORE any middleware
+app.post('/api/raffles/:id/approve-winner', async (req: any, res) => {
+  try {
+    const raffleId = parseInt(req.params.id);
+    const { storage } = await import('./storage');
+    
+    const raffle = await storage.getRaffleById(raffleId);
+    
+    if (!raffle) {
+      return res.status(404).json({ message: 'Raffle not found' });
+    }
+
+    if (!raffle.winnerId) {
+      return res.status(400).json({ message: 'No winner assigned yet' });
+    }
+
+    // For demo: Approve as creator (organization)
+    const updatedRaffle = await storage.updateRaffle(raffleId, { 
+      isApprovedByCreator: true 
+    });
+
+    console.log(`Creator approved raffle ${raffleId}`);
+    res.json({ message: 'Approved by creator', raffle: updatedRaffle });
+  } catch (error) {
+    console.error('Creator approval error:', error);
+    res.status(500).json({ message: 'Failed to approve by creator' });
+  }
+});
+
+app.post('/api/raffles/:id/approve-creator', async (req: any, res) => {
+  try {
+    const raffleId = parseInt(req.params.id);
+    const { storage } = await import('./storage');
+    
+    const raffle = await storage.getRaffleById(raffleId);
+    
+    if (!raffle) {
+      return res.status(404).json({ message: 'Raffle not found' });
+    }
+
+    if (!raffle.winnerId) {
+      return res.status(400).json({ message: 'No winner assigned yet' });
+    }
+
+    // For demo: Approve as winner
+    const updatedRaffle = await storage.updateRaffle(raffleId, { 
+      isApprovedByWinner: true 
+    });
+
+    console.log(`Winner approved raffle ${raffleId}`);
+    res.json({ message: 'Approved by winner', raffle: updatedRaffle });
+  } catch (error) {
+    console.error('Winner approval error:', error);
+    res.status(500).json({ message: 'Failed to approve by winner' });
+  }
+});
+
 // Chat routes BEFORE any middleware
 app.get('/api/raffles/:id/chat', async (req: any, res) => {
   try {

@@ -28,6 +28,7 @@ import {
   DollarSign
 } from 'lucide-react';
 import { WinnerOrgChat } from '@/components/WinnerOrgChat';
+import { MutualApprovalSystem } from '@/components/MutualApprovalSystem';
 
 export default function RaffleDetail() {
   const { id } = useParams();
@@ -451,6 +452,30 @@ export default function RaffleDetail() {
                   </div>
                 </CardContent>
               </Card>
+            )}
+
+            {/* Mutual Approval System */}
+            {safeRaffle && safeRaffle.winnerId && (
+              <MutualApprovalSystem 
+                raffle={{
+                  id: safeRaffle.id || 0,
+                  title: safeRaffle.title || '',
+                  winnerId: safeRaffle.winnerId,
+                  isApprovedByCreator: safeRaffle.isApprovedByCreator || false,
+                  isApprovedByWinner: safeRaffle.isApprovedByWinner || false,
+                  creator: {
+                    username: safeRaffle.creator?.username || '',
+                    organizationType: safeRaffle.creator?.organizationType,
+                    organizationVerified: safeRaffle.creator?.organizationVerified
+                  },
+                  winner: safeRaffle.winner ? {
+                    username: safeRaffle.winner.username
+                  } : undefined
+                }}
+                onApprovalUpdate={(updatedRaffle) => {
+                  queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+                }}
+              />
             )}
 
             {/* Winner-Organization Private Chat */}
