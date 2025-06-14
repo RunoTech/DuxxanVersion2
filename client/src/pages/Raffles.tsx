@@ -7,12 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RaffleCard } from '@/components/RaffleCard';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Globe } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
 
 export default function Raffles() {
   const { isConnected } = useWallet();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
   // Fetch categories
