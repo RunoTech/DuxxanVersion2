@@ -11,9 +11,9 @@ export function BlurOverlay() {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex items-center justify-center">
       <div className="bg-duxxan-surface border border-duxxan-border rounded-xl p-8 max-w-md mx-4 text-center animate-slide-up">
-        <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
+        <h2 className="text-2xl font-bold mb-4">Cüzdanınızı Bağlayın</h2>
         <p className="text-duxxan-text-secondary mb-6">
-          Connect your wallet to access all DUXXAN features including raffles and donations.
+          Çekilişler ve bağışlar dahil tüm DUXXAN özelliklerine erişmek için cüzdanınızı bağlayın.
         </p>
         <div className="space-y-3">
           <Button
@@ -21,7 +21,7 @@ export function BlurOverlay() {
             disabled={isConnecting}
             className="duxxan-button-primary w-full"
           >
-            {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
+            {isConnecting ? 'Bağlanıyor...' : 'MetaMask Bağla'}
           </Button>
           <Button
             onClick={connectTrustWallet}
@@ -29,7 +29,7 @@ export function BlurOverlay() {
             variant="outline"
             className="duxxan-button-secondary w-full bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
           >
-            {isConnecting ? 'Connecting...' : 'Connect Trust Wallet'}
+            {isConnecting ? 'Bağlanıyor...' : 'Trust Wallet Bağla'}
           </Button>
         </div>
       </div>

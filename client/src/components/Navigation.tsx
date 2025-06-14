@@ -11,10 +11,10 @@ export function Navigation() {
   const { isConnected, connectMetaMask, connectTrustWallet, disconnect, connection } = useWallet();
 
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/raffles', label: 'Raffles' },
-    { href: '/donations', label: 'Donations' },
-    { href: '/profile', label: 'Profile' },
+    { href: '/', label: 'Ana Sayfa' },
+    { href: '/raffles', label: 'Çekilişler' },
+    { href: '/donations', label: 'Bağışlar' },
+    { href: '/profile', label: 'Profil' },
   ];
 
   const NavLinks = ({ mobile = false }) => (
@@ -58,7 +58,7 @@ export function Navigation() {
                   variant="outline"
                   className="duxxan-button-secondary"
                 >
-                  Disconnect
+                  Bağlantıyı Kes
                 </Button>
               </div>
             ) : (
@@ -67,7 +67,7 @@ export function Navigation() {
                   onClick={connectMetaMask}
                   className="duxxan-button-primary"
                 >
-                  Connect MetaMask
+                  MetaMask Bağla
                 </Button>
                 <Button
                   onClick={connectTrustWallet}
@@ -99,7 +99,7 @@ export function Navigation() {
                         }}
                         className="duxxan-button-primary w-full"
                       >
-                        Connect MetaMask
+                        MetaMask Bağla
                       </Button>
                       <Button
                         onClick={() => {

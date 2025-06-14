@@ -75,10 +75,10 @@ export default function Home() {
       <section className="duxxan-gradient py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Win Big with <span className="text-duxxan-yellow">DUXXAN</span>
+            <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
           <p className="text-xl text-duxxan-text-secondary mb-12 max-w-3xl mx-auto">
-            Join the future of crypto raffles and donations. Create, participate, and win amazing prizes on the Binance Smart Chain.
+            Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
           
           {/* Live Stats */}
