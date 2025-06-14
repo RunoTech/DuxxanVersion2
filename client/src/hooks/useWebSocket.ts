@@ -62,11 +62,32 @@ export function useWebSocket() {
       setIsConnected(false);
       console.log('WebSocket disconnected');
       
-      // Attempt to reconnect after 3 seconds
+      // Attempt to reconnect after 3 seconds without page reload
       setTimeout(() => {
         if (ws.current?.readyState === WebSocket.CLOSED) {
-          // Recursively call the effect to reconnect
-          window.location.reload();
+          const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+          const wsUrl = `${protocol}//${window.location.host}/ws`;
+          
+          try {
+            ws.current = new WebSocket(wsUrl);
+            
+            ws.current.onopen = () => {
+              setIsConnected(true);
+              console.log('WebSocket reconnected');
+            };
+            
+            ws.current.onclose = () => {
+              setIsConnected(false);
+              console.log('WebSocket disconnected again');
+            };
+            
+            ws.current.onerror = (error) => {
+              console.error('WebSocket reconnection error:', error);
+              setIsConnected(false);
+            };
+          } catch (error) {
+            console.error('Failed to reconnect WebSocket:', error);
+          }
         }
       }, 3000);
     };
