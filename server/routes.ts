@@ -304,6 +304,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
+      // Cache active donations for 1 minute with stale-while-revalidate
+      res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+      
       const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
       
