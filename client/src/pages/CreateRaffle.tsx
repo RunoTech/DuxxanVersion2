@@ -182,9 +182,13 @@ export default function CreateRaffle() {
                             <SelectValue placeholder="Bir kategori seçin" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-white dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
+                        <SelectContent className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                           {categories.map((category: any) => (
-                            <SelectItem key={category.id} value={category.id.toString()}>
+                            <SelectItem 
+                              key={category.id} 
+                              value={category.id.toString()}
+                              className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800"
+                            >
                               {category.name}
                             </SelectItem>
                           ))}
