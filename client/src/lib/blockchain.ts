@@ -31,9 +31,9 @@ export class BlockchainService {
   private static instance: BlockchainService;
   
   // Contract addresses (would be deployed contracts)
-  private RAFFLE_CONTRACT = process.env.VITE_RAFFLE_CONTRACT || '0x0000000000000000000000000000000000000000';
-  private DONATION_CONTRACT = process.env.VITE_DONATION_CONTRACT || '0x0000000000000000000000000000000000000000';
-  private USDT_CONTRACT = process.env.NODE_ENV === 'development' 
+  private RAFFLE_CONTRACT = import.meta.env.VITE_RAFFLE_CONTRACT || '0x0000000000000000000000000000000000000000';
+  private DONATION_CONTRACT = import.meta.env.VITE_DONATION_CONTRACT || '0x0000000000000000000000000000000000000000';
+  private USDT_CONTRACT = import.meta.env.MODE === 'development' 
     ? '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd' // BSC Testnet USDT
     : '0x55d398326f99059fF775485246999027B3197955'; // BSC Mainnet USDT
 
