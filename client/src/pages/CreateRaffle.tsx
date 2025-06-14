@@ -131,16 +131,16 @@ export default function CreateRaffle() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-duxxan-dark flex items-center justify-center">
-        <Card className="duxxan-card max-w-md mx-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark flex items-center justify-center">
+        <Card className="bg-white dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border max-w-md mx-4">
           <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-            <p className="text-duxxan-text-secondary mb-6">
-              Please connect your wallet to create a raffle.
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Cüzdanınızı Bağlayın</h2>
+            <p className="text-gray-600 dark:text-duxxan-text-secondary mb-6">
+              Çekiliş oluşturmak için lütfen cüzdanınızı bağlayın.
             </p>
             <Link href="/">
-              <Button className="duxxan-button-primary">
-                Go Back Home
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+                Ana Sayfaya Dön
               </Button>
             </Link>
           </CardContent>
@@ -150,19 +150,19 @@ export default function CreateRaffle() {
   }
 
   return (
-    <div className="min-h-screen bg-duxxan-dark py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark py-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Yeni Çekiliş Oluştur</h1>
-          <p className="text-duxxan-text-secondary">
+          <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Yeni Çekiliş Oluştur</h1>
+          <p className="text-gray-600 dark:text-duxxan-text-secondary">
             Heyecan verici bir çekiliş oluşturun ve diğerlerinin harika ödüller kazanmasını sağlayın. 
-            <span className="text-duxxan-yellow font-semibold"> Oluşturma ücreti: 25 USDT</span>
+            <span className="text-yellow-600 dark:text-duxxan-yellow font-semibold"> Oluşturma ücreti: 25 USDT</span>
           </p>
         </div>
 
-        <Card className="duxxan-card">
+        <Card className="bg-white dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border shadow-lg">
           <CardHeader>
-            <CardTitle className="text-xl">Çekiliş Detayları</CardTitle>
+            <CardTitle className="text-xl text-gray-900 dark:text-white">Çekiliş Detayları</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
