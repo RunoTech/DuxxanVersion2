@@ -150,17 +150,17 @@ export default function CreateRaffle() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark py-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Yeni Çekiliş Oluştur</h1>
-          <p className="text-gray-600 dark:text-duxxan-text-secondary">
+          <p className="text-gray-600 dark:text-gray-400">
             Heyecan verici bir çekiliş oluşturun ve diğerlerinin harika ödüller kazanmasını sağlayın. 
-            <span className="text-yellow-600 dark:text-duxxan-yellow font-semibold"> Oluşturma ücreti: 25 USDT</span>
+            <span className="text-yellow-600 dark:text-yellow-500 font-semibold"> Oluşturma ücreti: 25 USDT</span>
           </p>
         </div>
 
-        <Card className="bg-white dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border shadow-lg">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl text-gray-900 dark:text-white">Çekiliş Detayları</CardTitle>
           </CardHeader>

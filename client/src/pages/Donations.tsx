@@ -70,19 +70,19 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-dark py-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Donation Campaigns</h1>
-            <p className="text-duxxan-text-secondary">
-              Support meaningful causes with transparent blockchain donations
+            <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Bağış Kampanyaları</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Şeffaf blockchain bağışlarıyla anlamlı amaçları destekleyin
             </p>
           </div>
           <Link href="/create-donation">
-            <Button className="duxxan-button-success mt-4 md:mt-0">
-              Start New Campaign
+            <Button className="bg-green-500 hover:bg-green-600 text-white mt-4 md:mt-0">
+              Yeni Kampanya Başlat
             </Button>
           </Link>
         </div>

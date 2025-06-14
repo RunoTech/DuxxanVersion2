@@ -104,16 +104,16 @@ export default function CreateDonation() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-duxxan-dark flex items-center justify-center">
-        <Card className="duxxan-card max-w-md mx-4">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-200">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-md mx-4">
           <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-            <p className="text-duxxan-text-secondary mb-6">
-              Please connect your wallet to create a donation campaign.
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Cüzdanınızı Bağlayın</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Bağış kampanyası oluşturmak için lütfen cüzdanınızı bağlayın.
             </p>
             <Link href="/">
-              <Button className="duxxan-button-primary">
-                Go Back Home
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                Ana Sayfaya Dön
               </Button>
             </Link>
           </CardContent>

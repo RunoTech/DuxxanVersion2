@@ -320,14 +320,14 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-dark">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            <span className="text-duxxan-yellow">Topluluk</span> Merkezi
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <span className="text-yellow-500">Topluluk</span> Merkezi
           </h1>
-          <p className="text-duxxan-text-secondary text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             İçerik üreticilerini takip edin, gelecek çekilişleri keşfedin ve kendi kanalınızı oluşturun.
           </p>
         </div>

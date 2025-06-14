@@ -35,12 +35,12 @@ export default function Profile() {
 
   if (!isConnected || !user) {
     return (
-      <div className="min-h-screen bg-duxxan-dark flex items-center justify-center">
-        <Card className="duxxan-card max-w-md mx-4">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-200">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-md mx-4">
           <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-            <p className="text-duxxan-text-secondary">
-              Please connect your wallet to view your profile.
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Cüzdanınızı Bağlayın</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Profilinizi görüntülemek için lütfen cüzdanınızı bağlayın.
             </p>
           </CardContent>
         </Card>

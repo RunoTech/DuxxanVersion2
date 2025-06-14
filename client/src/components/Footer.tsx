@@ -3,28 +3,28 @@ import { Github, Twitter, MessageCircle, Mail } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-white dark:bg-duxxan-surface border-t border-gray-200 dark:border-duxxan-border mt-20">
+    <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="md:col-span-1">
-            <div className="text-2xl font-bold text-duxxan-yellow mb-4">
+            <div className="text-2xl font-bold text-yellow-500 mb-4">
               DUXXAN
             </div>
-            <p className="text-gray-600 dark:text-duxxan-text-secondary text-sm leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
               Blockchain tabanlı şeffaf çekiliş ve bağış platformu. Güvenli, adil ve topluluk odaklı.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-duxxan-yellow transition-colors">
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-duxxan-yellow transition-colors">
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors">
                 <MessageCircle className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-duxxan-yellow transition-colors">
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors">
                 <Github className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-duxxan-yellow transition-colors">
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
             </div>
