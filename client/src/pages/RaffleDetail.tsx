@@ -376,7 +376,7 @@ export default function RaffleDetail() {
                 <div className="space-y-3">
                   <Progress value={progress} className="h-2" />
                   <div className="flex justify-between text-sm">
-                    <span className="text-duxxan-text-secondary">
+                    <span className="text-gray-600 dark:text-duxxan-yellow">
                       {raffle.ticketsSold} / {raffle.maxTickets} bilet
                     </span>
                     <span className="text-duxxan-success">%{progress.toFixed(1)}</span>
@@ -399,12 +399,12 @@ export default function RaffleDetail() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-duxxan-text">
+                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-yellow">
                       {raffle.creator?.username}
                     </h4>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 text-duxxan-yellow fill-current" />
-                      <span className="text-sm text-duxxan-text-secondary">
+                      <span className="text-sm text-gray-600 dark:text-duxxan-yellow">
                         {raffle.creator?.rating} ({raffle.creator?.ratingCount} değerlendirme)
                       </span>
                     </div>
@@ -431,13 +431,13 @@ export default function RaffleDetail() {
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-gray-200 dark:bg-duxxan-border text-gray-900 dark:text-duxxan-text text-xs">
+                          <AvatarFallback className="bg-gray-200 dark:bg-duxxan-border text-gray-900 dark:text-duxxan-yellow text-xs">
                             U{i}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-gray-900 dark:text-duxxan-text">user_{i}...abc</span>
+                        <span className="text-sm text-gray-900 dark:text-duxxan-yellow">user_{i}...abc</span>
                       </div>
-                      <span className="text-xs text-gray-600 dark:text-duxxan-text-secondary">
+                      <span className="text-xs text-gray-600 dark:text-duxxan-yellow">
                         {i * 5} bilet
                       </span>
                     </div>
