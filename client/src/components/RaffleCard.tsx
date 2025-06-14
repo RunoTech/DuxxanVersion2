@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border hover:shadow-lg dark:hover:border-duxxan-yellow/30 transition-all duration-300 cursor-pointer">
+      <Card className="bg-white dark:bg-duxxan-surface border-2 border-duxxan-yellow/80 dark:border-duxxan-border hover:shadow-lg hover:border-duxxan-yellow dark:hover:border-duxxan-yellow transition-all duration-300 cursor-pointer">
         <div className={`h-48 bg-gradient-to-br ${getCategoryColor(raffle.category.slug)} flex items-center justify-center relative overflow-hidden`}>
           <div className="text-center">
             <div className="text-4xl mb-2">{getCategoryIcon(raffle.category.slug)}</div>

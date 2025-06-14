@@ -152,7 +152,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 dark:text-white">
+          <h1 className="text-5xl md:text-7xl font-black mb-6 text-black dark:text-white">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
           <p className="text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
@@ -239,7 +239,7 @@ export default function Home() {
                 </div>
                 
                 {/* Main Chart */}
-                <div className="lg:col-span-2 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-gray-200 dark:border-duxxan-border/30 backdrop-blur-sm">
+                <div className="lg:col-span-2 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <div className="text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
@@ -415,15 +415,15 @@ export default function Home() {
       <section className="py-20 bg-white dark:bg-duxxan-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Popüler Çekilişler</h2>
+            <h2 className="text-3xl font-black text-black dark:text-white">Popüler Çekilişler</h2>
             <div className="flex space-x-4">
               <Link href="/raffles">
-                <Button variant="outline" className="border-gray-300 dark:border-duxxan-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-duxxan-surface">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                   Tüm Çekilişler
                 </Button>
               </Link>
               <Link href="/create-raffle">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-duxxan-dark">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                   Çekiliş Oluştur
                 </Button>
               </Link>
@@ -444,7 +444,7 @@ export default function Home() {
                   DUXXAN'da heyecan verici bir çekiliş oluşturan ilk kişi olun!
                 </p>
                 <Link href="/create-raffle">
-                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-duxxan-dark">
+                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                     İlk Çekilişi Oluştur
                   </Button>
                 </Link>
@@ -459,19 +459,19 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Bağış Kampanyaları</h2>
+              <h2 className="text-3xl font-black mb-2 text-black dark:text-white">Bağış Kampanyaları</h2>
               <p className="text-gray-600 dark:text-duxxan-text-secondary">
                 Şeffaf blockchain bağışları ile önemli amaçları destekleyin
               </p>
             </div>
             <div className="flex space-x-4">
               <Link href="/donations">
-                <Button variant="outline" className="border-gray-300 dark:border-duxxan-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-duxxan-surface">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                   Tüm Kampanyalar
                 </Button>
               </Link>
               <Link href="/create-donation">
-                <Button className="bg-duxxan-success hover:bg-duxxan-success/90 text-white">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
                   Kampanya Başlat
                 </Button>
               </Link>
