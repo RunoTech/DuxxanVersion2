@@ -30,20 +30,31 @@ function ScrollToTop() {
   const [location] = useLocation();
   
   useEffect(() => {
-    // Multiple immediate scroll attempts to ensure page opens at top
+    // Force immediate scroll to top with multiple methods
     const scrollToTop = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       window.scrollTo(0, 0);
+      // Additional force with requestAnimationFrame
+      requestAnimationFrame(() => {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo(0, 0);
+      });
     };
     
-    // Immediate scroll
+    // Immediate scroll before render
     scrollToTop();
     
-    // Additional scroll after minimal delay to catch any late renders
-    const timeoutId = setTimeout(scrollToTop, 10);
+    // Multiple fallback scrolls
+    const timeouts = [
+      setTimeout(scrollToTop, 1),
+      setTimeout(scrollToTop, 10),
+      setTimeout(scrollToTop, 50),
+      setTimeout(scrollToTop, 100)
+    ];
     
-    return () => clearTimeout(timeoutId);
+    return () => timeouts.forEach(clearTimeout);
   }, [location]);
   
   return null;
