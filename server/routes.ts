@@ -294,28 +294,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/donations/:id', async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const donation = await storage.getDonationById(id);
-      if (!donation) {
-        return res.status(404).json({ message: 'Donation not found' });
-      }
-      res.json(donation);
-    } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch donation' });
-    }
-  });
-
   app.get('/api/donations/active', async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
-      const donations = await storage.getDonations(limit, offset);
-      // Filter for active donations only
-      const activeDonations = donations.filter(donation => donation.isActive);
+      
+      // Direct implementation using working database pattern
+      const result = await db
+        .select({
+          donation: donations,
+          creator: users,
+        })
+        .from(donations)
+        .innerJoin(users, eq(donations.creatorId, users.id))
+        .orderBy(desc(donations.createdAt))
+        .limit(limit)
+        .offset(offset);
+      
+      const allDonations = result.map(row => ({ ...row.donation, creator: row.creator }));
+      const activeDonations = allDonations.filter(d => d.isActive === true);
       res.json(activeDonations);
     } catch (error) {
+      console.error('Donations active API error:', error);
       res.status(500).json({ message: 'Failed to fetch donations' });
     }
   });
