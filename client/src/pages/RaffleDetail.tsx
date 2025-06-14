@@ -188,7 +188,7 @@ export default function RaffleDetail() {
                 {/* İstatistikler */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-yellow">{raffle.ticketsSold}</div>
+                    <div className="text-2xl font-bold text-duxxan-yellow">{safeRaffle.ticketsSold || 0}</div>
                     <div className="text-sm text-duxxan-text-secondary">Toplam Bilet</div>
                   </div>
                   <div className="text-center">
@@ -196,7 +196,7 @@ export default function RaffleDetail() {
                     <div className="text-sm text-duxxan-text-secondary">Doluluk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-text">{raffle.prizeValue}</div>
+                    <div className="text-2xl font-bold text-duxxan-text">{safeRaffle.prizeValue || 0}</div>
                     <div className="text-sm text-duxxan-text-secondary">USDT Ödül</div>
                   </div>
                   <div className="text-center">
@@ -230,7 +230,7 @@ export default function RaffleDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-duxxan-text-secondary leading-relaxed">
-                  {raffle.description}
+                  {safeRaffle.description}
                 </p>
                 <Separator className="my-4 bg-gray-200 dark:bg-duxxan-border" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
