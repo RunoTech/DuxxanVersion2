@@ -239,16 +239,16 @@ export default function RaffleDetail() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-duxxan-text-secondary">Bilet Fiyatı:</span>
-                        <span className="text-duxxan-yellow">{raffle.ticketPrice} USDT</span>
+                        <span className="text-duxxan-yellow">{safeRaffle.ticketPrice} USDT</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-duxxan-text-secondary">Maksimum Bilet:</span>
-                        <span className="text-duxxan-text">{raffle.maxTickets}</span>
+                        <span className="text-duxxan-text">{safeRaffle.maxTickets}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-duxxan-text-secondary">Bitiş Tarihi:</span>
                         <span className="text-duxxan-text">
-                          {new Date(raffle.endDate).toLocaleDateString('tr-TR')}
+                          {new Date(safeRaffle.endDate).toLocaleDateString('tr-TR')}
                         </span>
                       </div>
                     </div>
@@ -299,7 +299,7 @@ export default function RaffleDetail() {
                 <div className="bg-gray-100 dark:bg-duxxan-dark p-3 rounded-lg">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600 dark:text-duxxan-yellow">Bilet Fiyatı:</span>
-                    <span className="text-gray-900 dark:text-duxxan-yellow">{raffle.ticketPrice} USDT</span>
+                    <span className="text-gray-900 dark:text-duxxan-yellow">{safeRaffle.ticketPrice} USDT</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600 dark:text-duxxan-yellow">Miktar:</span>
@@ -309,7 +309,7 @@ export default function RaffleDetail() {
                   <div className="flex justify-between font-semibold">
                     <span className="text-gray-900 dark:text-duxxan-yellow">Toplam:</span>
                     <span className="text-duxxan-yellow">
-                      {(Number(raffle.ticketPrice) * ticketCount).toFixed(2)} USDT
+                      {(Number(safeRaffle.ticketPrice) * ticketCount).toFixed(2)} USDT
                     </span>
                   </div>
                 </div>
@@ -339,7 +339,7 @@ export default function RaffleDetail() {
                   <Progress value={progress} className="h-2" />
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-duxxan-yellow">
-                      {raffle.ticketsSold} / {raffle.maxTickets} bilet
+                      {safeRaffle.ticketsSold} / {safeRaffle.maxTickets} bilet
                     </span>
                     <span className="text-duxxan-success">%{progress.toFixed(1)}</span>
                   </div>
@@ -355,19 +355,19 @@ export default function RaffleDetail() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12">
-                    <AvatarImage src={raffle.creator?.profileImage} />
+                    <AvatarImage src={safeRaffle.creator?.profileImage} />
                     <AvatarFallback className="bg-duxxan-yellow text-duxxan-dark">
-                      {raffle.creator?.username?.charAt(0)}
+                      {safeRaffle.creator?.username?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 dark:text-duxxan-yellow">
-                      {raffle.creator?.username}
+                      {safeRaffle.creator?.username}
                     </h4>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 text-duxxan-yellow fill-current" />
                       <span className="text-sm text-gray-600 dark:text-duxxan-yellow">
-                        {raffle.creator?.rating} ({raffle.creator?.ratingCount} değerlendirme)
+                        {safeRaffle.creator?.rating} ({safeRaffle.creator?.ratingCount} değerlendirme)
                       </span>
                     </div>
                   </div>
