@@ -137,11 +137,6 @@ export default function Home() {
                 <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30">
                   CANLI
                 </Badge>
-                {realConnectedWallets > 0 && (
-                  <Badge variant="secondary" className="bg-duxxan-yellow/20 text-duxxan-yellow border-duxxan-yellow/30 text-xs">
-                    +{realConnectedWallets} gerçek
-                  </Badge>
-                )}
               </div>
             </div>
           </div>
