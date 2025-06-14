@@ -320,14 +320,14 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-white transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             <span className="text-yellow-500">Topluluk</span> Merkezi
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             İçerik üreticilerini takip edin, gelecek çekilişleri keşfedin ve kendi kanalınızı oluşturun.
           </p>
         </div>
@@ -342,7 +342,7 @@ export default function Community() {
                 placeholder={activeTab === 'channels' ? "Kanal ara..." : "Çekiliş ara..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500 rounded-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                className="pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
               />
             </div>
             
@@ -352,13 +352,13 @@ export default function Community() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-white border-2 border-yellow-400 text-gray-900 rounded-lg px-3 py-2 min-w-[140px] focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-gray-900 dark:text-white rounded-lg px-3 py-2 min-w-[140px] focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
               >
                 {categories.map((category) => (
                   <option 
                     key={category.value} 
                     value={category.value}
-                    className="bg-white text-gray-900"
+                    className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   >
                     {category.label}
                   </option>
@@ -385,11 +385,11 @@ export default function Community() {
 
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-          <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 border-2 border-yellow-200">
+          <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border-2 border-yellow-200 dark:border-yellow-600">
             <Button
               variant={activeTab === 'channels' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('channels')}
-              className={activeTab === 'channels' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 hover:text-gray-900'}
+              className={activeTab === 'channels' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}
             >
               <Users className="h-4 w-4 mr-2" />
               Kanallar ({filteredChannels.length})
@@ -397,7 +397,7 @@ export default function Community() {
             <Button
               variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
               onClick={() => setActiveTab('upcoming')}
-              className={activeTab === 'upcoming' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 hover:text-gray-900'}
+              className={activeTab === 'upcoming' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}
             >
               <Calendar className="h-4 w-4 mr-2" />
               Gelecek Çekilişler ({filteredUpcomingRaffles.length})
@@ -414,9 +414,9 @@ export default function Community() {
                       Kanal Oluştur
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-white border-2 border-yellow-400">
+                  <DialogContent className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500">
                     <DialogHeader>
-                      <DialogTitle className="text-gray-900">Yeni Kanal Oluştur</DialogTitle>
+                      <DialogTitle className="text-gray-900 dark:text-white">Yeni Kanal Oluştur</DialogTitle>
                     </DialogHeader>
                     <Form {...channelForm}>
                       <form onSubmit={channelForm.handleSubmit((data) => createChannelMutation.mutate(data))} className="space-y-4">
@@ -656,7 +656,7 @@ export default function Community() {
         {activeTab === 'channels' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredChannels.map((channel) => (
-              <Card key={channel.id} className="bg-white border-2 border-yellow-400 hover:border-yellow-500 transition-colors">
+              <Card key={channel.id} className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-colors">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
@@ -667,26 +667,26 @@ export default function Community() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <CardTitle className="text-gray-900 text-lg">{channel.name}</CardTitle>
-                        <p className="text-gray-600 text-sm">{channel.creator}</p>
+                        <CardTitle className="text-gray-900 dark:text-white text-lg">{channel.name}</CardTitle>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{channel.creator}</p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-600 border border-yellow-300">
+                    <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
                       {channel.category}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                     {channel.description}
                   </p>
                   
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="text-center">
-                      <div className="text-yellow-600 font-bold text-lg">
+                      <div className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">
                         {channel.subscribers.toLocaleString()}
                       </div>
-                      <div className="text-gray-500 text-xs">Abone</div>
+                      <div className="text-gray-500 dark:text-gray-400 text-xs">Abone</div>
                     </div>
                     <div className="text-center">
                       <div className="text-green-600 font-bold text-lg">
