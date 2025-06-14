@@ -137,6 +137,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get('/api/users/me', getUser, async (req: any, res) => {
+    // Cache user data for 30 seconds to reduce database hits
+    res.set('Cache-Control', 'private, max-age=30');
     res.json(req.user);
   });
 
