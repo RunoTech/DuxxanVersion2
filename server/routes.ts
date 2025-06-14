@@ -22,6 +22,14 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
+  // Apply comprehensive DDoS protection
+  app.use(securityHeaders);
+  app.use(requestSizeLimit);
+  app.use(patternDetection);
+  app.use(securityMiddleware);
+  app.use(progressiveSlowdown);
+  app.use(globalRateLimit);
+
   // WebSocket server for real-time updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   
@@ -29,9 +37,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   wss.on('connection', (ws: WebSocket) => {
     clients.add(ws);
+    console.log(`🔗 WebSocket connected. Total clients: ${clients.size}`);
     
     ws.on('close', () => {
       clients.delete(ws);
+      console.log(`🔌 WebSocket disconnected. Total clients: ${clients.size}`);
     });
   });
 
@@ -95,8 +105,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User routes
-  app.post('/api/users', async (req, res) => {
+  // Security monitoring endpoint
+  app.get('/api/security/status', strictRateLimit, (req, res) => {
+    getSecurityStatus(req, res);
+  });
+
+  // User routes with authentication rate limiting
+  app.post('/api/users', authRateLimit, async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
       
@@ -179,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/raffles', getUser, async (req: any, res) => {
+  app.post('/api/raffles', createRateLimit, getUser, async (req: any, res) => {
     try {
       const raffleData = insertRaffleSchema.parse(req.body);
       const raffle = await storage.createRaffle({ ...raffleData, creatorId: req.user.id });
@@ -195,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/raffles/:id/approve', getUser, async (req: any, res) => {
+  app.put('/api/raffles/:id/approve', strictRateLimit, getUser, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);
       const raffle = await storage.getRaffleById(id);
@@ -223,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Ticket routes
-  app.post('/api/tickets', getUser, async (req: any, res) => {
+  app.post('/api/tickets', strictRateLimit, getUser, async (req: any, res) => {
     try {
       const ticketData = insertTicketSchema.parse(req.body);
       const ticket = await storage.createTicket({ ...ticketData, userId: req.user.id });
@@ -306,7 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/donations', getUser, async (req: any, res) => {
+  app.post('/api/donations', createRateLimit, getUser, async (req: any, res) => {
     try {
       const donationData = insertDonationSchema.parse(req.body);
       const donation = await storage.createDonation({ ...donationData, creatorId: req.user.id });
@@ -323,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Donation contribution routes
-  app.post('/api/donations/:id/contribute', getUser, async (req: any, res) => {
+  app.post('/api/donations/:id/contribute', strictRateLimit, getUser, async (req: any, res) => {
     try {
       const donationId = parseInt(req.params.id);
       const contributionData = insertDonationContributionSchema.parse({ ...req.body, donationId });

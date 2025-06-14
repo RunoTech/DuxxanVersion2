@@ -183,8 +183,9 @@ class SecurityMonitor {
     const now = Date.now();
     const cutoff = 60 * 60 * 1000; // 1 hour
     const keysToDelete: string[] = [];
+    const entries = Array.from(this.suspiciousIPs.entries());
     
-    for (const [key, data] of this.suspiciousIPs) {
+    for (const [key, data] of entries) {
       if ((now - data.lastActivity) > cutoff && !data.blocked) {
         keysToDelete.push(key);
       }
