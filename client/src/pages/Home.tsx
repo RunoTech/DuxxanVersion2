@@ -150,7 +150,25 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20">
+      <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
+        {/* Live Connected Wallets - Section Corner */}
+        <div className="absolute top-6 left-6 z-10">
+          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
+              <span className="text-duxxan-success font-semibold text-sm">
+                {totalConnectedWallets.toLocaleString()}
+              </span>
+              <span className="text-gray-600 dark:text-duxxan-text-secondary text-xs">
+                bağlı
+              </span>
+              <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30 text-xs px-1.5 py-0.5">
+                LIVE
+              </Badge>
+            </div>
+          </div>
+        </div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-7xl font-black mb-6 text-black dark:text-white">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
@@ -158,24 +176,6 @@ export default function Home() {
           <p className="text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
             Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
-          
-          {/* Live Connected Wallets - Corner Display */}
-          <div className="fixed top-4 right-4 z-50">
-            <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
-                <span className="text-duxxan-success font-semibold text-sm">
-                  {totalConnectedWallets.toLocaleString()}
-                </span>
-                <span className="text-gray-600 dark:text-duxxan-text-secondary text-xs">
-                  bağlı
-                </span>
-                <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30 text-xs px-1.5 py-0.5">
-                  LIVE
-                </Badge>
-              </div>
-            </div>
-          </div>
           
           {/* Trading-Style Chart */}
           <Card className="bg-duxxan-yellow/10 dark:bg-duxxan-surface border-2 border-duxxan-yellow/50 dark:border-duxxan-border mt-16">
