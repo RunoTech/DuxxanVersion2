@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { BlurOverlay } from "@/components/BlurOverlay";
 import { useWallet } from "@/hooks/useWallet";
 import { useWebSocket } from "@/hooks/useWebSocket";
@@ -44,9 +46,10 @@ function AppContent() {
   useWebSocket();
 
   return (
-    <div className="min-h-screen bg-duxxan-dark">
+    <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark text-gray-900 dark:text-white">
       <Navigation />
       <Router />
+      <Footer />
       {!isConnected && <BlurOverlay />}
     </div>
   );
@@ -56,8 +59,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AppContent />
-        <Toaster />
+        <ThemeProvider>
+          <AppContent />
+          <Toaster />
+        </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
