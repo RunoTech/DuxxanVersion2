@@ -50,6 +50,8 @@ interface WinnerOrgChatProps {
     title: string;
     winnerId?: number;
     creatorId: number;
+    isApprovedByCreator?: boolean;
+    isApprovedByWinner?: boolean;
     creator: {
       username: string;
       organizationType?: string;
@@ -70,8 +72,8 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Check if chat is available (winner must be announced)
-  const isChatAvailable = Boolean(raffle.winnerId);
+  // Check if chat is available (winner must be announced AND both parties approved)
+  const isChatAvailable = Boolean(raffle.winnerId && raffle.isApprovedByCreator && raffle.isApprovedByWinner);
   
   // Check if current user is authorized (either winner or organization creator)
   const isWinner = user?.id === raffle.winnerId;
@@ -150,19 +152,37 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
   };
 
   if (!isChatAvailable) {
+    // Show different messages based on the current state
+    let message = "Sohbet, kazanan açıklandıktan sonra aktif olacak";
+    let icon = <Clock className="w-12 h-12 text-gray-400 mx-auto mb-3" />;
+    
+    if (raffle.winnerId) {
+      // Winner is assigned but approvals are pending
+      if (!raffle.isApprovedByCreator && !raffle.isApprovedByWinner) {
+        message = "Sohbet için her iki tarafın da onayı gerekiyor";
+        icon = <Shield className="w-12 h-12 text-yellow-400 mx-auto mb-3" />;
+      } else if (!raffle.isApprovedByCreator) {
+        message = "Organizasyon onayı bekleniyor";
+        icon = <Clock className="w-12 h-12 text-yellow-400 mx-auto mb-3" />;
+      } else if (!raffle.isApprovedByWinner) {
+        message = "Kazanan onayı bekleniyor";
+        icon = <Clock className="w-12 h-12 text-yellow-400 mx-auto mb-3" />;
+      }
+    }
+
     return (
       <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
         <CardHeader>
           <CardTitle className="text-gray-900 dark:text-duxxan-yellow flex items-center gap-2">
             <MessageCircle className="w-5 h-5" />
-            Kazanan - Organizasyon Sohbeti
+            Özel Sohbet
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            {icon}
             <p className="text-gray-600 dark:text-duxxan-text-secondary">
-              Sohbet, kazanan açıklandıktan sonra aktif olacak
+              {message}
             </p>
           </div>
         </CardContent>
