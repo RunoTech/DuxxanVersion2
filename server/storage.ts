@@ -8,8 +8,14 @@ import {
   categories,
   chatMessages,
   follows,
+  userDevices,
+  userPhotos,
   type User,
   type InsertUser,
+  type UserDevice,
+  type InsertUserDevice,
+  type UserPhoto,
+  type InsertUserPhoto,
   type Raffle,
   type InsertRaffle,
   type Donation,
@@ -32,6 +38,16 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User>;
+  
+  // User Devices
+  createUserDevice(device: InsertUserDevice & { userId: number }): Promise<UserDevice>;
+  getUserDevices(userId: number): Promise<UserDevice[]>;
+  updateUserDeviceLastLogin(deviceId: number): Promise<void>;
+  
+  // User Photos
+  createUserPhoto(photo: InsertUserPhoto & { userId: number }): Promise<UserPhoto>;
+  getUserPhotos(userId: number, photoType?: string): Promise<UserPhoto[]>;
+  deleteUserPhoto(photoId: number, userId: number): Promise<void>;
   
   // Categories
   getCategories(): Promise<Category[]>;
@@ -436,6 +452,70 @@ export class DatabaseStorage implements IStorage {
       organizationDonations: orgStats.organizationDonations || 0,
       individualDonations: indivStats.individualDonations || 0,
     };
+  }
+
+  // User Device methods
+  async createUserDevice(device: InsertUserDevice & { userId: number }): Promise<UserDevice> {
+    const [newDevice] = await db
+      .insert(userDevices)
+      .values(device)
+      .returning();
+    return newDevice;
+  }
+
+  async getUserDevices(userId: number): Promise<UserDevice[]> {
+    return await db
+      .select()
+      .from(userDevices)
+      .where(eq(userDevices.userId, userId))
+      .orderBy(desc(userDevices.lastLoginAt));
+  }
+
+  async updateUserDeviceLastLogin(deviceId: number): Promise<void> {
+    await db
+      .update(userDevices)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(userDevices.id, deviceId));
+  }
+
+  // User Photo methods
+  async createUserPhoto(photo: InsertUserPhoto & { userId: number }): Promise<UserPhoto> {
+    const [newPhoto] = await db
+      .insert(userPhotos)
+      .values(photo)
+      .returning();
+    return newPhoto;
+  }
+
+  async getUserPhotos(userId: number, photoType?: string): Promise<UserPhoto[]> {
+    let whereConditions = and(
+      eq(userPhotos.userId, userId),
+      eq(userPhotos.isActive, true)
+    );
+
+    if (photoType) {
+      whereConditions = and(
+        eq(userPhotos.userId, userId),
+        eq(userPhotos.photoType, photoType),
+        eq(userPhotos.isActive, true)
+      );
+    }
+
+    return await db
+      .select()
+      .from(userPhotos)
+      .where(whereConditions)
+      .orderBy(desc(userPhotos.uploadedAt));
+  }
+
+  async deleteUserPhoto(photoId: number, userId: number): Promise<void> {
+    await db
+      .update(userPhotos)
+      .set({ isActive: false })
+      .where(and(
+        eq(userPhotos.id, photoId),
+        eq(userPhotos.userId, userId)
+      ));
   }
 }
 

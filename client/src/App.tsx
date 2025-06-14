@@ -13,6 +13,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 // Pages
 import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
+import ProfileNew from "@/pages/ProfileNew";
 import Community from "@/pages/Community";
 import Raffles from "@/pages/Raffles";
 import RaffleDetail from "@/pages/RaffleDetail";
