@@ -136,15 +136,15 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           {raffle.description}
         </p>
 
-        <div className="bg-duxxan-dark rounded-lg p-4 mb-4">
+        <div className="bg-gradient-to-r from-duxxan-yellow/10 to-duxxan-yellow/5 dark:bg-duxxan-dark rounded-lg p-4 mb-4 border border-duxxan-yellow/20 dark:border-duxxan-border">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-duxxan-text-secondary">Satılan Biletler</span>
+            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Satılan Biletler</span>
             <span className="text-sm font-bold text-duxxan-success">
               {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
             </span>
           </div>
           <Progress value={progress} className="mb-2" />
-          <div className="text-xs text-duxxan-text-secondary">
+          <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">
             {progress < 50 ? '🚀 Yeni başlıyor!' : progress < 80 ? '🔥 Kızışıyor!' : '⚡ Neredeyse tükendi!'}
           </div>
         </div>
