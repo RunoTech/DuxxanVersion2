@@ -10,11 +10,18 @@ export function useWallet() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if wallet was previously connected
-    const savedConnection = walletService.getConnection();
-    if (savedConnection) {
-      setConnection(savedConnection);
-      fetchUser(savedConnection.address);
+    // Check if demo wallet was previously connected
+    const isDemoConnected = localStorage.getItem('demo_wallet_connected');
+    const savedAddress = localStorage.getItem('demo_wallet_address');
+    
+    if (isDemoConnected === 'true' && savedAddress) {
+      const demoConnection = {
+        address: savedAddress,
+        provider: null as any,
+        signer: null as any
+      };
+      setConnection(demoConnection);
+      fetchUser(savedAddress);
     }
   }, []);
 
