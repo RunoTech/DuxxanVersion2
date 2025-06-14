@@ -308,7 +308,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get('/api/donations/active', async (req, res) => {
-    res.json([]);
+    try {
+      const donations = await storage.getActiveDonations();
+      res.json(donations);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch donations' });
+    }
   });
 
   app.get('/api/donations/:id', async (req, res) => {
