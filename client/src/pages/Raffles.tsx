@@ -22,6 +22,12 @@ export default function Raffles() {
     queryKey: ['/api/categories'],
   });
 
+  // Fetch countries
+  const { data: countries = [] } = useQuery({
+    queryKey: ['/api/countries'],
+    queryFn: () => apiRequest('GET', '/api/countries').then(res => res.json()),
+  });
+
   // Fetch raffles
   const { data: raffles = [], isLoading } = useQuery({
     queryKey: ['/api/raffles'],
@@ -33,8 +39,31 @@ export default function Raffles() {
     .filter((raffle: any) => {
       const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || raffle.category.id.toString() === selectedCategory;
-      return matchesSearch && matchesCategory;
+      const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory;
+      
+      // Country filter logic
+      let matchesCountry = true;
+      if (selectedCountry !== 'all') {
+        if (raffle.countryRestriction === 'all') {
+          matchesCountry = true; // Open to all countries
+        } else if (raffle.countryRestriction === 'selected' && raffle.allowedCountries) {
+          try {
+            const allowedCountries = JSON.parse(raffle.allowedCountries);
+            matchesCountry = allowedCountries.includes(selectedCountry);
+          } catch {
+            matchesCountry = true;
+          }
+        } else if (raffle.countryRestriction === 'exclude' && raffle.excludedCountries) {
+          try {
+            const excludedCountries = JSON.parse(raffle.excludedCountries);
+            matchesCountry = !excludedCountries.includes(selectedCountry);
+          } catch {
+            matchesCountry = true;
+          }
+        }
+      }
+      
+      return matchesSearch && matchesCategory && matchesCountry;
     })
     .sort((a: any, b: any) => {
       switch (sortBy) {
@@ -121,25 +150,25 @@ export default function Raffles() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-duxxan-text-secondary w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="Search raffles..."
+                  placeholder="Çekiliş ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-duxxan-dark border-duxxan-border text-white pl-10"
+                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
                 />
               </div>
 
               {/* Category Filter */}
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="bg-duxxan-dark border-duxxan-border text-white">
-                  <SelectValue placeholder="All Categories" />
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Tüm Kategoriler" />
                 </SelectTrigger>
-                <SelectContent className="bg-duxxan-surface border-duxxan-border">
-                  <SelectItem value="all">All Categories</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all">Tüm Kategoriler</SelectItem>
                   {categories.map((category: any) => (
                     <SelectItem key={category.id} value={category.id.toString()}>
                       {category.name}
@@ -148,17 +177,33 @@ export default function Raffles() {
                 </SelectContent>
               </Select>
 
+              {/* Country Filter */}
+              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <Globe className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Tüm Ülkeler" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
+                  {countries.map((country: any) => (
+                    <SelectItem key={country.code} value={country.code}>
+                      {country.flag} {country.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {/* Sort By */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-duxxan-dark border-duxxan-border text-white">
-                  <SelectValue placeholder="Sort By" />
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Sırala" />
                 </SelectTrigger>
-                <SelectContent className="bg-duxxan-surface border-duxxan-border">
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="ending-soon">Ending Soon</SelectItem>
-                  <SelectItem value="highest-value">Highest Value</SelectItem>
-                  <SelectItem value="most-tickets">Most Popular</SelectItem>
-                  <SelectItem value="lowest-price">Lowest Price</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="newest">En Yeni</SelectItem>
+                  <SelectItem value="ending-soon">Sona Erme</SelectItem>
+                  <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
+                  <SelectItem value="most-tickets">En Popüler</SelectItem>
+                  <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -167,12 +212,12 @@ export default function Raffles() {
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
+                  setSelectedCountry('all');
                   setSortBy('newest');
                 }}
-                variant="outline"
-                className="duxxan-button-secondary"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
               >
-                Clear Filters
+                Filtreleri Temizle
               </Button>
             </div>
           </CardContent>
@@ -221,21 +266,21 @@ export default function Raffles() {
                 }
               </p>
               <div className="flex justify-center gap-4">
-                {(searchTerm || selectedCategory !== 'all') && (
+                {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
                   <Button
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCategory('all');
+                      setSelectedCountry('all');
                     }}
-                    variant="outline"
-                    className="duxxan-button-secondary"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
                   >
-                    Clear Filters
+                    Filtreleri Temizle
                   </Button>
                 )}
                 <Link href="/create-raffle">
-                  <Button className="duxxan-button-primary">
-                    Create Raffle
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+                    Çekiliş Oluştur
                   </Button>
                 </Link>
               </div>
