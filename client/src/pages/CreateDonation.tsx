@@ -393,7 +393,7 @@ export default function CreateDonation() {
                       <Button
                         type="submit"
                         disabled={isSubmitting || createDonationMutation.isPending}
-                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 text-lg font-semibold"
+                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 text-lg font-semibold border-2 border-yellow-500 hover:border-yellow-600"
                       >
                         {isSubmitting || createDonationMutation.isPending ? (
                           <div className="flex items-center">
@@ -413,32 +413,32 @@ export default function CreateDonation() {
             {/* Info Sidebar */}
             <div className="space-y-4">
               {/* Account Info */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-lg text-yellow-600">Hesap Bilgileri</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Hesap Türü:</span>
+                    <span className="text-sm text-gray-600">Hesap Türü:</span>
                     <Badge variant={isOrganization ? "default" : "secondary"}>
                       {isOrganization ? "Organizasyon" : "Bireysel"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Doğrulama:</span>
+                    <span className="text-sm text-gray-600">Doğrulama:</span>
                     <Badge variant={userData?.organizationVerified ? "default" : "destructive"}>
                       {userData?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Komisyon Oranı:</span>
+                    <span className="text-sm text-gray-600">Komisyon Oranı:</span>
                     <span className="text-sm font-semibold text-yellow-600">%{commissionRate}</span>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Important Notice */}
-              <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+              <Card className="bg-white border-2 border-red-400 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-lg text-red-600 flex items-center">
                     <AlertTriangleIcon className="w-5 h-5 mr-2" />
@@ -446,7 +446,7 @@ export default function CreateDonation() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-sm text-red-700 dark:text-red-300">
+                  <div className="text-sm text-red-700">
                     <p className="mb-2 font-semibold">
                       Bağış alan hesaplar çekiliş oluşturamaz
                     </p>
@@ -459,15 +459,15 @@ export default function CreateDonation() {
               </Card>
 
               {/* Fee Information */}
-              <Card className="border-2 border-blue-200 dark:border-blue-800">
+              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-blue-600 flex items-center">
+                  <CardTitle className="text-lg text-yellow-600 flex items-center">
                     <InfoIcon className="w-5 h-5 mr-2" />
                     Ücret Bilgileri
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <div className="text-sm text-gray-600">
                     <p className="mb-2">
                       <strong>Bireysel Hesaplar:</strong> %10 komisyon, maksimum 30 gün süre
                     </p>
@@ -490,11 +490,11 @@ export default function CreateDonation() {
               </Card>
 
               {/* Guidelines */}
-              <Card className="border-2 border-green-200 dark:border-green-800">
+              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-green-600">Bağış Kuralları</CardTitle>
+                  <CardTitle className="text-lg text-yellow-600">Bağış Kuralları</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                <CardContent className="text-sm text-gray-600 space-y-2">
                   <p>• Tüm bağışlar USDT (BSC) ile gerçekleştirilir</p>
                   <p>• Bağış açıklamaları net ve şeffaf olmalıdır</p>
                   <p>• Yasadışı faaliyetler için bağış açılamaz</p>
