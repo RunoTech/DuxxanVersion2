@@ -20,6 +20,7 @@ import Donations from "@/pages/Donations";
 import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
+import CountryProfile from "@/pages/CountryProfile";
 
 import NotFound from "@/pages/not-found";
 
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/raffles/:id" component={RaffleDetail} />
       <Route path="/donations" component={Donations} />
       <Route path="/donations/:id" component={DonationDetail} />
+      <Route path="/country/:countryCode" component={CountryProfile} />
       <Route path="/create-raffle" component={CreateRaffle} />
       <Route path="/create-donation" component={CreateDonation} />
       <Route component={NotFound} />
