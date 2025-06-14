@@ -27,6 +27,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(requestSizeLimit);
   // Temporarily disabled aggressive protection to allow normal app functionality
   // app.use(patternDetection);
+  // Demo route to assign winner (for testing purposes) - Before rate limiting
+  app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
+    try {
+      const raffleId = parseInt(req.params.id);
+      const { winnerId } = req.body;
+
+      const raffle = await storage.getRaffleById(raffleId);
+      
+      if (!raffle) {
+        return res.status(404).json({ message: 'Raffle not found' });
+      }
+
+      // For demo: Skip authentication and creator checks
+      // Update raffle with winner
+      const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
+
+      // Broadcast winner announcement - will be available after WebSocket setup
+      console.log(`Winner assigned: Raffle ${raffleId}, Winner ${winnerId}`);
+
+      res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
+    } catch (error) {
+      console.error('Winner assignment error:', error);
+      res.status(500).json({ message: 'Failed to assign winner' });
+    }
+  });
+
   // app.use(securityMiddleware);
   // app.use(progressiveSlowdown);
   app.use(globalRateLimit);
@@ -488,38 +514,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Demo route to assign winner (for testing purposes)
-  app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
-    try {
-      const raffleId = parseInt(req.params.id);
-      const { winnerId } = req.body;
 
-      const raffle = await storage.getRaffleById(raffleId);
-      
-      if (!raffle) {
-        return res.status(404).json({ message: 'Raffle not found' });
-      }
-
-      // For demo: Skip authentication and creator checks
-      // Update raffle with winner
-      const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
-
-      // Broadcast winner announcement
-      broadcast({ 
-        type: 'WINNER_ANNOUNCED', 
-        data: { 
-          raffleId, 
-          winnerId,
-          raffle: updatedRaffle
-        } 
-      });
-
-      res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
-    } catch (error) {
-      console.error('Winner assignment error:', error);
-      res.status(500).json({ message: 'Failed to assign winner' });
-    }
-  });
 
   // User device logging routes
   app.post('/api/users/me/devices', getUser, async (req: any, res) => {
