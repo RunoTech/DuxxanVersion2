@@ -37,16 +37,41 @@ export function useWallet() {
 
   const connectMetaMask = async () => {
     setIsConnecting(true);
+    
+    // Demo mode - simulate connection
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     try {
-      const walletConnection = await walletService.connectMetaMask();
-      setConnection(walletConnection);
+      // Demo wallet data
+      const demoWallets = [
+        { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
+        { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
+        { address: '0x3456789012345678901234567890123456789012', balance: '1.23 BNB' },
+        { address: '0x4567890123456789012345678901234567890123', balance: '8.76 BNB' },
+        { address: '0x5678901234567890123456789012345678901234', balance: '3.14 BNB' }
+      ];
       
-      // Create or get user
-      await createOrGetUser(walletConnection.address);
+      const randomWallet = demoWallets[Math.floor(Math.random() * demoWallets.length)];
+      
+      // Create demo connection object
+      const demoConnection = {
+        address: randomWallet.address,
+        provider: null as any,
+        signer: null as any
+      };
+      
+      setConnection(demoConnection);
+      
+      // Create or get user with demo address
+      await createOrGetUser(randomWallet.address);
+      
+      // Store demo connection
+      localStorage.setItem('demo_wallet_connected', 'true');
+      localStorage.setItem('demo_wallet_address', randomWallet.address);
       
       toast({
-        title: 'Wallet Connected',
-        description: 'Successfully connected to MetaMask',
+        title: 'Demo Wallet Connected',
+        description: `Connected to ${randomWallet.address.slice(0, 6)}...${randomWallet.address.slice(-4)}`,
       });
     } catch (error: any) {
       toast({
@@ -61,16 +86,41 @@ export function useWallet() {
 
   const connectTrustWallet = async () => {
     setIsConnecting(true);
+    
+    // Demo mode - simulate connection
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     try {
-      const walletConnection = await walletService.connectTrustWallet();
-      setConnection(walletConnection);
+      // Demo wallet data
+      const demoWallets = [
+        { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
+        { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
+        { address: '0x3456789012345678901234567890123456789012', balance: '1.23 BNB' },
+        { address: '0x4567890123456789012345678901234567890123', balance: '8.76 BNB' },
+        { address: '0x5678901234567890123456789012345678901234', balance: '3.14 BNB' }
+      ];
       
-      // Create or get user
-      await createOrGetUser(walletConnection.address);
+      const randomWallet = demoWallets[Math.floor(Math.random() * demoWallets.length)];
+      
+      // Create demo connection object
+      const demoConnection = {
+        address: randomWallet.address,
+        provider: null as any,
+        signer: null as any
+      };
+      
+      setConnection(demoConnection);
+      
+      // Create or get user with demo address
+      await createOrGetUser(randomWallet.address);
+      
+      // Store demo connection
+      localStorage.setItem('demo_wallet_connected', 'true');
+      localStorage.setItem('demo_wallet_address', randomWallet.address);
       
       toast({
-        title: 'Wallet Connected',
-        description: 'Successfully connected to Trust Wallet',
+        title: 'Demo Wallet Connected',
+        description: `Connected to ${randomWallet.address.slice(0, 6)}...${randomWallet.address.slice(-4)}`,
       });
     } catch (error: any) {
       toast({
@@ -98,13 +148,16 @@ export function useWallet() {
   };
 
   const disconnect = async () => {
-    await walletService.disconnect();
     setConnection(null);
     setUser(null);
     
+    // Clear demo wallet data
+    localStorage.removeItem('demo_wallet_connected');
+    localStorage.removeItem('demo_wallet_address');
+    
     toast({
-      title: 'Wallet Disconnected',
-      description: 'Your wallet has been disconnected',
+      title: 'Demo Wallet Disconnected',
+      description: 'Your demo wallet has been disconnected',
     });
   };
 
