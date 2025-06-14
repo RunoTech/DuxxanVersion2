@@ -409,14 +409,14 @@ export default function Community() {
               <>
                 <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                   <DialogTrigger asChild>
-                    <Button className="duxxan-button-secondary">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
                       <Plus className="h-4 w-4 mr-2" />
                       Kanal Oluştur
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-duxxan-surface border-duxxan-border">
+                  <DialogContent className="bg-white border-2 border-yellow-400">
                     <DialogHeader>
-                      <DialogTitle className="text-white">Yeni Kanal Oluştur</DialogTitle>
+                      <DialogTitle className="text-gray-900">Yeni Kanal Oluştur</DialogTitle>
                     </DialogHeader>
                     <Form {...channelForm}>
                       <form onSubmit={channelForm.handleSubmit((data) => createChannelMutation.mutate(data))} className="space-y-4">
@@ -425,12 +425,12 @@ export default function Community() {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Kanal Adı</FormLabel>
+                              <FormLabel className="text-gray-900">Kanal Adı</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
                                   placeholder="Kanal adınızı girin"
-                                  className="bg-duxxan-card border-duxxan-border text-white"
+                                  className="bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -442,12 +442,12 @@ export default function Community() {
                           name="description"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Açıklama</FormLabel>
+                              <FormLabel className="text-gray-900">Açıklama</FormLabel>
                               <FormControl>
                                 <Textarea
                                   {...field}
                                   placeholder="Kanalınızı tanıtın"
-                                  className="bg-duxxan-card border-duxxan-border text-white"
+                                  className="bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -481,7 +481,7 @@ export default function Community() {
                         <Button
                           type="submit"
                           disabled={createChannelMutation.isPending}
-                          className="duxxan-button-primary w-full"
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white w-full border-2 border-yellow-500"
                         >
                           {createChannelMutation.isPending ? 'Oluşturuluyor...' : 'Kanal Oluştur'}
                         </Button>
