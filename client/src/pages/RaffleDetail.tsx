@@ -96,9 +96,13 @@ export default function RaffleDetail() {
     );
   }
 
-  const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
-  const timeLeft = new Date(raffle.endDate).getTime() - new Date().getTime();
-  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+  const progress = raffle?.ticketsSold && raffle?.maxTickets 
+    ? (raffle.ticketsSold / raffle.maxTickets) * 100 
+    : 0;
+  const timeLeft = raffle?.endDate 
+    ? new Date(raffle.endDate).getTime() - new Date().getTime() 
+    : 0;
+  const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
   return (
     <div className="min-h-screen bg-white dark:bg-duxxan-dark">
@@ -156,9 +160,9 @@ export default function RaffleDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height={320} minHeight={200}>
+                    <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <defs>
                         <linearGradient id="participantGradient" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#F3BA2F" stopOpacity={0.3}/>
@@ -224,9 +228,9 @@ export default function RaffleDetail() {
                 <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Saatlik Bilet Satışları</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={hourlyData}>
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height={256} minHeight={150}>
+                    <LineChart data={hourlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
                       <XAxis 
                         dataKey="hour" 
