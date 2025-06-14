@@ -72,46 +72,39 @@ export default function Home() {
     { name: '24:00', raffles: 8, prizes: 7120, donations: 3200, volume: 10320 }
   ]);
 
-  // Update chart data periodically for live effect
+  // Update chart data only when stats change
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (liveStats) {
       setChartData(prev => {
         const newData = [...prev];
         const lastPoint = newData[newData.length - 1];
         
-        // Add slight variations to make it look live
-        const variation = (Math.random() - 0.5) * 0.1; // ±5% variation
         newData[newData.length - 1] = {
           ...lastPoint,
-          raffles: Math.max(1, parseInt(liveStats.totalRaffles) + Math.floor(variation * 2)),
-          prizes: Math.max(100, parseFloat(liveStats.totalPrizePool) + (variation * 500)),
-          donations: Math.max(100, parseFloat(liveStats.totalDonations) + (variation * 300)),
-          volume: Math.max(1000, lastPoint.volume + (variation * 1000))
+          raffles: parseInt(liveStats.totalRaffles) || 1,
+          prizes: parseFloat(liveStats.totalPrizePool) || 100,
+          donations: parseFloat(liveStats.totalDonations) || 100,
+          volume: lastPoint.volume
         };
         
         return newData;
       });
-    }, 5000); // Update every 5 seconds
-
-    return () => clearInterval(interval);
+    }
   }, [liveStats]);
 
   // Fetch platform stats
   const { data: stats } = useQuery({
     queryKey: ['/api/stats'],
-    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Fetch active raffles
   const { data: raffles = [] } = useQuery({
     queryKey: ['/api/raffles/active'],
-    refetchInterval: isConnected ? 10000 : false, // Refresh every 10 seconds if connected
   });
 
   // Fetch active donations
   const { data: donations = [] } = useQuery({
     queryKey: ['/api/donations/active'],
-    refetchInterval: isConnected ? 10000 : false,
   });
 
   // Update live stats from WebSocket messages
