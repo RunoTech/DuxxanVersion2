@@ -412,18 +412,18 @@ export default function Home() {
       </section>
 
       {/* Popular Raffles Section */}
-      <section className="py-20">
+      <section className="py-20 bg-white dark:bg-duxxan-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">Popüler Çekilişler</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Popüler Çekilişler</h2>
             <div className="flex space-x-4">
               <Link href="/raffles">
-                <Button variant="outline" className="duxxan-button-secondary">
+                <Button variant="outline" className="border-gray-300 dark:border-duxxan-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-duxxan-surface">
                   Tüm Çekilişler
                 </Button>
               </Link>
               <Link href="/create-raffle">
-                <Button className="duxxan-button-primary">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-duxxan-dark">
                   Çekiliş Oluştur
                 </Button>
               </Link>
@@ -437,14 +437,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <Card className="duxxan-card text-center">
+            <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border text-center">
               <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4">Aktif Çekiliş Yok</h3>
-                <p className="text-duxxan-text-secondary mb-6">
+                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Aktif Çekiliş Yok</h3>
+                <p className="text-gray-600 dark:text-duxxan-text-secondary mb-6">
                   DUXXAN'da heyecan verici bir çekiliş oluşturan ilk kişi olun!
                 </p>
                 <Link href="/create-raffle">
-                  <Button className="duxxan-button-primary">
+                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-duxxan-dark">
                     İlk Çekilişi Oluştur
                   </Button>
                 </Link>
@@ -455,23 +455,23 @@ export default function Home() {
       </section>
 
       {/* Donations Section */}
-      <section className="py-20 bg-duxxan-surface">
+      <section className="py-20 bg-gray-50 dark:bg-duxxan-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Bağış Kampanyaları</h2>
-              <p className="text-duxxan-text-secondary">
+              <h2 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Bağış Kampanyaları</h2>
+              <p className="text-gray-600 dark:text-duxxan-text-secondary">
                 Şeffaf blockchain bağışları ile önemli amaçları destekleyin
               </p>
             </div>
             <div className="flex space-x-4">
               <Link href="/donations">
-                <Button variant="outline" className="duxxan-button-secondary">
+                <Button variant="outline" className="border-gray-300 dark:border-duxxan-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-duxxan-surface">
                   Tüm Kampanyalar
                 </Button>
               </Link>
               <Link href="/create-donation">
-                <Button className="duxxan-button-success">
+                <Button className="bg-duxxan-success hover:bg-duxxan-success/90 text-white">
                   Kampanya Başlat
                 </Button>
               </Link>
@@ -479,10 +479,10 @@ export default function Home() {
           </div>
 
           {/* Donation Market Cap Display */}
-          <Card className="duxxan-card mb-8">
+          <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border mb-8">
             <CardContent className="p-6">
               <div className="text-center">
-                <div className="text-sm text-duxxan-text-secondary mb-2">
+                <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary mb-2">
                   Toplam Bağış Piyasa Değeri
                 </div>
                 <div className="text-4xl font-bold text-duxxan-success mb-4">
@@ -490,7 +490,7 @@ export default function Home() {
                 </div>
                 <div className="flex justify-center items-center space-x-4 text-sm">
                   <span className="text-duxxan-success">↗ Anlık Güncellemeler</span>
-                  <span className="text-duxxan-text-secondary">Blockchain Doğrulanmış</span>
+                  <span className="text-gray-600 dark:text-duxxan-text-secondary">Blockchain Doğrulanmış</span>
                 </div>
               </div>
             </CardContent>

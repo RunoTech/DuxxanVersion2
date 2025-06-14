@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="duxxan-card-hover cursor-pointer">
+      <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border hover:shadow-lg dark:hover:border-duxxan-yellow/30 transition-all duration-300 cursor-pointer">
         <div className={`h-48 bg-gradient-to-br ${getCategoryColor(raffle.category.slug)} flex items-center justify-center relative overflow-hidden`}>
           <div className="text-center">
             <div className="text-4xl mb-2">{getCategoryIcon(raffle.category.slug)}</div>
@@ -119,14 +119,14 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
       
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-xl font-bold text-white">{raffle.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
             <span className="text-duxxan-yellow text-sm">★</span>
-            <span className="text-sm text-duxxan-text-secondary">{raffle.creator.rating}</span>
+            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">{raffle.creator.rating}</span>
           </div>
         </div>
         
-        <p className="text-duxxan-text-secondary mb-4 text-sm line-clamp-2">
+        <p className="text-gray-600 dark:text-duxxan-text-secondary mb-4 text-sm line-clamp-2">
           {raffle.description}
         </p>
 
