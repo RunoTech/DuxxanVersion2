@@ -291,12 +291,8 @@ export default function ProfileNew() {
     setFormData({
       name: displayUser?.name || '',
       email: displayUser?.email || '',
-      phoneNumber: displayUser?.phoneNumber || '',
-      dateOfBirth: displayUser?.dateOfBirth || '',
       gender: displayUser?.gender || '',
       city: displayUser?.city || '',
-      address: displayUser?.address || '',
-      website: displayUser?.website || '',
       profession: displayUser?.profession || '',
       bio: displayUser?.bio || '',
       organizationType: displayUser?.organizationType || 'individual',
