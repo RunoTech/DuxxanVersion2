@@ -22,28 +22,7 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
-  // Demo route FIRST - bypasses all middleware
-  app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
-    try {
-      console.log('Demo winner assignment request received');
-      const raffleId = parseInt(req.params.id);
-      const { winnerId } = req.body;
-
-      const raffle = await storage.getRaffleById(raffleId);
-      
-      if (!raffle) {
-        return res.status(404).json({ message: 'Raffle not found' });
-      }
-
-      const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
-      console.log(`Winner assigned: Raffle ${raffleId}, Winner ${winnerId}`);
-
-      res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
-    } catch (error) {
-      console.error('Winner assignment error:', error);
-      res.status(500).json({ message: 'Failed to assign winner', error: error.message });
-    }
-  });
+  // Demo route moved to index.ts to bypass all middleware
 
   // Apply basic security headers only (DDoS protection temporarily reduced)
   app.use(securityHeaders);
@@ -53,7 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // app.use(securityMiddleware);
   // app.use(progressiveSlowdown);
-  app.use(globalRateLimit);
+  // app.use(globalRateLimit); // Disabled for demo
 
   // WebSocket server for real-time updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });

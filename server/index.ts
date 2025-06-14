@@ -4,8 +4,37 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
-app.use(express.json());
+
+// Demo route BEFORE any middleware  
+app.use(express.json()); // Need this for req.body parsing
 app.use(express.urlencoded({ extended: false }));
+
+app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
+  try {
+    console.log('Demo winner assignment request received', req.body);
+    const raffleId = parseInt(req.params.id);
+    const { winnerId } = req.body;
+
+    // Import storage here to avoid circular dependency
+    const { storage } = await import('./storage');
+    
+    const raffle = await storage.getRaffleById(raffleId);
+    
+    if (!raffle) {
+      return res.status(404).json({ message: 'Raffle not found' });
+    }
+
+    const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
+    console.log(`Winner assigned: Raffle ${raffleId}, Winner ${winnerId}`);
+
+    res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
+  } catch (error: any) {
+    console.error('Winner assignment error:', error);
+    res.status(500).json({ message: 'Failed to assign winner', error: error.message });
+  }
+});
+
+// Remove duplicate middleware - already defined above
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -38,6 +67,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Register routes but skip the demo route since it's already defined
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
