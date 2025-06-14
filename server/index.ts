@@ -13,7 +13,7 @@ app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
   try {
     console.log('Demo winner assignment request received', req.body);
     const raffleId = parseInt(req.params.id);
-    const { winnerId } = req.body;
+    // Ignore winnerId from request body, always use user ID 1 for demo
 
     // Import storage here to avoid circular dependency
     const { storage } = await import('./storage');
@@ -24,8 +24,9 @@ app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
       return res.status(404).json({ message: 'Raffle not found' });
     }
 
-    const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId });
-    console.log(`Winner assigned: Raffle ${raffleId}, Winner ${winnerId}`);
+    // Use existing user ID 1 as demo winner
+    const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId: 1 });
+    console.log(`Winner assigned: Raffle ${raffleId}, Winner ID: 1 (TechMaster2024)`);
 
     res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
   } catch (error: any) {
