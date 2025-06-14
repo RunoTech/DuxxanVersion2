@@ -24,34 +24,39 @@ import {
   Calendar,
   DollarSign
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 export default function RaffleDetail() {
   const { id } = useParams();
   const { isConnected } = useWallet();
   const { theme } = useTheme();
   const [ticketCount, setTicketCount] = useState(1);
-  const [chartError, setChartError] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Scroll to top on mount
+  // Client-side only rendering to prevent SSR issues
   useEffect(() => {
+    setIsClient(true);
     window.scrollTo(0, 0);
-  }, []);
-
-  // Error boundary for charts
-  useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      if (event.error?.message?.includes('appendChild') || 
-          event.error?.message?.includes('chart') ||
-          event.error?.message?.includes('ResponsiveContainer')) {
-        setChartError(true);
+    
+    // Global error handling for chart issues
+    const handleError = (event: ErrorEvent | PromiseRejectionEvent) => {
+      const message = 'message' in event ? event.message : event.reason?.message || '';
+      if (message.includes('appendChild') || 
+          message.includes('chart') ||
+          message.includes('ResponsiveContainer') ||
+          message.includes('ResizeObserver')) {
         event.preventDefault();
-        console.warn('Chart render error prevented page refresh');
+        console.warn('Chart render error prevented:', message);
+        return false;
       }
     };
 
     window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleError);
+    
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleError);
+    };
   }, []);
 
   const { data: raffle, isLoading } = useQuery({

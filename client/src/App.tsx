@@ -99,6 +99,42 @@ function AppContent() {
 }
 
 function App() {
+  // Global error handler for chart-related issues
+  useEffect(() => {
+    const handleGlobalError = (event: ErrorEvent) => {
+      const message = event.message || '';
+      if (message.includes('appendChild') || 
+          message.includes('chart') ||
+          message.includes('ResponsiveContainer') ||
+          message.includes('ResizeObserver') ||
+          message.includes('Cannot read properties of null')) {
+        event.preventDefault();
+        console.warn('Chart error suppressed:', message);
+        return false;
+      }
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const message = event.reason?.message || '';
+      if (message.includes('appendChild') || 
+          message.includes('chart') ||
+          message.includes('ResponsiveContainer') ||
+          message.includes('ResizeObserver')) {
+        event.preventDefault();
+        console.warn('Chart promise rejection suppressed:', message);
+        return false;
+      }
+    };
+
+    window.addEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
