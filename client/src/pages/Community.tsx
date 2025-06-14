@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2 } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter } from 'lucide-react';
 
 const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
@@ -42,6 +42,8 @@ export default function Community() {
   const [activeTab, setActiveTab] = useState<'channels' | 'upcoming'>('channels');
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showCreateRaffle, setShowCreateRaffle] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -189,6 +191,48 @@ export default function Community() {
     }
   ];
 
+  // Categories for filtering
+  const categories = [
+    { value: 'all', label: 'Tüm Kategoriler' },
+    { value: 'crypto', label: 'Kripto' },
+    { value: 'nft', label: 'NFT' },
+    { value: 'gaming', label: 'Oyun' },
+    { value: 'luxury', label: 'Lüks' },
+    { value: 'sports', label: 'Spor' },
+    { value: 'tech', label: 'Teknoloji' },
+  ];
+
+  // Filtered channels based on search and category
+  const filteredChannels = useMemo(() => {
+    return mockChannels.filter(channel => {
+      const matchesSearch = searchQuery === '' || 
+        channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        channel.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        channel.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || 
+        channel.category.toLowerCase() === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
+  // Filtered upcoming raffles based on search and category
+  const filteredUpcomingRaffles = useMemo(() => {
+    return mockUpcomingRaffles.filter(raffle => {
+      const matchesSearch = searchQuery === '' || 
+        raffle.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        raffle.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        raffle.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        raffle.channel.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || 
+        raffle.category.toLowerCase() === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
       return apiRequest('/api/channels', 'POST', data);
@@ -288,6 +332,52 @@ export default function Community() {
           </p>
         </div>
 
+        {/* Search and Filter Section */}
+        <div className="mb-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search Bar */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-duxxan-text-secondary" />
+              <Input
+                placeholder={activeTab === 'channels' ? "Kanal ara (isim, yaratıcı, açıklama)" : "Çekiliş ara (başlık, yaratıcı, kanal)"}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-duxxan-card border-duxxan-border text-white placeholder:text-duxxan-text-secondary"
+              />
+            </div>
+            
+            {/* Category Filter */}
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-duxxan-text-secondary" />
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="bg-duxxan-card border border-duxxan-border text-white rounded-md px-3 py-2 min-w-[150px]"
+              >
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Clear Filters */}
+            {(searchQuery || selectedCategory !== 'all') && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('all');
+                }}
+                className="bg-duxxan-surface border-duxxan-border text-duxxan-text-secondary hover:text-white"
+              >
+                Temizle
+              </Button>
+            )}
+          </div>
+        </div>
+
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
           <div className="flex space-x-1 bg-duxxan-surface rounded-lg p-1">
@@ -297,7 +387,7 @@ export default function Community() {
               className={activeTab === 'channels' ? 'duxxan-button-primary' : 'text-duxxan-text-secondary'}
             >
               <Users className="h-4 w-4 mr-2" />
-              Kanallar
+              Kanallar ({filteredChannels.length})
             </Button>
             <Button
               variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
@@ -305,7 +395,7 @@ export default function Community() {
               className={activeTab === 'upcoming' ? 'duxxan-button-primary' : 'text-duxxan-text-secondary'}
             >
               <Calendar className="h-4 w-4 mr-2" />
-              Gelecek Çekilişler
+              Gelecek Çekilişler ({filteredUpcomingRaffles.length})
             </Button>
           </div>
 
@@ -560,7 +650,7 @@ export default function Community() {
         {/* Content */}
         {activeTab === 'channels' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockChannels.map((channel) => (
+            {filteredChannels.map((channel) => (
               <Card key={channel.id} className="duxxan-card-hover">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
@@ -633,7 +723,7 @@ export default function Community() {
 
         {activeTab === 'upcoming' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {mockUpcomingRaffles.map((raffle) => (
+            {filteredUpcomingRaffles.map((raffle) => (
               <Card key={raffle.id} className="duxxan-card-hover">
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -708,35 +798,77 @@ export default function Community() {
           </div>
         )}
 
-        {/* Empty states */}
-        {activeTab === 'channels' && mockChannels.length === 0 && (
+        {/* Empty states and No results */}
+        {activeTab === 'channels' && filteredChannels.length === 0 && (
           <div className="text-center py-12">
-            <Users className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Henüz kanal yok</h3>
-            <p className="text-duxxan-text-secondary mb-6">
-              İlk kanalı sen oluştur ve topluluğunu büyütmeye başla!
-            </p>
-            {isConnected && (
-              <Button onClick={() => setShowCreateChannel(true)} className="duxxan-button-primary">
-                <Plus className="h-4 w-4 mr-2" />
-                İlk Kanalı Oluştur
-              </Button>
+            {mockChannels.length === 0 ? (
+              <>
+                <Users className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Henüz kanal yok</h3>
+                <p className="text-duxxan-text-secondary mb-6">
+                  İlk kanalı sen oluştur ve topluluğunu büyütmeye başla!
+                </p>
+                {isConnected && (
+                  <Button onClick={() => setShowCreateChannel(true)} className="duxxan-button-primary">
+                    <Plus className="h-4 w-4 mr-2" />
+                    İlk Kanalı Oluştur
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <Search className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Sonuç bulunamadı</h3>
+                <p className="text-duxxan-text-secondary mb-6">
+                  Arama kriterlerinize uygun kanal bulunamadı. Filtreleri temizleyip tekrar deneyin.
+                </p>
+                <Button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('all');
+                  }}
+                  className="duxxan-button-secondary"
+                >
+                  Filtreleri Temizle
+                </Button>
+              </>
             )}
           </div>
         )}
 
-        {activeTab === 'upcoming' && mockUpcomingRaffles.length === 0 && (
+        {activeTab === 'upcoming' && filteredUpcomingRaffles.length === 0 && (
           <div className="text-center py-12">
-            <Calendar className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Gelecek çekiliş yok</h3>
-            <p className="text-duxxan-text-secondary mb-6">
-              Gelecek çekilişinizi duyurun ve topluluğunuzu heyecanlandırın!
-            </p>
-            {isConnected && (
-              <Button onClick={() => setShowCreateRaffle(true)} className="duxxan-button-primary">
-                <Trophy className="h-4 w-4 mr-2" />
-                İlk Duyuruyu Oluştur
-              </Button>
+            {mockUpcomingRaffles.length === 0 ? (
+              <>
+                <Calendar className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Gelecek çekiliş yok</h3>
+                <p className="text-duxxan-text-secondary mb-6">
+                  Gelecek çekilişinizi duyurun ve topluluğunuzu heyecanlandırın!
+                </p>
+                {isConnected && (
+                  <Button onClick={() => setShowCreateRaffle(true)} className="duxxan-button-primary">
+                    <Trophy className="h-4 w-4 mr-2" />
+                    İlk Duyuruyu Oluştur
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <Search className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Sonuç bulunamadı</h3>
+                <p className="text-duxxan-text-secondary mb-6">
+                  Arama kriterlerinize uygun çekiliş bulunamadı. Filtreleri temizleyip tekrar deneyin.
+                </p>
+                <Button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('all');
+                  }}
+                  className="duxxan-button-secondary"
+                >
+                  Filtreleri Temizle
+                </Button>
+              </>
             )}
           </div>
         )}
