@@ -98,9 +98,27 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
-          <p className="text-xl text-duxxan-text-secondary mb-12 max-w-3xl mx-auto">
+          <p className="text-xl text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
             Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
+          
+          {/* Live Connected Wallets - Promotional Display */}
+          <div className="mb-12">
+            <div className="inline-flex items-center bg-duxxan-success/10 border border-duxxan-success/30 rounded-full px-6 py-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-duxxan-success rounded-full animate-pulse"></div>
+                <span className="text-duxxan-success font-bold text-lg">
+                  {connectedWallets.toLocaleString()} 
+                </span>
+                <span className="text-duxxan-text-secondary">
+                  cüzdan şu anda bağlı
+                </span>
+                <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30">
+                  CANLI
+                </Badge>
+              </div>
+            </div>
+          </div>
           
           {/* Live Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
