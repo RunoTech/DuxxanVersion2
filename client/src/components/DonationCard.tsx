@@ -145,13 +145,13 @@ export function DonationCard({ donation }: DonationCardProps) {
             <div className="text-lg font-bold text-white">
               {daysLeft > 0 ? daysLeft : 0}
             </div>
-            <div className="text-xs text-duxxan-text-secondary">Days Left</div>
+            <div className="text-xs text-duxxan-text-secondary">Kalan Gün</div>
           </div>
           <div>
             <div className="text-lg font-bold text-duxxan-success">
               ${avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
             </div>
-            <div className="text-xs text-duxxan-text-secondary">Avg Donation</div>
+            <div className="text-xs text-duxxan-text-secondary">Ort. Bağış</div>
           </div>
         </div>
 
@@ -160,7 +160,7 @@ export function DonationCard({ donation }: DonationCardProps) {
             <div className="flex gap-2">
               <Input
                 type="number"
-                placeholder="Enter amount (USDT)"
+                placeholder="Miktar girin (USDT)"
                 value={donationAmount}
                 onChange={(e) => setDonationAmount(e.target.value)}
                 className="bg-duxxan-dark border-duxxan-border text-white"
@@ -172,7 +172,7 @@ export function DonationCard({ donation }: DonationCardProps) {
                 disabled={!isConnected || isContributing || !donationAmount}
                 className="duxxan-button-success whitespace-nowrap"
               >
-                {isContributing ? 'Processing...' : 'Donate'}
+                {isContributing ? 'İşleniyor...' : 'Bağış Yap'}
               </Button>
             </div>
 
