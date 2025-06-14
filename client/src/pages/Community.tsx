@@ -705,12 +705,21 @@ export default function Community() {
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => handleSubscribe(channel.id)}
-                      variant={channel.isSubscribed ? "outline" : "default"}
-                      className={channel.isSubscribed ? "bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
+                      variant="default"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"
                       disabled={!isConnected}
                     >
-                      <Bell className="h-4 w-4 mr-2" />
-                      {channel.isSubscribed ? 'Abonesin' : 'Abone Ol'}
+                      {channel.isSubscribed ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-2 text-blue-400" />
+                          Abonesin
+                        </>
+                      ) : (
+                        <>
+                          <Bell className="h-4 w-4 mr-2" />
+                          Abone Ol
+                        </>
+                      )}
                     </Button>
                     <Button
                       variant="ghost"
