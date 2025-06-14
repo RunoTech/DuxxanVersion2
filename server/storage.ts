@@ -224,27 +224,19 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
     try {
-      const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
-      const userResults = await db.select().from(users);
-      
-      const userMap = new Map(userResults.map(user => [user.id, user]));
-      
-      const now = new Date();
-      const activeDonations = donationResults
-        .filter(donation => new Date(donation.endDate) > now)
-        .map(donation => {
-          const creator = userMap.get(donation.creatorId);
-          if (!creator) return null;
-          
-          return {
-            ...donation,
-            creator
-          };
+      const results = await db
+        .select({
+          donation: donations,
+          creator: users,
         })
-        .filter((donation): donation is Donation & { creator: User } => donation !== null)
-        .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
-
-      return activeDonations;
+        .from(donations)
+        .innerJoin(users, eq(donations.creatorId, users.id))
+        .where(eq(donations.isActive, true));
+      
+      return results.map(result => ({
+        ...result.donation,
+        creator: result.creator
+      }));
     } catch (error) {
       console.error('Error in getActiveDonations:', error);
       return [];
