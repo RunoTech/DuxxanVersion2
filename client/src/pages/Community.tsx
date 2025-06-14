@@ -729,51 +729,51 @@ export default function Community() {
         {activeTab === 'upcoming' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredUpcomingRaffles.map((raffle) => (
-              <Card key={raffle.id} className="bg-white border-2 border-yellow-400 hover:border-yellow-500 transition-colors">
+              <Card key={raffle.id} className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-colors">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="text-4xl">{raffle.previewImage}</div>
                       <div>
-                        <CardTitle className="text-gray-900 text-lg">{raffle.title}</CardTitle>
-                        <p className="text-gray-600 text-sm">{raffle.channel}</p>
+                        <CardTitle className="text-gray-900 dark:text-white text-lg">{raffle.title}</CardTitle>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{raffle.channel}</p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-600 border border-yellow-300">
+                    <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
                       {raffle.category}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
                     {raffle.description}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-50 border border-yellow-200 rounded-lg p-3">
-                      <div className="text-green-600 font-bold text-lg">
+                    <div className="bg-gray-50 dark:bg-gray-700 border border-yellow-200 dark:border-yellow-600 rounded-lg p-3">
+                      <div className="text-green-600 dark:text-green-400 font-bold text-lg">
                         ${raffle.prizeValue}
                       </div>
-                      <div className="text-gray-500 text-xs">Ödül Değeri</div>
+                      <div className="text-gray-500 dark:text-gray-400 text-xs">Ödül Değeri</div>
                     </div>
-                    <div className="bg-gray-50 border border-yellow-200 rounded-lg p-3">
-                      <div className="text-yellow-600 font-bold text-lg">
+                    <div className="bg-gray-50 dark:bg-gray-700 border border-yellow-200 dark:border-yellow-600 rounded-lg p-3">
+                      <div className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">
                         {raffle.ticketPrice} USDT
                       </div>
-                      <div className="text-gray-500 text-xs">Bilet Fiyatı</div>
+                      <div className="text-gray-500 dark:text-gray-400 text-xs">Bilet Fiyatı</div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-600 text-sm">
+                      <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-gray-600 dark:text-gray-400 text-sm">
                         {formatDate(raffle.startDate)}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Eye className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-600 text-sm">
+                      <Eye className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-gray-600 dark:text-gray-400 text-sm">
                         {raffle.interestedCount.toLocaleString()} ilgileniyor
                       </span>
                     </div>
@@ -783,7 +783,7 @@ export default function Community() {
                     <Button
                       onClick={() => handleInterest(raffle.id)}
                       variant={raffle.isInterested ? "outline" : "default"}
-                      className={raffle.isInterested ? "bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
+                      className={raffle.isInterested ? "bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
                       disabled={!isConnected}
                     >
                       <Heart className={`h-4 w-4 mr-2 ${raffle.isInterested ? 'fill-current' : ''}`} />
@@ -792,7 +792,7 @@ export default function Community() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-gray-600 hover:text-yellow-600"
+                      className="text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400"
                     >
                       <Share2 className="h-4 w-4" />
                     </Button>
