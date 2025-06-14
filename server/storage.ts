@@ -258,13 +258,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
-    try {
-      // Use the existing working getDonations method instead
-      return await this.getDonations(50, 0);
-    } catch (error) {
-      console.error('Error in getActiveDonations:', error);
-      throw error;
-    }
+    return await this.getDonations(100, 0);
   }
 
   async getDonationsByCreator(creatorId: number): Promise<Donation[]> {
