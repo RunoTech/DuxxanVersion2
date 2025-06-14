@@ -89,13 +89,13 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
       });
 
       toast({
-        title: 'Tickets Purchased!',
-        description: `Successfully purchased ${quantity} ticket(s)`,
+        title: 'Biletler Satın Alındı!',
+        description: `${quantity} bilet başarıyla satın alındı`,
       });
     } catch (error: any) {
       toast({
-        title: 'Purchase Failed',
-        description: error.message || 'Failed to purchase tickets',
+        title: 'Satın Alma Başarısız',
+        description: error.message || 'Bilet satın alma başarısız',
         variant: 'destructive',
       });
     }
@@ -128,30 +128,30 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
         <div className="bg-duxxan-dark rounded-lg p-4 mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-duxxan-text-secondary">Tickets Sold</span>
+            <span className="text-sm text-duxxan-text-secondary">Satılan Biletler</span>
             <span className="text-sm font-bold text-duxxan-success">
               {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
             </span>
           </div>
           <Progress value={progress} className="mb-2" />
           <div className="text-xs text-duxxan-text-secondary">
-            {progress < 50 ? '🚀 Just getting started!' : progress < 80 ? '🔥 Heating up!' : '⚡ Almost sold out!'}
+            {progress < 50 ? '🚀 Yeni başlıyor!' : progress < 80 ? '🔥 Kızışıyor!' : '⚡ Neredeyse tükendi!'}
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="text-sm text-duxxan-text-secondary">Ticket Price</div>
+            <div className="text-sm text-duxxan-text-secondary">Bilet Fiyatı</div>
             <div className="text-lg font-bold text-duxxan-yellow">
               {parseFloat(raffle.ticketPrice).toLocaleString()} USDT
             </div>
           </div>
           <div className="text-right">
             <div className="text-sm text-duxxan-text-secondary">
-              {daysLeft > 0 ? 'Ends In' : 'Ended'}
+              {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
             </div>
             <div className="text-lg font-bold">
-              {daysLeft > 0 ? `${daysLeft}d` : 'Ended'}
+              {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             disabled={!isConnected || daysLeft <= 0}
             className="duxxan-button-primary w-full"
           >
-            Buy 1 Ticket
+            1 Bilet Al
           </Button>
           
           {raffle.ticketsSold < raffle.maxTickets * 0.8 && (
@@ -173,7 +173,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
                 variant="outline"
                 className="duxxan-button-secondary text-sm"
               >
-                Buy 5 Tickets
+                5 Bilet Al
               </Button>
               <Button
                 onClick={() => buyTickets(10)}

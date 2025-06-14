@@ -226,16 +226,16 @@ export default function Home() {
       {!isConnected && (
         <section className="py-20 bg-duxxan-dark">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+            <h2 className="text-3xl font-bold mb-4">Başlamaya Hazır mısınız?</h2>
             <p className="text-xl text-duxxan-text-secondary mb-8">
-              Connect your wallet to start participating in raffles and supporting donation campaigns.
+              Çekilişlere katılmaya ve bağış kampanyalarını desteklemeye başlamak için cüzdanınızı bağlayın.
             </p>
             <div className="flex justify-center space-x-4">
               <Button className="duxxan-button-primary">
-                Connect MetaMask
+                MetaMask Bağla
               </Button>
               <Button variant="outline" className="duxxan-button-secondary">
-                Learn More
+                Daha Fazla Bilgi
               </Button>
             </div>
           </div>
