@@ -6,8 +6,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { 
   User, Camera, Upload, X, Save, Edit, Eye, EyeOff, 
   Globe, Phone, Mail, MapPin, Calendar, Briefcase,
-  Twitter, Instagram, Linkedin, Facebook, Monitor,
-  Smartphone, Tablet, Trash2, Shield, Award
+  Monitor, Smartphone, Tablet, Trash2, Shield, Award, Share2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,10 +30,6 @@ interface ProfileFormData {
   website?: string;
   profession?: string;
   bio?: string;
-  socialMediaTwitter?: string;
-  socialMediaInstagram?: string;
-  socialMediaLinkedin?: string;
-  socialMediaFacebook?: string;
   organizationType?: string;
   organizationName?: string;
   country?: string;
@@ -100,10 +95,6 @@ export default function ProfileNew() {
         website: user.website || '',
         profession: user.profession || '',
         bio: user.bio || '',
-        socialMediaTwitter: user.socialMediaTwitter || '',
-        socialMediaInstagram: user.socialMediaInstagram || '',
-        socialMediaLinkedin: user.socialMediaLinkedin || '',
-        socialMediaFacebook: user.socialMediaFacebook || '',
         organizationType: user.organizationType || 'individual',
         organizationName: user.organizationName || '',
         country: user.country || '',
@@ -392,9 +383,9 @@ export default function ProfileNew() {
         </div>
 
         {/* Main Content Tabs */}
-        <div className="mt-8">
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <div className="mt-6">
+          <Tabs defaultValue="profile" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
               <TabsTrigger value="profile" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
                 Profil Bilgileri
               </TabsTrigger>
@@ -402,10 +393,7 @@ export default function ProfileNew() {
                 Fotoğraflar
               </TabsTrigger>
               <TabsTrigger value="devices" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-                Cihazlar
-              </TabsTrigger>
-              <TabsTrigger value="privacy" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-                Gizlilik
+                Cihazlar & Güvenlik
               </TabsTrigger>
             </TabsList>
 
@@ -667,85 +655,47 @@ export default function ProfileNew() {
                   </CardContent>
                 </Card>
 
-                {/* Social Media */}
+                {/* Sharing Options */}
                 <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Globe className="h-5 w-5" />
-                      Sosyal Medya
+                      <Share2 className="h-5 w-5" />
+                      Çekiliş Paylaşım
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="twitter" className="flex items-center gap-2">
-                        <Twitter className="h-4 w-4 text-blue-500" />
-                        Twitter
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="twitter"
-                          value={formData.socialMediaTwitter || ''}
-                          onChange={(e) => setFormData({...formData, socialMediaTwitter: e.target.value})}
-                          className="mt-1"
-                          placeholder="@kullaniciadi"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.socialMediaTwitter || 'Belirtilmemiş'}</p>
-                      )}
+                    <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                      <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+                        DUXXAN DEX Platform
+                      </h4>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                        Bu platform sadece çekiliş linklerinin paylaşımını destekler. 
+                        Çekilişlerinizi oluşturup arkadaşlarınızla paylaşabilirsiniz.
+                      </p>
                     </div>
-
-                    <div>
-                      <Label htmlFor="instagram" className="flex items-center gap-2">
-                        <Instagram className="h-4 w-4 text-pink-500" />
-                        Instagram
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="instagram"
-                          value={formData.socialMediaInstagram || ''}
-                          onChange={(e) => setFormData({...formData, socialMediaInstagram: e.target.value})}
-                          className="mt-1"
-                          placeholder="@kullaniciadi"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.socialMediaInstagram || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="linkedin" className="flex items-center gap-2">
-                        <Linkedin className="h-4 w-4 text-blue-700" />
-                        LinkedIn
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="linkedin"
-                          value={formData.socialMediaLinkedin || ''}
-                          onChange={(e) => setFormData({...formData, socialMediaLinkedin: e.target.value})}
-                          className="mt-1"
-                          placeholder="linkedin.com/in/kullaniciadi"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.socialMediaLinkedin || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="facebook" className="flex items-center gap-2">
-                        <Facebook className="h-4 w-4 text-blue-600" />
-                        Facebook
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="facebook"
-                          value={formData.socialMediaFacebook || ''}
-                          onChange={(e) => setFormData({...formData, socialMediaFacebook: e.target.value})}
-                          className="mt-1"
-                          placeholder="facebook.com/kullaniciadi"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.socialMediaFacebook || 'Belirtilmemiş'}</p>
-                      )}
+                    
+                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Profil Linki
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {window.location.origin}/profile/{user?.username}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${window.location.origin}/profile/${user?.username}`);
+                          toast({
+                            title: "Kopyalandı",
+                            description: "Profil linki panoya kopyalandı.",
+                          });
+                        }}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                      >
+                        Kopyala
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -799,105 +749,100 @@ export default function ProfileNew() {
               </Card>
             </TabsContent>
 
-            {/* Devices Tab */}
+            {/* Devices & Security Tab */}
             <TabsContent value="devices" className="space-y-6">
-              <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                    <Monitor className="h-5 w-5" />
-                    Giriş Yapılan Cihazlar
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {devicesLoading ? (
-                    <div className="flex justify-center py-8">
-                      <div className="animate-spin w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full" />
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* Security Settings */}
+                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                      <Shield className="h-5 w-5" />
+                      Güvenlik Ayarları
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">Kişisel Bilgileri Göster</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          E-posta, telefon ve doğum tarihi bilgilerini göster
+                        </p>
+                      </div>
+                      <Button
+                        variant={showPersonalInfo ? "default" : "outline"}
+                        onClick={() => setShowPersonalInfo(!showPersonalInfo)}
+                        size="sm"
+                      >
+                        {showPersonalInfo ? "Gizle" : "Göster"}
+                      </Button>
                     </div>
-                  ) : devices.length > 0 ? (
-                    <div className="space-y-4">
-                      {devices.map((device: DeviceInfo) => (
-                        <div key={device.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                          <div className="flex items-center gap-4">
-                            <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                              {getDeviceIcon(device.deviceType)}
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-gray-900 dark:text-white">
-                                {device.deviceName || device.deviceType}
-                              </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {device.browser} • {device.operatingSystem}
-                              </p>
-                              {device.location && (
-                                <p className="text-sm text-gray-500 dark:text-gray-500">{device.location}</p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Son giriş</p>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              {formatDate(device.lastLoginAt)}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                      Henüz kayıtlı cihaz bulunmuyor.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Privacy Tab */}
-            <TabsContent value="privacy" className="space-y-6">
-              <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                    <Shield className="h-5 w-5" />
-                    Gizlilik Ayarları
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">Kişisel Bilgileri Göster</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        E-posta, telefon ve doğum tarihi bilgilerini göster
-                      </p>
-                    </div>
-                    <Button
-                      variant={showPersonalInfo ? "default" : "outline"}
-                      onClick={() => setShowPersonalInfo(!showPersonalInfo)}
-                    >
-                      {showPersonalInfo ? "Gizle" : "Göster"}
-                    </Button>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-gray-900 dark:text-white">Hesap Güvenliği</h4>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                        <h5 className="font-medium text-gray-900 dark:text-white mb-2">Cüzdan Adresi</h5>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                    
+                    <div className="space-y-3">
+                      <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                        <h5 className="font-medium text-gray-900 dark:text-white mb-1">Cüzdan Adresi</h5>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">
                           {user?.walletAddress}
                         </p>
                       </div>
-                      <div className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                        <h5 className="font-medium text-gray-900 dark:text-white mb-2">Hesap Durumu</h5>
+                      <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                        <h5 className="font-medium text-gray-900 dark:text-white mb-1">Hesap Durumu</h5>
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-green-600 dark:text-green-400">Aktif</span>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+
+                {/* Device Management */}
+                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                      <Monitor className="h-5 w-5" />
+                      Giriş Yapılan Cihazlar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {devicesLoading ? (
+                      <div className="flex justify-center py-4">
+                        <div className="animate-spin w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full" />
+                      </div>
+                    ) : devices.length > 0 ? (
+                      <div className="space-y-3 max-h-80 overflow-y-auto">
+                        {devices.map((device: DeviceInfo) => (
+                          <div key={device.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <div className="p-1.5 bg-gray-100 dark:bg-gray-700 rounded">
+                                {getDeviceIcon(device.deviceType)}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                                  {device.deviceName || device.deviceType}
+                                </h4>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                                  {device.browser} • {device.operatingSystem}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs text-gray-600 dark:text-gray-400">Son giriş</p>
+                              <p className="text-xs font-medium text-gray-900 dark:text-white">
+                                {formatDate(device.lastLoginAt)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-6 text-gray-500 dark:text-gray-400">
+                        <Monitor className="mx-auto h-8 w-8 mb-2 opacity-50" />
+                        <p className="text-sm">Henüz kayıtlı cihaz bulunmuyor.</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
