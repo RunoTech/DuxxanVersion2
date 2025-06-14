@@ -409,7 +409,7 @@ export default function RaffleDetail() {
             </Card>
 
             {/* Demo Winner Assignment (for testing) */}
-            {safeRaffle && !safeRaffle.winnerId && user?.id === safeRaffle.creatorId && (
+            {safeRaffle && !safeRaffle.winnerId && (
               <Card className="bg-yellow-50 dark:bg-duxxan-surface border-yellow-200 dark:border-duxxan-border">
                 <CardHeader>
                   <CardTitle className="text-yellow-800 dark:text-duxxan-yellow">Demo: Kazanan Atama</CardTitle>
@@ -418,30 +418,36 @@ export default function RaffleDetail() {
                   <p className="text-sm text-yellow-700 dark:text-duxxan-text-secondary mb-3">
                     Test için kazanan atayabilirsiniz (demo amaçlı)
                   </p>
-                  <Button 
-                    onClick={() => {
-                      // Assign current user as winner for demo
-                      apiRequest('POST', `/api/raffles/${id}/assign-winner`, { winnerId: user.id })
-                        .then(() => {
-                          queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
-                          toast({
-                            title: 'Kazanan atandı!',
-                            description: 'Chat sistemi artık aktif.',
+                  <div className="space-y-2">
+                    <Button 
+                      onClick={() => {
+                        // Create demo user as winner
+                        const demoUser = { id: 999, username: 'demo_winner' };
+                        apiRequest('POST', `/api/raffles/${id}/assign-winner`, { winnerId: demoUser.id })
+                          .then(() => {
+                            queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+                            toast({
+                              title: 'Demo kazanan atandı!',
+                              description: 'Chat sistemi artık aktif. Demo kullanıcı: demo_winner',
+                            });
+                          })
+                          .catch((error) => {
+                            toast({
+                              title: 'Hata',
+                              description: 'Kazanan atanamadı',
+                              variant: 'destructive',
+                            });
                           });
-                        })
-                        .catch((error) => {
-                          toast({
-                            title: 'Hata',
-                            description: 'Kazanan atanamadı',
-                            variant: 'destructive',
-                          });
-                        });
-                    }}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                  >
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Kendimi Kazanan Yap (Demo)
-                  </Button>
+                      }}
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white w-full"
+                    >
+                      <Trophy className="w-4 h-4 mr-2" />
+                      Demo Kazanan Ata (ID: 999)
+                    </Button>
+                    <p className="text-xs text-yellow-700 dark:text-duxxan-text-secondary">
+                      Bu butona tıkladıktan sonra chat sistemi aktif olacak ve mesajlaşmayı test edebilirsiniz.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             )}
