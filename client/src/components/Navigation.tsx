@@ -14,7 +14,7 @@ export function Navigation() {
     { href: '/', label: 'Ana Sayfa' },
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
-    { href: '/profile', label: 'Profil' },
+    { href: '/community', label: 'Topluluk' },
   ];
 
   const NavLinks = ({ mobile = false }) => (

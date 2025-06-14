@@ -11,6 +11,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 // Pages
 import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
+import Community from "@/pages/Community";
 import Raffles from "@/pages/Raffles";
 import RaffleDetail from "@/pages/RaffleDetail";
 import Donations from "@/pages/Donations";
@@ -24,6 +25,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/profile" component={Profile} />
+      <Route path="/community" component={Community} />
       <Route path="/raffles" component={Raffles} />
       <Route path="/raffles/:id" component={RaffleDetail} />
       <Route path="/donations" component={Donations} />
