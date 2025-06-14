@@ -2,6 +2,9 @@ import { Link } from 'wouter';
 import { Github, Twitter, MessageCircle, Mail } from 'lucide-react';
 
 export function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,22 +38,22 @@ export function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/raffles" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/raffles" onClick={scrollToTop} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Çekilişler
                 </Link>
               </li>
               <li>
-                <Link href="/donations" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/donations" onClick={scrollToTop} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Bağış Kampanyaları
                 </Link>
               </li>
               <li>
-                <Link href="/community" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/community" onClick={scrollToTop} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Topluluk
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/profile" onClick={scrollToTop} className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Profil
                 </Link>
               </li>
@@ -62,12 +65,12 @@ export function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Oluştur</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/create-raffle" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/create-raffle" onClick={scrollToTop} className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Çekiliş Oluştur
                 </Link>
               </li>
               <li>
-                <Link href="/create-donation" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
+                <Link href="/create-donation" onClick={scrollToTop} className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white transition-colors text-sm">
                   Kampanya Başlat
                 </Link>
               </li>

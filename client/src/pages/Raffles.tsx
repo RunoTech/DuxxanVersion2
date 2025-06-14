@@ -31,7 +31,6 @@ export default function Raffles() {
   // Fetch raffles
   const { data: raffles = [], isLoading } = useQuery({
     queryKey: ['/api/raffles'],
-    refetchInterval: isConnected ? 30000 : false, // Refresh every 30 seconds if connected
   });
 
   // Filter and sort raffles
