@@ -128,6 +128,18 @@ export default function CountryProfile() {
                       <MapPin className="w-3 h-3 mr-1" />
                       {country.code}
                     </Badge>
+                    <a
+                      href={`https://tr.wikipedia.org/wiki/${encodeURIComponent(country.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center gap-1"
+                      title="Wikipedia'da görüntüle"
+                    >
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.624 5.367 11.99 11.988 11.99s11.99-5.366 11.99-11.99C24.007 5.367 18.641.001 12.017.001zM8.232 10.855c0-.639.516-1.156 1.156-1.156.639 0 1.156.517 1.156 1.156 0 .639-.517 1.156-1.156 1.156-.64 0-1.156-.517-1.156-1.156zm7.524 0c0-.639.516-1.156 1.155-1.156.64 0 1.156.517 1.156 1.156 0 .639-.516 1.156-1.156 1.156-.639 0-1.155-.517-1.155-1.156zm-3.762 5.803c-2.189 0-3.975-1.786-3.975-3.975s1.786-3.975 3.975-3.975 3.975 1.786 3.975 3.975-1.786 3.975-3.975 3.975z"/>
+                      </svg>
+                      Wiki
+                    </a>
                   </CardTitle>
                   <div className="flex items-center gap-4 mt-2 text-gray-600 dark:text-gray-400">
                     <span>👥 {country.population}</span>
