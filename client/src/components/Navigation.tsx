@@ -13,7 +13,6 @@ export function Navigation() {
   const { theme, toggleTheme } = useTheme();
 
   const navItems = [
-    { href: '/', label: 'Ana Sayfa' },
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
     { href: '/community', label: 'Topluluk' },
@@ -25,8 +24,8 @@ export function Navigation() {
         <Link
           key={item.href}
           href={item.href}
-          className={`font-black transition-colors hover:text-duxxan-yellow ${
-            location === item.href ? 'text-duxxan-yellow' : 'text-black dark:text-white'
+          className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
+            location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
           } ${mobile ? 'block py-2' : ''}`}
           onClick={() => mobile && setIsOpen(false)}
         >
