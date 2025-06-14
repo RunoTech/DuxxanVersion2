@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -6,7 +6,7 @@ import { Menu, Sun, Moon } from 'lucide-react';
 import { useWallet } from '@/hooks/useWallet';
 import { useTheme } from '@/components/ThemeProvider';
 
-export function Navigation() {
+function NavigationComponent() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { isConnected, connectMetaMask, connectTrustWallet, disconnect, connection } = useWallet();
@@ -143,3 +143,5 @@ export function Navigation() {
     </nav>
   );
 }
+
+export const Navigation = memo(NavigationComponent);

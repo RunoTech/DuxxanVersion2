@@ -71,11 +71,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   };
 
-  // Initialize categories with caching
+  // Initialize categories with aggressive caching
   app.get('/api/categories', async (req, res) => {
     try {
-      // Cache for 10 minutes
-      res.set('Cache-Control', 'public, max-age=600');
+      // Cache for 30 minutes with stale-while-revalidate
+      res.set('Cache-Control', 'public, max-age=1800, stale-while-revalidate=3600');
       
       const categories = await storage.getCategories();
       if (categories.length === 0) {
@@ -99,8 +99,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Platform stats with caching
   app.get('/api/stats', async (req, res) => {
     try {
-      // Cache for 2 minutes - stats update frequently
-      res.set('Cache-Control', 'public, max-age=120');
+      // Cache for 5 minutes with stale-while-revalidate
+      res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
       
       const stats = await storage.getPlatformStats();
       res.json(stats);
@@ -137,8 +137,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get('/api/users/me', getUser, async (req: any, res) => {
-    // Cache user data for 30 seconds to reduce database hits
-    res.set('Cache-Control', 'private, max-age=30');
+    // Cache user data for 1 minute with stale-while-revalidate
+    res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=120');
     res.json(req.user);
   });
 
@@ -175,6 +175,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/raffles/active', async (req, res) => {
     try {
+      // Cache active raffles for 1 minute with stale-while-revalidate
+      res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+      
       const raffles = await storage.getActiveRaffles();
       res.json(raffles);
     } catch (error) {
