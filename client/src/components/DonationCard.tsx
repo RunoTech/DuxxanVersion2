@@ -109,7 +109,7 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border hover:border-duxxan-success dark:hover:border-duxxan-success transition-all duration-300 cursor-pointer">
+      <Card className="bg-white dark:bg-duxxan-surface border-2 border-yellow-500 dark:border-yellow-500 hover:border-yellow-600 dark:hover:border-yellow-600 transition-all duration-300 cursor-pointer">
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
@@ -183,7 +183,7 @@ export function DonationCard({ donation }: DonationCardProps) {
                   onClick={() => quickDonate(amount)}
                   variant="outline"
                   size="sm"
-                  className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white flex-1 text-xs"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1 text-xs font-bold"
                 >
                   {amount} USDT
                 </Button>
