@@ -216,13 +216,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
-    return await db
-      .select()
-      .from(donations)
-      .innerJoin(users, eq(donations.creatorId, users.id))
-      .where(and(eq(donations.isActive, true), gt(donations.endDate, new Date())))
-      .orderBy(desc(donations.createdAt))
-      .then(rows => rows.map(row => ({ ...row.donations, creator: row.users })));
+    try {
+      const result = await db
+        .select({
+          donation: donations,
+          creator: users,
+        })
+        .from(donations)
+        .innerJoin(users, eq(donations.creatorId, users.id))
+        .where(and(eq(donations.isActive, true), gt(donations.endDate, new Date())))
+        .orderBy(desc(donations.createdAt));
+      
+      return result.map(row => ({ ...row.donation, creator: row.creator }));
+    } catch (error) {
+      console.error('Error in getActiveDonations:', error);
+      throw error;
+    }
   }
 
   async createDonationContribution(contribution: InsertDonationContribution & { userId: number }): Promise<DonationContribution> {
