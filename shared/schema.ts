@@ -41,6 +41,20 @@ export const categories = pgTable("categories", {
   slug: varchar("slug", { length: 50 }).notNull().unique(),
 });
 
+// Countries table for international filtering
+export const countries = pgTable("countries", {
+  id: serial("id").primaryKey(),
+  code: varchar("code", { length: 3 }).notNull().unique(), // ISO 3166-1 alpha-3
+  code2: varchar("code2", { length: 2 }).notNull().unique(), // ISO 3166-1 alpha-2
+  name: varchar("name", { length: 100 }).notNull(),
+  nameNative: varchar("name_native", { length: 100 }),
+  flag: varchar("flag", { length: 10 }), // Unicode flag emoji
+  continent: varchar("continent", { length: 20 }),
+  region: varchar("region", { length: 50 }),
+  currency: varchar("currency", { length: 10 }),
+  isActive: boolean("is_active").default(true),
+});
+
 export const raffles = pgTable("raffles", {
   id: serial("id").primaryKey(),
   creatorId: integer("creator_id").references(() => users.id).notNull(),
@@ -56,6 +70,10 @@ export const raffles = pgTable("raffles", {
   winnerId: integer("winner_id").references(() => users.id),
   isApprovedByCreator: boolean("is_approved_by_creator").default(false),
   isApprovedByWinner: boolean("is_approved_by_winner").default(false),
+  // Country filtering fields
+  countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
+  allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
+  excludedCountries: text("excluded_countries"), // JSON array of ISO country codes
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -87,6 +105,10 @@ export const donations = pgTable("donations", {
   totalCommissionCollected: decimal("total_commission_collected", { precision: 10, scale: 6 }).default("0"),
   category: varchar("category", { length: 50 }).default("general"), // health, education, disaster, etc.
   country: varchar("country", { length: 3 }), // For flag display
+  // Country filtering fields
+  countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
+  allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
+  excludedCountries: text("excluded_countries"), // JSON array of ISO country codes
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -138,6 +160,14 @@ export const userDevices = pgTable("user_devices", {
   ipAddress: varchar("ip_address", { length: 45 }), // supports IPv6
   userAgent: text("user_agent"),
   location: varchar("location", { length: 100 }), // city, country if available
+  // Detailed geolocation tracking
+  countryCode: varchar("country_code", { length: 3 }), // ISO country code
+  countryName: varchar("country_name", { length: 100 }),
+  city: varchar("city", { length: 100 }),
+  region: varchar("region", { length: 100 }),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }),
+  timezone: varchar("timezone", { length: 50 }),
   isActive: boolean("is_active").default(true),
   lastLoginAt: timestamp("last_login_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -291,6 +321,9 @@ export const insertRaffleSchema = createInsertSchema(raffles).pick({
   ticketPrice: true,
   maxTickets: true,
   endDate: true,
+  countryRestriction: true,
+  allowedCountries: true,
+  excludedCountries: true,
 }).extend({
   title: z.string()
     .min(5, "Title must be at least 5 characters")
