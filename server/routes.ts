@@ -6,6 +6,18 @@ import { db } from "./db";
 import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema } from "@shared/schema";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
+import {
+  globalRateLimit,
+  strictRateLimit,
+  authRateLimit,
+  createRateLimit,
+  progressiveSlowdown,
+  securityHeaders,
+  securityMiddleware,
+  requestSizeLimit,
+  patternDetection,
+  getSecurityStatus
+} from "./security";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
