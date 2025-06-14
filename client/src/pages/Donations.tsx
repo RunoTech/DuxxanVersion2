@@ -617,27 +617,7 @@ export default function Donations() {
                   Her ülkeden vakıf ve dernekler için özel alanlar.
                 </p>
                 
-                {/* Demo Raffles Section */}
-                <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
-                  <div className="flex items-center gap-2 mb-3">
-                    <TrendingUp className="w-5 h-5 text-yellow-600" />
-                    <h4 className="font-semibold text-gray-900 dark:text-white">Demo Çekilişler</h4>
-                    <Badge className="bg-yellow-100 text-yellow-800">Deneme</Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Platform özelliklerini test etmek için demo çekilişlere katılabilirsiniz.
-                  </p>
-                  <div className="flex gap-3">
-                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
-                      <TrendingUp className="w-4 h-4 mr-2" />
-                      Demo Çekiliş Başlat
-                    </Button>
-                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
-                      <Heart className="w-4 h-4 mr-2" />
-                      Demo Çekilişe Katıl
-                    </Button>
-                  </div>
-                </div>
+
               </CardHeader>
             </Card>
             
