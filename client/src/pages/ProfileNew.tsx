@@ -1,23 +1,37 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { useTheme } from '@/components/ThemeProvider';
-import { 
-  User, Camera, Upload, X, Save, Edit, Eye, EyeOff, 
-  Globe, Phone, Mail, MapPin, Calendar, Briefcase,
-  Monitor, Smartphone, Tablet, Trash2, Shield, Award, Share2
-} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
+import { 
+  User, 
+  Edit3, 
+  Save, 
+  X, 
+  Camera, 
+  Shield,
+  Star,
+  MapPin,
+  Upload,
+  Trash2,
+  Smartphone,
+  Monitor,
+  Tablet,
+  Globe,
+  Calendar,
+  Clock,
+  AlertTriangle
+} from 'lucide-react';
+
 
 interface ProfileFormData {
   name?: string;
@@ -56,13 +70,12 @@ interface UserPhoto {
 }
 
 export default function ProfileNew() {
-  const { theme } = useTheme();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [isEditing, setIsEditing] = useState(false);
-  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
   const [formData, setFormData] = useState<ProfileFormData>({});
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
@@ -78,28 +91,64 @@ export default function ProfileNew() {
     name: 'Demo Kullanıcı',
     email: 'demo@example.com',
     walletAddress: '0x1234567890123456789012345678901234567890',
-    organizationType: 'individual',
+    organizationType: 'individual' as const,
     country: 'Turkey',
     rating: '4.5',
     ratingCount: 12,
-    profession: 'Geliştirici'
-  };
+    profession: 'Geliştirici',
+    phoneNumber: '+90 555 123 4567',
+    city: 'İstanbul',
+    bio: 'Blockchain teknolojileri ve kripto para alanında uzman geliştirici.',
+    website: 'https://example.com',
+    isVerified: false,
+    organizationVerified: false,
+    profileImage: undefined,
+    dateOfBirth: undefined,
+    gender: undefined,
+    address: undefined,
+    organizationName: undefined
+  } as any;
 
-  // Fetch user devices with error handling
-  const { data: devices = [], isLoading: devicesLoading } = useQuery({
+  // Fetch user devices with demo data
+  const { data: rawDevices = [], isLoading: devicesLoading } = useQuery({
     queryKey: ['/api/users/me/devices'],
     enabled: !!user,
     retry: false,
     refetchOnWindowFocus: false,
   });
 
-  // Fetch user photos with error handling
-  const { data: photos = [], isLoading: photosLoading } = useQuery({
+  const devices = user ? (rawDevices as any[]) : [
+    {
+      id: 1,
+      deviceType: 'desktop',
+      deviceName: 'Chrome Tarayıcı',
+      browser: 'Chrome 120.0',
+      operatingSystem: 'Windows 11',
+      location: 'İstanbul, Türkiye',
+      lastLoginAt: new Date().toISOString(),
+      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 2,
+      deviceType: 'mobile',
+      deviceName: 'iPhone 15',
+      browser: 'Safari Mobile',
+      operatingSystem: 'iOS 17.2',
+      location: 'İstanbul, Türkiye',
+      lastLoginAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+
+  // Fetch user photos with demo data
+  const { data: rawPhotos = [], isLoading: photosLoading } = useQuery({
     queryKey: ['/api/users/me/photos'],
     enabled: !!user,
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  const photos = user ? (rawPhotos as any[]) : [];
 
   // Initialize form data when user data loads
   useEffect(() => {
@@ -125,31 +174,43 @@ export default function ProfileNew() {
   // Log device information on component mount
   useEffect(() => {
     const logDevice = async () => {
-      // Only log device if user is loaded and authenticated
-      if (!user || userLoading) return;
+      if (!user) return; // Skip for demo mode
       
       try {
         const deviceInfo = {
-          deviceType: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 
-                     /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' : 'desktop',
-          deviceName: navigator.platform,
-          browser: navigator.userAgent.split(' ').find(item => item.includes('Chrome') || item.includes('Firefox') || item.includes('Safari')) || 'Unknown',
-          operatingSystem: navigator.platform,
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          cookieEnabled: navigator.cookieEnabled,
+          onLine: navigator.onLine,
+          screenResolution: `${screen.width}x${screen.height}`,
+          colorDepth: screen.colorDepth,
+          pixelDepth: screen.pixelDepth,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timestamp: new Date().toISOString()
         };
 
         await apiRequest('POST', '/api/users/me/devices', deviceInfo);
       } catch (error) {
-        // Silently handle device logging errors to prevent UI disruption
-        console.error('Failed to log device:', error);
+        console.error('Failed to log device info:', error);
       }
     };
 
     logDevice();
-  }, [user, userLoading]);
+  }, [user]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {
+      if (!user) {
+        toast({
+          title: "Demo Modu",
+          description: "Demo modunda profil güncellenemez.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const response = await apiRequest('PATCH', '/api/users/me', data);
       return response.json();
     },
@@ -158,35 +219,47 @@ export default function ProfileNew() {
       setIsEditing(false);
       toast({
         title: "Profil Güncellendi",
-        description: "Profiliniz başarıyla güncellendi.",
+        description: "Profil bilgileriniz başarıyla güncellendi.",
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        title: "Hata",
-        description: "Profil güncellenirken bir hata oluştu.",
+        title: "Güncelleme Hatası",
+        description: error.message || "Profil güncellenirken hata oluştu.",
         variant: "destructive",
       });
     },
   });
 
-  // Upload photo mutation
+  // Photo upload mutation
   const uploadPhotoMutation = useMutation({
-    mutationFn: async (photoData: any) => {
-      const response = await apiRequest('POST', '/api/users/me/photos', photoData);
+    mutationFn: async (photoData: string) => {
+      if (!user) {
+        toast({
+          title: "Demo Modu",
+          description: "Demo modunda fotoğraf yüklenemez.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const response = await apiRequest('POST', '/api/users/me/photos', {
+        photoData,
+        photoType: 'profile'
+      });
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/users/me/photos'] });
       toast({
         title: "Fotoğraf Yüklendi",
-        description: "Fotoğrafınız başarıyla yüklendi.",
+        description: "Profil fotoğrafınız başarıyla güncellendi.",
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        title: "Hata",
-        description: "Fotoğraf yüklenirken bir hata oluştu.",
+        title: "Yükleme Hatası",
+        description: error.message || "Fotoğraf yüklenirken hata oluştu.",
         variant: "destructive",
       });
     },
@@ -195,6 +268,15 @@ export default function ProfileNew() {
   // Delete photo mutation
   const deletePhotoMutation = useMutation({
     mutationFn: async (photoId: number) => {
+      if (!user) {
+        toast({
+          title: "Demo Modu",
+          description: "Demo modunda fotoğraf silinemez.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       await apiRequest('DELETE', `/api/users/me/photos/${photoId}`);
     },
     onSuccess: () => {
@@ -204,25 +286,57 @@ export default function ProfileNew() {
         description: "Fotoğraf başarıyla silindi.",
       });
     },
+    onError: (error) => {
+      toast({
+        title: "Silme Hatası",
+        description: error.message || "Fotoğraf silinirken hata oluştu.",
+        variant: "destructive",
+      });
+    },
   });
+
+  const handleSave = () => {
+    updateProfileMutation.mutate(formData);
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: displayUser?.name || '',
+      email: displayUser?.email || '',
+      phoneNumber: displayUser?.phoneNumber || '',
+      dateOfBirth: displayUser?.dateOfBirth || '',
+      gender: displayUser?.gender || '',
+      city: displayUser?.city || '',
+      address: displayUser?.address || '',
+      website: displayUser?.website || '',
+      profession: displayUser?.profession || '',
+      bio: displayUser?.bio || '',
+      organizationType: displayUser?.organizationType || 'individual',
+      organizationName: displayUser?.organizationName || '',
+      country: displayUser?.country || '',
+    });
+    setIsEditing(false);
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
     if (!file.type.startsWith('image/jpeg')) {
       toast({
-        title: "Hata",
-        description: "Sadece JPEG formatında fotoğraflar yükleyebilirsiniz.",
+        title: "Geçersiz Dosya Türü",
+        description: "Sadece JPEG formatında resim yükleyebilirsiniz.",
         variant: "destructive",
       });
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "Hata",
-        description: "Fotoğraf boyutu 5MB'dan küçük olmalıdır.",
+        title: "Dosya Çok Büyük",
+        description: "Maksimum 5MB boyutunda resim yükleyebilirsiniz.",
         variant: "destructive",
       });
       return;
@@ -230,38 +344,39 @@ export default function ProfileNew() {
 
     setUploadingPhoto(true);
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64Data = e.target?.result as string;
-      
-      const photoData = {
-        photoData: base64Data,
-        photoType: 'profile',
-        fileName: file.name,
-        fileSize: file.size,
+    try {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        uploadPhotoMutation.mutate(result);
       };
-
-      uploadPhotoMutation.mutate(photoData);
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('File upload error:', error);
+      toast({
+        title: "Yükleme Hatası",
+        description: "Dosya yüklenirken hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
       setUploadingPhoto(false);
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  const handleSaveProfile = () => {
-    updateProfileMutation.mutate(formData);
+    }
   };
 
   const getDeviceIcon = (deviceType: string) => {
-    switch (deviceType) {
-      case 'mobile': return <Smartphone className="h-4 w-4" />;
-      case 'tablet': return <Tablet className="h-4 w-4" />;
-      default: return <Monitor className="h-4 w-4" />;
+    switch (deviceType.toLowerCase()) {
+      case 'mobile':
+        return <Smartphone className="h-4 w-4" />;
+      case 'tablet':
+        return <Tablet className="h-4 w-4" />;
+      case 'desktop':
+      default:
+        return <Monitor className="h-4 w-4" />;
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+    return new Date(dateString).toLocaleString('tr-TR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -283,36 +398,38 @@ export default function ProfileNew() {
       <div className="container mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="relative">
-          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-            <div className="h-32 bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 dark:from-yellow-600 dark:via-yellow-700 dark:to-orange-600 rounded-t-lg relative overflow-hidden">
-              <div className="absolute inset-0 bg-black/10 dark:bg-black/20" />
+          <Card className="mb-8 overflow-hidden border-2 border-yellow-200 dark:border-yellow-800 shadow-xl">
+            <div className="relative h-48 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800">
+              <div className="absolute inset-0 bg-black/20" />
               <div className="absolute top-4 right-4">
                 {!isEditing ? (
                   <Button
                     onClick={() => setIsEditing(true)}
-                    variant="secondary"
                     size="sm"
-                    className="bg-white/90 hover:bg-white text-gray-800 shadow-lg"
+                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30"
                   >
-                    <Edit className="h-4 w-4 mr-2" />
+                    <Edit3 className="h-4 w-4 mr-2" />
                     Düzenle
                   </Button>
                 ) : (
                   <div className="flex gap-2">
                     <Button
-                      onClick={handleSaveProfile}
-                      disabled={updateProfileMutation.isPending}
+                      onClick={handleSave}
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      disabled={updateProfileMutation.isPending}
+                      className="bg-green-500 hover:bg-green-600 text-white"
                     >
-                      <Save className="h-4 w-4 mr-2" />
-                      Kaydet
+                      {updateProfileMutation.isPending ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Save className="h-4 w-4" />
+                      )}
                     </Button>
                     <Button
-                      onClick={() => setIsEditing(false)}
-                      variant="secondary"
+                      onClick={handleCancel}
                       size="sm"
-                      className="bg-white/90 hover:bg-white text-gray-800 shadow-lg"
+                      variant="outline"
+                      className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -327,7 +444,7 @@ export default function ProfileNew() {
                 <div className="relative">
                   <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-700 shadow-xl">
                     <AvatarImage 
-                      src={photos.find(p => p.photoType === 'profile')?.photoData || displayUser?.profileImage} 
+                      src={photos.find((p: any) => p.photoType === 'profile')?.photoData || displayUser?.profileImage} 
                       alt={displayUser?.name || displayUser?.username}
                     />
                     <AvatarFallback className="bg-yellow-500 text-white text-2xl font-bold">
@@ -363,41 +480,44 @@ export default function ProfileNew() {
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center gap-3 mb-2">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {user?.name || user?.username}
+                      {displayUser?.name || displayUser?.username}
                     </h1>
-                    {user?.isVerified && (
+                    {displayUser?.isVerified && (
                       <Badge className="bg-blue-500 text-white">
                         <Shield className="h-3 w-3 mr-1" />
                         Doğrulanmış
                       </Badge>
                     )}
-                    {user?.organizationType !== 'individual' && (
-                      <Badge className="bg-purple-500 text-white">
-                        {user?.organizationType === 'foundation' ? 'Vakıf' : 
-                         user?.organizationType === 'association' ? 'Dernek' : 'Resmi'}
-                      </Badge>
+                    {displayUser?.organizationType === 'foundation' && (
+                      <Badge className="bg-green-500 text-white">Vakıf</Badge>
+                    )}
+                    {displayUser?.organizationType === 'association' && (
+                      <Badge className="bg-purple-500 text-white">Dernek</Badge>
                     )}
                   </div>
                   
-                  <p className="text-gray-600 dark:text-gray-300 mb-2">@{user?.username}</p>
-                  
-                  {user?.profession && (
-                    <p className="text-gray-700 dark:text-gray-200 mb-2 flex items-center justify-center md:justify-start gap-2">
-                      <Briefcase className="h-4 w-4" />
-                      {user.profession}
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">
+                    @{displayUser?.username}
+                  </p>
+                  {displayUser?.profession && (
+                    <p className="text-gray-500 dark:text-gray-400 mb-3">
+                      {displayUser?.profession}
                     </p>
                   )}
                   
-                  <div className="flex items-center justify-center md:justify-start gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-1">
-                      <Award className="h-4 w-4" />
-                      {user?.rating}/5.0 ({user?.ratingCount || 0} değerlendirme)
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span>{displayUser?.rating} ({displayUser?.ratingCount} değerlendirme)</span>
                     </div>
-                    {user?.country && (
-                      <div className="flex items-center gap-1">
-                        <Globe className="h-4 w-4" />
-                        {user.country}
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>{displayUser?.country}</span>
+                    </div>
+                    {displayUser?.country && (
+                      <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        {displayUser.country}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -406,470 +526,426 @@ export default function ProfileNew() {
           </Card>
         </div>
 
-        {/* Main Content Tabs */}
-        <div className="mt-6">
-          <Tabs defaultValue="profile" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-              <TabsTrigger value="profile" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-                Profil Bilgileri
-              </TabsTrigger>
-              <TabsTrigger value="photos" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-                Fotoğraflar
-              </TabsTrigger>
-              <TabsTrigger value="devices" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-                Cihazlar & Güvenlik
-              </TabsTrigger>
-            </TabsList>
+        {/* Tabs Section */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-white dark:bg-gray-800 border-2 border-yellow-200 dark:border-yellow-800">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+              <User className="h-4 w-4 mr-2" />
+              Profil Bilgileri
+            </TabsTrigger>
+            <TabsTrigger value="photos" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+              <Camera className="h-4 w-4 mr-2" />
+              Fotoğraflar
+            </TabsTrigger>
+            <TabsTrigger value="security" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+              <Shield className="h-4 w-4 mr-2" />
+              Cihazlar & Güvenlik
+            </TabsTrigger>
+          </TabsList>
 
-            {/* Profile Information Tab */}
-            <TabsContent value="profile" className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Personal Information */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <User className="h-5 w-5" />
-                      Kişisel Bilgiler
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPersonalInfo(!showPersonalInfo)}
-                        className="ml-auto"
-                      >
-                        {showPersonalInfo ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="name">Ad Soyad</Label>
-                        {isEditing ? (
-                          <Input
-                            id="name"
-                            value={formData.name || ''}
-                            onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="mt-1"
-                          />
-                        ) : (
-                          <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.name || 'Belirtilmemiş'}</p>
-                        )}
-                      </div>
-
-                      {showPersonalInfo && (
-                        <>
-                          <div>
-                            <Label htmlFor="email">E-posta</Label>
-                            {isEditing ? (
-                              <Input
-                                id="email"
-                                type="email"
-                                value={formData.email || ''}
-                                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.email || 'Belirtilmemiş'}</p>
-                            )}
-                          </div>
-
-                          <div>
-                            <Label htmlFor="phone">Telefon</Label>
-                            {isEditing ? (
-                              <Input
-                                id="phone"
-                                value={formData.phoneNumber || ''}
-                                onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.phoneNumber || 'Belirtilmemiş'}</p>
-                            )}
-                          </div>
-
-                          <div>
-                            <Label htmlFor="birthDate">Doğum Tarihi</Label>
-                            {isEditing ? (
-                              <Input
-                                id="birthDate"
-                                type="date"
-                                value={formData.dateOfBirth || ''}
-                                onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-700 dark:text-gray-300">
-                                {user?.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString('tr-TR') : 'Belirtilmemiş'}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <Label htmlFor="gender">Cinsiyet</Label>
-                            {isEditing ? (
-                              <Select value={formData.gender || ''} onValueChange={(value) => setFormData({...formData, gender: value})}>
-                                <SelectTrigger className="mt-1">
-                                  <SelectValue placeholder="Cinsiyet seçin" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="male">Erkek</SelectItem>
-                                  <SelectItem value="female">Kadın</SelectItem>
-                                  <SelectItem value="other">Diğer</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            ) : (
-                              <p className="mt-1 text-gray-700 dark:text-gray-300">
-                                {user?.gender === 'male' ? 'Erkek' : user?.gender === 'female' ? 'Kadın' : user?.gender === 'other' ? 'Diğer' : 'Belirtilmemiş'}
-                              </p>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Location & Contact */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <MapPin className="h-5 w-5" />
-                      Konum & İletişim
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="city">Şehir</Label>
-                      {isEditing ? (
-                        <Input
-                          id="city"
-                          value={formData.city || ''}
-                          onChange={(e) => setFormData({...formData, city: e.target.value})}
-                          className="mt-1"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.city || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="address">Adres</Label>
-                      {isEditing ? (
-                        <Textarea
-                          id="address"
-                          value={formData.address || ''}
-                          onChange={(e) => setFormData({...formData, address: e.target.value})}
-                          className="mt-1"
-                          rows={3}
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.address || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="website">Website</Label>
-                      {isEditing ? (
-                        <Input
-                          id="website"
-                          type="url"
-                          value={formData.website || ''}
-                          onChange={(e) => setFormData({...formData, website: e.target.value})}
-                          className="mt-1"
-                        />
-                      ) : (
-                        <div className="mt-1">
-                          {user?.website ? (
-                            <a 
-                              href={user.website} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-yellow-600 dark:text-yellow-400 hover:underline flex items-center gap-1"
-                            >
-                              <Globe className="h-4 w-4" />
-                              {user.website}
-                            </a>
-                          ) : (
-                            <p className="text-gray-700 dark:text-gray-300">Belirtilmemiş</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Professional Info */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Briefcase className="h-5 w-5" />
-                      Profesyonel Bilgiler
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="profession">Meslek</Label>
-                      {isEditing ? (
-                        <Input
-                          id="profession"
-                          value={formData.profession || ''}
-                          onChange={(e) => setFormData({...formData, profession: e.target.value})}
-                          className="mt-1"
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.profession || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="bio">Hakkımda</Label>
-                      {isEditing ? (
-                        <Textarea
-                          id="bio"
-                          value={formData.bio || ''}
-                          onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                          className="mt-1"
-                          rows={4}
-                          placeholder="Kendiniz hakkında kısa bir açıklama yazın..."
-                        />
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.bio || 'Belirtilmemiş'}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="orgType">Organizasyon Türü</Label>
-                      {isEditing ? (
-                        <Select value={formData.organizationType || ''} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="individual">Bireysel</SelectItem>
-                            <SelectItem value="foundation">Vakıf</SelectItem>
-                            <SelectItem value="association">Dernek</SelectItem>
-                            <SelectItem value="official">Resmi Kurum</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <p className="mt-1 text-gray-700 dark:text-gray-300">
-                          {user?.organizationType === 'individual' ? 'Bireysel' :
-                           user?.organizationType === 'foundation' ? 'Vakıf' :
-                           user?.organizationType === 'association' ? 'Dernek' :
-                           user?.organizationType === 'official' ? 'Resmi Kurum' : 'Belirtilmemiş'}
-                        </p>
-                      )}
-                    </div>
-
-                    {formData.organizationType !== 'individual' && (
-                      <div>
-                        <Label htmlFor="orgName">Organizasyon Adı</Label>
-                        {isEditing ? (
-                          <Input
-                            id="orgName"
-                            value={formData.organizationName || ''}
-                            onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
-                            className="mt-1"
-                          />
-                        ) : (
-                          <p className="mt-1 text-gray-700 dark:text-gray-300">{user?.organizationName || 'Belirtilmemiş'}</p>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Sharing Options */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Share2 className="h-5 w-5" />
-                      Çekiliş Paylaşım
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                      <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-                        DUXXAN DEX Platform
-                      </h4>
-                      <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                        Bu platform sadece çekiliş linklerinin paylaşımını destekler. 
-                        Çekilişlerinizi oluşturup arkadaşlarınızla paylaşabilirsiniz.
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">
-                          Profil Linki
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {window.location.origin}/profile/{user?.username}
-                        </p>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          navigator.clipboard.writeText(`${window.location.origin}/profile/${user?.username}`);
-                          toast({
-                            title: "Kopyalandı",
-                            description: "Profil linki panoya kopyalandı.",
-                          });
-                        }}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                      >
-                        Kopyala
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Photos Tab */}
-            <TabsContent value="photos" className="space-y-6">
-              <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+          {/* Profile Information Tab */}
+          <TabsContent value="profile" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Personal Information */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                    <Camera className="h-5 w-5" />
-                    Fotoğraflar
-                  </CardTitle>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Kişisel Bilgiler</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {photos.map((photo: UserPhoto) => (
-                      <div key={photo.id} className="relative group">
-                        <img
-                          src={photo.photoData}
-                          alt={photo.fileName || 'User photo'}
-                          className="w-full h-32 object-cover rounded-lg shadow-md"
-                        />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => deletePhotoMutation.mutate(photo.id)}
-                            disabled={deletePhotoMutation.isPending}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <div className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
-                          {photo.photoType}
-                        </div>
-                      </div>
-                    ))}
-                    
-                    {/* Upload Button */}
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <Upload className="h-8 w-8 text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">Fotoğraf Ekle</span>
-                    </button>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Ad Soyad</Label>
+                    {isEditing ? (
+                      <Input
+                        id="name"
+                        value={formData.name || ''}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="Ad Soyad"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.name || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">E-posta</Label>
+                    {isEditing ? (
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email || ''}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        placeholder="E-posta adresi"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.email || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Telefon</Label>
+                    {isEditing ? (
+                      <Input
+                        id="phone"
+                        value={formData.phoneNumber || ''}
+                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                        placeholder="Telefon numarası"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.phoneNumber || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="birthDate">Doğum Tarihi</Label>
+                    {isEditing ? (
+                      <Input
+                        id="birthDate"
+                        type="date"
+                        value={formData.dateOfBirth ? new Date(formData.dateOfBirth).toISOString().split('T')[0] : ''}
+                        onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.dateOfBirth ? new Date(displayUser.dateOfBirth).toLocaleDateString('tr-TR') : 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="gender">Cinsiyet</Label>
+                    {isEditing ? (
+                      <Select value={formData.gender || ''} onValueChange={(value) => setFormData({...formData, gender: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Cinsiyet seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Erkek</SelectItem>
+                          <SelectItem value="female">Kadın</SelectItem>
+                          <SelectItem value="other">Diğer</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.gender === 'male' ? 'Erkek' : 
+                         displayUser?.gender === 'female' ? 'Kadın' : 
+                         displayUser?.gender === 'other' ? 'Diğer' : 'Belirtilmemiş'}
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
 
-            {/* Devices & Security Tab */}
-            <TabsContent value="devices" className="space-y-6">
-              <div className="grid gap-6 lg:grid-cols-2">
-                {/* Security Settings */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Shield className="h-5 w-5" />
-                      Güvenlik Ayarları
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white">Kişisel Bilgileri Göster</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          E-posta, telefon ve doğum tarihi bilgilerini göster
-                        </p>
+              {/* Location Information */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Konum Bilgileri</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">Şehir</Label>
+                    {isEditing ? (
+                      <Input
+                        id="city"
+                        value={formData.city || ''}
+                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                        placeholder="Şehir"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.city || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="address">Adres</Label>
+                    {isEditing ? (
+                      <Textarea
+                        id="address"
+                        value={formData.address || ''}
+                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                        placeholder="Adres"
+                        rows={3}
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.address || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="website">Website</Label>
+                    {isEditing ? (
+                      <Input
+                        id="website"
+                        type="url"
+                        value={formData.website || ''}
+                        onChange={(e) => setFormData({...formData, website: e.target.value})}
+                        placeholder="https://example.com"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.website ? (
+                          <a href={displayUser.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                            {displayUser.website}
+                          </a>
+                        ) : 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Professional Information */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Profesyonel Bilgiler</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="profession">Meslek</Label>
+                    {isEditing ? (
+                      <Input
+                        id="profession"
+                        value={formData.profession || ''}
+                        onChange={(e) => setFormData({...formData, profession: e.target.value})}
+                        placeholder="Mesleğiniz"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.profession || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Biyografi</Label>
+                    {isEditing ? (
+                      <Textarea
+                        id="bio"
+                        value={formData.bio || ''}
+                        onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                        placeholder="Kendinizi tanıtın..."
+                        rows={4}
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.bio || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Organization Information */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Organizasyon Bilgileri</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="organizationType">Organizasyon Türü</Label>
+                    {isEditing ? (
+                      <Select value={formData.organizationType || 'individual'} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Organizasyon türü seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="individual">Bireysel</SelectItem>
+                          <SelectItem value="foundation">Vakıf</SelectItem>
+                          <SelectItem value="association">Dernek</SelectItem>
+                          <SelectItem value="company">Şirket</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.organizationType === 'individual' ? 'Bireysel' :
+                         displayUser?.organizationType === 'foundation' ? 'Vakıf' :
+                         displayUser?.organizationType === 'association' ? 'Dernek' :
+                         displayUser?.organizationType === 'company' ? 'Şirket' : 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="organizationName">Organizasyon Adı</Label>
+                    {isEditing ? (
+                      <Input
+                        id="organizationName"
+                        value={formData.organizationName || ''}
+                        onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
+                        placeholder="Organizasyon adı"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white font-medium">
+                        {displayUser?.organizationName || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Photos Tab */}
+          <TabsContent value="photos" className="space-y-6">
+            <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+              <CardHeader>
+                <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
+                  <Camera className="h-5 w-5" />
+                  Fotoğraflarım
+                </CardTitle>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Sadece JPEG formatında fotoğraf yükleyebilirsiniz. Maksimum dosya boyutu 5MB.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4 mb-6">
+                  <Button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                    disabled={!user || uploadingPhoto}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {uploadingPhoto ? 'Yükleniyor...' : 'Fotoğraf Yükle'}
+                  </Button>
+                  {!user && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Demo modunda fotoğraf yüklenemez
+                    </p>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {photos.map((photo: any) => (
+                    <div key={photo.id} className="relative group">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        <img
+                          src={photo.photoData}
+                          alt={`Fotoğraf ${photo.id}`}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <Button
-                        variant={showPersonalInfo ? "default" : "outline"}
-                        onClick={() => setShowPersonalInfo(!showPersonalInfo)}
+                        onClick={() => deletePhotoMutation.mutate(photo.id)}
                         size="sm"
+                        variant="destructive"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        disabled={deletePhotoMutation.isPending}
                       >
-                        {showPersonalInfo ? "Gizle" : "Göster"}
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                    
-                    <div className="space-y-3">
-                      <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
-                        <h5 className="font-medium text-gray-900 dark:text-white mb-1">Cüzdan Adresi</h5>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 font-mono break-all">
-                          {user?.walletAddress}
-                        </p>
+                  ))}
+                </div>
+                
+                {photos.length === 0 && (
+                  <div className="text-center py-12">
+                    <Camera className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Henüz fotoğraf yüklenmemiş
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Security & Devices Tab */}
+          <TabsContent value="security" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Wallet Information */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Cüzdan Bilgileri
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Cüzdan Adresi</Label>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded flex-1 break-all">
+                        {displayUser?.walletAddress}
+                      </code>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                    <Shield className="h-4 w-4" />
+                    <span>Cüzdan bağlantısı güvenli</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Login Devices */}
+              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
+                    <Monitor className="h-5 w-5" />
+                    Giriş Yapılan Cihazlar
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {devices.map((device: any) => (
+                    <div key={device.id} className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div className="flex-shrink-0 mt-1">
+                        {getDeviceIcon(device.deviceType)}
                       </div>
-                      <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
-                        <h5 className="font-medium text-gray-900 dark:text-white mb-1">Hesap Durumu</h5>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-sm text-green-600 dark:text-green-400">Aktif</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-gray-900 dark:text-white">
+                            {device.deviceName || device.deviceType}
+                          </h4>
+                          <Badge variant="secondary" className="text-xs">
+                            {device.deviceType}
+                          </Badge>
+                        </div>
+                        <div className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <Globe className="h-3 w-3" />
+                            <span>{device.browser}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Monitor className="h-3 w-3" />
+                            <span>{device.operatingSystem}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            <span>{device.location}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            <span>Son giriş: {formatDate(device.lastLoginAt)}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Device Management */}
-                <Card className="border-0 shadow-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Monitor className="h-5 w-5" />
-                      Giriş Yapılan Cihazlar
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {devicesLoading ? (
-                      <div className="flex justify-center py-4">
-                        <div className="animate-spin w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full" />
-                      </div>
-                    ) : devices.length > 0 ? (
-                      <div className="space-y-3 max-h-80 overflow-y-auto">
-                        {devices.map((device: DeviceInfo) => (
-                          <div key={device.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="p-1.5 bg-gray-100 dark:bg-gray-700 rounded">
-                                {getDeviceIcon(device.deviceType)}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
-                                  {device.deviceName || device.deviceType}
-                                </h4>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                                  {device.browser} • {device.operatingSystem}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-xs text-gray-600 dark:text-gray-400">Son giriş</p>
-                              <p className="text-xs font-medium text-gray-900 dark:text-white">
-                                {formatDate(device.lastLoginAt)}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-6 text-gray-500 dark:text-gray-400">
-                        <Monitor className="mx-auto h-8 w-8 mb-2 opacity-50" />
-                        <p className="text-sm">Henüz kayıtlı cihaz bulunmuyor.</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+                  ))}
+                  
+                  {devices.length === 0 && (
+                    <div className="text-center py-8">
+                      <AlertTriangle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500 dark:text-gray-400">
+                        Cihaz bilgisi bulunamadı
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
