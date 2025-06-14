@@ -88,7 +88,7 @@ export default function Home() {
                 <div className="text-3xl font-bold text-duxxan-yellow mb-2">
                   {liveStats.totalRaffles.toLocaleString()}
                 </div>
-                <div className="text-duxxan-text-secondary">Active Raffles</div>
+                <div className="text-duxxan-text-secondary">Aktif Çekilişler</div>
               </CardContent>
             </Card>
             
@@ -97,7 +97,7 @@ export default function Home() {
                 <div className="text-3xl font-bold text-duxxan-success mb-2">
                   ${parseFloat(liveStats.totalPrizePool).toLocaleString()}
                 </div>
-                <div className="text-duxxan-text-secondary">Total Prize Pool</div>
+                <div className="text-duxxan-text-secondary">Toplam Ödül Havuzu</div>
               </CardContent>
             </Card>
             
@@ -106,7 +106,7 @@ export default function Home() {
                 <div className="text-3xl font-bold text-duxxan-warning mb-2">
                   ${parseFloat(liveStats.totalDonations).toLocaleString()}
                 </div>
-                <div className="text-duxxan-text-secondary">Donations Raised</div>
+                <div className="text-duxxan-text-secondary">Toplanan Bağışlar</div>
               </CardContent>
             </Card>
           </div>
@@ -117,16 +117,16 @@ export default function Home() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">Popular Raffles</h2>
+            <h2 className="text-3xl font-bold">Popüler Çekilişler</h2>
             <div className="flex space-x-4">
               <Link href="/raffles">
                 <Button variant="outline" className="duxxan-button-secondary">
-                  View All Raffles
+                  Tüm Çekilişler
                 </Button>
               </Link>
               <Link href="/create-raffle">
                 <Button className="duxxan-button-primary">
-                  Create Raffle
+                  Çekiliş Oluştur
                 </Button>
               </Link>
             </div>
@@ -141,13 +141,13 @@ export default function Home() {
           ) : (
             <Card className="duxxan-card text-center">
               <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4">No Active Raffles</h3>
+                <h3 className="text-xl font-bold mb-4">Aktif Çekiliş Yok</h3>
                 <p className="text-duxxan-text-secondary mb-6">
-                  Be the first to create an exciting raffle on DUXXAN!
+                  DUXXAN'da heyecan verici bir çekiliş oluşturan ilk kişi olun!
                 </p>
                 <Link href="/create-raffle">
                   <Button className="duxxan-button-primary">
-                    Create First Raffle
+                    İlk Çekilişi Oluştur
                   </Button>
                 </Link>
               </CardContent>
@@ -161,20 +161,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Donation Campaigns</h2>
+              <h2 className="text-3xl font-bold mb-2">Bağış Kampanyaları</h2>
               <p className="text-duxxan-text-secondary">
-                Support causes that matter with transparent blockchain donations
+                Şeffaf blockchain bağışları ile önemli amaçları destekleyin
               </p>
             </div>
             <div className="flex space-x-4">
               <Link href="/donations">
                 <Button variant="outline" className="duxxan-button-secondary">
-                  View All Campaigns
+                  Tüm Kampanyalar
                 </Button>
               </Link>
               <Link href="/create-donation">
                 <Button className="duxxan-button-success">
-                  Start Campaign
+                  Kampanya Başlat
                 </Button>
               </Link>
             </div>
@@ -185,14 +185,14 @@ export default function Home() {
             <CardContent className="p-6">
               <div className="text-center">
                 <div className="text-sm text-duxxan-text-secondary mb-2">
-                  Total Donation Market Cap
+                  Toplam Bağış Piyasa Değeri
                 </div>
                 <div className="text-4xl font-bold text-duxxan-success mb-4">
                   ${parseFloat(liveStats.totalDonations).toLocaleString()}
                 </div>
                 <div className="flex justify-center items-center space-x-4 text-sm">
-                  <span className="text-duxxan-success">↗ Live Updates</span>
-                  <span className="text-duxxan-text-secondary">Blockchain Verified</span>
+                  <span className="text-duxxan-success">↗ Anlık Güncellemeler</span>
+                  <span className="text-duxxan-text-secondary">Blockchain Doğrulanmış</span>
                 </div>
               </div>
             </CardContent>
@@ -207,13 +207,13 @@ export default function Home() {
           ) : (
             <Card className="duxxan-card text-center">
               <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4">No Active Campaigns</h3>
+                <h3 className="text-xl font-bold mb-4">Aktif Kampanya Yok</h3>
                 <p className="text-duxxan-text-secondary mb-6">
-                  Start the first donation campaign and make a difference!
+                  İlk bağış kampanyasını başlatın ve fark yaratın!
                 </p>
                 <Link href="/create-donation">
                   <Button className="duxxan-button-success">
-                    Start First Campaign
+                    İlk Kampanyayı Başlat
                   </Button>
                 </Link>
               </CardContent>
