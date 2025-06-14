@@ -409,7 +409,7 @@ export default function RaffleDetail() {
             </Card>
 
             {/* Demo Winner Assignment (for testing) */}
-            {raffle && !raffle.winnerId && user?.id === raffle.creatorId && (
+            {safeRaffle && !safeRaffle.winnerId && user?.id === safeRaffle.creatorId && (
               <Card className="bg-yellow-50 dark:bg-duxxan-surface border-yellow-200 dark:border-duxxan-border">
                 <CardHeader>
                   <CardTitle className="text-yellow-800 dark:text-duxxan-yellow">Demo: Kazanan Atama</CardTitle>
@@ -447,21 +447,21 @@ export default function RaffleDetail() {
             )}
 
             {/* Winner-Organization Private Chat */}
-            {raffle && (
+            {safeRaffle && (
               <WinnerOrgChat 
                 raffleId={parseInt(id!)} 
                 raffle={{
-                  id: raffle.id || 0,
-                  title: raffle.title || '',
-                  winnerId: raffle.winnerId,
-                  creatorId: raffle.creatorId || 0,
+                  id: safeRaffle.id || 0,
+                  title: safeRaffle.title || '',
+                  winnerId: safeRaffle.winnerId,
+                  creatorId: safeRaffle.creatorId || 0,
                   creator: {
-                    username: raffle.creator?.username || '',
-                    organizationType: raffle.creator?.organizationType,
-                    organizationVerified: raffle.creator?.organizationVerified
+                    username: safeRaffle.creator?.username || '',
+                    organizationType: safeRaffle.creator?.organizationType,
+                    organizationVerified: safeRaffle.creator?.organizationVerified
                   },
-                  winner: raffle.winner ? {
-                    username: raffle.winner.username
+                  winner: safeRaffle.winner ? {
+                    username: safeRaffle.winner.username
                   } : undefined
                 }}
               />
