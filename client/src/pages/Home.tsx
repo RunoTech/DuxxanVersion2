@@ -239,63 +239,101 @@ export default function Home() {
                 </div>
                 
                 {/* Main Chart */}
-                <div className="lg:col-span-2 bg-duxxan-dark/30 rounded-lg p-4">
-                  <div className="text-sm text-duxxan-text-secondary mb-4">24 Saatlik Aktivite Grafiği</div>
-                  <div className="h-64">
+                <div className="lg:col-span-2 bg-gradient-to-br from-duxxan-dark/40 to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-border/30 backdrop-blur-sm">
+                  <div className="flex justify-between items-center mb-6">
+                    <div>
+                      <div className="text-lg font-semibold text-white mb-1">24 Saatlik Aktivite Grafiği</div>
+                      <div className="text-xs text-duxxan-text-secondary">Gerçek zamanlı platform veriler</div>
+                    </div>
+                    <div className="flex items-center space-x-2 px-3 py-1 bg-duxxan-success/20 rounded-full">
+                      <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
+                      <span className="text-xs text-duxxan-success font-medium">LIVE</span>
+                    </div>
+                  </div>
+                  <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                      <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="prizesGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                          </linearGradient>
+                          <linearGradient id="donationsGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.1}/>
+                          </linearGradient>
+                          <linearGradient id="rafflesGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#EAB308" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#EAB308" stopOpacity={0.1}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid 
+                          strokeDasharray="1 3" 
+                          stroke="#374151" 
+                          opacity={0.2} 
+                          horizontal={true}
+                          vertical={false}
+                        />
                         <XAxis 
                           dataKey="name" 
-                          stroke="#9CA3AF" 
-                          fontSize={12}
+                          stroke="#6B7280" 
+                          fontSize={11}
                           tickLine={false}
                           axisLine={false}
+                          tick={{ fill: '#9CA3AF' }}
                         />
                         <YAxis 
-                          stroke="#9CA3AF" 
-                          fontSize={12}
+                          stroke="#6B7280" 
+                          fontSize={11}
                           tickLine={false}
                           axisLine={false}
+                          tick={{ fill: '#9CA3AF' }}
+                          tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
                         />
                         <Tooltip 
                           contentStyle={{
-                            backgroundColor: '#1F2937',
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
                             border: '1px solid #374151',
-                            borderRadius: '8px',
-                            color: '#F3F4F6'
+                            borderRadius: '12px',
+                            color: '#F3F4F6',
+                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                            backdropFilter: 'blur(10px)'
                           }}
-                          labelStyle={{ color: '#9CA3AF' }}
+                          labelStyle={{ color: '#D1D5DB', fontWeight: '600' }}
+                          formatter={(value, name) => [
+                            name === 'Çekilişler' ? value : `$${Number(value).toLocaleString()}`,
+                            name
+                          ]}
                         />
                         <Area
                           type="monotone"
                           dataKey="prizes"
-                          stackId="1"
                           stroke="#10B981"
-                          fill="#10B981"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                          name="Ödül Havuzu ($)"
+                          fill="url(#prizesGradient)"
+                          strokeWidth={3}
+                          name="Ödül Havuzu"
+                          dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 2, fill: '#ffffff' }}
                         />
                         <Area
                           type="monotone"
                           dataKey="donations"
-                          stackId="2"
                           stroke="#F59E0B"
-                          fill="#F59E0B"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                          name="Bağışlar ($)"
+                          fill="url(#donationsGradient)"
+                          strokeWidth={3}
+                          name="Bağışlar"
+                          dot={{ fill: '#F59E0B', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6, stroke: '#F59E0B', strokeWidth: 2, fill: '#ffffff' }}
                         />
                         <Area
                           type="monotone"
                           dataKey="raffles"
-                          stackId="3"
                           stroke="#EAB308"
-                          fill="#EAB308"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
+                          fill="url(#rafflesGradient)"
+                          strokeWidth={3}
                           name="Çekilişler"
+                          dot={{ fill: '#EAB308', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6, stroke: '#EAB308', strokeWidth: 2, fill: '#ffffff' }}
                         />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -304,33 +342,65 @@ export default function Home() {
               </div>
               
               {/* Volume Chart */}
-              <div className="mt-6 bg-duxxan-dark/30 rounded-lg p-4">
-                <div className="text-sm text-duxxan-text-secondary mb-4">İşlem Hacmi (24 Saat)</div>
-                <div className="h-32">
+              <div className="mt-6 bg-gradient-to-r from-duxxan-dark/40 to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-border/30 backdrop-blur-sm">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <div className="text-lg font-semibold text-white mb-1">İşlem Hacmi</div>
+                    <div className="text-xs text-duxxan-text-secondary">24 saatlik toplam aktivite</div>
+                  </div>
+                  <div className="text-sm text-duxxan-yellow font-bold">
+                    ${chartData[chartData.length - 1]?.volume.toLocaleString()}
+                  </div>
+                </div>
+                <div className="h-40">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                    <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                      <defs>
+                        <linearGradient id="volumeGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
+                          <stop offset="95%" stopColor="#1E40AF" stopOpacity={0.8}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid 
+                        strokeDasharray="1 3" 
+                        stroke="#374151" 
+                        opacity={0.15} 
+                        horizontal={true}
+                        vertical={false}
+                      />
                       <XAxis 
                         dataKey="name" 
-                        stroke="#9CA3AF" 
+                        stroke="#6B7280" 
                         fontSize={10}
                         tickLine={false}
                         axisLine={false}
+                        tick={{ fill: '#9CA3AF' }}
                       />
-                      <YAxis hide />
+                      <YAxis 
+                        stroke="#6B7280" 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fill: '#9CA3AF' }}
+                        tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
+                      />
                       <Tooltip 
                         contentStyle={{
-                          backgroundColor: '#1F2937',
+                          backgroundColor: 'rgba(17, 24, 39, 0.95)',
                           border: '1px solid #374151',
-                          borderRadius: '8px',
-                          color: '#F3F4F6'
+                          borderRadius: '12px',
+                          color: '#F3F4F6',
+                          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                          backdropFilter: 'blur(10px)'
                         }}
+                        labelStyle={{ color: '#D1D5DB', fontWeight: '600' }}
+                        formatter={(value) => [`$${Number(value).toLocaleString()}`, 'İşlem Hacmi']}
                       />
                       <Bar 
                         dataKey="volume" 
-                        fill="#3B82F6"
-                        radius={[2, 2, 0, 0]}
-                        name="İşlem Hacmi ($)"
+                        fill="url(#volumeGradient)"
+                        radius={[4, 4, 0, 0]}
+                        name="İşlem Hacmi"
                       />
                     </BarChart>
                   </ResponsiveContainer>
