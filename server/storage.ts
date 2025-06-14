@@ -184,25 +184,32 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getDonations(limit = 20, offset = 0): Promise<(Donation & { creator: User })[]> {
-    return await db
-      .select()
+    const result = await db
+      .select({
+        donation: donations,
+        creator: users,
+      })
       .from(donations)
       .innerJoin(users, eq(donations.creatorId, users.id))
       .where(eq(donations.isActive, true))
       .orderBy(desc(donations.createdAt))
       .limit(limit)
-      .offset(offset)
-      .then(rows => rows.map(row => ({ ...row.donations, creator: row.users })));
+      .offset(offset);
+    
+    return result.map(row => ({ ...row.donation, creator: row.creator }));
   }
 
   async getDonationById(id: number): Promise<(Donation & { creator: User }) | undefined> {
     const [result] = await db
-      .select()
+      .select({
+        donation: donations,
+        creator: users,
+      })
       .from(donations)
       .innerJoin(users, eq(donations.creatorId, users.id))
       .where(eq(donations.id, id));
     
-    return result ? { ...result.donations, creator: result.users } : undefined;
+    return result ? { ...result.donation, creator: result.creator } : undefined;
   }
 
   async createDonation(donation: InsertDonation & { creatorId: number }): Promise<Donation> {
@@ -217,17 +224,24 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
     try {
+      // Simplified query to test
       const result = await db
-        .select({
-          donation: donations,
-          creator: users,
-        })
+        .select()
         .from(donations)
-        .innerJoin(users, eq(donations.creatorId, users.id))
-        .where(and(eq(donations.isActive, true), gt(donations.endDate, new Date())))
-        .orderBy(desc(donations.createdAt));
+        .where(eq(donations.isActive, true));
       
-      return result.map(row => ({ ...row.donation, creator: row.creator }));
+      // Get creators separately
+      const donationsWithCreators = await Promise.all(
+        result.map(async (donation) => {
+          const [creator] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, donation.creatorId));
+          return { ...donation, creator };
+        })
+      );
+      
+      return donationsWithCreators.filter(d => d.creator);
     } catch (error) {
       console.error('Error in getActiveDonations:', error);
       throw error;

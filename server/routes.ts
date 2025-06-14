@@ -261,10 +261,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
+      console.log('Fetching active donations...');
       const donations = await storage.getActiveDonations();
+      console.log('Found donations:', donations.length);
       res.json(donations);
     } catch (error) {
       console.error('Error fetching active donations:', error);
+      console.error('Error stack:', error.stack);
       res.status(500).json({ message: 'Failed to fetch active donations' });
     }
   });
