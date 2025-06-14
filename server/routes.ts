@@ -246,6 +246,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/donations/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const donation = await storage.getDonationById(id);
+      if (!donation) {
+        return res.status(404).json({ message: 'Donation not found' });
+      }
+      res.json(donation);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch donation' });
+    }
+  });
+
   app.get('/api/donations/active', async (req, res) => {
     try {
       const donations = await storage.getActiveDonations();

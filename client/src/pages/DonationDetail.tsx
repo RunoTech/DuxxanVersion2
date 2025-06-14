@@ -1,0 +1,528 @@
+import { useParams } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useWallet } from '@/hooks/useWallet';
+import { useState } from 'react';
+import { 
+  Clock, 
+  Users, 
+  Heart, 
+  Star, 
+  TrendingUp, 
+  MessageCircle,
+  Share2,
+  Target,
+  Shield,
+  Calendar,
+  DollarSign,
+  Wallet
+} from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
+
+export default function DonationDetail() {
+  const { id } = useParams();
+  const { isConnected } = useWallet();
+  const [donationAmount, setDonationAmount] = useState(10);
+
+  const { data: donation, isLoading } = useQuery({
+    queryKey: [`/api/donations/${id}`],
+    enabled: !!id,
+  });
+
+  const { data: contributions } = useQuery({
+    queryKey: [`/api/donations/${id}/contributions`],
+    enabled: !!id,
+  });
+
+  // Mock chart data - bağış analizi
+  const progressData = [
+    { day: 'Pzt', amount: 45.5, donors: 12 },
+    { day: 'Sal', amount: 89.2, donors: 23 },
+    { day: 'Çar', amount: 156.8, donors: 34 },
+    { day: 'Per', amount: 234.1, donors: 45 },
+    { day: 'Cum', amount: 387.5, donors: 67 },
+    { day: 'Cmt', amount: 523.2, donors: 89 },
+    { day: 'Paz', amount: 687.5, donors: 156 },
+  ];
+
+  const hourlyDonations = [
+    { hour: '09:00', amount: 23.5 },
+    { hour: '10:00', amount: 45.2 },
+    { hour: '11:00', amount: 67.8 },
+    { hour: '12:00', amount: 89.1 },
+    { hour: '13:00', amount: 112.4 },
+    { hour: '14:00', amount: 98.6 },
+    { hour: '15:00', amount: 134.2 },
+    { hour: '16:00', amount: 156.7 },
+    { hour: '17:00', amount: 187.3 },
+    { hour: '18:00', amount: 203.9 },
+  ];
+
+  const donorDistribution = [
+    { range: '0-25 USDT', count: 45 },
+    { range: '25-50 USDT', count: 32 },
+    { range: '50-100 USDT', count: 28 },
+    { range: '100-250 USDT', count: 18 },
+    { range: '250+ USDT', count: 7 },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-duxxan-dark p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-duxxan-border rounded mb-4"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <div className="h-96 bg-duxxan-border rounded"></div>
+                <div className="h-64 bg-duxxan-border rounded"></div>
+              </div>
+              <div className="h-96 bg-duxxan-border rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!donation) {
+    return (
+      <div className="min-h-screen bg-duxxan-dark flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-duxxan-text mb-2">Bağış Bulunamadı</h1>
+          <p className="text-duxxan-text-secondary">Aradığınız bağış kampanyası mevcut değil.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const progress = (Number(donation.currentAmount) / Number(donation.goalAmount)) * 100;
+  const timeLeft = new Date(donation.endDate).getTime() - new Date().getTime();
+  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+
+  return (
+    <div className="min-h-screen bg-duxxan-dark">
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-duxxan-text mb-2">
+              {donation.title}
+            </h1>
+            <div className="flex items-center gap-4 text-duxxan-text-secondary">
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {daysLeft} gün kaldı
+              </span>
+              <span className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                {donation.donorCount} bağışçı
+              </span>
+              <span className="flex items-center gap-1">
+                <Target className="w-4 h-4" />
+                {donation.goalAmount} USDT hedef
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="border-duxxan-border">
+              <Share2 className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="sm" className="border-duxxan-border">
+              <Heart className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Ana İçerik */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Bağış İlerleme Analizi */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-duxxan-text flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-duxxan-success" />
+                    Bağış İlerleme Analizi
+                  </CardTitle>
+                  <div className="flex gap-2">
+                    <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success">
+                      Aktif
+                    </Badge>
+                    <Badge variant="outline" className="border-duxxan-success text-duxxan-success">
+                      7g: +{donation.currentAmount} USDT
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={progressData}>
+                      <defs>
+                        <linearGradient id="donationGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                      <XAxis 
+                        dataKey="day" 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: '#888', fontSize: 12 }}
+                      />
+                      <YAxis 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: '#888', fontSize: 12 }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1A1A1A', 
+                          border: '1px solid #333',
+                          borderRadius: '8px',
+                          color: '#fff'
+                        }}
+                        formatter={(value, name) => [
+                          `${value} ${name === 'amount' ? 'USDT' : 'kişi'}`,
+                          name === 'amount' ? 'Toplam Bağış' : 'Bağışçı Sayısı'
+                        ]}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="amount"
+                        stroke="#10B981"
+                        strokeWidth={2}
+                        fill="url(#donationGradient)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+                
+                {/* İstatistikler */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-duxxan-success">{donation.currentAmount}</div>
+                    <div className="text-sm text-duxxan-text-secondary">Toplanan</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-duxxan-warning">%{progress.toFixed(1)}</div>
+                    <div className="text-sm text-duxxan-text-secondary">Hedef</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-duxxan-text">{donation.donorCount}</div>
+                    <div className="text-sm text-duxxan-text-secondary">Bağışçı</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-duxxan-yellow">{daysLeft}</div>
+                    <div className="text-sm text-duxxan-text-secondary">Gün Kaldı</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Saatlik Bağışlar */}
+              <Card className="bg-duxxan-surface border-duxxan-border">
+                <CardHeader>
+                  <CardTitle className="text-duxxan-text">Saatlik Bağışlar</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={hourlyDonations}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                        <XAxis 
+                          dataKey="hour" 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: '#888', fontSize: 10 }}
+                        />
+                        <YAxis 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: '#888', fontSize: 10 }}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#1A1A1A', 
+                            border: '1px solid #333',
+                            borderRadius: '8px',
+                            color: '#fff'
+                          }}
+                          formatter={(value) => [`${value} USDT`, 'Bağış']}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="amount" 
+                          stroke="#10B981" 
+                          strokeWidth={2}
+                          dot={{ fill: '#10B981', strokeWidth: 2, r: 3 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Bağışçı Dağılımı */}
+              <Card className="bg-duxxan-surface border-duxxan-border">
+                <CardHeader>
+                  <CardTitle className="text-duxxan-text">Bağışçı Dağılımı</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={donorDistribution}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                        <XAxis 
+                          dataKey="range" 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: '#888', fontSize: 10 }}
+                        />
+                        <YAxis 
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: '#888', fontSize: 10 }}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#1A1A1A', 
+                            border: '1px solid #333',
+                            borderRadius: '8px',
+                            color: '#fff'
+                          }}
+                          formatter={(value) => [`${value} kişi`, 'Bağışçı']}
+                        />
+                        <Bar 
+                          dataKey="count" 
+                          fill="#F3BA2F"
+                          radius={[4, 4, 0, 0]}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Açıklama */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader>
+                <CardTitle className="text-duxxan-text">Bağış Kampanyası Detayları</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-duxxan-text-secondary leading-relaxed mb-4">
+                  {donation.description}
+                </p>
+                <Separator className="my-4 bg-duxxan-border" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold text-duxxan-text mb-2">Kampanya Bilgileri</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-duxxan-text-secondary">Hedef Tutar:</span>
+                        <span className="text-duxxan-success">{donation.goalAmount} USDT</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-duxxan-text-secondary">Toplanan:</span>
+                        <span className="text-duxxan-text">{donation.currentAmount} USDT</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-duxxan-text-secondary">Bitiş Tarihi:</span>
+                        <span className="text-duxxan-text">
+                          {new Date(donation.endDate).toLocaleDateString('tr-TR')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-duxxan-text mb-2">Güvenlik & Şeffaflık</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                        <Shield className="w-4 h-4" />
+                        Blockchain Destekli
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                        <Shield className="w-4 h-4" />
+                        Şeffaf Harcama
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                        <Shield className="w-4 h-4" />
+                        Doğrudan Transfer
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Yan Panel */}
+          <div className="space-y-6">
+            {/* Bağış Yap */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader>
+                <CardTitle className="text-duxxan-text flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-duxxan-error" />
+                  Bağış Yap
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="amount" className="text-duxxan-text">Bağış Tutarı (USDT)</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    value={donationAmount}
+                    onChange={(e) => setDonationAmount(Number(e.target.value))}
+                    className="bg-duxxan-dark border-duxxan-border text-duxxan-text"
+                  />
+                </div>
+
+                {/* Hızlı Tutar Seçimi */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[10, 25, 50, 100, 250, 500].map((amount) => (
+                    <Button
+                      key={amount}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDonationAmount(amount)}
+                      className="border-duxxan-border text-duxxan-text hover:bg-duxxan-yellow hover:text-duxxan-dark"
+                    >
+                      {amount}
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="bg-duxxan-dark p-3 rounded-lg">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-duxxan-text-secondary">Bağış Tutarı:</span>
+                    <span className="text-duxxan-text">{donationAmount} USDT</span>
+                  </div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-duxxan-text-secondary">Platform Ücreti:</span>
+                    <span className="text-duxxan-text">Ücretsiz</span>
+                  </div>
+                  <Separator className="my-2 bg-duxxan-border" />
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-duxxan-text">Toplam:</span>
+                    <span className="text-duxxan-success">
+                      {donationAmount.toFixed(2)} USDT
+                    </span>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full bg-duxxan-success text-white hover:bg-duxxan-success/90"
+                  disabled={!isConnected}
+                >
+                  {isConnected ? 'Bağış Yap' : 'Cüzdan Bağlayın'}
+                </Button>
+
+                {!isConnected && (
+                  <p className="text-xs text-duxxan-text-secondary text-center">
+                    Bağış yapmak için cüzdanınızı bağlamanız gerekmektedir.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* İlerleme */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader>
+                <CardTitle className="text-duxxan-text">Kampanya İlerlemesi</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <Progress value={progress} className="h-3" />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-duxxan-text-secondary">
+                      {donation.currentAmount} / {donation.goalAmount} USDT
+                    </span>
+                    <span className="text-duxxan-success">%{progress.toFixed(1)}</span>
+                  </div>
+                  <div className="text-center text-sm text-duxxan-text-secondary">
+                    Hedefe {(Number(donation.goalAmount) - Number(donation.currentAmount)).toFixed(2)} USDT kaldı
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Kampanya Sahibi */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader>
+                <CardTitle className="text-duxxan-text">Kampanya Sahibi</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={donation.creator?.profileImage} />
+                    <AvatarFallback className="bg-duxxan-success text-white">
+                      {donation.creator?.username?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-duxxan-text">
+                      {donation.creator?.username}
+                    </h4>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-duxxan-yellow fill-current" />
+                      <span className="text-sm text-duxxan-text-secondary">
+                        {donation.creator?.rating} ({donation.creator?.ratingCount} değerlendirme)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-3 border-duxxan-border text-duxxan-text"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  İletişime Geç
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Son Bağışçılar */}
+            <Card className="bg-duxxan-surface border-duxxan-border">
+              <CardHeader>
+                <CardTitle className="text-duxxan-text">Son Bağışçılar</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback className="bg-duxxan-border text-duxxan-text text-xs">
+                            B{i}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm text-duxxan-text">donor_{i}...xyz</span>
+                      </div>
+                      <span className="text-xs text-duxxan-success font-semibold">
+                        {(Math.random() * 100 + 10).toFixed(2)} USDT
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

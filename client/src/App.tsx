@@ -12,7 +12,9 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
 import Raffles from "@/pages/Raffles";
+import RaffleDetail from "@/pages/RaffleDetail";
 import Donations from "@/pages/Donations";
+import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
 import NotFound from "@/pages/not-found";
@@ -23,7 +25,9 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/profile" component={Profile} />
       <Route path="/raffles" component={Raffles} />
+      <Route path="/raffles/:id" component={RaffleDetail} />
       <Route path="/donations" component={Donations} />
+      <Route path="/donations/:id" component={DonationDetail} />
       <Route path="/create-raffle" component={CreateRaffle} />
       <Route path="/create-donation" component={CreateDonation} />
       <Route component={NotFound} />
