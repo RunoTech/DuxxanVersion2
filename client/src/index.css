@@ -28,6 +28,7 @@
   --duxxan-yellow: hsl(47, 96%, 56%);
   --duxxan-dark: hsl(216, 13%, 5%);
   --duxxan-surface: hsl(220, 13%, 13%);
+  --duxxan-card: hsl(217, 13%, 8%);
   --duxxan-border: hsl(217, 11%, 20%);
   --duxxan-text-secondary: hsl(212, 13%, 73%);
   --duxxan-success: hsl(159, 94%, 35%);
@@ -243,6 +244,41 @@
     to { 
       transform: translateY(0); 
       opacity: 1; 
+    }
+  }
+
+  /* Custom Select Dropdown Styling */
+  select option {
+    background-color: hsl(220, 13%, 13%) !important;
+    color: white !important;
+    padding: 8px 12px;
+  }
+
+  select option:hover {
+    background-color: hsl(217, 11%, 20%) !important;
+  }
+
+  select option:checked {
+    background-color: hsl(47, 96%, 56%) !important;
+    color: hsl(216, 13%, 5%) !important;
+  }
+
+  /* WebKit browsers (Chrome, Safari, Edge) */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23F1C40F'><path d='M4.5 6L8 9.5L11.5 6H4.5Z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 32px;
+  }
+
+  /* Firefox specific */
+  @-moz-document url-prefix() {
+    select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23F1C40F'><path d='M4.5 6L8 9.5L11.5 6H4.5Z'/></svg>");
     }
   }
 

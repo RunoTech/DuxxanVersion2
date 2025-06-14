@@ -334,28 +334,39 @@ export default function Community() {
 
         {/* Search and Filter Section */}
         <div className="mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             {/* Search Bar */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-duxxan-text-secondary" />
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-duxxan-yellow" />
               <Input
-                placeholder={activeTab === 'channels' ? "Kanal ara (isim, yaratıcı, açıklama)" : "Çekiliş ara (başlık, yaratıcı, kanal)"}
+                placeholder={activeTab === 'channels' ? "Kanal ara..." : "Çekiliş ara..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-duxxan-card border-duxxan-border text-white placeholder:text-duxxan-text-secondary"
+                className="pl-10 pr-4 py-2 bg-duxxan-surface/50 border border-duxxan-yellow/30 text-white placeholder:text-duxxan-text-secondary rounded-lg focus:border-duxxan-yellow focus:ring-1 focus:ring-duxxan-yellow transition-all"
               />
             </div>
             
             {/* Category Filter */}
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-duxxan-text-secondary" />
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-duxxan-yellow" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-duxxan-card border border-duxxan-border text-white rounded-md px-3 py-2 min-w-[150px]"
+                className="bg-duxxan-surface border border-duxxan-yellow/30 text-white rounded-lg px-3 py-2 min-w-[140px] focus:border-duxxan-yellow focus:ring-1 focus:ring-duxxan-yellow transition-all"
+                style={{
+                  background: 'var(--duxxan-surface)',
+                  color: 'white',
+                }}
               >
                 {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
+                  <option 
+                    key={category.value} 
+                    value={category.value}
+                    style={{
+                      backgroundColor: 'var(--duxxan-surface)',
+                      color: 'white',
+                    }}
+                  >
                     {category.label}
                   </option>
                 ))}
@@ -366,11 +377,12 @@ export default function Community() {
             {(searchQuery || selectedCategory !== 'all') && (
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('all');
                 }}
-                className="bg-duxxan-surface border-duxxan-border text-duxxan-text-secondary hover:text-white"
+                className="bg-duxxan-surface/50 border-duxxan-yellow/30 text-duxxan-text-secondary hover:text-duxxan-yellow hover:border-duxxan-yellow transition-all"
               >
                 Temizle
               </Button>
