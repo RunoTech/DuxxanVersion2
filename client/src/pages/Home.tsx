@@ -19,25 +19,46 @@ export default function Home() {
     activeUsers: 0,
   });
 
-  // Live connected wallets counter - starts at 1397 and fluctuates above this number
-  const [connectedWallets, setConnectedWallets] = useState(1397);
+  // Live connected wallets counter - demo range 1300-100,000 + real connected wallets
+  const [demoWalletCount, setDemoWalletCount] = useState(() => 
+    Math.floor(Math.random() * (100000 - 1300 + 1)) + 1300
+  );
+  const [realConnectedWallets, setRealConnectedWallets] = useState(0);
+  const [previousDemoCount, setPreviousDemoCount] = useState(demoWalletCount);
 
-  // Simulate live wallet connections for promotional display
+  // Generate a new unique demo wallet count
+  const generateNewDemoCount = (current: number, previous: number) => {
+    let newCount;
+    let attempts = 0;
+    do {
+      newCount = Math.floor(Math.random() * (100000 - 1300 + 1)) + 1300;
+      attempts++;
+    } while ((newCount === current || newCount === previous) && attempts < 50);
+    return newCount;
+  };
+
+  // Fast-changing demo wallet counter
   useEffect(() => {
     const interval = setInterval(() => {
-      setConnectedWallets(prev => {
-        const baseCount = 1397;
-        const variation = Math.floor(Math.random() * 150) + 1; // 1-150 additional wallets
-        const trend = Math.random() > 0.3 ? 1 : -1; // 70% chance to increase
-        const change = Math.floor(Math.random() * 8) * trend; // Change by 0-7
-        
-        const newCount = Math.max(baseCount, prev + change);
-        return Math.min(newCount, baseCount + variation); // Cap at base + variation
+      setDemoWalletCount(prev => {
+        const newCount = generateNewDemoCount(prev, previousDemoCount);
+        setPreviousDemoCount(prev);
+        return newCount;
       });
-    }, 3000 + Math.random() * 4000); // Update every 3-7 seconds
+    }, 800 + Math.random() * 400); // Update every 0.8-1.2 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [previousDemoCount]);
+
+  // Track real connected wallets (when users actually connect)
+  useEffect(() => {
+    if (isConnected) {
+      setRealConnectedWallets(prev => prev < 1 ? 1 : prev);
+    }
+  }, [isConnected]);
+
+  // Total displayed wallet count
+  const totalConnectedWallets = demoWalletCount + realConnectedWallets;
 
   // Fetch platform stats
   const { data: stats } = useQuery({
@@ -108,7 +129,7 @@ export default function Home() {
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 bg-duxxan-success rounded-full animate-pulse"></div>
                 <span className="text-duxxan-success font-bold text-lg">
-                  {connectedWallets.toLocaleString()} 
+                  {totalConnectedWallets.toLocaleString()} 
                 </span>
                 <span className="text-duxxan-text-secondary">
                   cüzdan şu anda bağlı
@@ -116,6 +137,11 @@ export default function Home() {
                 <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30">
                   CANLI
                 </Badge>
+                {realConnectedWallets > 0 && (
+                  <Badge variant="secondary" className="bg-duxxan-yellow/20 text-duxxan-yellow border-duxxan-yellow/30 text-xs">
+                    +{realConnectedWallets} gerçek
+                  </Badge>
+                )}
               </div>
             </div>
           </div>
