@@ -1,0 +1,60 @@
+import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Navigation } from "@/components/Navigation";
+import { BlurOverlay } from "@/components/BlurOverlay";
+import { useWallet } from "@/hooks/useWallet";
+import { useWebSocket } from "@/hooks/useWebSocket";
+
+// Pages
+import Home from "@/pages/Home";
+import Profile from "@/pages/Profile";
+import Raffles from "@/pages/Raffles";
+import Donations from "@/pages/Donations";
+import CreateRaffle from "@/pages/CreateRaffle";
+import CreateDonation from "@/pages/CreateDonation";
+import NotFound from "@/pages/not-found";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/raffles" component={Raffles} />
+      <Route path="/donations" component={Donations} />
+      <Route path="/create-raffle" component={CreateRaffle} />
+      <Route path="/create-donation" component={CreateDonation} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function AppContent() {
+  const { isConnected } = useWallet();
+  
+  // Initialize WebSocket connection for real-time updates
+  useWebSocket();
+
+  return (
+    <div className="min-h-screen bg-duxxan-dark">
+      <Navigation />
+      <Router />
+      {!isConnected && <BlurOverlay />}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AppContent />
+        <Toaster />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;

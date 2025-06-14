@@ -1,0 +1,205 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { useWallet } from '@/hooks/useWallet';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
+import { blockchainService } from '@/lib/blockchain';
+
+interface DonationCardProps {
+  donation: {
+    id: number;
+    title: string;
+    description: string;
+    goalAmount: string;
+    currentAmount: string;
+    donorCount: number;
+    endDate: string;
+    creator: {
+      username: string;
+      rating: string;
+    };
+  };
+}
+
+export function DonationCard({ donation }: DonationCardProps) {
+  const [donationAmount, setDonationAmount] = useState('');
+  const [isContributing, setIsContributing] = useState(false);
+  const { isConnected, getApiHeaders } = useWallet();
+  const { toast } = useToast();
+
+  const progress = (parseFloat(donation.currentAmount) / parseFloat(donation.goalAmount)) * 100;
+  const endDate = new Date(donation.endDate);
+  const timeLeft = endDate.getTime() - Date.now();
+  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+  const avgDonation = donation.donorCount > 0 
+    ? parseFloat(donation.currentAmount) / donation.donorCount 
+    : 0;
+
+  const getStatusBadge = () => {
+    if (daysLeft <= 0) {
+      return <Badge variant="destructive">Ended</Badge>;
+    }
+    if (progress >= 100) {
+      return <Badge className="bg-duxxan-success">Completed</Badge>;
+    }
+    if (progress >= 80) {
+      return <Badge className="bg-duxxan-warning text-black">Almost There</Badge>;
+    }
+    return <Badge className="bg-blue-600">Active</Badge>;
+  };
+
+  const contribute = async () => {
+    if (!isConnected) {
+      toast({
+        title: 'Wallet Required',
+        description: 'Please connect your wallet to donate',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!donationAmount || parseFloat(donationAmount) <= 0) {
+      toast({
+        title: 'Invalid Amount',
+        description: 'Please enter a valid donation amount',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsContributing(true);
+    try {
+      // First, handle blockchain transaction
+      const transactionHash = await blockchainService.donate(
+        donation.id,
+        donationAmount
+      );
+
+      // Then record in database
+      const response = await apiRequest('POST', `/api/donations/${donation.id}/contribute`, {
+        amount: donationAmount,
+        transactionHash,
+      });
+
+      toast({
+        title: 'Donation Successful!',
+        description: `Thank you for donating $${donationAmount} USDT`,
+      });
+
+      setDonationAmount('');
+    } catch (error: any) {
+      toast({
+        title: 'Donation Failed',
+        description: error.message || 'Failed to process donation',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsContributing(false);
+    }
+  };
+
+  const quickDonate = (amount: number) => {
+    setDonationAmount(amount.toString());
+  };
+
+  return (
+    <Card className="duxxan-card hover:border-duxxan-success transition-all duration-300">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <h3 className="text-xl font-bold mb-2 text-white">{donation.title}</h3>
+            <p className="text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
+              {donation.description}
+            </p>
+          </div>
+          <div className="ml-4">
+            {getStatusBadge()}
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-duxxan-text-secondary">Progress</span>
+            <span className="text-sm font-bold">
+              ${parseFloat(donation.currentAmount).toLocaleString()} / ${parseFloat(donation.goalAmount).toLocaleString()}
+            </span>
+          </div>
+          <Progress value={Math.min(progress, 100)} className="mb-2" />
+          <div className="text-xs text-duxxan-text-secondary text-center">
+            {progress >= 100 ? '🎉 Goal reached!' : `${progress.toFixed(1)}% funded`}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 mb-6 text-center">
+          <div>
+            <div className="text-lg font-bold text-white">{donation.donorCount}</div>
+            <div className="text-xs text-duxxan-text-secondary">Donors</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-white">
+              {daysLeft > 0 ? daysLeft : 0}
+            </div>
+            <div className="text-xs text-duxxan-text-secondary">Days Left</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-duxxan-success">
+              ${avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
+            </div>
+            <div className="text-xs text-duxxan-text-secondary">Avg Donation</div>
+          </div>
+        </div>
+
+        {daysLeft > 0 && progress < 100 && (
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                placeholder="Enter amount (USDT)"
+                value={donationAmount}
+                onChange={(e) => setDonationAmount(e.target.value)}
+                className="bg-duxxan-dark border-duxxan-border text-white"
+                min="1"
+                step="1"
+              />
+              <Button
+                onClick={contribute}
+                disabled={!isConnected || isContributing || !donationAmount}
+                className="duxxan-button-success whitespace-nowrap"
+              >
+                {isContributing ? 'Processing...' : 'Donate'}
+              </Button>
+            </div>
+
+            <div className="flex gap-2">
+              {[10, 25, 50, 100].map((amount) => (
+                <Button
+                  key={amount}
+                  onClick={() => quickDonate(amount)}
+                  variant="outline"
+                  size="sm"
+                  className="duxxan-button-secondary flex-1 text-xs"
+                >
+                  ${amount}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-4 pt-4 border-t border-duxxan-border flex items-center justify-between">
+          <div className="text-xs text-duxxan-text-secondary">
+            Created by <span className="text-white font-medium">{donation.creator.username}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <span className="text-duxxan-yellow text-xs">★</span>
+            <span className="text-xs text-duxxan-text-secondary">{donation.creator.rating}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

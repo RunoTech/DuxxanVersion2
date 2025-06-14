@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(47, 96%, 56%);
+  --primary-foreground: hsl(20, 14.3%, 4.1%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 56.9%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+  
+  /* DUXXAN Theme Colors */
+  --duxxan-yellow: hsl(47, 96%, 56%);
+  --duxxan-dark: hsl(216, 13%, 5%);
+  --duxxan-surface: hsl(220, 13%, 13%);
+  --duxxan-border: hsl(217, 11%, 20%);
+  --duxxan-text-secondary: hsl(212, 13%, 73%);
+  --duxxan-success: hsl(159, 94%, 35%);
+  --duxxan-error: hsl(349, 89%, 63%);
+  --duxxan-warning: hsl(45, 93%, 47%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(47, 96%, 56%);
+  --primary-foreground: hsl(20, 14.3%, 4.1%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    @apply bg-duxxan-dark text-white;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-duxxan-surface;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-duxxan-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-duxxan-text-secondary;
+  }
+}
+
+@layer components {
+  .duxxan-button {
+    @apply px-6 py-3 rounded-lg font-bold transition-all duration-200 transform hover:scale-105;
+  }
+
+  .duxxan-button-primary {
+    @apply duxxan-button bg-duxxan-yellow text-duxxan-dark hover:bg-yellow-400;
+  }
+
+  .duxxan-button-success {
+    @apply duxxan-button bg-duxxan-success text-white hover:bg-green-600;
+  }
+
+  .duxxan-button-secondary {
+    @apply duxxan-button bg-duxxan-surface border border-duxxan-border text-white hover:bg-duxxan-border;
+  }
+
+  .duxxan-card {
+    @apply bg-duxxan-surface border border-duxxan-border rounded-xl p-6;
+  }
+
+  .duxxan-card-hover {
+    @apply duxxan-card hover:border-duxxan-yellow transition-all duration-300 transform hover:scale-105;
+  }
+
+  .duxxan-text-secondary {
+    @apply text-duxxan-text-secondary;
+  }
+
+  .duxxan-gradient {
+    @apply bg-gradient-to-br from-duxxan-surface to-duxxan-dark;
+  }
+}
+
+@layer utilities {
+  .text-duxxan-yellow {
+    color: var(--duxxan-yellow);
+  }
+
+  .text-duxxan-success {
+    color: var(--duxxan-success);
+  }
+
+  .text-duxxan-error {
+    color: var(--duxxan-error);
+  }
+
+  .text-duxxan-warning {
+    color: var(--duxxan-warning);
+  }
+
+  .bg-duxxan-yellow {
+    background-color: var(--duxxan-yellow);
+  }
+
+  .bg-duxxan-dark {
+    background-color: var(--duxxan-dark);
+  }
+
+  .bg-duxxan-surface {
+    background-color: var(--duxxan-surface);
+  }
+
+  .bg-duxxan-success {
+    background-color: var(--duxxan-success);
+  }
+
+  .bg-duxxan-error {
+    background-color: var(--duxxan-error);
+  }
+
+  .bg-duxxan-warning {
+    background-color: var(--duxxan-warning);
+  }
+
+  .border-duxxan-border {
+    border-color: var(--duxxan-border);
+  }
+
+  .border-duxxan-yellow {
+    border-color: var(--duxxan-yellow);
+  }
+
+  .border-duxxan-success {
+    border-color: var(--duxxan-success);
+  }
+
+  /* Animations */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce 2s infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      transform: translateY(20px); 
+      opacity: 0; 
+    }
+    to { 
+      transform: translateY(0); 
+      opacity: 1; 
+    }
+  }
+
+  /* Blur overlay */
+  .blur-overlay {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
