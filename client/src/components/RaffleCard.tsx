@@ -172,29 +172,8 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             disabled={!isConnected || daysLeft <= 0}
             className="bg-yellow-500 hover:bg-yellow-600 text-white w-full"
           >
-            1 Bilet Al
+            Bilet Al
           </Button>
-          
-          {raffle.ticketsSold < raffle.maxTickets * 0.8 && (
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                onClick={() => buyTickets(5)}
-                disabled={!isConnected || daysLeft <= 0}
-                variant="outline"
-                className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white text-sm"
-              >
-                5 Bilet Al
-              </Button>
-              <Button
-                onClick={() => buyTickets(10)}
-                disabled={!isConnected || daysLeft <= 0}
-                variant="outline"
-                className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white text-sm"
-              >
-                10 Bilet Al
-              </Button>
-            </div>
-          )}
         </div>
 
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
