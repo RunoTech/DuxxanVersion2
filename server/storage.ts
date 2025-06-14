@@ -6,6 +6,7 @@ import {
   donationContributions,
   userRatings,
   categories,
+  countries,
   chatMessages,
   follows,
   userDevices,
@@ -27,6 +28,7 @@ import {
   type UserRating,
   type InsertUserRating,
   type Category,
+  type Country,
   type ChatMessage,
 } from "@shared/schema";
 import { db } from "./db";
@@ -51,6 +53,11 @@ export interface IStorage {
   
   // Categories
   getCategories(): Promise<Category[]>;
+  
+  // Countries
+  getCountries(): Promise<any[]>;
+  getCountryByCode(code: string): Promise<any | undefined>;
+  createCountry(country: any): Promise<any>;
   
   // Raffles
   getRaffles(limit?: number, offset?: number): Promise<(Raffle & { creator: User; category: Category })[]>;
@@ -125,6 +132,20 @@ export class DatabaseStorage implements IStorage {
 
   async getCategories(): Promise<Category[]> {
     return await db.select().from(categories).orderBy(asc(categories.name));
+  }
+
+  async getCountries(): Promise<any[]> {
+    return await db.select().from(countries).where(eq(countries.isActive, true)).orderBy(asc(countries.name));
+  }
+
+  async getCountryByCode(code: string): Promise<any | undefined> {
+    const [country] = await db.select().from(countries).where(eq(countries.code, code));
+    return country || undefined;
+  }
+
+  async createCountry(country: any): Promise<any> {
+    const [newCountry] = await db.insert(countries).values(country).returning();
+    return newCountry;
   }
 
   async getRaffles(limit = 20, offset = 0): Promise<(Raffle & { creator: User; category: Category })[]> {

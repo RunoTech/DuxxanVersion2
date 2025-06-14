@@ -355,6 +355,9 @@ export const insertDonationSchema = createInsertSchema(donations).pick({
   isUnlimited: true,
   category: true,
   country: true,
+  countryRestriction: true,
+  allowedCountries: true,
+  excludedCountries: true,
 }).extend({
   title: z.string()
     .min(5, "Title must be at least 5 characters")
@@ -422,4 +425,5 @@ export type InsertDonationContribution = z.infer<typeof insertDonationContributi
 export type UserRating = typeof userRatings.$inferSelect;
 export type InsertUserRating = z.infer<typeof insertUserRatingSchema>;
 export type Category = typeof categories.$inferSelect;
+export type Country = typeof countries.$inferSelect;
 export type ChatMessage = typeof chatMessages.$inferSelect;
