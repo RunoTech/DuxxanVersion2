@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { Link } from 'wouter';
+import { Building2, Users, Heart, Clock, Shield, Star, Globe } from 'lucide-react';
 
 interface DonationCardProps {
   donation: {
@@ -19,9 +20,15 @@ interface DonationCardProps {
     currentAmount: string;
     donorCount: number;
     endDate: string;
+    isUnlimited?: boolean;
+    organizationType?: string;
+    category?: string;
+    country?: string;
     creator: {
       username: string;
       rating: string;
+      organizationType?: string;
+      organizationVerified?: boolean;
     };
   };
 }
@@ -45,12 +52,77 @@ export function DonationCard({ donation }: DonationCardProps) {
       return <Badge variant="destructive">Bitti</Badge>;
     }
     if (progress >= 100) {
-      return <Badge className="bg-duxxan-success">Tamamlandı</Badge>;
+      return <Badge className="bg-green-600 text-white">Tamamlandı</Badge>;
     }
     if (progress >= 80) {
-      return <Badge className="bg-duxxan-warning text-black">Neredeyse Hedefe Ulaştı</Badge>;
+      return <Badge className="bg-yellow-500 text-white">Hedefe Yakın</Badge>;
     }
-    return <Badge className="bg-blue-600">Aktif</Badge>;
+    return <Badge className="bg-blue-600 text-white">Aktif</Badge>;
+  };
+
+  const getOrganizationBadge = () => {
+    const orgType = donation.creator?.organizationType || donation.organizationType;
+    
+    if (orgType === 'foundation') {
+      return (
+        <Badge className="bg-blue-100 text-blue-800 border border-blue-200">
+          <Building2 className="w-3 h-3 mr-1" />
+          Vakıf
+        </Badge>
+      );
+    }
+    if (orgType === 'association') {
+      return (
+        <Badge className="bg-green-100 text-green-800 border border-green-200">
+          <Users className="w-3 h-3 mr-1" />
+          Dernek
+        </Badge>
+      );
+    }
+    if (orgType === 'individual') {
+      return (
+        <Badge className="bg-red-100 text-red-800 border border-red-200">
+          <Heart className="w-3 h-3 mr-1" />
+          Bireysel
+        </Badge>
+      );
+    }
+    return null;
+  };
+
+  const getCommissionBadge = () => {
+    const orgType = donation.creator?.organizationType || donation.organizationType;
+    const isVerified = donation.creator?.organizationVerified;
+    
+    if ((orgType === 'foundation' || orgType === 'association') && isVerified) {
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
+          %2 Komisyon
+        </Badge>
+      );
+    }
+    if (orgType === 'individual') {
+      return (
+        <Badge className="bg-orange-100 text-orange-800 border border-orange-200">
+          %10 Komisyon
+        </Badge>
+      );
+    }
+    return null;
+  };
+
+  const getCountryFlag = () => {
+    const countryFlags: Record<string, string> = {
+      TUR: '🇹🇷',
+      USA: '🇺🇸',
+      GER: '🇩🇪',
+      FRA: '🇫🇷',
+      GBR: '🇬🇧',
+      JPN: '🇯🇵',
+      CHN: '🇨🇳',
+      IND: '🇮🇳',
+    };
+    return donation.country ? countryFlags[donation.country] || '🌍' : '🌍';
   };
 
   const contribute = async () => {
@@ -111,17 +183,44 @@ export function DonationCard({ donation }: DonationCardProps) {
     <Link href={`/donations/${donation.id}`}>
       <Card className="bg-white dark:bg-duxxan-surface border-2 border-yellow-500 dark:border-yellow-500 hover:border-yellow-600 dark:hover:border-yellow-600 transition-all duration-300 cursor-pointer">
         <CardContent className="p-6">
+          {/* Header with badges */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{donation.title}</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">{getCountryFlag()}</span>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{donation.title}</h3>
+              </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">
                 {donation.description}
               </p>
             </div>
-          <div className="ml-4">
-            {getStatusBadge()}
+            <div className="ml-4">
+              {getStatusBadge()}
+            </div>
           </div>
-        </div>
+
+          {/* Organization and Commission Badges */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {getOrganizationBadge()}
+            {getCommissionBadge()}
+            {donation.isUnlimited && (
+              <Badge className="bg-purple-100 text-purple-800 border border-purple-200">
+                <Clock className="w-3 h-3 mr-1" />
+                Sınırsız Süre
+              </Badge>
+            )}
+            {donation.creator?.organizationVerified && (
+              <Badge className="bg-green-100 text-green-800 border border-green-200">
+                <Shield className="w-3 h-3 mr-1" />
+                Doğrulanmış
+              </Badge>
+            )}
+            {donation.category && (
+              <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
+                {donation.category}
+              </Badge>
+            )}
+          </div>
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
