@@ -783,7 +783,7 @@ export default function Community() {
                     <Button
                       onClick={() => handleInterest(raffle.id)}
                       variant={raffle.isInterested ? "outline" : "default"}
-                      className={raffle.isInterested ? "duxxan-button-secondary flex-1" : "duxxan-button-primary flex-1"}
+                      className={raffle.isInterested ? "bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-50 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
                       disabled={!isConnected}
                     >
                       <Heart className={`h-4 w-4 mr-2 ${raffle.isInterested ? 'fill-current' : ''}`} />
@@ -792,7 +792,7 @@ export default function Community() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-duxxan-text-secondary hover:text-duxxan-yellow"
+                      className="text-gray-600 hover:text-yellow-600"
                     >
                       <Share2 className="h-4 w-4" />
                     </Button>
