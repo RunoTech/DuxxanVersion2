@@ -2,8 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import { db } from "./db";
 import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema } from "@shared/schema";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -261,37 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      // Direct database query for testing
-      const result = await db.execute(sql`
-        SELECT d.*, u.username, u.wallet_address, u.name, u.profession, u.bio, u.profile_image
-        FROM donations d
-        INNER JOIN users u ON d.creator_id = u.id
-        WHERE d.is_active = true AND d.end_date > NOW()
-        ORDER BY d.created_at DESC
-      `);
-      
-      const donations = result.rows.map((row: any) => ({
-        id: row.id,
-        creatorId: row.creator_id,
-        title: row.title,
-        description: row.description,
-        goalAmount: row.goal_amount,
-        currentAmount: row.current_amount,
-        donorCount: row.donor_count,
-        endDate: row.end_date,
-        isActive: row.is_active,
-        createdAt: row.created_at,
-        creator: {
-          id: row.creator_id,
-          username: row.username,
-          walletAddress: row.wallet_address,
-          name: row.name,
-          profession: row.profession,
-          bio: row.bio,
-          profileImage: row.profile_image
-        }
-      }));
-      
+      const donations = await storage.getActiveDonations();
       res.json(donations);
     } catch (error) {
       console.error('Error fetching active donations:', error);

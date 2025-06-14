@@ -223,24 +223,38 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveDonations(): Promise<(Donation & { creator: User })[]> {
-    // Simple approach - get all donations and manually join with users
-    const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
-    const userResults = await db.select().from(users);
-    
-    // Create a map for faster lookup
-    const userMap = new Map(userResults.map(user => [user.id, user]));
-    
-    // Combine donations with their creators and filter by end date
-    const activeDonations = donationResults
-      .filter(donation => new Date(donation.endDate) > new Date())
-      .map(donation => ({
-        ...donation,
-        creator: userMap.get(donation.creatorId)!
-      }))
-      .filter(donation => donation.creator)
-      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
-    
-    return activeDonations;
+    try {
+      // Get all active donations
+      const donationResults = await db.select().from(donations).where(eq(donations.isActive, true));
+      
+      // Get all users
+      const userResults = await db.select().from(users);
+      const userMap = new Map(userResults.map(user => [user.id, user]));
+      
+      // Filter by end date and combine with creators
+      const activeDonations = donationResults
+        .filter(donation => {
+          const endDate = new Date(donation.endDate);
+          const now = new Date();
+          return endDate > now;
+        })
+        .map(donation => {
+          const creator = userMap.get(donation.creatorId);
+          if (!creator) return null;
+          
+          return {
+            ...donation,
+            creator
+          };
+        })
+        .filter((donation): donation is Donation & { creator: User } => donation !== null)
+        .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+      
+      return activeDonations;
+    } catch (error) {
+      console.error('Error in getActiveDonations:', error);
+      throw new Error('Failed to fetch active donations');
+    }
   }
 
   async createDonationContribution(contribution: InsertDonationContribution & { userId: number }): Promise<DonationContribution> {
