@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="bg-white dark:bg-duxxan-surface border-2 border-duxxan-yellow/80 dark:border-duxxan-border hover:shadow-lg hover:border-duxxan-yellow dark:hover:border-duxxan-yellow transition-all duration-300 cursor-pointer">
+      <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-500 hover:shadow-lg hover:border-yellow-600 transition-all duration-300 cursor-pointer">
         <div className="h-48 relative overflow-hidden rounded-t-lg">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
@@ -116,7 +116,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <Badge variant="secondary" className="bg-duxxan-yellow text-black font-semibold">
+              <Badge variant="secondary" className="bg-yellow-500 text-white font-semibold">
                 {raffle.category.name}
               </Badge>
             </div>
@@ -127,40 +127,40 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
-            <span className="text-duxxan-yellow text-sm">★</span>
-            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">{raffle.creator.rating}</span>
+            <span className="text-yellow-500 text-sm">★</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{raffle.creator.rating}</span>
           </div>
         </div>
         
-        <p className="text-gray-600 dark:text-duxxan-text-secondary mb-4 text-sm line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm line-clamp-2">
           {raffle.description}
         </p>
 
-        <div className="bg-gradient-to-r from-duxxan-yellow/10 to-duxxan-yellow/5 dark:bg-duxxan-dark rounded-lg p-4 mb-4 border border-duxxan-yellow/20 dark:border-duxxan-border">
+        <div className="bg-yellow-50 dark:bg-gray-700 rounded-lg p-4 mb-4 border border-yellow-200 dark:border-gray-600">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Satılan Biletler</span>
-            <span className="text-sm font-bold text-duxxan-success">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Satılan Biletler</span>
+            <span className="text-sm font-bold text-white">
               {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
             </span>
           </div>
           <Progress value={progress} className="mb-2" />
-          <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">
-            {progress < 50 ? '🚀 Yeni başlıyor!' : progress < 80 ? '🔥 Kızışıyor!' : '⚡ Neredeyse tükendi!'}
+          <div className="text-xs text-gray-600 dark:text-gray-400">
+            {progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse tükendi!'}
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-4">
           <div>
-            <div className="text-sm text-duxxan-text-secondary">Bilet Fiyatı</div>
-            <div className="text-lg font-bold text-duxxan-yellow">
+            <div className="text-sm text-gray-600 dark:text-gray-400">Bilet Fiyatı</div>
+            <div className="text-lg font-bold text-white">
               {parseFloat(raffle.ticketPrice).toLocaleString()} USDT
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-duxxan-text-secondary">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
             </div>
-            <div className="text-lg font-bold">
+            <div className="text-lg font-bold text-white">
               {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
             </div>
           </div>
@@ -170,7 +170,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           <Button
             onClick={() => buyTickets(1)}
             disabled={!isConnected || daysLeft <= 0}
-            className="duxxan-button-primary w-full"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white w-full"
           >
             1 Bilet Al
           </Button>
@@ -181,7 +181,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
                 onClick={() => buyTickets(5)}
                 disabled={!isConnected || daysLeft <= 0}
                 variant="outline"
-                className="duxxan-button-secondary text-sm"
+                className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white text-sm"
               >
                 5 Bilet Al
               </Button>
@@ -189,7 +189,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
                 onClick={() => buyTickets(10)}
                 disabled={!isConnected || daysLeft <= 0}
                 variant="outline"
-                className="duxxan-button-secondary text-sm"
+                className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white text-sm"
               >
                 10 Bilet Al
               </Button>
@@ -197,10 +197,10 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           )}
         </div>
 
-        <div className="mt-4 pt-4 border-t border-duxxan-border flex items-center justify-between">
-          <span className="text-xs text-duxxan-text-secondary">
-            Prize Value: <span className="text-duxxan-yellow font-semibold">
-              ${parseFloat(raffle.prizeValue).toLocaleString()}
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <span className="text-xs text-gray-600 dark:text-gray-400">
+            Ödül Değeri: <span className="text-white font-semibold">
+              {parseFloat(raffle.prizeValue).toLocaleString()} USDT
             </span>
           </span>
           <Button
@@ -211,7 +211,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             }}
             variant="ghost"
             size="icon"
-            className="text-duxxan-text-secondary hover:text-duxxan-yellow"
+            className="text-gray-600 dark:text-gray-400 hover:text-yellow-500"
           >
             <Share2 className="h-4 w-4" />
           </Button>

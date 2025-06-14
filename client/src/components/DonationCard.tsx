@@ -114,7 +114,7 @@ export function DonationCard({ donation }: DonationCardProps) {
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{donation.title}</h3>
-              <p className="text-gray-600 dark:text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">
                 {donation.description}
               </p>
             </div>
@@ -125,33 +125,33 @@ export function DonationCard({ donation }: DonationCardProps) {
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">İlerleme</span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">
-              ${parseFloat(donation.currentAmount).toLocaleString()} / ${parseFloat(donation.goalAmount).toLocaleString()}
+            <span className="text-sm text-gray-600 dark:text-gray-400">İlerleme</span>
+            <span className="text-sm font-bold text-white">
+              {parseFloat(donation.currentAmount).toLocaleString()} USDT / {parseFloat(donation.goalAmount).toLocaleString()} USDT
             </span>
           </div>
           <Progress value={Math.min(progress, 100)} className="mb-2" />
-          <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary text-center">
+          <div className="text-xs text-gray-600 dark:text-gray-400 text-center">
             {progress >= 100 ? '🎉 Hedefe ulaşıldı!' : `%${progress.toFixed(1)} fonlandı`}
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4 mb-6 text-center">
           <div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
-            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Bağışçılar</div>
+            <div className="text-lg font-bold text-white">{donation.donorCount}</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Bağışçılar</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">
+            <div className="text-lg font-bold text-white">
               {daysLeft > 0 ? daysLeft : 0}
             </div>
-            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Kalan Gün</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Kalan Gün</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-duxxan-success">
-              ${avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
+            <div className="text-lg font-bold text-white">
+              {avgDonation > 0 ? avgDonation.toFixed(0) : '0'} USDT
             </div>
-            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Ort. Bağış</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Ort. Bağış</div>
           </div>
         </div>
 
@@ -163,14 +163,14 @@ export function DonationCard({ donation }: DonationCardProps) {
                 placeholder="Miktar girin (USDT)"
                 value={donationAmount}
                 onChange={(e) => setDonationAmount(e.target.value)}
-                className="bg-duxxan-dark border-duxxan-border text-white"
+                className="bg-white dark:bg-gray-700 border-yellow-500 text-gray-900 dark:text-white"
                 min="1"
                 step="1"
               />
               <Button
                 onClick={contribute}
                 disabled={!isConnected || isContributing || !donationAmount}
-                className="duxxan-button-success whitespace-nowrap"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500 whitespace-nowrap"
               >
                 {isContributing ? 'İşleniyor...' : 'Bağış Yap'}
               </Button>
@@ -183,22 +183,22 @@ export function DonationCard({ donation }: DonationCardProps) {
                   onClick={() => quickDonate(amount)}
                   variant="outline"
                   size="sm"
-                  className="duxxan-button-secondary flex-1 text-xs"
+                  className="border-yellow-500 text-white hover:bg-yellow-500 hover:text-white flex-1 text-xs"
                 >
-                  ${amount}
+                  {amount} USDT
                 </Button>
               ))}
             </div>
           </div>
         )}
 
-        <div className="mt-4 pt-4 border-t border-duxxan-border flex items-center justify-between">
-          <div className="text-xs text-duxxan-text-secondary">
-            Created by <span className="text-white font-medium">{donation.creator.username}</span>
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="text-xs text-gray-600 dark:text-gray-400">
+            Oluşturan: <span className="text-white font-medium">{donation.creator.username}</span>
           </div>
           <div className="flex items-center space-x-1">
-            <span className="text-duxxan-yellow text-xs">★</span>
-            <span className="text-xs text-duxxan-text-secondary">{donation.creator.rating}</span>
+            <span className="text-yellow-500 text-xs">★</span>
+            <span className="text-xs text-gray-600 dark:text-gray-400">{donation.creator.rating}</span>
           </div>
         </div>
       </CardContent>

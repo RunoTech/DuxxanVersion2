@@ -101,7 +101,7 @@ export default function Donations() {
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
               <div className="text-2xl font-bold text-orange-500 mb-2">
-                ${getTotalRaised().toLocaleString()}
+                {getTotalRaised().toLocaleString()} USDT
               </div>
               <div className="text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
             </CardContent>
@@ -119,7 +119,7 @@ export default function Donations() {
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                ${getAverageContribution().toFixed(0)}
+                {getAverageContribution().toFixed(0)} USDT
               </div>
               <div className="text-gray-600 dark:text-gray-400">Ortalama Bağış</div>
             </CardContent>
@@ -136,7 +136,7 @@ export default function Donations() {
                   Bağış Pazar Değeri
                 </h3>
                 <div className="text-3xl font-bold text-green-500 mb-2">
-                  ${getTotalRaised().toLocaleString()} USDT
+                  {getTotalRaised().toLocaleString()} USDT
                 </div>
                 <div className="flex items-center space-x-4 text-sm">
                   <span className="text-green-500">↗ Canlı Güncellemeler</span>
