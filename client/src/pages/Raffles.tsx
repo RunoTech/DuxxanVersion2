@@ -63,59 +63,59 @@ export default function Raffles() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-dark py-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">All Raffles</h1>
-            <p className="text-duxxan-text-secondary">
-              Discover amazing prizes and join exciting raffles
+            <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Tüm Çekilişler</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Muhteşem ödülleri keşfedin ve heyecan verici çekilişlere katılın
             </p>
           </div>
           <Link href="/create-raffle">
-            <Button className="duxxan-button-primary mt-4 md:mt-0">
-              Create New Raffle
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black mt-4 md:mt-0">
+              Yeni Çekiliş Oluştur
             </Button>
           </Link>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-yellow mb-2">
+              <div className="text-2xl font-bold text-yellow-500 mb-2">
                 {getActiveRafflesCount()}
               </div>
-              <div className="text-duxxan-text-secondary">Active Raffles</div>
+              <div className="text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>
             </CardContent>
           </Card>
           
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-success mb-2">
+              <div className="text-2xl font-bold text-green-500 mb-2">
                 ${getTotalPrizePool().toLocaleString()}
               </div>
-              <div className="text-duxxan-text-secondary">Total Prize Pool</div>
+              <div className="text-gray-600 dark:text-gray-400">Toplam Ödül Havuzu</div>
             </CardContent>
           </Card>
           
-          <Card className="duxxan-card">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-duxxan-warning mb-2">
+              <div className="text-2xl font-bold text-orange-500 mb-2">
                 {raffles.length}
               </div>
-              <div className="text-duxxan-text-secondary">All Time Raffles</div>
+              <div className="text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Filters */}
-        <Card className="duxxan-card mb-8">
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <Filter className="w-5 h-5" />
-              Filters & Search
+              Filtreler ve Arama
             </CardTitle>
           </CardHeader>
           <CardContent>

@@ -300,13 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get('/api/donations/active', async (req, res) => {
-    try {
-      // Return empty array for now to fix the 500 error
-      res.json([]);
-    } catch (error) {
-      console.error('Error fetching active donations:', error);
-      res.json([]);
-    }
+    res.json([]);
   });
 
   app.get('/api/donations/:id', async (req, res) => {
