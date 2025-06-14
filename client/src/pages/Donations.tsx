@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
-import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield } from 'lucide-react';
+import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';
 
 export default function Donations() {
   const { isConnected } = useWallet();
@@ -28,11 +28,10 @@ export default function Donations() {
   // Organization types and countries
   const organizationTypes = [
     { value: 'all', label: 'Tüm Türler', icon: Globe },
+    { value: 'countries', label: 'Ülkeler', icon: MapPin },
     { value: 'foundation', label: 'Vakıflar', icon: Building2 },
     { value: 'association', label: 'Dernekler', icon: Users },
     { value: 'individual', label: 'Bireysel', icon: Heart },
-    { value: 'unlimited', label: 'Sınırsız Bağışlar', icon: Clock },
-    { value: 'timed', label: 'Süreli Bağışlar', icon: Clock },
   ];
 
   const countries = [
@@ -45,6 +44,95 @@ export default function Donations() {
     { value: 'JPN', label: '🇯🇵 Japonya' },
     { value: 'CHN', label: '🇨🇳 Çin' },
     { value: 'IND', label: '🇮🇳 Hindistan' },
+    { value: 'RUS', label: '🇷🇺 Rusya' },
+    { value: 'BRA', label: '🇧🇷 Brezilya' },
+    { value: 'CAN', label: '🇨🇦 Kanada' },
+    { value: 'AUS', label: '🇦🇺 Avustralya' },
+    { value: 'MEX', label: '🇲🇽 Meksika' },
+    { value: 'ITA', label: '🇮🇹 İtalya' },
+    { value: 'ESP', label: '🇪🇸 İspanya' },
+    { value: 'KOR', label: '🇰🇷 Güney Kore' },
+    { value: 'NLD', label: '🇳🇱 Hollanda' },
+    { value: 'SAU', label: '🇸🇦 Suudi Arabistan' },
+    { value: 'CHE', label: '🇨🇭 İsviçre' },
+    { value: 'SWE', label: '🇸🇪 İsveç' },
+    { value: 'NOR', label: '🇳🇴 Norveç' },
+    { value: 'DNK', label: '🇩🇰 Danimarka' },
+    { value: 'FIN', label: '🇫🇮 Finlandiya' },
+    { value: 'BEL', label: '🇧🇪 Belçika' },
+    { value: 'AUT', label: '🇦🇹 Avusturya' },
+    { value: 'POL', label: '🇵🇱 Polonya' },
+    { value: 'GRC', label: '🇬🇷 Yunanistan' },
+    { value: 'PRT', label: '🇵🇹 Portekiz' },
+    { value: 'CZE', label: '🇨🇿 Çek Cumhuriyeti' },
+    { value: 'HUN', label: '🇭🇺 Macaristan' },
+    { value: 'SVK', label: '🇸🇰 Slovakya' },
+    { value: 'SVN', label: '🇸🇮 Slovenya' },
+    { value: 'HRV', label: '🇭🇷 Hırvatistan' },
+    { value: 'BGR', label: '🇧🇬 Bulgaristan' },
+    { value: 'ROU', label: '🇷🇴 Romanya' },
+    { value: 'LTU', label: '🇱🇹 Litvanya' },
+    { value: 'LVA', label: '🇱🇻 Letonya' },
+    { value: 'EST', label: '🇪🇪 Estonya' },
+    { value: 'MLT', label: '🇲🇹 Malta' },
+    { value: 'CYP', label: '🇨🇾 Kıbrıs' },
+    { value: 'LUX', label: '🇱🇺 Lüksemburg' },
+    { value: 'ISL', label: '🇮🇸 İzlanda' },
+    { value: 'IRL', label: '🇮🇪 İrlanda' },
+    { value: 'NZL', label: '🇳🇿 Yeni Zelanda' },
+    { value: 'SGP', label: '🇸🇬 Singapur' },
+    { value: 'ARE', label: '🇦🇪 BAE' },
+    { value: 'QAT', label: '🇶🇦 Katar' },
+    { value: 'KWT', label: '🇰🇼 Kuveyt' },
+    { value: 'BHR', label: '🇧🇭 Bahreyn' },
+    { value: 'OMN', label: '🇴🇲 Umman' },
+    { value: 'JOR', label: '🇯🇴 Ürdün' },
+    { value: 'LBN', label: '🇱🇧 Lübnan' },
+    { value: 'ISR', label: '🇮🇱 İsrail' },
+    { value: 'EGY', label: '🇪🇬 Mısır' },
+    { value: 'ZAF', label: '🇿🇦 Güney Afrika' },
+    { value: 'MAR', label: '🇲🇦 Fas' },
+    { value: 'TUN', label: '🇹🇳 Tunus' },
+    { value: 'DZA', label: '🇩🇿 Cezayir' },
+    { value: 'NGA', label: '🇳🇬 Nijerya' },
+    { value: 'KEN', label: '🇰🇪 Kenya' },
+    { value: 'GHA', label: '🇬🇭 Gana' },
+    { value: 'ETH', label: '🇪🇹 Etiyopya' },
+    { value: 'THA', label: '🇹🇭 Tayland' },
+    { value: 'VNM', label: '🇻🇳 Vietnam' },
+    { value: 'MYS', label: '🇲🇾 Malezya' },
+    { value: 'IDN', label: '🇮🇩 Endonezya' },
+    { value: 'PHL', label: '🇵🇭 Filipinler' },
+    { value: 'BGD', label: '🇧🇩 Bangladeş' },
+    { value: 'PAK', label: '🇵🇰 Pakistan' },
+    { value: 'LKA', label: '🇱🇰 Sri Lanka' },
+    { value: 'NPL', label: '🇳🇵 Nepal' },
+    { value: 'AFG', label: '🇦🇫 Afganistan' },
+    { value: 'IRN', label: '🇮🇷 İran' },
+    { value: 'IRQ', label: '🇮🇶 Irak' },
+    { value: 'SYR', label: '🇸🇾 Suriye' },
+    { value: 'YEM', label: '🇾🇪 Yemen' },
+    { value: 'ARG', label: '🇦🇷 Arjantin' },
+    { value: 'CHL', label: '🇨🇱 Şili' },
+    { value: 'COL', label: '🇨🇴 Kolombiya' },
+    { value: 'PER', label: '🇵🇪 Peru' },
+    { value: 'VEN', label: '🇻🇪 Venezuela' },
+    { value: 'ECU', label: '🇪🇨 Ekvador' },
+    { value: 'URY', label: '🇺🇾 Uruguay' },
+    { value: 'PRY', label: '🇵🇾 Paraguay' },
+    { value: 'BOL', label: '🇧🇴 Bolivya' },
+    { value: 'UKR', label: '🇺🇦 Ukrayna' },
+    { value: 'BLR', label: '🇧🇾 Belarus' },
+    { value: 'MDA', label: '🇲🇩 Moldova' },
+    { value: 'GEO', label: '🇬🇪 Gürcistan' },
+    { value: 'ARM', label: '🇦🇲 Ermenistan' },
+    { value: 'AZE', label: '🇦🇿 Azerbaycan' },
+    { value: 'KAZ', label: '🇰🇿 Kazakistan' },
+    { value: 'UZB', label: '🇺🇿 Özbekistan' },
+    { value: 'KGZ', label: '🇰🇬 Kırgızistan' },
+    { value: 'TJK', label: '🇹🇯 Tacikistan' },
+    { value: 'TKM', label: '🇹🇲 Türkmenistan' },
+    { value: 'MNG', label: '🇲🇳 Moğolistan' },
   ];
 
   const categories = [
@@ -205,7 +293,7 @@ export default function Donations() {
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <TabsList className="grid w-full grid-cols-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             {organizationTypes.map((type) => {
               const IconComponent = type.icon;
               return (
@@ -365,6 +453,20 @@ export default function Donations() {
                   Doğrulanmış vakıflar tarafından yürütülen profesyonel bağış kampanyaları. 
                   Sınırsız süre imkanı ve düşük komisyon oranı.
                 </p>
+                <div className="flex gap-3 mt-4">
+                  <Link href="/create-raffle">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Çekiliş Oluştur
+                    </Button>
+                  </Link>
+                  <Link href="/raffles">
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Çekilişe Katıl
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
             </Card>
             
@@ -410,6 +512,20 @@ export default function Donations() {
                   Sivil toplum kuruluşları ve dernekler tarafından organize edilen 
                   toplumsal fayda odaklı bağış projeleri.
                 </p>
+                <div className="flex gap-3 mt-4">
+                  <Link href="/create-raffle">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Çekiliş Oluştur
+                    </Button>
+                  </Link>
+                  <Link href="/raffles">
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Çekilişe Katıl
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
             </Card>
             
@@ -484,26 +600,65 @@ export default function Donations() {
             )}
           </TabsContent>
 
-          <TabsContent value="unlimited" className="mt-6">
+          <TabsContent value="countries" className="mt-6">
             <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                  <Clock className="w-5 h-5 text-purple-500" />
-                  Sınırsız Süreli Kampanyalar
-                  <Badge className="bg-purple-100 text-purple-800">100 USDT Başlangıç Ücreti</Badge>
-                  <Badge className="bg-blue-100 text-blue-800 ml-2">
-                    <Star className="w-3 h-3 mr-1" />
-                    Premium
+                  <MapPin className="w-5 h-5 text-blue-500" />
+                  Ülke Bazlı Kampanyalar
+                  <Badge className="bg-blue-100 text-blue-800">Küresel Destek</Badge>
+                  <Badge className="bg-green-100 text-green-800 ml-2">
+                    <Globe className="w-3 h-3 mr-1" />
+                    Dünya Çapında
                   </Badge>
                 </CardTitle>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Sadece doğrulanmış organizasyonlar tarafından açılabilen, süresiz bağış kampanyaları. 
-                  Uzun vadeli projeler için ideal.
+                  Tüm dünyadan ülkelerin bağış kampanyaları ve çekilişleri. 
+                  Her ülkeden vakıf ve dernekler için özel alanlar.
                 </p>
+                
+                {/* Demo Raffles Section */}
+                <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                  <div className="flex items-center gap-2 mb-3">
+                    <TrendingUp className="w-5 h-5 text-yellow-600" />
+                    <h4 className="font-semibold text-gray-900 dark:text-white">Demo Çekilişler</h4>
+                    <Badge className="bg-yellow-100 text-yellow-800">Deneme</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Platform özelliklerini test etmek için demo çekilişlere katılabilirsiniz.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Demo Çekiliş Başlat
+                    </Button>
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Demo Çekilişe Katıl
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
             </Card>
             
-            {/* Unlimited Donations Grid */}
+            {/* Countries Grid - Show all countries */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+              {countries.slice(1).map((country) => ( // Skip "Tüm Ülkeler" option
+                <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600 hover:border-yellow-400 transition-colors cursor-pointer group">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl mb-2">{country.label.split(' ')[0]}</div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600">
+                      {country.label.split(' ').slice(1).join(' ')}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      0 Kampanya
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            {/* Countries Donations Grid */}
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
@@ -518,58 +673,19 @@ export default function Donations() {
               </div>
             ) : (
               <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
-                <Clock className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+                <MapPin className="w-16 h-16 text-blue-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Henüz sınırsız kampanya bulunmuyor
+                  Ülkeler arası kampanyalar başlıyor
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Premium sınırsız süreli kampanyalar burada görünecek.
+                  Dünya çapındaki vakıf ve derneklerin kampanyaları burada görünecek.
                 </p>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="timed" className="mt-6">
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                  <Clock className="w-5 h-5 text-orange-500" />
-                  Süreli Kampanyalar
-                  <Badge className="bg-orange-100 text-orange-800">Belirli Süre</Badge>
-                  <Badge className="bg-yellow-100 text-yellow-800 ml-2">
-                    <Award className="w-3 h-3 mr-1" />
-                    Standart
-                  </Badge>
-                </CardTitle>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Belirli bir süre ile sınırlı bağış kampanyaları. 
-                  Acil ihtiyaçlar ve kısa vadeli projeler için uygundur.
-                </p>
-              </CardHeader>
-            </Card>
-            
-            {/* Timed Donations Grid */}
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-                ))}
-              </div>
-            ) : filteredDonations.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredDonations.map((donation: any) => (
-                  <DonationCard key={donation.id} donation={donation} />
-                ))}
-              </div>
-            ) : (
-              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
-                <Clock className="w-16 h-16 text-orange-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Henüz süreli kampanya bulunmuyor
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Süreli bağış kampanyaları burada görünecek.
-                </p>
+                <div className="flex justify-center gap-4">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                    <Globe className="w-4 h-4 mr-2" />
+                    İlk Küresel Kampanyayı Başlat
+                  </Button>
+                </div>
               </Card>
             )}
           </TabsContent>
