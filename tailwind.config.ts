@@ -61,6 +61,17 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+        duxxan: {
+          yellow: "#EAB308",
+          success: "#10B981",
+          warning: "#F59E0B",
+          error: "#EF4444",
+          dark: "#0F172A",
+          darker: "#020617",
+          surface: "#1E293B",
+          border: "#334155",
+          "text-secondary": "#94A3B8",
+        },
       },
       keyframes: {
         "accordion-down": {

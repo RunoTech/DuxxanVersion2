@@ -109,12 +109,12 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="duxxan-card hover:border-duxxan-success transition-all duration-300 cursor-pointer">
+      <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border hover:border-duxxan-success dark:hover:border-duxxan-success transition-all duration-300 cursor-pointer">
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2 text-white">{donation.title}</h3>
-              <p className="text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
+              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{donation.title}</h3>
+              <p className="text-gray-600 dark:text-duxxan-text-secondary text-sm mb-3 line-clamp-3">
                 {donation.description}
               </p>
             </div>
@@ -125,33 +125,33 @@ export function DonationCard({ donation }: DonationCardProps) {
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-duxxan-text-secondary">İlerleme</span>
-            <span className="text-sm font-bold">
+            <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">İlerleme</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
               ${parseFloat(donation.currentAmount).toLocaleString()} / ${parseFloat(donation.goalAmount).toLocaleString()}
             </span>
           </div>
           <Progress value={Math.min(progress, 100)} className="mb-2" />
-          <div className="text-xs text-duxxan-text-secondary text-center">
+          <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary text-center">
             {progress >= 100 ? '🎉 Hedefe ulaşıldı!' : `%${progress.toFixed(1)} fonlandı`}
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4 mb-6 text-center">
           <div>
-            <div className="text-lg font-bold text-white">{donation.donorCount}</div>
-            <div className="text-xs text-duxxan-text-secondary">Bağışçılar</div>
+            <div className="text-lg font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
+            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Bağışçılar</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-lg font-bold text-gray-900 dark:text-white">
               {daysLeft > 0 ? daysLeft : 0}
             </div>
-            <div className="text-xs text-duxxan-text-secondary">Kalan Gün</div>
+            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Kalan Gün</div>
           </div>
           <div>
             <div className="text-lg font-bold text-duxxan-success">
               ${avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
             </div>
-            <div className="text-xs text-duxxan-text-secondary">Ort. Bağış</div>
+            <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Ort. Bağış</div>
           </div>
         </div>
 
