@@ -181,7 +181,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
                 variant="outline"
                 className="duxxan-button-secondary text-sm"
               >
-                Buy 10 Tickets
+                10 Bilet Al
               </Button>
             </div>
           )}

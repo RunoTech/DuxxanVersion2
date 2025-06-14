@@ -42,15 +42,15 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   const getStatusBadge = () => {
     if (daysLeft <= 0) {
-      return <Badge variant="destructive">Ended</Badge>;
+      return <Badge variant="destructive">Bitti</Badge>;
     }
     if (progress >= 100) {
-      return <Badge className="bg-duxxan-success">Completed</Badge>;
+      return <Badge className="bg-duxxan-success">Tamamlandı</Badge>;
     }
     if (progress >= 80) {
-      return <Badge className="bg-duxxan-warning text-black">Almost There</Badge>;
+      return <Badge className="bg-duxxan-warning text-black">Neredeyse Hedefe Ulaştı</Badge>;
     }
-    return <Badge className="bg-blue-600">Active</Badge>;
+    return <Badge className="bg-blue-600">Aktif</Badge>;
   };
 
   const contribute = async () => {
@@ -87,15 +87,15 @@ export function DonationCard({ donation }: DonationCardProps) {
       });
 
       toast({
-        title: 'Donation Successful!',
-        description: `Thank you for donating $${donationAmount} USDT`,
+        title: 'Bağış Başarılı!',
+        description: `${donationAmount} USDT bağışınız için teşekkürler`,
       });
 
       setDonationAmount('');
     } catch (error: any) {
       toast({
-        title: 'Donation Failed',
-        description: error.message || 'Failed to process donation',
+        title: 'Bağış Başarısız',
+        description: error.message || 'Bağış işlemi başarısız',
         variant: 'destructive',
       });
     } finally {
@@ -125,21 +125,21 @@ export function DonationCard({ donation }: DonationCardProps) {
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-duxxan-text-secondary">Progress</span>
+            <span className="text-sm text-duxxan-text-secondary">İlerleme</span>
             <span className="text-sm font-bold">
               ${parseFloat(donation.currentAmount).toLocaleString()} / ${parseFloat(donation.goalAmount).toLocaleString()}
             </span>
           </div>
           <Progress value={Math.min(progress, 100)} className="mb-2" />
           <div className="text-xs text-duxxan-text-secondary text-center">
-            {progress >= 100 ? '🎉 Goal reached!' : `${progress.toFixed(1)}% funded`}
+            {progress >= 100 ? '🎉 Hedefe ulaşıldı!' : `%${progress.toFixed(1)} fonlandı`}
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4 mb-6 text-center">
           <div>
             <div className="text-lg font-bold text-white">{donation.donorCount}</div>
-            <div className="text-xs text-duxxan-text-secondary">Donors</div>
+            <div className="text-xs text-duxxan-text-secondary">Bağışçılar</div>
           </div>
           <div>
             <div className="text-lg font-bold text-white">
