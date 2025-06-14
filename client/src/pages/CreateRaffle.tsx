@@ -29,6 +29,20 @@ export default function CreateRaffle() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
+  const [hasExistingDonations, setHasExistingDonations] = useState(false);
+
+  // Check if user has created any donations
+  useQuery({
+    queryKey: ['/api/donations', 'user-check'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/donations');
+      const donations = await response.json();
+      const userDonations = donations.filter((d: any) => d.creatorId === user?.id);
+      setHasExistingDonations(userDonations.length > 0);
+      return donations;
+    },
+    enabled: !!user?.id,
+  });
 
   const form = useForm<CreateRaffleForm>({
     resolver: zodResolver(createRaffleSchema),
@@ -145,6 +159,48 @@ export default function CreateRaffle() {
             </Link>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  // Block donation recipients from creating raffles
+  if (hasExistingDonations) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 py-8 transition-colors duration-200">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <X className="w-8 h-8 text-red-600" />
+              </div>
+              <h2 className="text-2xl font-bold mb-4 text-red-700 dark:text-red-300">
+                Çekiliş Oluşturulamaz
+              </h2>
+              <p className="text-red-600 dark:text-red-400 mb-6 leading-relaxed">
+                Bağış kampanyası oluşturmuş hesaplar çekiliş yapamaz. Bu, platform güvenliği ve 
+                kullanıcı koruması için gerekli bir kısıtlamadır.
+              </p>
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-red-200 dark:border-red-700 mb-6">
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Çözüm:</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Çekiliş yapmak için yeni bir cüzdan adresi kullanmanız gerekir.
+                </p>
+              </div>
+              <div className="flex justify-center gap-4">
+                <Link href="/donations">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                    Bağışlara Dön
+                  </Button>
+                </Link>
+                <Link href="/raffles">
+                  <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                    Çekilişleri Görüntüle
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }

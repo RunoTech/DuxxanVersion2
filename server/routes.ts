@@ -198,7 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/raffles', createRateLimit, getUser, async (req: any, res) => {
     try {
       // Check if user has created any donations (donation recipients cannot create raffles)
-      const userDonations = await storage.getDonationsByCreator ? await storage.getDonationsByCreator(req.user.id) : [];
+      const userDonations = await storage.getDonationsByCreator(req.user.id);
       if (userDonations.length > 0) {
         return res.status(403).json({ 
           message: 'Bağış alan hesaplar çekiliş oluşturamaz. Çekiliş yapmak için ayrı bir hesap kullanın.' 
