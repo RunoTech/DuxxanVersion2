@@ -11,6 +11,18 @@ export const users = pgTable("users", {
   profession: varchar("profession", { length: 100 }),
   bio: text("bio"),
   profileImage: text("profile_image"),
+  profilePhoto: text("profile_photo"), // JPEG photo stored as base64
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 20 }),
+  dateOfBirth: varchar("date_of_birth", { length: 10 }), // YYYY-MM-DD format
+  gender: varchar("gender", { length: 10 }),
+  city: varchar("city", { length: 100 }),
+  address: text("address"),
+  website: varchar("website", { length: 255 }),
+  socialMediaTwitter: varchar("social_media_twitter", { length: 100 }),
+  socialMediaInstagram: varchar("social_media_instagram", { length: 100 }),
+  socialMediaLinkedin: varchar("social_media_linkedin", { length: 100 }),
+  socialMediaFacebook: varchar("social_media_facebook", { length: 100 }),
   isActive: boolean("is_active").default(true),
   rating: decimal("rating", { precision: 2, scale: 1 }).default("5.0"),
   ratingCount: integer("rating_count").default(0),
@@ -115,6 +127,34 @@ export const follows = pgTable("follows", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Device login logging table
+export const userDevices = pgTable("user_devices", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  deviceType: varchar("device_type", { length: 20 }).notNull(), // mobile, desktop, tablet
+  deviceName: varchar("device_name", { length: 100 }), // device model/name
+  browser: varchar("browser", { length: 50 }),
+  operatingSystem: varchar("operating_system", { length: 50 }),
+  ipAddress: varchar("ip_address", { length: 45 }), // supports IPv6
+  userAgent: text("user_agent"),
+  location: varchar("location", { length: 100 }), // city, country if available
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User photos table for storing multiple photos
+export const userPhotos = pgTable("user_photos", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  photoData: text("photo_data").notNull(), // base64 encoded JPEG
+  photoType: varchar("photo_type", { length: 20 }).default("profile"), // profile, gallery, document
+  fileName: varchar("file_name", { length: 255 }),
+  fileSize: integer("file_size"), // in bytes
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+  isActive: boolean("is_active").default(true),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   rafflesCreated: many(raffles, { relationName: "raffles_creator" }),
@@ -128,6 +168,22 @@ export const usersRelations = relations(users, ({ many }) => ({
   receivedMessages: many(chatMessages, { relationName: "messages_receiver" }),
   following: many(follows, { relationName: "follows_follower" }),
   followers: many(follows, { relationName: "follows_following" }),
+  devices: many(userDevices),
+  photos: many(userPhotos),
+}));
+
+export const userDevicesRelations = relations(userDevices, ({ one }) => ({
+  user: one(users, {
+    fields: [userDevices.userId],
+    references: [users.id],
+  }),
+}));
+
+export const userPhotosRelations = relations(userPhotos, ({ one }) => ({
+  user: one(users, {
+    fields: [userPhotos.userId],
+    references: [users.id],
+  }),
 }));
 
 export const rafflesRelations = relations(raffles, ({ one, many }) => ({
@@ -165,6 +221,18 @@ export const insertUserSchema = createInsertSchema(users).pick({
   profession: true,
   bio: true,
   profileImage: true,
+  profilePhoto: true,
+  email: true,
+  phoneNumber: true,
+  dateOfBirth: true,
+  gender: true,
+  city: true,
+  address: true,
+  website: true,
+  socialMediaTwitter: true,
+  socialMediaInstagram: true,
+  socialMediaLinkedin: true,
+  socialMediaFacebook: true,
   organizationType: true,
   organizationName: true,
   verificationUrl: true,
@@ -181,10 +249,38 @@ export const insertUserSchema = createInsertSchema(users).pick({
   name: z.string().max(100, "Name must be less than 100 characters").optional(),
   profession: z.string().max(100, "Profession must be less than 100 characters").optional(),
   bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  email: z.string().email("Invalid email format").optional(),
+  phoneNumber: z.string().max(20, "Phone number must be less than 20 characters").optional(),
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
+  city: z.string().max(100, "City must be less than 100 characters").optional(),
+  address: z.string().max(500, "Address must be less than 500 characters").optional(),
+  website: z.string().url("Must be a valid URL").optional(),
+  socialMediaTwitter: z.string().max(100).optional(),
+  socialMediaInstagram: z.string().max(100).optional(),
+  socialMediaLinkedin: z.string().max(100).optional(),
+  socialMediaFacebook: z.string().max(100).optional(),
   organizationType: z.enum(["individual", "foundation", "association", "official"]).default("individual"),
   organizationName: z.string().max(200, "Organization name must be less than 200 characters").optional(),
   verificationUrl: z.string().url("Must be a valid URL").optional(),
   country: z.string().length(3, "Country code must be 3 characters").optional(),
+});
+
+export const insertUserDeviceSchema = createInsertSchema(userDevices).pick({
+  deviceType: true,
+  deviceName: true,
+  browser: true,
+  operatingSystem: true,
+  ipAddress: true,
+  userAgent: true,
+  location: true,
+});
+
+export const insertUserPhotoSchema = createInsertSchema(userPhotos).pick({
+  photoData: true,
+  photoType: true,
+  fileName: true,
+  fileSize: true,
 });
 
 export const insertRaffleSchema = createInsertSchema(raffles).pick({
@@ -278,6 +374,10 @@ export const insertUserRatingSchema = createInsertSchema(userRatings).pick({
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type UserDevice = typeof userDevices.$inferSelect;
+export type InsertUserDevice = z.infer<typeof insertUserDeviceSchema>;
+export type UserPhoto = typeof userPhotos.$inferSelect;
+export type InsertUserPhoto = z.infer<typeof insertUserPhotoSchema>;
 export type Raffle = typeof raffles.$inferSelect;
 export type InsertRaffle = z.infer<typeof insertRaffleSchema>;
 export type Donation = typeof donations.$inferSelect;
