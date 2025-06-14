@@ -3,9 +3,9 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { db } from "./db";
-import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema } from "@shared/schema";
+import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema, donations, users } from "@shared/schema";
 import { z } from "zod";
-import { sql } from "drizzle-orm";
+import { sql, eq, desc } from "drizzle-orm";
 import {
   globalRateLimit,
   strictRateLimit,
@@ -309,8 +309,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/donations/active', async (req, res) => {
     try {
-      const donations = await storage.getActiveDonations();
-      res.json(donations);
+      // Use same logic as regular donations endpoint but filter for active ones
+      const limit = parseInt(req.query.limit as string) || 20;
+      const offset = parseInt(req.query.offset as string) || 0;
+      const allDonations = await storage.getDonations(limit * 2, offset); // Get more to filter
+      const activeDonations = allDonations.filter(donation => donation.isActive);
+      res.json(activeDonations.slice(0, limit));
     } catch (error) {
       console.error('API donations/active error:', error);
       res.status(500).json({ message: 'Failed to fetch donations' });
