@@ -19,6 +19,7 @@ import { Link, useLocation } from 'wouter';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { CalendarIcon, InfoIcon, AlertTriangleIcon } from 'lucide-react';
+import { CountrySelector } from '@/components/CountrySelector';
 
 const createDonationSchema = insertDonationSchema.extend({
   endDate: z.string().optional(),

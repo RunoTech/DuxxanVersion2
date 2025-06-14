@@ -17,6 +17,7 @@ import { blockchainService } from '@/lib/blockchain';
 import { insertRaffleSchema } from '@shared/schema';
 import { Link, useLocation } from 'wouter';
 import { Upload, X, ImageIcon, AlertTriangle } from 'lucide-react';
+import { CountrySelector } from '@/components/CountrySelector';
 
 const createRaffleSchema = insertRaffleSchema.extend({
   endDate: z.string().min(1, 'End date is required'),
@@ -32,6 +33,15 @@ export default function CreateRaffle() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [showRestrictionDialog, setShowRestrictionDialog] = useState(false);
   const [hasExistingDonations, setHasExistingDonations] = useState(false);
+  const [countryRestrictions, setCountryRestrictions] = useState<{
+    restriction: "all" | "selected" | "exclude";
+    allowedCountries?: string[];
+    excludedCountries?: string[];
+  }>({
+    restriction: "all",
+    allowedCountries: undefined,
+    excludedCountries: undefined,
+  });
 
   // Check if user has created any donations
   useQuery({
@@ -66,12 +76,15 @@ export default function CreateRaffle() {
 
   const createRaffleMutation = useMutation({
     mutationFn: async (data: CreateRaffleForm) => {
-      // Convert endDate string to Date object
+      // Convert endDate string to Date object and include country restrictions
       const raffleData = {
         ...data,
         endDate: new Date(data.endDate),
         prizeValue: data.prizeValue.toString(),
         ticketPrice: data.ticketPrice.toString(),
+        countryRestriction: countryRestrictions.restriction,
+        allowedCountries: countryRestrictions.allowedCountries ? JSON.stringify(countryRestrictions.allowedCountries) : null,
+        excludedCountries: countryRestrictions.excludedCountries ? JSON.stringify(countryRestrictions.excludedCountries) : null,
       };
 
       // First, create blockchain transaction
@@ -434,6 +447,14 @@ export default function CreateRaffle() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* International Country Filtering System */}
+                <CountrySelector
+                  value={countryRestrictions}
+                  onChange={setCountryRestrictions}
+                  label="Ülke Kısıtlamaları"
+                  description="Bu çekiliş için katılım ülke kısıtlamaları belirleyin"
+                />
 
                 <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-300 dark:border-blue-600 rounded-lg p-4">
                   <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Önemli Notlar</h4>

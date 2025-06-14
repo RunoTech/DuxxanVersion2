@@ -58,7 +58,7 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
     country.code2.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const continents = [...new Set(countries.map(c => c.continent))].filter(Boolean);
+  const continents = Array.from(new Set(countries.map(c => c.continent))).filter(Boolean);
 
   const handleRestrictionChange = (restriction: "all" | "selected" | "exclude") => {
     setSelectedCountries([]);
