@@ -64,29 +64,10 @@ export default function RaffleDetail() {
     enabled: !!id,
   });
 
-  // Mock chart data - borsa tarzı
-  const chartData = [
-    { time: '00:00', participants: 45, price: 0.50 },
-    { time: '04:00', participants: 89, price: 0.50 },
-    { time: '08:00', participants: 156, price: 0.50 },
-    { time: '12:00', participants: 234, price: 0.50 },
-    { time: '16:00', participants: 387, price: 0.50 },
-    { time: '20:00', participants: 523, price: 0.50 },
-    { time: '24:00', participants: 743, price: 0.50 },
-  ];
-
-  const hourlyData = [
-    { hour: '09:00', sales: 23 },
-    { hour: '10:00', sales: 45 },
-    { hour: '11:00', sales: 67 },
-    { hour: '12:00', sales: 89 },
-    { hour: '13:00', sales: 112 },
-    { hour: '14:00', sales: 98 },
-    { hour: '15:00', sales: 134 },
-    { hour: '16:00', sales: 156 },
-    { hour: '17:00', sales: 187 },
-    { hour: '18:00', sales: 203 },
-  ];
+  // Gerçek chart verilerini sadece veri varsa kullan
+  const hasRealData = raffle && tickets && Array.isArray(tickets) && tickets.length > 0;
+  const chartData = hasRealData ? [] : []; // Backend'den gelecek
+  const hourlyData = hasRealData ? [] : []; // Backend'den gelecek
 
   if (isLoading) {
     return (
@@ -182,54 +163,13 @@ export default function RaffleDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                {chartError ? (
-                  <div className="h-80 w-full flex items-center justify-center bg-gray-50 dark:bg-duxxan-surface border border-duxxan-border rounded-lg">
-                    <div className="text-center">
-                      <TrendingUp className="w-12 h-12 text-duxxan-yellow mx-auto mb-2" />
-                      <p className="text-duxxan-text-secondary">Chart temporarily unavailable</p>
-                    </div>
+                <div className="h-80 w-full flex items-center justify-center bg-gray-50 dark:bg-duxxan-surface border border-duxxan-border rounded-lg">
+                  <div className="text-center">
+                    <TrendingUp className="w-12 h-12 text-duxxan-yellow mx-auto mb-2" />
+                    <p className="text-duxxan-text-secondary">Henüz katılım verisi yok</p>
+                    <p className="text-sm text-duxxan-text-secondary mt-1">İlk bilet satıldığında grafik görünecek</p>
                   </div>
-                ) : (
-                  <div className="h-80 w-full">
-                    <ResponsiveContainer width="100%" height={320} minHeight={200}>
-                      <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                        <defs>
-                          <linearGradient id="participantGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#F3BA2F" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#F3BA2F" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
-                        <XAxis 
-                          dataKey="time" 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                        />
-                        <YAxis 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                        />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
-                            border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
-                            borderRadius: '8px',
-                            color: theme === 'dark' ? '#fff' : '#000'
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="participants"
-                          stroke="#F3BA2F"
-                          strokeWidth={2}
-                          fill="url(#participantGradient)"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
+                </div>
                 
                 {/* İstatistikler */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
@@ -259,39 +199,12 @@ export default function RaffleDetail() {
                 <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Saatlik Bilet Satışları</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height={256} minHeight={150}>
-                    <LineChart data={hourlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
-                      <XAxis 
-                        dataKey="hour" 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                      />
-                      <YAxis 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
-                          border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
-                          borderRadius: '8px',
-                          color: theme === 'dark' ? '#fff' : '#000'
-                        }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="sales" 
-                        stroke="#F3BA2F" 
-                        strokeWidth={3}
-                        dot={{ fill: '#F3BA2F', strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6, stroke: '#F3BA2F', strokeWidth: 2 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="h-64 w-full flex items-center justify-center bg-gray-50 dark:bg-duxxan-surface border border-duxxan-border rounded-lg">
+                  <div className="text-center">
+                    <Clock className="w-12 h-12 text-duxxan-yellow mx-auto mb-2" />
+                    <p className="text-duxxan-text-secondary">Henüz satış verisi yok</p>
+                    <p className="text-sm text-duxxan-text-secondary mt-1">İlk satış yapıldığında grafik görünecek</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
