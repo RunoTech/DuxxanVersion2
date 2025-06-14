@@ -644,7 +644,7 @@ export default function Donations() {
             {/* Countries Grid - Show all countries */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
               {countries.slice(1).map((country) => ( // Skip "Tüm Ülkeler" option
-                <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600 hover:border-yellow-400 transition-colors cursor-pointer group">
+                <Card key={country.value} className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600 hover:border-yellow-400 transition-colors cursor-pointer group">
                   <CardContent className="p-4 text-center">
                     <div className="text-2xl mb-2">{country.label.split(' ')[0]}</div>
                     <div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600">
