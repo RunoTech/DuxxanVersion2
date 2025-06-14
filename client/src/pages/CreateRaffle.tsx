@@ -15,6 +15,7 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { insertRaffleSchema } from '@shared/schema';
 import { Link, useLocation } from 'wouter';
+import { Upload, X, ImageIcon } from 'lucide-react';
 
 const createRaffleSchema = insertRaffleSchema.extend({
   endDate: z.string().min(1, 'End date is required'),
@@ -27,6 +28,7 @@ export default function CreateRaffle() {
   const { isConnected, user, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [photos, setPhotos] = useState<File[]>([]);
 
   const form = useForm<CreateRaffleForm>({
     resolver: zodResolver(createRaffleSchema),
@@ -103,15 +105,28 @@ export default function CreateRaffle() {
     }
   };
 
-  const suggestTicketPrice = () => {
+  const calculateOptimalPrice = () => {
     const prizeValue = parseFloat(form.getValues('prizeValue') || '0');
     const maxTickets = form.getValues('maxTickets') || 100;
     
     if (prizeValue > 0 && maxTickets > 0) {
-      // Suggest price that would generate 120% of prize value (20% platform profit margin)
-      const suggestedPrice = (prizeValue * 1.2) / maxTickets;
+      // Platform takes 10% commission, so we need 110% of prize value to cover prize + commission
+      const suggestedPrice = (prizeValue * 1.1) / maxTickets;
       form.setValue('ticketPrice', suggestedPrice.toFixed(2));
     }
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      const remainingSlots = 10 - photos.length;
+      const filesToAdd = newFiles.slice(0, remainingSlots);
+      setPhotos(prev => [...prev, ...filesToAdd]);
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
   if (!isConnected) {
@@ -138,16 +153,16 @@ export default function CreateRaffle() {
     <div className="min-h-screen bg-duxxan-dark py-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Create New Raffle</h1>
+          <h1 className="text-3xl font-bold mb-2">Yeni Çekiliş Oluştur</h1>
           <p className="text-duxxan-text-secondary">
-            Create an exciting raffle and let others win amazing prizes. 
-            <span className="text-duxxan-yellow font-semibold"> Creation fee: 25 USDT</span>
+            Heyecan verici bir çekiliş oluşturun ve diğerlerinin harika ödüller kazanmasını sağlayın. 
+            <span className="text-duxxan-yellow font-semibold"> Oluşturma ücreti: 25 USDT</span>
           </p>
         </div>
 
         <Card className="duxxan-card">
           <CardHeader>
-            <CardTitle className="text-xl">Raffle Details</CardTitle>
+            <CardTitle className="text-xl">Çekiliş Detayları</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -157,17 +172,17 @@ export default function CreateRaffle() {
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
+                      <FormLabel>Kategori</FormLabel>
                       <Select
                         onValueChange={(value) => field.onChange(parseInt(value))}
                         defaultValue={field.value?.toString()}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-duxxan-dark border-duxxan-border text-white">
-                            <SelectValue placeholder="Select a category" />
+                          <SelectTrigger className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white">
+                            <SelectValue placeholder="Bir kategori seçin" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-duxxan-surface border-duxxan-border">
+                        <SelectContent className="bg-white dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
                           {categories.map((category: any) => (
                             <SelectItem key={category.id} value={category.id.toString()}>
                               {category.name}
@@ -185,11 +200,11 @@ export default function CreateRaffle() {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Raffle Title</FormLabel>
+                      <FormLabel>Çekiliş Başlığı</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g., Ferrari 488 GTB - Ultimate Sports Car"
-                          className="bg-duxxan-dark border-duxxan-border text-white"
+                          placeholder="örn., Ferrari 488 GTB - Efsane Spor Araba"
+                          className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white"
                           {...field}
                         />
                       </FormControl>
@@ -198,16 +213,55 @@ export default function CreateRaffle() {
                   )}
                 />
 
+                {/* Photo Upload Section */}
+                <div className="space-y-4">
+                  <FormLabel>Ürün Fotoğrafları (En fazla 10 adet)</FormLabel>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {photos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={URL.createObjectURL(photo)}
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg border-2 border-yellow-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {photos.length < 10 && (
+                      <label className="w-full h-24 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-yellow-400 transition-colors">
+                        <Upload className="w-6 h-6 text-gray-400 mb-1" />
+                        <span className="text-xs text-gray-500">Fotoğraf Ekle</span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {photos.length}/10 fotoğraf yüklendi. JPG, PNG formatları desteklenir.
+                  </p>
+                </div>
+
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Açıklama</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Describe your prize in detail. Include specifications, condition, value, and any special features..."
-                          className="bg-duxxan-dark border-duxxan-border text-white min-h-[100px]"
+                          placeholder="Ödülünüzü detaylı olarak açıklayın. Özellikler, durum, değer ve özel özellikleri dahil edin..."
+                          className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white min-h-[100px]"
                           {...field}
                         />
                       </FormControl>
@@ -222,16 +276,16 @@ export default function CreateRaffle() {
                     name="prizeValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prize Value (USD)</FormLabel>
+                        <FormLabel>Ödül Değeri (USD)</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             placeholder="300000"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
+                            className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white"
                             onChange={(e) => {
                               field.onChange(e);
-                              // Auto-suggest ticket price when prize value changes
-                              setTimeout(suggestTicketPrice, 100);
+                              // Auto-calculate ticket price when prize value changes
+                              setTimeout(calculateOptimalPrice, 100);
                             }}
                             value={field.value}
                           />
@@ -246,16 +300,16 @@ export default function CreateRaffle() {
                     name="maxTickets"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Maximum Tickets</FormLabel>
+                        <FormLabel>Maksimum Bilet Sayısı</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             placeholder="2000"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
+                            className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white"
                             onChange={(e) => {
                               field.onChange(parseInt(e.target.value) || 0);
-                              // Auto-suggest ticket price when max tickets changes
-                              setTimeout(suggestTicketPrice, 100);
+                              // Auto-calculate ticket price when max tickets changes
+                              setTimeout(calculateOptimalPrice, 100);
                             }}
                             value={field.value || ''}
                           />
@@ -273,15 +327,15 @@ export default function CreateRaffle() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center justify-between">
-                          Ticket Price (USDT)
+                          Bilet Fiyatı (USDT)
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={suggestTicketPrice}
-                            className="text-duxxan-yellow hover:text-yellow-400 h-auto p-0"
+                            onClick={calculateOptimalPrice}
+                            className="text-yellow-600 hover:text-yellow-500 h-auto p-0 text-sm"
                           >
-                            Auto-calculate
+                            Otomatik Hesapla
                           </Button>
                         </FormLabel>
                         <FormControl>
@@ -289,7 +343,7 @@ export default function CreateRaffle() {
                             type="number"
                             step="0.01"
                             placeholder="150.00"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
+                            className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white"
                             {...field}
                           />
                         </FormControl>
@@ -303,11 +357,11 @@ export default function CreateRaffle() {
                     name="endDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>End Date</FormLabel>
+                        <FormLabel>Bitiş Tarihi</FormLabel>
                         <FormControl>
                           <Input
                             type="datetime-local"
-                            className="bg-duxxan-dark border-duxxan-border text-white"
+                            className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-white"
                             min={new Date().toISOString().slice(0, 16)}
                             {...field}
                           />
@@ -353,14 +407,14 @@ export default function CreateRaffle() {
                   </Card>
                 )}
 
-                <div className="bg-duxxan-dark border border-duxxan-warning rounded-lg p-4">
-                  <h4 className="font-semibold text-duxxan-warning mb-2">Important Notes</h4>
-                  <ul className="text-sm text-duxxan-text-secondary space-y-1">
-                    <li>• Creation fee of 25 USDT will be charged upon submission</li>
-                    <li>• Platform takes 10% commission (5% to you, 5% to platform)</li>
-                    <li>• If insufficient tickets are sold, participant funds are refunded</li>
-                    <li>• Winner and creator must both approve transaction within 6 days</li>
-                    <li>• All transactions are secured by smart contracts on BSC</li>
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-300 dark:border-blue-600 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Önemli Notlar</h4>
+                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                    <li>• Çekiliş oluşturma ücreti 25 USDT gönderimde tahsil edilecektir</li>
+                    <li>• Platform %10 komisyon alır (%5 size, %5 platforma)</li>
+                    <li>• Yetersiz bilet satılırsa, katılımcı fonları iade edilir</li>
+                    <li>• Kazanan ve yaratıcı 6 gün içinde işlemi onaylamalıdır</li>
+                    <li>• Tüm işlemler BSC üzerinde akıllı kontratlarla güvence altındadır</li>
                   </ul>
                 </div>
 
@@ -369,17 +423,17 @@ export default function CreateRaffle() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="duxxan-button-secondary w-full"
+                      className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
-                      Cancel
+                      İptal
                     </Button>
                   </Link>
                   <Button
                     type="submit"
                     disabled={isSubmitting || !isConnected}
-                    className="duxxan-button-primary flex-1"
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
                   >
-                    {isSubmitting ? 'Creating Raffle...' : 'Create Raffle (25 USDT)'}
+                    {isSubmitting ? 'Çekiliş Oluşturuluyor...' : 'Çekiliş Oluştur (25 USDT)'}
                   </Button>
                 </div>
               </form>
