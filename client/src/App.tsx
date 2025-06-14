@@ -30,10 +30,20 @@ function ScrollToTop() {
   const [location] = useLocation();
   
   useEffect(() => {
-    // Force immediate scroll to top without any animation
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    window.scrollTo(0, 0);
+    // Multiple immediate scroll attempts to ensure page opens at top
+    const scrollToTop = () => {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo(0, 0);
+    };
+    
+    // Immediate scroll
+    scrollToTop();
+    
+    // Additional scroll after minimal delay to catch any late renders
+    const timeoutId = setTimeout(scrollToTop, 10);
+    
+    return () => clearTimeout(timeoutId);
   }, [location]);
   
   return null;

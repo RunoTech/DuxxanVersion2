@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useWallet } from '@/hooks/useWallet';
 import { useState } from 'react';
+import { useTheme } from '@/components/ThemeProvider';
 import { 
   Clock, 
   Users, 
@@ -28,6 +29,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function RaffleDetail() {
   const { id } = useParams();
   const { isConnected } = useWallet();
+  const { theme } = useTheme();
   const [ticketCount, setTicketCount] = useState(1);
 
   const { data: raffle, isLoading } = useQuery({
@@ -163,24 +165,24 @@ export default function RaffleDetail() {
                           <stop offset="95%" stopColor="#F3BA2F" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                      <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
                       <XAxis 
                         dataKey="time" 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
                       />
                       <YAxis 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1A1A1A', 
-                          border: '1px solid #333',
+                          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
+                          border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
                           borderRadius: '8px',
-                          color: '#fff'
+                          color: theme === 'dark' ? '#fff' : '#000'
                         }}
                       />
                       <Area
@@ -225,24 +227,24 @@ export default function RaffleDetail() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={hourlyData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                      <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#2A2A2A' : '#E5E5E5'} />
                       <XAxis 
                         dataKey="hour" 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
                       />
                       <YAxis 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: theme === 'dark' ? '#888' : '#666', fontSize: 12 }}
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1A1A1A', 
-                          border: '1px solid #333',
+                          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#FFFFFF', 
+                          border: theme === 'dark' ? '1px solid #333' : '1px solid #E5E5E5',
                           borderRadius: '8px',
-                          color: '#fff'
+                          color: theme === 'dark' ? '#fff' : '#000'
                         }}
                       />
                       <Line 

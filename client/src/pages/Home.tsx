@@ -7,6 +7,7 @@ import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/components/ThemeProvider';
 import { Badge } from '@/components/ui/badge';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line } from 'recharts';
 
