@@ -142,6 +142,14 @@
     color: var(--duxxan-warning);
   }
 
+  .text-duxxan-text-secondary {
+    color: var(--duxxan-text-secondary);
+  }
+
+  .text-duxxan-dark {
+    color: var(--duxxan-dark);
+  }
+
   .bg-duxxan-yellow {
     background-color: var(--duxxan-yellow);
   }
@@ -184,6 +192,25 @@
 
   .border-duxxan-success {
     border-color: var(--duxxan-success);
+  }
+
+  .from-duxxan-surface {
+    --tw-gradient-from: var(--duxxan-surface) var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .via-duxxan-border {
+    --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--duxxan-border) var(--tw-gradient-via-position), var(--tw-gradient-to);
+  }
+
+  .to-duxxan-background {
+    --tw-gradient-to: var(--duxxan-background) var(--tw-gradient-to-position);
+  }
+
+  .to-duxxan-dark {
+    --tw-gradient-to: var(--duxxan-dark) var(--tw-gradient-to-position);
   }
 
   /* Animations */
