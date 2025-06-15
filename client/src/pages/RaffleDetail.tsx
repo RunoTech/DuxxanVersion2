@@ -293,7 +293,7 @@ export default function RaffleDetail() {
                     max="100"
                     value={ticketCount}
                     onChange={(e) => setTicketCount(Number(e.target.value))}
-                    className="bg-white dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-duxxan-text"
+                    className="dark:bg-duxxan-dark border-gray-300 dark:border-duxxan-border text-gray-900 dark:text-duxxan-text bg-[#ffc929]"
                   />
                 </div>
                 
