@@ -108,15 +108,15 @@ export default function DonationDetail() {
   const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
 
   return (
-    <div className="min-h-screen bg-duxxan-dark">
+    <div className="min-h-screen bg-white dark:bg-duxxan-dark">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-duxxan-text mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
               {donation.title}
             </h1>
-            <div className="flex items-center gap-4 text-duxxan-text-secondary">
+            <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {daysLeft} gün kaldı
@@ -132,10 +132,10 @@ export default function DonationDetail() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-duxxan-border">
+            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-duxxan-border dark:text-duxxan-text">
               <Share2 className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="sm" className="border-duxxan-border">
+            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-duxxan-border dark:text-duxxan-text">
               <Heart className="w-4 h-4" />
             </Button>
           </div>
@@ -145,10 +145,10 @@ export default function DonationDetail() {
           {/* Ana İçerik */}
           <div className="lg:col-span-2 space-y-6">
             {/* Bağış İlerleme Analizi */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-duxxan-text flex items-center gap-2">
+                  <CardTitle className="text-gray-900 dark:text-duxxan-text flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-duxxan-success" />
                     Bağış İlerleme Analizi
                   </CardTitle>
@@ -172,25 +172,29 @@ export default function DonationDetail() {
                           <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
                       <XAxis 
                         dataKey="day" 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: '#666', fontSize: 12 }}
+                        className="dark:fill-[#888]"
                       />
                       <YAxis 
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#888', fontSize: 12 }}
+                        tick={{ fill: '#666', fontSize: 12 }}
+                        className="dark:fill-[#888]"
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1A1A1A', 
-                          border: '1px solid #333',
+                          backgroundColor: '#fff', 
+                          border: '2px solid #F59E0B',
                           borderRadius: '8px',
-                          color: '#fff'
+                          color: '#000',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                         }}
+
                         formatter={(value, name) => [
                           `${value} ${name === 'amount' ? 'USDT' : 'kişi'}`,
                           name === 'amount' ? 'Toplam Bağış' : 'Bağışçı Sayısı'
@@ -208,22 +212,22 @@ export default function DonationDetail() {
                 </div>
                 
                 {/* İstatistikler */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-yellow-200 dark:border-duxxan-border">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-success">{donation.currentAmount}</div>
-                    <div className="text-sm text-duxxan-text-secondary">Toplanan</div>
+                    <div className="text-2xl font-bold text-green-600 dark:text-duxxan-success">{(donation as any)?.currentAmount}</div>
+                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Toplanan</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-warning">%{progress.toFixed(1)}</div>
-                    <div className="text-sm text-duxxan-text-secondary">Hedef</div>
+                    <div className="text-2xl font-bold text-yellow-600 dark:text-duxxan-warning">%{progress.toFixed(1)}</div>
+                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Hedef</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-text">{donation.donorCount}</div>
-                    <div className="text-sm text-duxxan-text-secondary">Bağışçı</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-duxxan-text">{(donation as any)?.donorCount}</div>
+                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Bağışçı</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-yellow">{daysLeft}</div>
-                    <div className="text-sm text-duxxan-text-secondary">Gün Kaldı</div>
+                    <div className="text-2xl font-bold text-yellow-600 dark:text-duxxan-yellow">{daysLeft}</div>
+                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Gün Kaldı</div>
                   </div>
                 </div>
               </CardContent>
@@ -231,32 +235,35 @@ export default function DonationDetail() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Saatlik Bağışlar */}
-              <Card className="bg-duxxan-surface border-duxxan-border">
+              <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
                 <CardHeader>
-                  <CardTitle className="text-duxxan-text">Saatlik Bağışlar</CardTitle>
+                  <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bağışlar</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={hourlyDonations}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
                         <XAxis 
                           dataKey="hour" 
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#888', fontSize: 10 }}
+                          tick={{ fill: '#666', fontSize: 10 }}
+                          className="dark:fill-[#888]"
                         />
                         <YAxis 
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#888', fontSize: 10 }}
+                          tick={{ fill: '#666', fontSize: 10 }}
+                          className="dark:fill-[#888]"
                         />
                         <Tooltip 
                           contentStyle={{ 
-                            backgroundColor: '#1A1A1A', 
-                            border: '1px solid #333',
+                            backgroundColor: '#fff', 
+                            border: '2px solid #F59E0B',
                             borderRadius: '8px',
-                            color: '#fff'
+                            color: '#000',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                           }}
                           formatter={(value) => [`${value} USDT`, 'Bağış']}
                         />
@@ -274,32 +281,35 @@ export default function DonationDetail() {
               </Card>
 
               {/* Bağışçı Dağılımı */}
-              <Card className="bg-duxxan-surface border-duxxan-border">
+              <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
                 <CardHeader>
-                  <CardTitle className="text-duxxan-text">Bağışçı Dağılımı</CardTitle>
+                  <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağışçı Dağılımı</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={donorDistribution}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
                         <XAxis 
                           dataKey="range" 
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#888', fontSize: 10 }}
+                          tick={{ fill: '#666', fontSize: 10 }}
+                          className="dark:fill-[#888]"
                         />
                         <YAxis 
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#888', fontSize: 10 }}
+                          tick={{ fill: '#666', fontSize: 10 }}
+                          className="dark:fill-[#888]"
                         />
                         <Tooltip 
                           contentStyle={{ 
-                            backgroundColor: '#1A1A1A', 
-                            border: '1px solid #333',
+                            backgroundColor: '#fff', 
+                            border: '2px solid #F59E0B',
                             borderRadius: '8px',
-                            color: '#fff'
+                            color: '#000',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                           }}
                           formatter={(value) => [`${value} kişi`, 'Bağışçı']}
                         />
