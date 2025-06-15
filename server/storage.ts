@@ -110,9 +110,20 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  private async withErrorHandling<T>(operation: () => Promise<T>, operationName: string): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Database operation failed [${operationName}]:`, error);
+      throw new Error(`Database operation failed: ${operationName}`);
+    }
+  }
+
   async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
-    return user || undefined;
+    return this.withErrorHandling(async () => {
+      const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
+      return user || undefined;
+    }, 'getUserByWalletAddress');
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
