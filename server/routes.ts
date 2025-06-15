@@ -6,6 +6,8 @@ import { db, pool } from "./db";
 import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema, donations, users } from "@shared/schema";
 import { z } from "zod";
 import { sql, eq, desc } from "drizzle-orm";
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import {
   globalRateLimit,
   strictRateLimit,
@@ -54,7 +56,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/metrics', metricsHandler);
   app.get('/api/security/status', getSecurityStatus);
   
-  // Security endpoints with enhanced validation
+  // Authentication endpoints with JWT and device fingerprinting
+  app.post('/api/auth/login', authRateLimit, walletValidation, deviceInfoValidation, validationMiddleware, async (req, res) => {
+    try {
+      const { walletAddress, deviceInfo } = req.body;
+      
+      // Get or create user
+      let user = await storage.getUserByWalletAddress(walletAddress);
+      if (!user) {
+        user = await storage.createUser({ 
+          walletAddress, 
+          username: walletAddress.slice(0, 8),
+          organizationType: 'individual'
+        });
+      }
+      
+      // Generate device fingerprint
+      const fingerprint = generateDeviceFingerprint(req, deviceInfo);
+      
+      // Create or update device record
+      await storage.createUserDevice({
+        userId: user.id,
+        deviceType: deviceInfo?.deviceType || 'unknown',
+        userAgent: fingerprint.userAgent,
+        ipAddress: req.ip || 'unknown',
+        deviceFingerprint: fingerprint.hash,
+        acceptLanguage: fingerprint.acceptLanguage,
+        acceptEncoding: fingerprint.acceptEncoding,
+        timezone: fingerprint.timezone,
+        screenResolution: fingerprint.screenResolution,
+        colorDepth: fingerprint.colorDepth
+      });
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { 
+          userId: user.id, 
+          walletAddress: user.walletAddress,
+          deviceFingerprint: fingerprint.hash,
+          sessionId: crypto.randomBytes(16).toString('hex')
+        },
+        process.env.JWT_SECRET || 'dev-secret',
+        { expiresIn: '24h', issuer: 'duxxan', audience: 'duxxan-app' }
+      );
+      
+      // Generate CSRF token
+      const csrfToken = csrfProtection.generateToken(req.ip);
+      
+      res.json({
+        token,
+        csrfToken,
+        user: {
+          id: user.id,
+          walletAddress: user.walletAddress,
+          username: user.username,
+          name: user.name
+        },
+        deviceFingerprint: fingerprint.hash,
+        expiresIn: '24h'
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Authentication failed' });
+    }
+  });
+  
+  app.post('/api/auth/refresh', authRateLimit, async (req, res) => {
+    try {
+      const authHeader = req.get('Authorization');
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Invalid token format' });
+      }
+      
+      const token = authHeader.slice(7);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
+      
+      // Verify user still exists
+      const user = await storage.getUserByWalletAddress(decoded.walletAddress);
+      if (!user) {
+        return res.status(401).json({ message: 'User not found' });
+      }
+      
+      // Generate new token
+      const newToken = jwt.sign(
+        { 
+          userId: user.id, 
+          walletAddress: user.walletAddress,
+          deviceFingerprint: decoded.deviceFingerprint,
+          sessionId: crypto.randomBytes(16).toString('hex')
+        },
+        process.env.JWT_SECRET || 'dev-secret',
+        { expiresIn: '24h', issuer: 'duxxan', audience: 'duxxan-app' }
+      );
+      
+      res.json({ token: newToken, expiresIn: '24h' });
+    } catch (error) {
+      res.status(401).json({ message: 'Token refresh failed' });
+    }
+  });
+  
+  app.post('/api/auth/logout', async (req, res) => {
+    // In a production system, you'd blacklist the token
+    res.json({ message: 'Logged out successfully' });
+  });
+  
+  // Security endpoints
   app.post('/api/security/csrf-token', (req, res) => {
     const sessionId = (req as any).sessionID || req.ip;
     const token = csrfProtection.generateToken(sessionId);
@@ -97,7 +203,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
 
-  // Middleware to get user from wallet address
+  // JWT Authentication middleware with device verification
+  const authenticateUser = async (req: any, res: any, next: any) => {
+    try {
+      const authHeader = req.get('Authorization');
+      const deviceId = req.get('X-Device-ID');
+      
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Authentication token required' });
+      }
+      
+      const token = authHeader.slice(7);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret') as any;
+      
+      // Verify device fingerprint if provided
+      if (deviceId && decoded.deviceFingerprint !== deviceId) {
+        return res.status(401).json({ message: 'Device verification failed' });
+      }
+      
+      // Get current user data
+      const user = await storage.getUserByWalletAddress(decoded.walletAddress);
+      if (!user) {
+        return res.status(401).json({ message: 'User not found' });
+      }
+      
+      req.user = user;
+      req.deviceFingerprint = decoded.deviceFingerprint;
+      req.sessionId = decoded.sessionId;
+      next();
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        return res.status(401).json({ message: 'Invalid authentication token' });
+      }
+      if (error instanceof jwt.TokenExpiredError) {
+        return res.status(401).json({ message: 'Authentication token expired' });
+      }
+      return res.status(500).json({ message: 'Authentication failed' });
+    }
+  };
+  
+  // Legacy fallback for existing endpoints (deprecated - use authenticateUser)
   const getUser = async (req: any, res: any, next: any) => {
     const walletAddress = req.headers['x-wallet-address'];
     if (!walletAddress) {
