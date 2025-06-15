@@ -1,18 +1,18 @@
 import { useState, memo } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sun, Moon } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Menu, Sun, Moon, Wallet } from 'lucide-react';
 import { useSimpleWallet } from '@/hooks/useSimpleWallet';
-import { WalletConnect } from '@/components/WalletConnect';
 import { useTheme } from '@/components/ThemeProvider';
 
 function NavigationComponent() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { isConnected, address, connectMetaMask, connectTrustWallet, disconnect, isConnecting } = useSimpleWallet();
 
   const navItems = [
     { href: '/raffles', label: 'Çekilişler' },
@@ -63,16 +63,75 @@ function NavigationComponent() {
 
             {/* Wallet Connection */}
             <div className="hidden md:block">
-              <WalletConnect 
-                onConnect={(address) => {
-                  setIsWalletConnected(true);
-                  setWalletAddress(address);
-                }}
-              />
+              {isConnected ? (
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {address?.slice(0, 6)}...{address?.slice(-4)}
+                  </span>
+                  <Button onClick={disconnect} variant="outline" size="sm">
+                    Çıkış
+                  </Button>
+                </div>
+              ) : (
+                <Dialog open={isWalletDialogOpen} onOpenChange={setIsWalletDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black">
+                      <Wallet className="mr-2 h-4 w-4" />
+                      Cüzdan Bağla
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Cüzdan Seçin</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <Button
+                        onClick={async () => {
+                          await connectMetaMask();
+                          setIsWalletDialogOpen(false);
+                        }}
+                        disabled={isConnecting}
+                        className="w-full h-16 justify-start space-x-4"
+                        variant="outline"
+                      >
+                        <img 
+                          src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" 
+                          alt="MetaMask" 
+                          className="w-8 h-8"
+                        />
+                        <div className="text-left">
+                          <div className="font-semibold">MetaMask</div>
+                          <div className="text-sm text-gray-500">En popüler cüzdan</div>
+                        </div>
+                      </Button>
+                      
+                      <Button
+                        onClick={async () => {
+                          await connectTrustWallet();
+                          setIsWalletDialogOpen(false);
+                        }}
+                        disabled={isConnecting}
+                        className="w-full h-16 justify-start space-x-4"
+                        variant="outline"
+                      >
+                        <img 
+                          src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" 
+                          alt="Trust Wallet" 
+                          className="w-8 h-8"
+                        />
+                        <div className="text-left">
+                          <div className="font-semibold">Trust Wallet</div>
+                          <div className="text-sm text-gray-500">Mobil ve güvenli</div>
+                        </div>
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
 
             {/* Profile Icon for connected users */}
-            {isWalletConnected && walletAddress && (
+            {isConnected && address && (
               <Link href="/profile-new" className="hidden md:block">
                 <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -90,17 +149,80 @@ function NavigationComponent() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="bg-duxxan-surface border-duxxan-border">
+                <SheetHeader>
+                  <SheetTitle>Menü</SheetTitle>
+                </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-8">
                   <NavLinks mobile />
                   
                   <div className="pt-4 border-t border-duxxan-border">
-                    <WalletConnect 
-                      onConnect={(address) => {
-                        setIsWalletConnected(true);
-                        setWalletAddress(address);
-                        setIsOpen(false);
-                      }}
-                    />
+                    {isConnected ? (
+                      <div className="space-y-2">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Bağlı Cüzdan: {address?.slice(0, 6)}...{address?.slice(-4)}
+                        </div>
+                        <Button onClick={disconnect} variant="outline" className="w-full">
+                          Cüzdan Bağlantısını Kes
+                        </Button>
+                      </div>
+                    ) : (
+                      <Dialog open={isWalletDialogOpen} onOpenChange={setIsWalletDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button className="w-full bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black">
+                            <Wallet className="mr-2 h-4 w-4" />
+                            Cüzdan Bağla
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Cüzdan Seçin</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <Button
+                              onClick={async () => {
+                                await connectMetaMask();
+                                setIsWalletDialogOpen(false);
+                                setIsOpen(false);
+                              }}
+                              disabled={isConnecting}
+                              className="w-full h-16 justify-start space-x-4"
+                              variant="outline"
+                            >
+                              <img 
+                                src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" 
+                                alt="MetaMask" 
+                                className="w-8 h-8"
+                              />
+                              <div className="text-left">
+                                <div className="font-semibold">MetaMask</div>
+                                <div className="text-sm text-gray-500">En popüler cüzdan</div>
+                              </div>
+                            </Button>
+                            
+                            <Button
+                              onClick={async () => {
+                                await connectTrustWallet();
+                                setIsWalletDialogOpen(false);
+                                setIsOpen(false);
+                              }}
+                              disabled={isConnecting}
+                              className="w-full h-16 justify-start space-x-4"
+                              variant="outline"
+                            >
+                              <img 
+                                src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" 
+                                alt="Trust Wallet" 
+                                className="w-8 h-8"
+                              />
+                              <div className="text-left">
+                                <div className="font-semibold">Trust Wallet</div>
+                                <div className="text-sm text-gray-500">Mobil ve güvenli</div>
+                              </div>
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                 </div>
               </SheetContent>
