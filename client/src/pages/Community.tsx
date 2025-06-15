@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +40,7 @@ export default function Community() {
   const { isConnected } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState<'channels' | 'upcoming'>('channels');
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showCreateRaffle, setShowCreateRaffle] = useState(false);
@@ -598,7 +600,11 @@ export default function Community() {
         {activeTab === 'channels' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredChannels.map((channel) => (
-              <Card key={channel.id} className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-colors">
+              <Card 
+                key={channel.id} 
+                className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 cursor-pointer"
+                onClick={() => setLocation(`/community/${channel.id}`)}
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">

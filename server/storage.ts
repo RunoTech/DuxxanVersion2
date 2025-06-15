@@ -660,6 +660,31 @@ export class DatabaseStorage implements IStorage {
     await db.update(channels).set({ subscriberCount: count }).where(eq(channels.id, channelId));
   }
 
+  async getChannelSubscriptionCount(channelId: number): Promise<number> {
+    try {
+      const result = await db.select({ count: sql<number>`count(*)` })
+        .from(channelSubscriptions)
+        .where(eq(channelSubscriptions.channelId, channelId));
+      return result[0]?.count || 0;
+    } catch (error) {
+      console.error('Error getting channel subscription count:', error);
+      return 0;
+    }
+  }
+
+  async getUpcomingRafflesByChannel(channelId: number) {
+    try {
+      const result = await db.select()
+        .from(upcomingRaffles)
+        .where(eq(upcomingRaffles.channelId, channelId))
+        .orderBy(upcomingRaffles.startDate);
+      return result;
+    } catch (error) {
+      console.error('Error getting upcoming raffles by channel:', error);
+      return [];
+    }
+  }
+
   // Channel Subscription Methods
   async subscribeToChannel(userId: number, channelId: number): Promise<ChannelSubscription> {
     const [subscription] = await db.insert(channelSubscriptions).values({ userId, channelId }).returning();
