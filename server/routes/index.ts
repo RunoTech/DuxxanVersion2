@@ -18,7 +18,7 @@ router.post('/users', userController.createUser);
 router.put('/users/me', userController.updateUser);
 router.delete('/users/me', userController.deleteUser);
 router.get('/users/:id/stats', userController.getUserStats);
-router.post('/auth/wallet', userController.authenticateWallet);
+router.post('/users/auth/wallet', userController.authenticateWallet);
 
 // Raffle routes
 router.get('/raffles', raffleController.getRaffles);

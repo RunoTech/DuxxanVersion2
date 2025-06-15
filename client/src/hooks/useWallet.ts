@@ -10,16 +10,13 @@ export function useWallet() {
 
   const createOrGetUser = async (walletAddress: string) => {
     try {
-      const response = await apiRequest('POST', '/api/users', {
-        walletAddress,
-        deviceType: 'web',
-        deviceName: navigator.userAgent,
-        ipAddress: 'auto-detect'
+      // First try to authenticate with the wallet address
+      const response = await apiRequest('POST', '/api/users/auth/wallet', {
+        walletAddress: walletAddress.toLowerCase()
       });
       return response;
     } catch (error: any) {
-      console.error('User creation failed:', error);
-      // Don't throw error - user might already exist
+      console.error('Wallet authentication failed:', error);
       return null;
     }
   };

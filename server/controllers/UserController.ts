@@ -120,26 +120,26 @@ export class UserController extends BaseController {
     this.asyncHandler(async (req: Request, res: Response) => {
       const { walletAddress } = req.body;
 
-      let user = await this.userService.getUserByWallet(walletAddress);
+      let user = await this.userService.getUserByWallet(walletAddress.toLowerCase());
       
       if (!user) {
         // Create new user if doesn't exist
-        user = await this.userService.createUser({
+        const userData = {
           walletAddress: walletAddress.toLowerCase(),
-          username: `User_${walletAddress.slice(-6)}`,
-          email: null,
-          totalRaffleEntries: 0,
-          totalDonations: 0
-        });
+          username: `user_${walletAddress.slice(2, 8).toLowerCase()}`,
+          organizationType: 'individual' as const
+        };
+        user = await this.userService.createUser(userData);
       }
 
-      // Set user in session (assuming passport is used)
-      (req as any).login(user, (err: any) => {
-        if (err) {
-          return this.sendError(res, 'Authentication failed', 500);
-        }
-        this.sendSuccess(res, user, 'Authentication successful');
-      });
+      // Store wallet address in session for authentication
+      if (req.session) {
+        req.session.walletAddress = walletAddress.toLowerCase();
+        req.session.userId = user.id;
+        req.session.isAuthenticated = true;
+      }
+
+      this.sendSuccess(res, user, 'Authentication successful');
     })
   ];
 }
