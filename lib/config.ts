@@ -6,7 +6,7 @@ const configSchema = z.object({
   DATABASE_URL: z.string().url(),
   
   // JWT
-  JWT_SECRET: z.string().min(32).optional(),
+  JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('24h'),
   
   // Server
@@ -48,7 +48,12 @@ const configSchema = z.object({
 // Validate and parse environment variables
 function loadConfig() {
   try {
-    return configSchema.parse(process.env);
+    const env = {
+      ...process.env,
+      // Provide default JWT_SECRET for development
+      JWT_SECRET: process.env.JWT_SECRET || 'development-jwt-secret-key-at-least-32-characters-long-for-security'
+    };
+    return configSchema.parse(env);
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error('Environment configuration error:');

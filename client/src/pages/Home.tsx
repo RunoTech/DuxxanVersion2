@@ -85,7 +85,7 @@ export default function Home() {
         
         newData[newData.length - 1] = {
           ...lastPoint,
-          raffles: parseInt(liveStats.totalRaffles) || 1,
+          raffles: parseInt(liveStats.totalRaffles.toString()) || 1,
           prizes: parseFloat(liveStats.totalPrizePool) || 100,
           donations: parseFloat(liveStats.totalDonations) || 100,
           volume: lastPoint.volume
@@ -114,7 +114,12 @@ export default function Home() {
   // Update live stats from WebSocket messages
   useEffect(() => {
     if (stats) {
-      setLiveStats(stats);
+      setLiveStats({
+        totalRaffles: (stats as any).totalRaffles || 0,
+        totalPrizePool: (stats as any).totalPrizePool || '0',
+        totalDonations: (stats as any).totalDonations || '0',
+        activeUsers: (stats as any).activeUsers || 0
+      });
     }
   }, [stats]);
 
@@ -427,9 +432,15 @@ export default function Home() {
             </div>
           </div>
 
-          {raffles.length > 0 ? (
+          {rafflesQuery.isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {raffles.slice(0, 6).map((raffle: any) => (
+              {[...Array(6)].map((_, i) => (
+                <RaffleCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (raffles as any)?.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(raffles as any).slice(0, 6).map((raffle: any) => (
                 <RaffleCard key={raffle.id} raffle={raffle} />
               ))}
             </div>
@@ -493,9 +504,15 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {donations.length > 0 ? (
+          {donationsQuery.isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {donations.slice(0, 4).map((donation: any) => (
+              {[...Array(4)].map((_, i) => (
+                <RaffleCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (donations as any)?.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(donations as any).slice(0, 4).map((donation: any) => (
                 <DonationCard key={donation.id} donation={donation} />
               ))}
             </div>
