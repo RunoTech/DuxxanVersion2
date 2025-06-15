@@ -166,7 +166,7 @@ class FirebaseService {
         }
       };
 
-      const response = await this.messaging.sendMulticast(message);
+      const response = await this.messaging.sendEachForMulticast(message);
       console.log(`Multicast notification sent: ${response.successCount} successful, ${response.failureCount} failed`);
       return response;
     } catch (error) {
