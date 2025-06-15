@@ -1,4 +1,7 @@
 import { EventEmitter } from 'events';
+import { redis } from './redis';
+import { firebase } from './firebase';
+import { storage } from '../server/storage';
 
 interface QueueJob {
   id: string;
@@ -12,15 +15,26 @@ interface QueueJob {
 }
 
 class JobQueue extends EventEmitter {
-  private jobs: Map<string, QueueJob> = new Map();
-  private processing: Set<string> = new Set();
   private workers: Map<string, Function> = new Map();
   private isRunning: boolean = false;
   private processingInterval?: NodeJS.Timeout;
+  private useRedis: boolean = false;
 
   constructor() {
     super();
+    this.initializeRedis();
     this.start();
+  }
+
+  private async initializeRedis() {
+    try {
+      const isRedisAvailable = await redis.ping();
+      this.useRedis = isRedisAvailable;
+      console.log(`Queue initialized with ${this.useRedis ? 'Redis' : 'in-memory'} backend`);
+    } catch (error) {
+      console.log('Redis not available, using in-memory queue');
+      this.useRedis = false;
+    }
   }
 
   // Register a worker function for a specific job type
