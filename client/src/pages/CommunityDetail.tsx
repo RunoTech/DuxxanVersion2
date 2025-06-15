@@ -17,7 +17,10 @@ import {
   Copy,
   Facebook,
   Twitter,
-  Send
+  Send,
+  Info,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 
 export default function CommunityDetail() {
@@ -40,6 +43,10 @@ export default function CommunityDetail() {
 
   const channel = (channelData as any)?.data;
   const raffles = (rafflesData as any)?.data || [];
+  
+  // Parse demo content if available
+  const demoContent = channel?.demoContent ? JSON.parse(channel.demoContent) : null;
+  const displayRaffles = channel?.isDemo && demoContent?.sampleRaffles ? demoContent.sampleRaffles : raffles;
 
   const handleJoin = () => {
     // Simulate wallet connection action
@@ -199,15 +206,22 @@ export default function CommunityDetail() {
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                      {channel.name}
-                    </CardTitle>
+                    <div className="flex items-center gap-3 mb-2">
+                      <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white">
+                        {channel.name}
+                      </CardTitle>
+                      {channel.isDemo && (
+                        <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 border border-orange-300 dark:border-orange-600 px-3 py-1">
+                          DEMO
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex items-center space-x-2 mb-3">
                       <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
                         {channel.category}
                       </Badge>
                       <span className="text-gray-600 dark:text-gray-400 text-sm">
-                        Oluşturan: {channel.creator || 'Anonymous'}
+                        Oluşturan: {channel.creator?.username || 'Anonymous'}
                       </span>
                     </div>
                   </div>
@@ -260,39 +274,75 @@ export default function CommunityDetail() {
         {/* Raffles Section */}
         <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-              Aktif ve Gelecek Çekilişler
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                {channel?.isDemo ? 'Demo Çekilişler' : 'Aktif ve Gelecek Çekilişler'}
+              </CardTitle>
+              {channel?.isDemo && (
+                <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 border border-blue-300 dark:border-blue-600">
+                  Örnek İçerik
+                </Badge>
+              )}
+            </div>
+            {channel?.isDemo && (
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                Bu demo kanalında örnek çekiliş içerikleri görüntülenmektedir. Gerçek çekiliş değildir.
+              </p>
+            )}
           </CardHeader>
           <CardContent>
             {rafflesLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin w-6 h-6 border-4 border-yellow-500 border-t-transparent rounded-full" />
               </div>
-            ) : raffles.length > 0 ? (
+            ) : displayRaffles.length > 0 ? (
               <div className="space-y-4">
-                {raffles.map((raffle: any) => (
+                {displayRaffles.map((raffle: any, index: number) => (
                   <div
-                    key={raffle.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-yellow-400 dark:hover:border-yellow-500 transition-colors cursor-pointer"
-                    onClick={() => setLocation(`/raffles/${raffle.id}`)}
+                    key={channel?.isDemo ? `demo-${index}` : raffle.id}
+                    className={`flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors ${
+                      channel?.isDemo 
+                        ? 'cursor-default border-dashed' 
+                        : 'hover:border-yellow-400 dark:hover:border-yellow-500 cursor-pointer'
+                    }`}
+                    onClick={() => !channel?.isDemo && setLocation(`/raffles/${raffle.id}`)}
                   >
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white text-lg mb-2">
-                        {raffle.title}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
+                          {raffle.title}
+                        </h3>
+                        {channel?.isDemo && (
+                          <Badge variant="outline" className="text-xs">
+                            DEMO
+                          </Badge>
+                        )}
+                      </div>
+                      {raffle.description && (
+                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                          {raffle.description}
+                        </p>
+                      )}
                       <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-1" />
-                          {formatDate(raffle.startDate || raffle.createdAt)}
+                          {channel?.isDemo 
+                            ? formatDate(raffle.endDate) 
+                            : formatDate(raffle.startDate || raffle.createdAt)
+                          }
                         </div>
                         <div className="flex items-center">
                           <DollarSign className="h-4 w-4 mr-1" />
-                          {raffle.prizeValue} USDT
+                          {raffle.prizeValue}
                         </div>
                       </div>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    {!channel?.isDemo && <ExternalLink className="h-5 w-5 text-gray-400" />}
+                    {channel?.isDemo && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded">
+                        Önizleme
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -300,15 +350,61 @@ export default function CommunityDetail() {
               <div className="text-center py-12">
                 <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Henüz Çekiliş Yok
+                  {channel?.isDemo ? 'Demo İçerik Yükleniyor' : 'Henüz Çekiliş Yok'}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor.
+                  {channel?.isDemo 
+                    ? 'Demo çekiliş içerikleri hazırlanıyor...'
+                    : 'Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor.'
+                  }
                 </p>
               </div>
             )}
           </CardContent>
         </Card>
+
+        {/* Demo Features Section */}
+        {channel?.isDemo && demoContent?.features && (
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+                <Info className="h-6 w-6" />
+                Demo Özellikleri
+              </CardTitle>
+              <p className="text-blue-700 dark:text-blue-400">
+                Bu demo kanalında deneyimleyebileceğiniz özellikler:
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {demoContent.features.map((feature: string, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-600 rounded-lg"
+                  >
+                    <CheckCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span className="text-gray-900 dark:text-white">{feature}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-yellow-900 dark:text-yellow-300 mb-1">
+                      Demo Kanal Bilgisi
+                    </h4>
+                    <p className="text-yellow-800 dark:text-yellow-400 text-sm">
+                      Bu demo kanalında gerçek para transferi yapılmaz. Tüm işlemler simülasyon amaçlıdır ve 
+                      platform özelliklerini denemeniz için tasarlanmıştır.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
