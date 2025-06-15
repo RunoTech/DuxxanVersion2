@@ -169,7 +169,7 @@ function NavigationComponent() {
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                           Bağlı Cüzdan: {address?.slice(0, 6)}...{address?.slice(-4)}
                         </div>
-                        <Button onClick={disconnect} variant="outline" className="w-full">
+                        <Button onClick={disconnectWallet} variant="outline" className="w-full">
                           Cüzdan Bağlantısını Kes
                         </Button>
                       </div>
@@ -196,7 +196,7 @@ function NavigationComponent() {
                           <div className="space-y-4 py-4">
                             <Button
                               onClick={async () => {
-                                await connectMetaMask();
+                                await connectWallet('metamask');
                                 setIsWalletDialogOpen(false);
                                 setIsOpen(false);
                               }}
@@ -217,7 +217,7 @@ function NavigationComponent() {
                             
                             <Button
                               onClick={async () => {
-                                await connectTrustWallet();
+                                await connectWallet('trustwallet');
                                 setIsWalletDialogOpen(false);
                                 setIsOpen(false);
                               }}

@@ -75,102 +75,31 @@ export function useWallet() {
     }
   };
 
-  const connectDemoWallet = async () => {
-    setIsConnecting(true);
-    try {
-      // Demo wallets for testing
-      const demoWallets = [
-        { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
-        { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
-        { address: '0x3456789012345678901234567890123456789012', balance: '1.23 BNB' },
-        { address: '0x4567890123456789012345678901234567890123', balance: '8.76 BNB' },
-        { address: '0x5678901234567890123456789012345678901234', balance: '3.14 BNB' }
-      ];
-      
-      const randomWallet = demoWallets[Math.floor(Math.random() * demoWallets.length)];
-      
-      // Create demo connection object with chainId
-      const demoConnection: WalletConnection = {
-        address: randomWallet.address,
-        provider: null as any,
-        signer: null as any,
-        chainId: 56 // BSC Mainnet for demo
-      };
-      
-      setConnection(demoConnection);
-      
-      // Create or get user with demo address
-      await createOrGetUser(randomWallet.address);
-      
-      // Store demo connection
-      localStorage.setItem('demo_wallet_connected', 'true');
-      localStorage.setItem('demo_wallet_address', randomWallet.address);
-      
-      toast({
-        title: 'Demo Wallet Connected',
-        description: `Connected to ${randomWallet.address.slice(0, 6)}...${randomWallet.address.slice(-4)}`,
-      });
-    } catch (error: any) {
-      toast({
-        title: 'Demo Connection Failed',
-        description: error.message || 'Failed to connect demo wallet',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsConnecting(false);
-    }
-  };
+  // Auto-connect on mount if previously connected
+  useEffect(() => {
+    const autoConnect = async () => {
+      const walletManager = WalletManager.getInstance();
+      try {
+        const connected = await walletManager.autoConnect();
+        if (connected) {
+          const connection = walletManager.getConnection();
+          if (connection) {
+            setConnection(connection);
+            await createOrGetUser(connection.address);
+          }
+        }
+      } catch (error) {
+        console.error('Auto-connect failed:', error);
+      }
+    };
 
-  const connectTrustWallet = async () => {
-    setIsConnecting(true);
-    try {
-      // Trust Wallet demo wallets
-      const trustWallets = [
-        { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
-        { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
-        { address: '0x3456789012345678901234567890123456789012', balance: '1.23 BNB' },
-        { address: '0x4567890123456789012345678901234567890123', balance: '8.76 BNB' },
-        { address: '0x5678901234567890123456789012345678901234', balance: '3.14 BNB' }
-      ];
-      
-      const randomWallet = trustWallets[Math.floor(Math.random() * trustWallets.length)];
-      
-      // Create demo connection object with chainId
-      const demoConnection: WalletConnection = {
-        address: randomWallet.address,
-        provider: null as any,
-        signer: null as any,
-        chainId: 56 // BSC Mainnet for demo
-      };
-      
-      setConnection(demoConnection);
-      
-      // Create or get user with demo address
-      await createOrGetUser(randomWallet.address);
-      
-      // Store demo connection
-      localStorage.setItem('demo_wallet_connected', 'true');
-      localStorage.setItem('demo_wallet_address', randomWallet.address);
-      
-      toast({
-        title: 'Demo Wallet Connected',
-        description: `Connected to ${randomWallet.address.slice(0, 6)}...${randomWallet.address.slice(-4)}`,
-      });
-    } catch (error: any) {
-      toast({
-        title: 'Demo Connection Failed',
-        description: error.message || 'Failed to connect demo wallet',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsConnecting(false);
-    }
-  };
+    autoConnect();
+  }, []);
 
   const disconnectWallet = async () => {
     try {
       const walletManager = WalletManager.getInstance();
-      await walletManager.disconnect();
+      await walletManager.disconnectWallet();
       setConnection(null);
       
       // Clear demo connection storage
@@ -201,8 +130,6 @@ export function useWallet() {
     chainId,
     isConnecting,
     connectWallet,
-    connectDemoWallet,
-    connectTrustWallet,
     disconnectWallet,
   };
 }
