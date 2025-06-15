@@ -326,37 +326,37 @@ export default function DonationDetail() {
             </div>
 
             {/* Açıklama */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Bağış Kampanyası Detayları</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağış Kampanyası Detayları</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-duxxan-text-secondary leading-relaxed mb-4">
-                  {donation.description}
+                <p className="text-gray-700 dark:text-duxxan-text-secondary leading-relaxed mb-4">
+                  {(donation as any)?.description}
                 </p>
-                <Separator className="my-4 bg-duxxan-border" />
+                <Separator className="my-4 bg-yellow-200 dark:bg-duxxan-border" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-duxxan-text mb-2">Kampanya Bilgileri</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text mb-2">Kampanya Bilgileri</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-duxxan-text-secondary">Hedef Tutar:</span>
-                        <span className="text-duxxan-success">{donation.goalAmount} USDT</span>
+                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Hedef Tutar:</span>
+                        <span className="text-green-600 dark:text-duxxan-success">{(donation as any)?.goalAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-duxxan-text-secondary">Toplanan:</span>
-                        <span className="text-duxxan-text">{donation.currentAmount} USDT</span>
+                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Toplanan:</span>
+                        <span className="text-gray-900 dark:text-duxxan-text">{(donation as any)?.currentAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-duxxan-text-secondary">Bitiş Tarihi:</span>
-                        <span className="text-duxxan-text">
-                          {new Date(donation.endDate).toLocaleDateString('tr-TR')}
+                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Bitiş Tarihi:</span>
+                        <span className="text-gray-900 dark:text-duxxan-text">
+                          {new Date((donation as any)?.endDate).toLocaleDateString('tr-TR')}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-duxxan-text mb-2">Güvenlik & Şeffaflık</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text mb-2">Güvenlik & Şeffaflık</h4>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-duxxan-success">
                         <Shield className="w-4 h-4" />
@@ -380,16 +380,16 @@ export default function DonationDetail() {
           {/* Yan Panel */}
           <div className="space-y-6">
             {/* Bağış Yap */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-duxxan-error" />
+                <CardTitle className="text-gray-900 dark:text-duxxan-text flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-red-500 dark:text-duxxan-error" />
                   Bağış Yap
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="amount" className="text-duxxan-text">Bağış Tutarı (USDT)</Label>
+                  <Label htmlFor="amount" className="text-gray-900 dark:text-duxxan-text">Bağış Tutarı (USDT)</Label>
                   <Input
                     id="amount"
                     type="number"
@@ -397,7 +397,7 @@ export default function DonationDetail() {
                     step="0.01"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(Number(e.target.value))}
-                    className="bg-duxxan-dark border-duxxan-border text-duxxan-text"
+                    className="bg-white dark:bg-duxxan-dark border-yellow-300 dark:border-duxxan-border text-gray-900 dark:text-duxxan-text"
                   />
                 </div>
 
@@ -409,40 +409,40 @@ export default function DonationDetail() {
                       variant="outline"
                       size="sm"
                       onClick={() => setDonationAmount(amount)}
-                      className="border-duxxan-border text-duxxan-text hover:bg-duxxan-yellow hover:text-duxxan-dark"
+                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-duxxan-border dark:text-duxxan-text dark:hover:bg-duxxan-yellow dark:hover:text-duxxan-dark"
                     >
                       {amount}
                     </Button>
                   ))}
                 </div>
                 
-                <div className="bg-duxxan-dark p-3 rounded-lg">
+                <div className="bg-yellow-50 dark:bg-duxxan-dark p-3 rounded-lg border border-yellow-200 dark:border-duxxan-border">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-duxxan-text-secondary">Bağış Tutarı:</span>
-                    <span className="text-duxxan-text">{donationAmount} USDT</span>
+                    <span className="text-gray-600 dark:text-duxxan-text-secondary">Bağış Tutarı:</span>
+                    <span className="text-gray-900 dark:text-duxxan-text">{donationAmount} USDT</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-duxxan-text-secondary">Platform Ücreti:</span>
-                    <span className="text-duxxan-text">Ücretsiz</span>
+                    <span className="text-gray-600 dark:text-duxxan-text-secondary">Platform Ücreti:</span>
+                    <span className="text-gray-900 dark:text-duxxan-text">Ücretsiz</span>
                   </div>
-                  <Separator className="my-2 bg-duxxan-border" />
+                  <Separator className="my-2 bg-yellow-200 dark:bg-duxxan-border" />
                   <div className="flex justify-between font-semibold">
-                    <span className="text-duxxan-text">Toplam:</span>
-                    <span className="text-duxxan-success">
+                    <span className="text-gray-900 dark:text-duxxan-text">Toplam:</span>
+                    <span className="text-yellow-600 dark:text-duxxan-success">
                       {donationAmount.toFixed(2)} USDT
                     </span>
                   </div>
                 </div>
 
                 <Button 
-                  className="w-full bg-duxxan-success text-white hover:bg-duxxan-success/90"
+                  className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-duxxan-success dark:text-white dark:hover:bg-duxxan-success/90"
                   disabled={!isConnected}
                 >
                   {isConnected ? 'Bağış Yap' : 'Cüzdan Bağlayın'}
                 </Button>
 
                 {!isConnected && (
-                  <p className="text-xs text-duxxan-text-secondary text-center">
+                  <p className="text-xs text-gray-600 dark:text-duxxan-text-secondary text-center">
                     Bağış yapmak için cüzdanınızı bağlamanız gerekmektedir.
                   </p>
                 )}
@@ -450,54 +450,54 @@ export default function DonationDetail() {
             </Card>
 
             {/* İlerleme */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Kampanya İlerlemesi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Kampanya İlerlemesi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <Progress value={progress} className="h-3" />
                   <div className="flex justify-between text-sm">
-                    <span className="text-duxxan-text-secondary">
-                      {donation.currentAmount} / {donation.goalAmount} USDT
+                    <span className="text-gray-600 dark:text-duxxan-text-secondary">
+                      {(donation as any)?.currentAmount} / {(donation as any)?.goalAmount} USDT
                     </span>
-                    <span className="text-duxxan-success">%{progress.toFixed(1)}</span>
+                    <span className="text-yellow-600 dark:text-duxxan-success">%{progress.toFixed(1)}</span>
                   </div>
-                  <div className="text-center text-sm text-duxxan-text-secondary">
-                    Hedefe {(Number(donation.goalAmount) - Number(donation.currentAmount)).toFixed(2)} USDT kaldı
+                  <div className="text-center text-sm text-gray-600 dark:text-duxxan-text-secondary">
+                    Hedefe {(Number((donation as any)?.goalAmount) - Number((donation as any)?.currentAmount)).toFixed(2)} USDT kaldı
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Kampanya Sahibi */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Kampanya Sahibi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Kampanya Sahibi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12">
-                    <AvatarImage src={donation.creator?.profileImage} />
-                    <AvatarFallback className="bg-duxxan-success text-white">
-                      {donation.creator?.username?.charAt(0)}
+                    <AvatarImage src={(donation as any)?.creator?.profileImage} />
+                    <AvatarFallback className="bg-yellow-500 dark:bg-duxxan-success text-white">
+                      {(donation as any)?.creator?.username?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-duxxan-text">
-                      {donation.creator?.username}
+                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text">
+                      {(donation as any)?.creator?.username}
                     </h4>
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-duxxan-yellow fill-current" />
-                      <span className="text-sm text-duxxan-text-secondary">
-                        {donation.creator?.rating} ({donation.creator?.ratingCount} değerlendirme)
+                      <Star className="w-4 h-4 text-yellow-500 dark:text-duxxan-yellow fill-current" />
+                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">
+                        {(donation as any)?.creator?.rating} ({(donation as any)?.creator?.ratingCount} değerlendirme)
                       </span>
                     </div>
                   </div>
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full mt-3 border-duxxan-border text-duxxan-text"
+                  className="w-full mt-3 border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-duxxan-border dark:text-duxxan-text"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   İletişime Geç
@@ -506,9 +506,9 @@ export default function DonationDetail() {
             </Card>
 
             {/* Son Bağışçılar */}
-            <Card className="bg-duxxan-surface border-duxxan-border">
+            <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-duxxan-text">Son Bağışçılar</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-duxxan-text">Son Bağışçılar</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -516,13 +516,13 @@ export default function DonationDetail() {
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-duxxan-border text-duxxan-text text-xs">
+                          <AvatarFallback className="bg-yellow-100 dark:bg-duxxan-border text-gray-700 dark:text-duxxan-text text-xs">
                             B{i}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-duxxan-text">donor_{i}...xyz</span>
+                        <span className="text-sm text-gray-900 dark:text-duxxan-text">donor_{i}...xyz</span>
                       </div>
-                      <span className="text-xs text-duxxan-success font-semibold">
+                      <span className="text-xs text-yellow-600 dark:text-duxxan-success font-semibold">
                         {(Math.random() * 100 + 10).toFixed(2)} USDT
                       </span>
                     </div>
