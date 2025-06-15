@@ -398,31 +398,31 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-darker text-white">
+    <div className="min-h-screen bg-white dark:bg-duxxan-darker text-black dark:text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Topluluk Merkezi</h1>
-          <p className="text-gray-400">Kanalları keşfedin, çekilişleri takip edin ve topluluğa katılın</p>
+          <h1 className="text-3xl font-bold mb-2 text-black dark:text-white">Topluluk Merkezi</h1>
+          <p className="text-gray-600 dark:text-gray-400">Kanalları keşfedin, çekilişleri takip edin ve topluluğa katılın</p>
         </div>
 
         {/* Search and Filter */}
         <div className="mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-400 h-4 w-4" />
             <Input
               placeholder="Kanal ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-duxxan-card border-duxxan-border text-white"
+              className="pl-10 bg-gray-100 dark:bg-duxxan-card border-gray-300 dark:border-duxxan-border text-black dark:text-white"
             />
           </div>
           <div className="flex items-center space-x-2">
-            <Filter className="text-gray-400 h-4 w-4" />
+            <Filter className="text-gray-400 dark:text-gray-400 h-4 w-4" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-duxxan-card border border-duxxan-border rounded-md px-3 py-2 text-white"
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
             >
               {categories.map((category: any) => (
                 <option key={category.id} value={category.id}>
@@ -623,14 +623,18 @@ export default function Community() {
         {activeTab === 'upcoming' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Gelecek Çekilişler</h2>
-              <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
-                <DialogTrigger asChild>
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Çekiliş Duyuru
-                  </Button>
-                </DialogTrigger>
+              <h2 className="text-xl font-semibold text-black dark:text-white">Gelecek Çekilişler</h2>
+              {isConnected && address && channels.some((channel: any) => 
+                channel.creatorWalletAddress && 
+                address.toLowerCase() === channel.creatorWalletAddress.toLowerCase()
+              ) && (
+                <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Çekiliş Duyuru
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent className="bg-duxxan-card border-duxxan-border text-white max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>Gelecek Çekiliş Duyurusu</DialogTitle>
@@ -743,6 +747,7 @@ export default function Community() {
                   </Form>
                 </DialogContent>
               </Dialog>
+              )}
             </div>
 
             {rafflesLoading ? (
