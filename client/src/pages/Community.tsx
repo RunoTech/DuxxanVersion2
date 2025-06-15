@@ -20,7 +20,7 @@ import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter
 const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
   description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(500, 'Açıklama en fazla 500 karakter olabilir'),
-  category: z.string().min(1, 'Kategori seçimi zorunlu'),
+  categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
 });
 
 const createUpcomingRaffleSchema = z.object({
@@ -30,7 +30,7 @@ const createUpcomingRaffleSchema = z.object({
   ticketPrice: z.string().min(1, 'Bilet fiyatı gerekli'),
   maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
   startDate: z.string().min(1, 'Başlangıç tarihi gerekli'),
-  category: z.string().min(1, 'Kategori seçimi zorunlu'),
+  categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
 });
 
 type CreateChannelForm = z.infer<typeof createChannelSchema>;
@@ -53,7 +53,7 @@ export default function Community() {
     defaultValues: {
       name: '',
       description: '',
-      category: '',
+      categoryId: 0,
     },
   });
 
@@ -66,7 +66,7 @@ export default function Community() {
       ticketPrice: '',
       maxTickets: '',
       startDate: '',
-      category: '',
+      categoryId: 0,
     },
   });
 

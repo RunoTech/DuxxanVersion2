@@ -134,6 +134,55 @@ router.get('/channels/:id/raffles', [
   }
 });
 
+// Update a channel (only creator can edit)
+router.put('/channels/:id', [
+  param('id').isInt().withMessage('Geçersiz kanal ID'),
+  body('name').optional().trim().isLength({ min: 3, max: 50 }).withMessage('Kanal adı 3-50 karakter arası olmalıdır'),
+  body('description').optional().trim().isLength({ min: 10, max: 500 }).withMessage('Açıklama 10-500 karakter arası olmalıdır'),
+  body('categoryId').optional().isInt().withMessage('Geçersiz kategori ID'),
+  validationMiddleware
+], async (req, res) => {
+  try {
+    const channelId = parseInt(req.params.id);
+    const userId = 1; // This should come from authenticated user
+
+    // Check if the user is the channel creator
+    const isCreator = await storage.isChannelCreator(channelId, userId);
+    if (!isCreator) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bu kanalı düzenleme yetkiniz yok. Sadece kanal yaratıcısı düzenleyebilir.',
+        error: 'PERMISSION_DENIED'
+      });
+    }
+
+    // Validate the update data
+    const updateData = insertChannelSchema.partial().parse(req.body);
+    
+    const updatedChannel = await storage.updateChannel(channelId, updateData);
+    
+    if (!updatedChannel) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kanal bulunamadı'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Kanal başarıyla güncellendi',
+      data: updatedChannel
+    });
+  } catch (error: any) {
+    console.error('Error updating channel:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Kanal güncellenirken hata oluştu',
+      error: error.message
+    });
+  }
+});
+
 // Subscribe to a channel
 router.post('/channels/:id/subscribe', [
   param('id').isInt().withMessage('Geçersiz kanal ID'),

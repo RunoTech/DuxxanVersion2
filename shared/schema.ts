@@ -520,7 +520,7 @@ export const insertUserRatingSchema = createInsertSchema(userRatings).pick({
 export const insertChannelSchema = createInsertSchema(channels).pick({
   name: true,
   description: true,
-  category: true,
+  categoryId: true,
 });
 
 export const insertChannelSubscriptionSchema = createInsertSchema(channelSubscriptions).pick({
@@ -534,7 +534,7 @@ export const insertUpcomingRaffleSchema = createInsertSchema(upcomingRaffles).pi
   ticketPrice: true,
   maxTickets: true,
   startDate: true,
-  category: true,
+  categoryId: true,
   channelId: true,
 });
 

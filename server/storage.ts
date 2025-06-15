@@ -662,6 +662,21 @@ export class DatabaseStorage implements IStorage {
     return channel;
   }
 
+  async updateChannel(channelId: number, updateData: Partial<InsertChannel>): Promise<Channel | undefined> {
+    const [updatedChannel] = await db.update(channels)
+      .set(updateData)
+      .where(eq(channels.id, channelId))
+      .returning();
+    return updatedChannel;
+  }
+
+  async isChannelCreator(channelId: number, userId: number): Promise<boolean> {
+    const [channel] = await db.select({ creatorId: channels.creatorId })
+      .from(channels)
+      .where(eq(channels.id, channelId));
+    return channel?.creatorId === userId;
+  }
+
   async updateChannelSubscriberCount(channelId: number, count: number): Promise<void> {
     await db.update(channels).set({ subscriberCount: count }).where(eq(channels.id, channelId));
   }
