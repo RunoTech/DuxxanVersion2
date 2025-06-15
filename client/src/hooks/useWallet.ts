@@ -6,6 +6,7 @@ import { apiRequest } from '@/lib/queryClient';
 export function useWallet() {
   const [connection, setConnection] = useState<WalletConnection | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
 
   const createOrGetUser = async (walletAddress: string) => {
@@ -15,17 +16,21 @@ export function useWallet() {
         walletAddress: walletAddress.toLowerCase()
       });
       
+      const userData = await response.json();
+      
       // Store authentication state in localStorage for persistence
-      if (response) {
+      if (userData && userData.success) {
         localStorage.setItem('wallet_authenticated', 'true');
         localStorage.setItem('wallet_address', walletAddress.toLowerCase());
+        setUser(userData.data); // Set the user data
       }
       
-      return response;
+      return userData;
     } catch (error: any) {
       console.error('Wallet authentication failed:', error);
       localStorage.removeItem('wallet_authenticated');
       localStorage.removeItem('wallet_address');
+      setUser(null);
       return null;
     }
   };
@@ -100,6 +105,8 @@ export function useWallet() {
             if (wasAuthenticated && storedAddress === connection.address.toLowerCase()) {
               // User was previously authenticated with this address
               console.log('Restoring authenticated session for:', connection.address);
+              // Create a basic user object from stored data
+              setUser({ walletAddress: connection.address.toLowerCase() });
             } else {
               // New address or no previous authentication
               await createOrGetUser(connection.address);
@@ -122,6 +129,7 @@ export function useWallet() {
       const walletManager = WalletManager.getInstance();
       await walletManager.disconnectWallet();
       setConnection(null);
+      setUser(null);
       
       // Clear authentication state
       localStorage.removeItem('wallet_authenticated');
@@ -140,6 +148,12 @@ export function useWallet() {
     }
   };
 
+  const getApiHeaders = () => {
+    return connection?.address ? {
+      'x-wallet-address': connection.address.toLowerCase()
+    } : {};
+  };
+
   const isConnected = !!connection;
   const address = connection?.address;
   const chainId = connection?.chainId;
@@ -149,8 +163,10 @@ export function useWallet() {
     isConnected,
     address,
     chainId,
+    user,
     isConnecting,
     connectWallet,
     disconnectWallet,
+    getApiHeaders,
   };
 }
