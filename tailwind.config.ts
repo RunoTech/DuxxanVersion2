@@ -5,6 +5,21 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'rubik': ['Rubik', 'sans-serif'],
+        'sans': ['Rubik', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'h1': ['67.32px', { lineHeight: '1.2', letterSpacing: '-0.025em' }],
+        'h2': ['50.5px', { lineHeight: '1.25', letterSpacing: '-0.02em' }],
+        'h3': ['37.89px', { lineHeight: '1.3', letterSpacing: '-0.015em' }],
+        'h4': ['28.42px', { lineHeight: '1.35', letterSpacing: '-0.01em' }],
+        'h5': ['21.32px', { lineHeight: '1.4' }],
+        'h6': ['16px', { lineHeight: '1.45' }],
+        'p': ['12px', { lineHeight: '1.6' }],
+        'small': ['9px', { lineHeight: '1.5' }],
+        'overline': ['6.75px', { lineHeight: '1.4', letterSpacing: '0.1em' }],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
