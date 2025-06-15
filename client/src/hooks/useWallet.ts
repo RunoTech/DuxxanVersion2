@@ -1,72 +1,84 @@
 import { useState, useEffect } from 'react';
-import { walletManager, type WalletConnection } from '@/lib/wallet';
-import { apiRequest } from '@/lib/queryClient';
+import { WalletManager, type WalletConnection } from '@/lib/wallet';
 import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 
 export function useWallet() {
   const [connection, setConnection] = useState<WalletConnection | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Check if demo wallet was previously connected
-    const isDemoConnected = localStorage.getItem('demo_wallet_connected');
-    const savedAddress = localStorage.getItem('demo_wallet_address');
-    const savedUser = localStorage.getItem('demo_user_data');
-    
-    if (isDemoConnected === 'true' && savedAddress) {
-      const demoConnection = {
-        address: savedAddress,
-        provider: null as any,
-        signer: null as any,
-        chainId: 56
-      };
-      setConnection(demoConnection);
-      
-      // Use cached user data first
-      if (savedUser) {
-        try {
-          setUser(JSON.parse(savedUser));
-        } catch (e) {
-          fetchUser(savedAddress);
-        }
-      } else {
-        fetchUser(savedAddress);
-      }
-    }
-  }, []);
-
-  const fetchUser = async (walletAddress: string) => {
-    // Sadece user yoksa fetch et
-    if (user) return;
-    
+  const createOrGetUser = async (walletAddress: string) => {
     try {
-      const response = await fetch('/api/users/me', {
-        headers: {
-          'x-wallet-address': walletAddress,
-        },
+      const response = await apiRequest('POST', '/api/users', {
+        walletAddress,
+        deviceType: 'web',
+        deviceName: navigator.userAgent,
+        ipAddress: 'auto-detect'
       });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        // Cache user data
-        localStorage.setItem('demo_user_data', JSON.stringify(userData));
-      }
-    } catch (error) {
-      console.error('Failed to fetch user:', error);
+      return response;
+    } catch (error: any) {
+      console.error('User creation failed:', error);
+      // Don't throw error - user might already exist
+      return null;
     }
   };
 
-  const connectMetaMask = async () => {
+  useEffect(() => {
+    // Check for existing connection on mount
+    const walletManager = WalletManager.getInstance();
+    const existingConnection = walletManager.getConnection();
+    if (existingConnection) {
+      setConnection(existingConnection);
+    }
+
+    // Listen for connection changes
+    const handleConnectionChange = (connected: boolean, address?: string) => {
+      if (!connected) {
+        setConnection(null);
+      }
+    };
+
+    walletManager.addListener(handleConnectionChange);
+
+    return () => {
+      walletManager.removeListener(handleConnectionChange);
+    };
+  }, []);
+
+  const connectWallet = async (walletType: 'metamask' | 'trustwallet' = 'metamask') => {
     setIsConnecting(true);
-    
-    // Demo mode - simulate connection
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
     try {
-      // Demo wallet data
+      const walletManager = WalletManager.getInstance();
+      const newConnection = await walletManager.connectWallet(walletType);
+      setConnection(newConnection);
+
+      // Create or get user
+      await createOrGetUser(newConnection.address);
+
+      toast({
+        title: 'Wallet Connected',
+        description: `Connected to ${newConnection.address.slice(0, 6)}...${newConnection.address.slice(-4)}`,
+      });
+
+      return newConnection;
+    } catch (error: any) {
+      console.error('Wallet connection failed:', error);
+      toast({
+        title: 'Connection Failed',
+        description: error.message || 'Failed to connect wallet',
+        variant: 'destructive',
+      });
+      throw error;
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const connectDemoWallet = async () => {
+    setIsConnecting(true);
+    try {
+      // Demo wallets for testing
       const demoWallets = [
         { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
         { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
@@ -77,11 +89,12 @@ export function useWallet() {
       
       const randomWallet = demoWallets[Math.floor(Math.random() * demoWallets.length)];
       
-      // Create demo connection object
-      const demoConnection = {
+      // Create demo connection object with chainId
+      const demoConnection: WalletConnection = {
         address: randomWallet.address,
         provider: null as any,
-        signer: null as any
+        signer: null as any,
+        chainId: 56 // BSC Mainnet for demo
       };
       
       setConnection(demoConnection);
@@ -99,8 +112,8 @@ export function useWallet() {
       });
     } catch (error: any) {
       toast({
-        title: 'Connection Failed',
-        description: error.message,
+        title: 'Demo Connection Failed',
+        description: error.message || 'Failed to connect demo wallet',
         variant: 'destructive',
       });
     } finally {
@@ -110,13 +123,9 @@ export function useWallet() {
 
   const connectTrustWallet = async () => {
     setIsConnecting(true);
-    
-    // Demo mode - simulate connection
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
     try {
-      // Demo wallet data
-      const demoWallets = [
+      // Trust Wallet demo wallets
+      const trustWallets = [
         { address: '0x1234567890123456789012345678901234567890', balance: '2.45 BNB' },
         { address: '0x2345678901234567890123456789012345678901', balance: '5.89 BNB' },
         { address: '0x3456789012345678901234567890123456789012', balance: '1.23 BNB' },
@@ -124,13 +133,14 @@ export function useWallet() {
         { address: '0x5678901234567890123456789012345678901234', balance: '3.14 BNB' }
       ];
       
-      const randomWallet = demoWallets[Math.floor(Math.random() * demoWallets.length)];
+      const randomWallet = trustWallets[Math.floor(Math.random() * trustWallets.length)];
       
-      // Create demo connection object
-      const demoConnection = {
+      // Create demo connection object with chainId
+      const demoConnection: WalletConnection = {
         address: randomWallet.address,
         provider: null as any,
-        signer: null as any
+        signer: null as any,
+        chainId: 56 // BSC Mainnet for demo
       };
       
       setConnection(demoConnection);
@@ -148,8 +158,8 @@ export function useWallet() {
       });
     } catch (error: any) {
       toast({
-        title: 'Connection Failed',
-        description: error.message,
+        title: 'Demo Connection Failed',
+        description: error.message || 'Failed to connect demo wallet',
         variant: 'destructive',
       });
     } finally {
@@ -157,77 +167,42 @@ export function useWallet() {
     }
   };
 
-  const createOrGetUser = async (walletAddress: string) => {
+  const disconnectWallet = async () => {
     try {
-      const response = await apiRequest('POST', '/api/users', {
-        walletAddress,
-        username: `user_${walletAddress.slice(-8)}`, // Default username
-      });
+      const walletManager = WalletManager.getInstance();
+      await walletManager.disconnect();
+      setConnection(null);
       
-      const userData = await response.json();
-      setUser(userData);
-      // Cache user data
-      localStorage.setItem('demo_user_data', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Failed to create/get user:', error);
-    }
-  };
+      // Clear demo connection storage
+      localStorage.removeItem('demo_wallet_connected');
+      localStorage.removeItem('demo_wallet_address');
 
-  const disconnect = async () => {
-    setConnection(null);
-    setUser(null);
-    
-    // Clear all demo wallet data including cache
-    localStorage.removeItem('demo_wallet_connected');
-    localStorage.removeItem('demo_wallet_address');
-    localStorage.removeItem('demo_user_data');
-    
-    toast({
-      title: 'Demo Wallet Disconnected',
-      description: 'Your demo wallet has been disconnected',
-    });
-  };
-
-  const updateUser = async (updates: any) => {
-    if (!connection) return;
-    
-    try {
-      const response = await apiRequest('PUT', '/api/users/me', updates);
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-      // Cache updated user data
-      localStorage.setItem('demo_user_data', JSON.stringify(updatedUser));
-      
       toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been updated successfully',
+        title: 'Wallet Disconnected',
+        description: 'Successfully disconnected from wallet',
       });
     } catch (error: any) {
       toast({
-        title: 'Update Failed',
-        description: 'Failed to update profile',
+        title: 'Disconnection Failed',
+        description: error.message || 'Failed to disconnect wallet',
         variant: 'destructive',
       });
     }
   };
 
-  const getApiHeaders = () => {
-    if (!connection) return {};
-    
-    return {
-      'x-wallet-address': connection.address,
-    };
-  };
+  const isConnected = !!connection;
+  const address = connection?.address;
+  const chainId = connection?.chainId;
 
   return {
     connection,
-    user,
-    isConnected: !!connection,
+    isConnected,
+    address,
+    chainId,
     isConnecting,
-    connectMetaMask,
+    connectWallet,
+    connectDemoWallet,
     connectTrustWallet,
-    disconnect,
-    updateUser,
-    getApiHeaders,
+    disconnectWallet,
   };
 }
