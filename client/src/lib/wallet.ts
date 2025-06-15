@@ -34,34 +34,21 @@ export class WalletManager {
     // Check what's available first
     const available = this.checkAvailableWallets();
     
+    if (!available.hasEthereum) {
+      throw new Error('Hiçbir cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
+    }
+
     if (walletType === 'trustwallet') {
-      ethereum = this.getTrustWalletProvider();
-      if (!ethereum) {
-        if (!available.hasEthereum) {
-          throw new Error('Hiçbir cüzdan bulunamadı. Lütfen Trust Wallet veya MetaMask yükleyin.');
-        } else {
-          // Fallback: use any available provider for Trust Wallet if we can't detect it specifically
-          console.log('Trust Wallet detection failed, using fallback provider');
-          ethereum = window.ethereum;
-          if (!ethereum) {
-            throw new Error('Trust Wallet bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
-          }
-        }
-      }
+      // For Trust Wallet, try detection first, then fallback to ethereum provider
+      ethereum = this.getTrustWalletProvider() || window.ethereum;
+      console.log(`Trust Wallet connection attempt using ${this.getTrustWalletProvider() ? 'detected' : 'fallback'} provider`);
     } else if (walletType === 'metamask') {
       ethereum = this.getMetaMaskProvider();
       if (!ethereum) {
-        if (!available.hasEthereum) {
-          throw new Error('Hiçbir cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
-        } else {
-          throw new Error('MetaMask bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
-        }
+        throw new Error('MetaMask bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
       }
     } else {
       // Default behavior - use any available provider
-      if (!window.ethereum) {
-        throw new Error('Cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
-      }
       ethereum = window.ethereum;
     }
 
