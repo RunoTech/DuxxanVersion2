@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Menu, Sun, Moon, Wallet } from 'lucide-react';
-import { useSimpleWallet } from '@/hooks/useSimpleWallet';
+import { useWallet } from '@/hooks/useWallet';
 import { useTheme } from '@/components/ThemeProvider';
 
 function NavigationComponent() {
@@ -12,7 +12,7 @@ function NavigationComponent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { isConnected, address, connectMetaMask, connectTrustWallet, disconnect, isConnecting } = useSimpleWallet();
+  const { isConnected, address, connectWallet, disconnectWallet, isConnecting } = useWallet();
 
   const navItems = [
     { href: '/raffles', label: 'Çekilişler' },
@@ -68,7 +68,7 @@ function NavigationComponent() {
                   <span className="text-sm text-gray-600 dark:text-gray-400">
                     {address?.slice(0, 6)}...{address?.slice(-4)}
                   </span>
-                  <Button onClick={disconnect} variant="outline" size="sm">
+                  <Button onClick={disconnectWallet} variant="outline" size="sm">
                     Çıkış
                   </Button>
                 </div>
@@ -95,7 +95,7 @@ function NavigationComponent() {
                     <div className="space-y-4 py-4">
                       <Button
                         onClick={async () => {
-                          await connectMetaMask();
+                          await connectWallet('metamask');
                           setIsWalletDialogOpen(false);
                         }}
                         disabled={isConnecting}
@@ -115,7 +115,7 @@ function NavigationComponent() {
                       
                       <Button
                         onClick={async () => {
-                          await connectTrustWallet();
+                          await connectWallet('trustwallet');
                           setIsWalletDialogOpen(false);
                         }}
                         disabled={isConnecting}

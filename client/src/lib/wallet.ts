@@ -28,217 +28,206 @@ export class WalletManager {
     return WalletManager.instance;
   }
 
+  addListener(listener: (connected: boolean, address?: string) => void): void {
+    this.listeners.add(listener);
+  }
+
+  removeListener(listener: (connected: boolean, address?: string) => void): void {
+    this.listeners.delete(listener);
+  }
+
+  getConnection(): WalletConnection | null {
+    return this.connection;
+  }
+
+  isConnected(): boolean {
+    return !!this.connection;
+  }
+
   // BSC Network Configuration
   private BSC_NETWORK = {
     chainId: '0x38', // 56 in hexadecimal
-    chainName: 'BNB Smart Chain',
-    rpcUrls: ['https://bsc-dataseed1.binance.org/'],
+    chainName: 'Binance Smart Chain',
     nativeCurrency: {
       name: 'BNB',
       symbol: 'BNB',
-      decimals: 18
+      decimals: 18,
     },
-    blockExplorerUrls: ['https://bscscan.com/']
+    rpcUrls: ['https://bsc-dataseed1.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com/'],
   };
 
   async connectWallet(walletType?: 'metamask' | 'trustwallet'): Promise<WalletConnection> {
-    if (!window.ethereum) {
-      throw new Error('No wallet found. Please install MetaMask or Trust Wallet.');
+    if (walletType === 'trustwallet') {
+      return this.connectTrustWallet();
     }
-
-    const ethereum = window.ethereum;
-    console.log(`Attempting ${walletType || 'default'} wallet connection...`);
-
-    try {
-      // Check current network first
-      let currentChainId;
-      try {
-        currentChainId = await ethereum.request({ method: 'eth_chainId' });
-      } catch (error) {
-        console.log('Could not get current chain ID, proceeding with connection...');
-      }
-
-      // If not on BSC, try to switch/add BSC network
-      if (currentChainId !== this.BSC_NETWORK.chainId) {
-        try {
-          // Try to switch to BSC first
-          await ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: this.BSC_NETWORK.chainId }]
-          });
-        } catch (switchError: any) {
-          // If network doesn't exist (4902), add it
-          if (switchError.code === 4902) {
-            await ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [this.BSC_NETWORK]
-            });
-          } else {
-            console.warn('Network switch failed:', switchError);
-            // Continue anyway - user might be on testnet or development
-          }
-        }
-      }
-
-      // Request account access
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-
-      if (!accounts || accounts.length === 0) {
-        throw new Error('Cüzdan bağlantısı reddedildi');
-      }
-
-      const provider = new BrowserProvider(ethereum);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-      
-      // Get final network after potential switching
-      const finalChainId = await ethereum.request({ method: 'eth_chainId' });
-      const chainId = parseInt(finalChainId, 16);
-
-      this.connection = {
-        address,
-        provider,
-        signer,
-        chainId
-      };
-
-      this.notifyListeners(true, address);
-      return this.connection;
-
-    } catch (error: any) {
-      console.error('Wallet connection failed:', error);
-      throw new Error(error.message || 'Cüzdan bağlantısı başarısız');
-    }
+    return this.connectMetaMask();
   }
 
   private getMetaMaskProvider() {
-    // Check if MetaMask is available
     if (typeof window !== 'undefined' && window.ethereum) {
-      // Direct MetaMask check
-      if (window.ethereum.isMetaMask && !window.ethereum.isTrust) {
-        return window.ethereum;
-      }
-      
-      // Check in providers array
-      if (window.ethereum.providers?.length > 0) {
-        const metamask = window.ethereum.providers.find((provider: any) => 
-          provider.isMetaMask && !provider.isTrust
-        );
-        if (metamask) return metamask;
-      }
-      
-      // Fallback: if only MetaMask is installed
       if (window.ethereum.isMetaMask) {
         return window.ethereum;
+      }
+      // Handle multiple wallet providers
+      if (window.ethereum.providers) {
+        return window.ethereum.providers.find((provider: any) => provider.isMetaMask);
       }
     }
     return null;
   }
 
   private getTrustWalletProvider() {
-    // Check if Trust Wallet is available
     if (typeof window !== 'undefined') {
-      
-      // Check for Trust Wallet specific global
-      if ((window as any).trustWallet) {
-        return (window as any).trustWallet;
-      }
-      
-      // Check window.ethereum for Trust Wallet
-      if (window.ethereum) {
-        // Direct Trust Wallet checks
-        if (window.ethereum.isTrust || window.ethereum.isTrustWallet) {
-          return window.ethereum;
-        }
-        
-        // Check provider name/brand
-        if (window.ethereum.name === 'TrustWallet' || 
-            window.ethereum.selectedProvider?.name === 'TrustWallet') {
-          return window.ethereum;
-        }
-        
-        // Check in providers array
-        if (window.ethereum.providers?.length > 0) {
-          const trustwallet = window.ethereum.providers.find((provider: any) => 
-            provider.isTrust || 
-            provider.isTrustWallet || 
-            provider.name === 'TrustWallet' ||
-            provider.selectedProvider?.name === 'TrustWallet'
-          );
-          if (trustwallet) return trustwallet;
-        }
-        
-        // Check user agent for Trust Wallet browser
-        if (navigator.userAgent.includes('Trust')) {
-          return window.ethereum;
-        }
-      }
-      
-      // Check for Trust Wallet in window object with different names
-      const trustWalletGlobals = ['trustwallet', 'TrustWallet', 'trust'];
-      for (const global of trustWalletGlobals) {
-        if ((window as any)[global]?.ethereum) {
-          return (window as any)[global].ethereum;
-        }
-      }
+      // Try multiple ways Trust Wallet might be available
+      if (window.trustWallet) return window.trustWallet;
+      if (window.ethereum?.isTrust) return window.ethereum;
+      if (window.ethereum?.isTrustWallet) return window.ethereum;
     }
     return null;
   }
 
   checkAvailableWallets() {
-    const metamask = this.getMetaMaskProvider();
-    const trustwallet = this.getTrustWalletProvider();
+    const hasEthereum = typeof window !== 'undefined' && !!window.ethereum;
+    const isMetaMask = hasEthereum && window.ethereum.isMetaMask;
+    const providers = hasEthereum && window.ethereum.providers ? window.ethereum.providers.length : 0;
     
-    // Debug information
+    // Trust Wallet detection
+    const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
+    const trustWalletGlobal = typeof window !== 'undefined' && !!window.trustWallet;
+    const trustwallet = typeof window !== 'undefined' && !!(window as any).trustwallet;  
+    const TrustWallet = typeof window !== 'undefined' && !!(window as any).TrustWallet;
+    const trust = typeof window !== 'undefined' && !!(window as any).trust;
+    
+    const metamaskFound = isMetaMask || (hasEthereum && window.ethereum.providers?.some((p: any) => p.isMetaMask));
+    const trustwalletFound = trustWalletGlobal || trustwallet || TrustWallet || trust || 
+                           (hasEthereum && (window.ethereum.isTrust || window.ethereum.isTrustWallet));
+
+    const availableGlobals = [];
     if (typeof window !== 'undefined') {
-      console.log('Wallet Detection Debug:', {
-        hasEthereum: !!window.ethereum,
-        isMetaMask: window.ethereum?.isMetaMask,
-        isTrust: window.ethereum?.isTrust,
-        isTrustWallet: window.ethereum?.isTrustWallet,
-        ethereumName: window.ethereum?.name,
-        selectedProvider: window.ethereum?.selectedProvider?.name,
-        providers: window.ethereum?.providers?.length || 0,
-        userAgent: navigator.userAgent.includes('Trust'),
-        trustWalletGlobal: !!(window as any).trustWallet,
-        trustwallet: !!(window as any).trustwallet,
-        TrustWallet: !!(window as any).TrustWallet,
-        trust: !!(window as any).trust,
-        metamaskFound: !!metamask,
-        trustwalletFound: !!trustwallet,
-        availableGlobals: Object.keys(window).filter(key => 
-          key.toLowerCase().includes('trust') || 
-          key.toLowerCase().includes('wallet')
-        ).slice(0, 10)
-      });
-      
-      // Additional provider details if available
-      if (window.ethereum?.providers?.length > 0) {
-        console.log('Available Providers:', window.ethereum.providers.map((p: any) => ({
-          isMetaMask: p.isMetaMask,
-          isTrust: p.isTrust,
-          isTrustWallet: p.isTrustWallet,
-          name: p.name,
-          selectedProvider: p.selectedProvider?.name
-        })));
-      }
+      const globalKeys = Object.keys(window).filter(key => 
+        key.toLowerCase().includes('trust') || 
+        key.toLowerCase().includes('metamask') ||
+        key.toLowerCase().includes('wallet')
+      );
+      availableGlobals.push(...globalKeys);
     }
-    
+
+    console.log('Wallet Detection Debug:', {
+      hasEthereum,
+      isMetaMask,
+      providers,
+      userAgent: userAgent.includes('trust'),
+      trustWalletGlobal,
+      trustwallet,
+      TrustWallet,
+      trust,
+      metamaskFound,
+      trustwalletFound,
+      availableGlobals
+    });
+
     return {
-      metamask: !!metamask,
-      trustwallet: !!trustwallet,
-      hasEthereum: !!window.ethereum
+      metamask: metamaskFound,
+      trustwallet: trustwalletFound,
+      ethereum: hasEthereum
     };
   }
 
   async connectMetaMask(): Promise<WalletConnection> {
-    return this.connectWallet('metamask');
+    console.log('Attempting metamask wallet connection...');
+    
+    const ethereum = this.getMetaMaskProvider();
+    if (!ethereum) {
+      throw new Error('MetaMask not found. Please install MetaMask extension.');
+    }
+
+    try {
+      // Request account access
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please connect your MetaMask wallet.');
+      }
+
+      // Create provider and signer
+      const provider = new BrowserProvider(ethereum);
+      const signer = await provider.getSigner();
+      const address = await signer.getAddress();
+      
+      // Check and switch to BSC network
+      await this.switchToBSC(ethereum);
+      
+      // Get chain ID after network switch
+      const network = await provider.getNetwork();
+      const chainId = Number(network.chainId);
+
+      const connection: WalletConnection = {
+        address,
+        provider,
+        signer,
+        chainId
+      };
+
+      this.connection = connection;
+      this.setupEventListeners();
+      this.notifyListeners(true, address);
+
+      return connection;
+    } catch (error: any) {
+      console.error('MetaMask connection failed:', error);
+      throw new Error(`MetaMask connection failed: ${error.message}`);
+    }
   }
 
   async connectTrustWallet(): Promise<WalletConnection> {
-    return this.connectWallet('trustwallet');
+    console.log('Attempting trustwallet wallet connection...');
+    
+    const ethereum = this.getTrustWalletProvider() || this.getMetaMaskProvider();
+    if (!ethereum) {
+      throw new Error('Trust Wallet not found. Please install Trust Wallet or use Trust Wallet browser.');
+    }
+
+    try {
+      // Request account access
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please connect your Trust Wallet.');
+      }
+
+      // Create provider and signer
+      const provider = new BrowserProvider(ethereum);
+      const signer = await provider.getSigner();
+      const address = await signer.getAddress();
+      
+      // Check and switch to BSC network
+      await this.switchToBSC(ethereum);
+      
+      // Get chain ID after network switch
+      const network = await provider.getNetwork();
+      const chainId = Number(network.chainId);
+
+      const connection: WalletConnection = {
+        address,
+        provider,
+        signer,
+        chainId
+      };
+
+      this.connection = connection;
+      this.setupEventListeners();
+      this.notifyListeners(true, address);
+
+      return connection;
+    } catch (error: any) {
+      console.error('Trust Wallet connection failed:', error);
+      throw new Error(`Trust Wallet connection failed: ${error.message}`);
+    }
   }
 
   async switchToBSC(ethereum?: any): Promise<void> {
@@ -246,28 +235,24 @@ export class WalletManager {
     if (!provider) return;
 
     try {
-      // Try to switch to BSC mainnet
+      // Try to switch to BSC network
       await provider.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x38' }], // BSC mainnet
+        params: [{ chainId: this.BSC_NETWORK.chainId }],
       });
     } catch (switchError: any) {
-      // If BSC is not added, add it
+      // This error code indicates that the chain has not been added to MetaMask
       if (switchError.code === 4902) {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: '0x38',
-            chainName: 'Binance Smart Chain',
-            nativeCurrency: {
-              name: 'BNB',
-              symbol: 'BNB',
-              decimals: 18
-            },
-            rpcUrls: ['https://bsc-dataseed.binance.org/'],
-            blockExplorerUrls: ['https://bscscan.com/']
-          }],
-        });
+        try {
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [this.BSC_NETWORK],
+          });
+        } catch (addError: any) {
+          throw new Error(`Failed to add BSC network: ${addError.message}`);
+        }
+      } else {
+        throw new Error(`Failed to switch to BSC network: ${switchError.message}`);
       }
     }
   }
@@ -277,12 +262,8 @@ export class WalletManager {
     this.notifyListeners(false);
   }
 
-  getConnection(): WalletConnection | null {
-    return this.connection;
-  }
-
-  isConnected(): boolean {
-    return this.connection !== null;
+  async disconnect(): Promise<void> {
+    await this.disconnectWallet();
   }
 
   getAddress(): string | null {
@@ -295,68 +276,71 @@ export class WalletManager {
   }
 
   private notifyListeners(connected: boolean, address?: string): void {
-    this.listeners.forEach(callback => callback(connected, address));
+    this.listeners.forEach(listener => listener(connected, address));
   }
 
   async signMessage(message: string): Promise<string> {
     if (!this.connection) {
-      throw new Error('Cüzdan bağlı değil');
+      throw new Error('Wallet not connected');
     }
-
     return await this.connection.signer.signMessage(message);
   }
 
   async getBalance(): Promise<string> {
     if (!this.connection) {
-      throw new Error('Cüzdan bağlı değil');
+      throw new Error('Wallet not connected');
     }
-
     const balance = await this.connection.provider.getBalance(this.connection.address);
     return balance.toString();
   }
 
-  // Auto-connect if previously connected
   async autoConnect(): Promise<boolean> {
-    if (!window.ethereum) return false;
-
     try {
-      const accounts = await window.ethereum.request({
-        method: 'eth_accounts'
-      });
+      const ethereum = this.getMetaMaskProvider();
+      if (!ethereum) return false;
 
+      const accounts = await ethereum.request({ method: 'eth_accounts' });
       if (accounts && accounts.length > 0) {
-        await this.connectWallet();
+        await this.connectMetaMask();
         return true;
       }
     } catch (error) {
       console.error('Auto-connect failed:', error);
     }
-
     return false;
   }
 
-  // Listen for account changes
   setupEventListeners(): void {
-    if (!window.ethereum) return;
+    const ethereum = window.ethereum;
+    if (!ethereum) return;
 
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+    // Listen for account changes
+    ethereum.on('accountsChanged', (accounts: string[]) => {
       if (accounts.length === 0) {
         this.disconnectWallet();
       } else {
-        this.connectWallet();
+        // Reconnect with new account
+        this.connectMetaMask().catch(console.error);
       }
     });
 
-    window.ethereum.on('chainChanged', (chainId: string) => {
-      // Reload page on chain change
+    // Listen for chain changes
+    ethereum.on('chainChanged', (chainId: string) => {
+      // Reload the page to reset the dapp state
       window.location.reload();
+    });
+
+    // Listen for connection
+    ethereum.on('connect', (connectInfo: { chainId: string }) => {
+      console.log('Wallet connected:', connectInfo);
+    });
+
+    // Listen for disconnection
+    ethereum.on('disconnect', (error: { code: number; message: string }) => {
+      console.log('Wallet disconnected:', error);
+      this.disconnectWallet();
     });
   }
 }
 
 export const walletManager = WalletManager.getInstance();
-
-// Initialize event listeners
-if (typeof window !== 'undefined') {
-  walletManager.setupEventListeners();
-}
