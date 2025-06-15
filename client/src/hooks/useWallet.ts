@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { walletService, type WalletConnection } from '@/lib/wallet';
+import { walletManager, type WalletConnection } from '@/lib/wallet';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,7 +19,8 @@ export function useWallet() {
       const demoConnection = {
         address: savedAddress,
         provider: null as any,
-        signer: null as any
+        signer: null as any,
+        chainId: 56
       };
       setConnection(demoConnection);
       

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { walletService } from './wallet';
+import { walletManager } from './wallet';
 
 // Smart contract ABIs (would be generated from actual contracts)
 const RAFFLE_CONTRACT_ABI = [
@@ -45,7 +45,7 @@ export class BlockchainService {
   }
 
   private getConnection() {
-    const connection = walletService.getConnection();
+    const connection = walletManager.getConnection();
     if (!connection) {
       throw new Error('Wallet not connected');
     }
