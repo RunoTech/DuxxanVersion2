@@ -102,12 +102,12 @@ export default function Home() {
   });
 
   // Fetch active raffles
-  const { data: raffles = [] } = useQuery({
+  const { data: raffles = [], isLoading: rafflesLoading } = useQuery({
     queryKey: ['/api/raffles/active'],
   });
 
   // Fetch active donations
-  const { data: donations = [] } = useQuery({
+  const { data: donations = [], isLoading: donationsLoading } = useQuery({
     queryKey: ['/api/donations/active'],
   });
 
@@ -432,7 +432,7 @@ export default function Home() {
             </div>
           </div>
 
-          {rafflesQuery.isLoading ? (
+          {rafflesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <RaffleCardSkeleton key={i} />
@@ -504,7 +504,7 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {donationsQuery.isLoading ? (
+          {donationsLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[...Array(4)].map((_, i) => (
                 <RaffleCardSkeleton key={i} />
