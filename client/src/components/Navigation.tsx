@@ -61,8 +61,18 @@ function NavigationComponent() {
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
 
-            {/* Profile Icon moved to the end */}
-            {isConnected && (
+            {/* Wallet Connection */}
+            <div className="hidden md:block">
+              <WalletConnect 
+                onConnect={(address) => {
+                  setIsWalletConnected(true);
+                  setWalletAddress(address);
+                }}
+              />
+            </div>
+
+            {/* Profile Icon for connected users */}
+            {isWalletConnected && walletAddress && (
               <Link href="/profile-new" className="hidden md:block">
                 <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -70,36 +80,6 @@ function NavigationComponent() {
                   </svg>
                 </Button>
               </Link>
-            )}
-            {isConnected ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-duxxan-text-secondary hidden sm:block">
-                  {connection?.address.slice(0, 6)}...{connection?.address.slice(-4)}
-                </span>
-                <Button
-                  onClick={disconnect}
-                  variant="outline"
-                  className="duxxan-button-secondary"
-                >
-                  Bağlantıyı Kes
-                </Button>
-              </div>
-            ) : (
-              <div className="hidden sm:flex items-center space-x-2">
-                <Button
-                  onClick={connectMetaMask}
-                  className="duxxan-button-primary"
-                >
-                  MetaMask Bağla
-                </Button>
-                <Button
-                  onClick={connectTrustWallet}
-                  variant="outline"
-                  className="duxxan-button-secondary"
-                >
-                  Trust Wallet
-                </Button>
-              </div>
             )}
 
             {/* Mobile Menu */}
@@ -113,29 +93,15 @@ function NavigationComponent() {
                 <div className="flex flex-col space-y-4 mt-8">
                   <NavLinks mobile />
                   
-                  {!isConnected && (
-                    <div className="flex flex-col space-y-2 pt-4 border-t border-duxxan-border">
-                      <Button
-                        onClick={() => {
-                          connectMetaMask();
-                          setIsOpen(false);
-                        }}
-                        className="duxxan-button-primary w-full"
-                      >
-                        MetaMask Bağla
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          connectTrustWallet();
-                          setIsOpen(false);
-                        }}
-                        variant="outline"
-                        className="duxxan-button-secondary w-full"
-                      >
-                        Trust Wallet
-                      </Button>
-                    </div>
-                  )}
+                  <div className="pt-4 border-t border-duxxan-border">
+                    <WalletConnect 
+                      onConnect={(address) => {
+                        setIsWalletConnected(true);
+                        setWalletAddress(address);
+                        setIsOpen(false);
+                      }}
+                    />
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

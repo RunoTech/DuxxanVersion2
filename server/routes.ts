@@ -74,26 +74,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const userData = {
           walletAddress,
           username: `user_${walletAddress.slice(-8)}`,
-          name: null,
-          profession: null,
-          bio: null,
-          profileImage: null,
-          profilePhoto: null,
-          email: null,
-          phoneNumber: null,
-          dateOfBirth: null,
-          gender: null,
-          city: null,
-          address: null,
-          website: null,
-          socialMediaTwitter: null,
-          socialMediaInstagram: null,
-          socialMediaLinkedin: null,
-          socialMediaFacebook: null,
-          organizationType: "individual" as const,
-          organizationName: null,
-          verificationUrl: null,
-          country: null
+          organizationType: "individual" as const
         };
         
         user = await storage.createUser(userData);
