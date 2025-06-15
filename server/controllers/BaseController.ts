@@ -1,12 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema } from 'zod';
 
+// Extend Express Request type to include authentication properties
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+      isAuthenticated?(): boolean;
+      login?(user: any, callback: (err: any) => void): void;
+    }
+  }
+}
+
 export abstract class BaseController {
   protected validateBody<T>(schema: ZodSchema<T>) {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         const validatedData = schema.parse(req.body);
-        req.body = validatedData;
+        req.body = validatedData as any;
         next();
       } catch (error) {
         res.status(400).json({
@@ -21,7 +32,7 @@ export abstract class BaseController {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         const validatedData = schema.parse(req.params);
-        req.params = validatedData;
+        req.params = validatedData as any;
         next();
       } catch (error) {
         res.status(400).json({
@@ -36,7 +47,7 @@ export abstract class BaseController {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         const validatedData = schema.parse(req.query);
-        req.query = validatedData;
+        req.query = validatedData as any;
         next();
       } catch (error) {
         res.status(400).json({

@@ -41,8 +41,6 @@ export class UserController extends BaseController {
       id: user.id,
       username: user.username,
       walletAddress: user.walletAddress,
-      totalRaffleEntries: user.totalRaffleEntries,
-      totalDonations: user.totalDonations,
       createdAt: user.createdAt
     };
 

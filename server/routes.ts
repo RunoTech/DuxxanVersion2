@@ -43,6 +43,9 @@ import {
   createValidationMiddleware
 } from "../lib/validation/schemas";
 
+// Import controller-based routes
+import controllerRoutes from "./routes/index";
+
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
