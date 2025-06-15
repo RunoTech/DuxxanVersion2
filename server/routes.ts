@@ -8,6 +8,8 @@ import { z } from "zod";
 import { sql, eq, desc } from "drizzle-orm";
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import { redis } from '../lib/redis';
+import { firebase } from '../lib/firebase';
 import {
   globalRateLimit,
   strictRateLimit,
@@ -69,6 +71,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           username: walletAddress.slice(0, 8),
           organizationType: 'individual'
         });
+        
+        // Store new user in Firebase
+        try {
+          await firebase.saveUserActivity(user.id, 'user_registration', {
+            walletAddress: user.walletAddress,
+            username: user.username,
+            registrationTime: new Date().toISOString(),
+            source: 'web_platform'
+          });
+        } catch (firebaseError) {
+          console.warn('Firebase user creation failed:', firebaseError);
+        }
       }
       
       // Generate device fingerprint
@@ -87,6 +101,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         screenResolution: fingerprint.screenResolution,
         colorDepth: fingerprint.colorDepth
       });
+      
+      // Store user session in Redis
+      const sessionKey = `duxxan:user:${user.id}:session`;
+      try {
+        await redis.hset(sessionKey, 'userId', user.id.toString());
+        await redis.hset(sessionKey, 'username', user.username || 'anonymous');
+        await redis.hset(sessionKey, 'walletAddress', user.walletAddress);
+        await redis.hset(sessionKey, 'lastLoginTime', new Date().toISOString());
+        await redis.hset(sessionKey, 'deviceType', deviceInfo?.deviceType || 'unknown');
+        await redis.hset(sessionKey, 'ipAddress', req.ip || 'unknown');
+        await redis.hset(sessionKey, 'userAgent', fingerprint.userAgent);
+        await redis.hset(sessionKey, 'status', 'active');
+        await redis.hset(sessionKey, 'sessionId', crypto.randomBytes(16).toString('hex'));
+        
+        console.log(`User session stored in Redis: ${sessionKey}`);
+      } catch (redisError) {
+        console.warn('Redis session storage failed:', redisError);
+      }
+      
+      // Log login activity in Firebase
+      try {
+        await firebase.saveUserActivity(user.id, 'user_login', {
+          walletAddress: user.walletAddress,
+          deviceType: deviceInfo?.deviceType || 'unknown',
+          ipAddress: req.ip || 'unknown',
+          deviceFingerprint: fingerprint.hash,
+          loginTime: new Date().toISOString()
+        });
+      } catch (firebaseError) {
+        console.warn('Firebase login logging failed:', firebaseError);
+      }
       
       // Generate JWT token
       const token = jwt.sign(
@@ -403,6 +448,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const raffleData = insertRaffleSchema.parse(req.body);
       const raffle = await storage.createRaffle({ ...raffleData, creatorId: req.user.id });
       
+      // Store raffle in Redis for real-time tracking
+      const raffleKey = `duxxan:raffle:${raffle.id}:live_stats`;
+      try {
+        await redis.hset(raffleKey, 'raffleId', raffle.id.toString());
+        await redis.hset(raffleKey, 'title', raffle.title);
+        await redis.hset(raffleKey, 'prizeAmount', raffle.prizeAmount || '0');
+        await redis.hset(raffleKey, 'ticketPrice', raffle.ticketPrice || '0');
+        await redis.hset(raffleKey, 'maxTickets', raffle.maxTickets?.toString() || '0');
+        await redis.hset(raffleKey, 'totalTickets', '0');
+        await redis.hset(raffleKey, 'status', 'active');
+        await redis.hset(raffleKey, 'createdAt', new Date().toISOString());
+        await redis.hset(raffleKey, 'creatorId', raffle.creatorId.toString());
+        
+        console.log(`Raffle stored in Redis: ${raffleKey}`);
+      } catch (redisError) {
+        console.warn('Redis raffle storage failed:', redisError);
+      }
+      
+      // Log raffle creation in Firebase
+      try {
+        await firebase.saveRaffleEvent(raffle.id, 'raffle_created', {
+          title: raffle.title,
+          prizeAmount: raffle.prizeAmount,
+          creatorId: raffle.creatorId,
+          categoryId: raffle.categoryId,
+          createdAt: new Date().toISOString()
+        });
+      } catch (firebaseError) {
+        console.warn('Firebase raffle logging failed:', firebaseError);
+      }
+      
       broadcast({ type: 'RAFFLE_CREATED', data: raffle });
       res.status(201).json(raffle);
     } catch (error) {
@@ -446,6 +522,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const ticketData = insertTicketSchema.parse(req.body);
       const ticket = await storage.createTicket({ ...ticketData, userId: req.user.id });
+      
+      // Update raffle stats in Redis
+      const raffleKey = `duxxan:raffle:${ticket.raffleId}:live_stats`;
+      try {
+        const currentTickets = await redis.hget(raffleKey, 'totalTickets');
+        const newTotal = (parseInt(currentTickets || '0') + ticket.quantity).toString();
+        await redis.hset(raffleKey, 'totalTickets', newTotal);
+        await redis.hset(raffleKey, 'lastTicketPurchase', new Date().toISOString());
+        
+        console.log(`Raffle ${ticket.raffleId} tickets updated in Redis: ${newTotal}`);
+      } catch (redisError) {
+        console.warn('Redis ticket update failed:', redisError);
+      }
+      
+      // Log ticket purchase in Firebase
+      try {
+        await firebase.saveRaffleEvent(ticket.raffleId, 'ticket_purchased', {
+          userId: req.user.id,
+          quantity: ticket.quantity,
+          totalPrice: ticket.totalPrice,
+          purchaseTime: new Date().toISOString()
+        });
+      } catch (firebaseError) {
+        console.warn('Firebase ticket logging failed:', firebaseError);
+      }
       
       broadcast({ type: 'TICKET_PURCHASED', data: { raffleId: ticket.raffleId, quantity: ticket.quantity } });
       res.status(201).json(ticket);

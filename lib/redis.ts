@@ -25,7 +25,7 @@ class RedisService {
         connectTimeout: 10000,
         commandTimeout: 5000,
         retryDelayOnFailover: 100,
-        enableOfflineQueue: false,
+        enableOfflineQueue: true,
         family: 4,
         reconnectOnError: (err: Error) => {
           const targetError = 'READONLY';
