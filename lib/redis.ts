@@ -6,28 +6,30 @@ class RedisService {
   private publisher: Redis;
 
   constructor() {
-    // First try external Redis URL, then localhost
-    let config: any;
+    // Use the provided Redis URL directly
+    const redisUrl = process.env.REDIS_URL;
     
-    if (process.env.REDIS_URL && process.env.REDIS_URL !== 'redis://213.14.187.63:6379') {
-      // Use working Redis URL if provided
-      config = process.env.REDIS_URL;
-    } else {
-      // Use localhost Redis
-      config = {
-        host: 'localhost',
-        port: 6379,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 2,
+    if (redisUrl) {
+      console.log(`Redis bağlanıyor: ${redisUrl}`);
+      this.client = new Redis(redisUrl, {
+        maxRetriesPerRequest: 3,
         lazyConnect: true,
-        connectTimeout: 5000,
-        enableOfflineQueue: false,
-      };
+        connectTimeout: 10000,
+        commandTimeout: 5000,
+      });
+      this.subscriber = new Redis(redisUrl, {
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        connectTimeout: 10000,
+      });
+      this.publisher = new Redis(redisUrl, {
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        connectTimeout: 10000,
+      });
+    } else {
+      throw new Error('REDIS_URL environment variable is required');
     }
-
-    this.client = new Redis(config);
-    this.subscriber = new Redis(config);
-    this.publisher = new Redis(config);
 
     this.setupEventHandlers();
   }
