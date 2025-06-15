@@ -870,5 +870,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Integrate controller-based routes with proper middleware
+  app.use('/api', 
+    globalRateLimit,
+    securityMiddleware,
+    sanitizationMiddleware,
+    controllerRoutes
+  );
+
   return httpServer;
 }
