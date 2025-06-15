@@ -148,7 +148,7 @@ export default function Donations() {
   ];
 
   // Filter and sort donations
-  const filteredDonations = donations
+  const filteredDonations = (Array.isArray(donations) ? donations : [])
     .filter((donation: any) => {
       const matchesSearch = donation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            donation.description.toLowerCase().includes(searchTerm.toLowerCase());

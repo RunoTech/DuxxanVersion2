@@ -9,17 +9,20 @@ export class UserController extends BaseController {
 
   // Get current user profile
   getCurrentUser = this.asyncHandler(async (req: Request, res: Response) => {
-    const user = (req as any).user;
+    // Check for wallet address in headers or session
+    const walletAddress = req.headers['x-wallet-address'] as string || 
+                         (req as any).session?.walletAddress;
+    
+    if (!walletAddress) {
+      return this.sendError(res, 'No authenticated user found', 404);
+    }
+
+    const user = await this.userService.getUserByWallet(walletAddress);
     if (!user) {
       return this.sendError(res, 'User not found', 404);
     }
 
-    const userProfile = await this.userService.getUserProfile(user.id);
-    if (!userProfile) {
-      return this.sendError(res, 'User profile not found', 404);
-    }
-
-    this.sendSuccess(res, userProfile, 'User profile retrieved successfully');
+    this.sendSuccess(res, user, 'User profile retrieved successfully');
   });
 
   // Get user by ID

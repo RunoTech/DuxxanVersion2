@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { BaseController } from './BaseController';
 import { RaffleService } from '../services/RaffleService';
+import { UserService } from '../services/UserService';
 import { insertRaffleSchema, insertTicketSchema } from '@shared/schema';
 import { z } from 'zod';
 
@@ -41,11 +42,23 @@ export class RaffleController extends BaseController {
 
   // Create new raffle
   createRaffle = [
-    this.requireAuth(),
-    this.requireWallet(),
     this.validateBody(insertRaffleSchema),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = req.user;
+      // Check for wallet address in headers
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
+
+      // Get user by wallet address
+      const userService = new (await import('../services/UserService')).UserService();
+      const user = await userService.getUserByWallet(walletAddress);
+      
+      if (!user) {
+        return this.sendError(res, 'User not found', 404);
+      }
+
       const raffleData = { ...req.body, creatorId: user.id };
 
       try {
