@@ -153,11 +153,11 @@ export default function DonationDetail() {
                     Bağış İlerleme Analizi
                   </CardTitle>
                   <div className="flex gap-2">
-                    <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success">
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-duxxan-success/20 dark:text-duxxan-success">
                       Aktif
                     </Badge>
-                    <Badge variant="outline" className="border-duxxan-success text-duxxan-success">
-                      7g: +{donation.currentAmount} USDT
+                    <Badge variant="outline" className="border-yellow-400 text-yellow-600 dark:border-duxxan-success dark:text-duxxan-success">
+                      7g: +{(donation as any)?.currentAmount} USDT
                     </Badge>
                   </div>
                 </div>
@@ -358,15 +358,15 @@ export default function DonationDetail() {
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-duxxan-text mb-2">Güvenlik & Şeffaflık</h4>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
                         <Shield className="w-4 h-4" />
                         Blockchain Destekli
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
                         <Shield className="w-4 h-4" />
                         Şeffaf Harcama
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
                         <Shield className="w-4 h-4" />
                         Doğrudan Transfer
                       </div>
