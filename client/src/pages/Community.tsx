@@ -747,8 +747,7 @@ export default function Community() {
                   </Form>
                 </DialogContent>
               </Dialog>
-              ) : null
-              }
+              ) : null}
             </div>
 
             {rafflesLoading ? (
