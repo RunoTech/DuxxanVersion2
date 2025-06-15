@@ -230,9 +230,9 @@ class SecurityMonitor {
     violations: string[];
   }>();
 
-  private readonly MAX_REQUESTS_PER_SECOND = 100; // Much higher for development
-  private readonly BLOCK_DURATION = 2 * 60 * 1000; // 2 minutes for development
-  private readonly VIOLATION_THRESHOLD = 20; // Very tolerant for development
+  private readonly MAX_REQUESTS_PER_SECOND = 1000; // Disabled for development
+  private readonly BLOCK_DURATION = 10 * 1000; // 10 seconds for development
+  private readonly VIOLATION_THRESHOLD = 50; // Very tolerant for development
 
   trackRequest(ip: string, userAgent: string = 'unknown'): boolean {
     const now = Date.now();

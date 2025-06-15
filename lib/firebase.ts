@@ -26,10 +26,11 @@ class FirebaseService {
         // Remove quotes if present
         privateKey = privateKey.replace(/^["']|["']$/g, '');
         
-        // Ensure proper line breaks
-        if (!privateKey.includes('\n')) {
-          privateKey = privateKey.replace(/\\n/g, '\n');
-        }
+        // Always convert escaped newlines to actual newlines
+        privateKey = privateKey.replace(/\\n/g, '\n');
+        
+        // Clean up whitespace and normalize line endings
+        privateKey = privateKey.trim();
         
         // Ensure proper PEM format
         if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
