@@ -682,5 +682,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test Firebase endpoint
+  app.get('/api/test-firebase', async (req, res) => {
+    try {
+      const { testFirebaseManually } = await import('./firebase-manual-test');
+      const result = await testFirebaseManually();
+      res.json({ success: true, result });
+    } catch (error: any) {
+      console.error('Firebase test error:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   return httpServer;
 }
