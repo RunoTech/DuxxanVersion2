@@ -53,9 +53,14 @@ export function BlurOverlay() {
           </Button>
           
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 text-center mb-2">
               Güvenli BSC (Binance Smart Chain) ağı kullanılacaktır
             </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 mt-3">
+              <p className="text-xs text-blue-700 dark:text-blue-300 text-center">
+                ⚠️ Eğer bağlantı sorunu yaşıyorsanız, bu sayfayı yeni bir sekmede açmayı deneyin
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -86,6 +86,9 @@ export function useWallet() {
       } else if (error.code === -32002) {
         errorTitle = 'Bekleyen İstek';
         errorDescription = 'Cüzdan uygulamanızı kontrol edin ve bekleyen isteği onaylayın';
+      } else if (error.message?.includes('iframe') || error.message?.includes('frames-disallowed')) {
+        errorTitle = 'Güvenlik Kısıtlaması';
+        errorDescription = 'Bu sayfayı doğrudan tarayıcınızda açmanız gerekiyor. Lütfen yeni sekmede deneyin.';
       } else if (error.message?.includes('not found') || error.message?.includes('not installed')) {
         errorTitle = 'Cüzdan Bulunamadı';
         errorDescription = 'Lütfen MetaMask veya Trust Wallet uygulamasını yükleyin';
@@ -95,6 +98,9 @@ export function useWallet() {
       } else if (error.message?.includes('User rejected')) {
         errorTitle = 'İstek Reddedildi';
         errorDescription = 'Cüzdan bağlantı isteğini onaylamanız gerekiyor';
+      } else if (error.message?.includes('dapp')) {
+        errorTitle = 'DApp Hatası';
+        errorDescription = 'Sayfayı yeniden yükleyin ve tekrar deneyin';
       }
       
       toast({

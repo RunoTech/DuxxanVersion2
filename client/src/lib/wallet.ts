@@ -66,6 +66,15 @@ export class WalletManager {
 
   private getMetaMaskProvider() {
     if (typeof window !== 'undefined' && window.ethereum) {
+      // Check if we're in a restricted frame context
+      try {
+        if (window.top !== window.self) {
+          console.warn('Wallet connection may be restricted in iframe context');
+        }
+      } catch (e) {
+        console.warn('Frame access restricted, wallet connection may fail');
+      }
+
       if (window.ethereum.isMetaMask) {
         return window.ethereum;
       }
@@ -136,6 +145,19 @@ export class WalletManager {
 
   async connectMetaMask(): Promise<WalletConnection> {
     console.log('Attempting metamask wallet connection...');
+    
+    // Check for frame restrictions first
+    try {
+      if (window.top !== window.self) {
+        throw new Error('Wallet connections are not allowed in iframe context. Please open this page directly in your browser.');
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes('iframe')) {
+        throw e;
+      }
+      // Frame access check failed, might be in restricted context
+      console.warn('Frame context check failed, proceeding with caution');
+    }
     
     const ethereum = this.getMetaMaskProvider();
     if (!ethereum) {
@@ -209,6 +231,19 @@ export class WalletManager {
 
   async connectTrustWallet(): Promise<WalletConnection> {
     console.log('Attempting trustwallet wallet connection...');
+    
+    // Check for frame restrictions first
+    try {
+      if (window.top !== window.self) {
+        throw new Error('Wallet connections are not allowed in iframe context. Please open this page directly in your browser.');
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes('iframe')) {
+        throw e;
+      }
+      // Frame access check failed, might be in restricted context
+      console.warn('Frame context check failed, proceeding with caution');
+    }
     
     const ethereum = this.getTrustWalletProvider() || this.getMetaMaskProvider();
     if (!ethereum) {
