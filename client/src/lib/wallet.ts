@@ -29,27 +29,18 @@ export class WalletManager {
   }
 
   async connectWallet(walletType?: 'metamask' | 'trustwallet'): Promise<WalletConnection> {
-    let ethereum;
-    
-    // Check what's available first
-    const available = this.checkAvailableWallets();
-    
-    if (!available.hasEthereum) {
+    if (!window.ethereum) {
       throw new Error('Hiçbir cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
     }
 
-    if (walletType === 'trustwallet') {
-      // For Trust Wallet, try detection first, then fallback to ethereum provider
-      ethereum = this.getTrustWalletProvider() || window.ethereum;
-      console.log(`Trust Wallet connection attempt using ${this.getTrustWalletProvider() ? 'detected' : 'fallback'} provider`);
-    } else if (walletType === 'metamask') {
-      ethereum = this.getMetaMaskProvider();
-      if (!ethereum) {
-        throw new Error('MetaMask bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
-      }
-    } else {
-      // Default behavior - use any available provider
-      ethereum = window.ethereum;
+    // Always use window.ethereum and let the user's wallet respond
+    const ethereum = window.ethereum;
+    console.log(`Attempting ${walletType || 'default'} wallet connection...`);
+    
+    // If user selected Trust Wallet but only MetaMask is detected, 
+    // the user may have Trust Wallet installed but not properly detected
+    if (walletType === 'trustwallet' && ethereum.isMetaMask) {
+      console.log('Trust Wallet selected but MetaMask detected. Proceeding with connection attempt...');
     }
 
     try {
