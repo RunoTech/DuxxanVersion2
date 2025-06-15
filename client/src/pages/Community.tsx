@@ -603,14 +603,14 @@ export default function Community() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage src={channel.avatar} alt={channel.creator} />
+                        <AvatarImage src={channel.avatar} alt={channel.creator || 'Creator'} />
                         <AvatarFallback className="bg-yellow-500 text-white">
-                          {channel.creator.slice(0, 2).toUpperCase()}
+                          {(channel.creator || 'User').slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <CardTitle className="text-gray-900 dark:text-white text-lg">{channel.name}</CardTitle>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">{channel.creator}</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{channel.creator || 'Anonymous'}</p>
                       </div>
                     </div>
                     <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
@@ -626,19 +626,19 @@ export default function Community() {
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="text-center">
                       <div className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">
-                        {channel.subscribers.toLocaleString()}
+                        {(channel.subscriberCount || 0).toLocaleString()}
                       </div>
                       <div className="text-gray-500 dark:text-gray-400 text-xs">Abone</div>
                     </div>
                     <div className="text-center">
                       <div className="text-green-600 font-bold text-lg">
-                        {channel.upcomingRaffles}
+                        {channel.upcomingRaffles || 0}
                       </div>
                       <div className="text-gray-500 text-xs">Gelecek</div>
                     </div>
                     <div className="text-center">
                       <div className="text-orange-600 font-bold text-lg">
-                        ${channel.totalPrizes}
+                        ${channel.totalPrizes || 0}
                       </div>
                       <div className="text-gray-500 text-xs">Ödül</div>
                     </div>
@@ -725,7 +725,7 @@ export default function Community() {
                     <div className="flex items-center space-x-2">
                       <Eye className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <span className="text-gray-600 dark:text-gray-400 text-sm">
-                        {raffle.interestedCount.toLocaleString()} ilgileniyor
+                        {(raffle.interestedCount || 0).toLocaleString()} ilgileniyor
                       </span>
                     </div>
                   </div>

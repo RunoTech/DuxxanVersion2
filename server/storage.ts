@@ -636,7 +636,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getChannels(): Promise<Channel[]> {
-    return await db.select().from(channels).where(eq(channels.isActive, true));
+    return await db.select({
+      id: channels.id,
+      name: channels.name,
+      description: channels.description,
+      category: channels.category,
+      creatorId: channels.creatorId,
+      subscriberCount: channels.subscriberCount,
+      isActive: channels.isActive,
+      createdAt: channels.createdAt,
+      creator: users.username
+    }).from(channels)
+    .leftJoin(users, eq(channels.creatorId, users.id))
+    .where(eq(channels.isActive, true));
   }
 
   async getChannelById(id: number): Promise<Channel | undefined> {
