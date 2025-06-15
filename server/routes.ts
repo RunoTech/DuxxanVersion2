@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { redis } from '../lib/redis';
 import { firebase } from '../lib/firebase';
+import communityRoutes from './routes/community';
 import {
   globalRateLimit,
   strictRateLimit,

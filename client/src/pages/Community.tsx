@@ -754,10 +754,18 @@ export default function Community() {
           </div>
         )}
 
-        {/* Empty states and No results */}
-        {activeTab === 'channels' && filteredChannels.length === 0 && (
+        {/* Loading states */}
+        {(channelsLoading || rafflesLoading) && (
           <div className="text-center py-12">
-            {mockChannels.length === 0 ? (
+            <div className="animate-spin w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-gray-600 dark:text-gray-400">Veriler yükleniyor...</p>
+          </div>
+        )}
+
+        {/* Empty states and No results */}
+        {!channelsLoading && activeTab === 'channels' && filteredChannels.length === 0 && (
+          <div className="text-center py-12">
+            {channels.length === 0 ? (
               <>
                 <Users className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">Henüz kanal yok</h3>
@@ -792,9 +800,9 @@ export default function Community() {
           </div>
         )}
 
-        {activeTab === 'upcoming' && filteredUpcomingRaffles.length === 0 && (
+        {!rafflesLoading && activeTab === 'upcoming' && filteredUpcomingRaffles.length === 0 && (
           <div className="text-center py-12">
-            {mockUpcomingRaffles.length === 0 ? (
+            {upcomingRaffles.length === 0 ? (
               <>
                 <Calendar className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">Gelecek çekiliş yok</h3>
