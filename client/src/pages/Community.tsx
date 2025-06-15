@@ -627,7 +627,7 @@ export default function Community() {
               {isConnected && address && channels.some((channel: any) => 
                 channel.creatorWalletAddress && 
                 address.toLowerCase() === channel.creatorWalletAddress.toLowerCase()
-              ) && (
+              ) ? (
                 <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
                   <DialogTrigger asChild>
                     <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
@@ -747,7 +747,8 @@ export default function Community() {
                   </Form>
                 </DialogContent>
               </Dialog>
-              )}
+              ) : null
+              }
             </div>
 
             {rafflesLoading ? (
