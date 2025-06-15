@@ -16,6 +16,7 @@ import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
 import ProfileNew from "@/pages/ProfileNew";
 import Community from "@/pages/Community";
+import CommunityDetail from "@/pages/CommunityDetail";
 import Raffles from "@/pages/Raffles";
 import RaffleDetail from "@/pages/RaffleDetail";
 import Donations from "@/pages/Donations";
@@ -69,6 +70,7 @@ function Router() {
         <Route path="/profile" component={Profile} />
         <Route path="/profile-new" component={ProfileNew} />
         <Route path="/community" component={Community} />
+        <Route path="/community/:id" component={CommunityDetail} />
         <Route path="/raffles" component={Raffles} />
         <Route path="/raffles/:id" component={RaffleDetail} />
         <Route path="/donations" component={Donations} />

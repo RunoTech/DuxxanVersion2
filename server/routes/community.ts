@@ -56,6 +56,84 @@ router.post('/channels', [
   }
 });
 
+// Get individual channel details
+router.get('/channels/:id', [
+  param('id').isInt().withMessage('Geçersiz kanal ID'),
+  validationMiddleware
+], async (req, res) => {
+  try {
+    const channelId = parseInt(req.params.id);
+    
+    const channel = await storage.getChannelById(channelId);
+    
+    if (!channel) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kanal bulunamadı'
+      });
+    }
+
+    // Get creator information
+    let creator = null;
+    if (channel.creatorId) {
+      creator = await storage.getUser(channel.creatorId);
+    }
+
+    // Get subscriber count
+    const subscriberCount = await storage.getChannelSubscriptionCount(channelId);
+
+    // Get upcoming raffles for this channel
+    const upcomingRaffles = await storage.getUpcomingRafflesByChannel(channelId);
+    const totalPrizes = upcomingRaffles.reduce((sum, raffle) => {
+      return sum + parseFloat(raffle.prizeValue || '0');
+    }, 0);
+
+    const channelWithDetails = {
+      ...channel,
+      creator: creator?.username || 'Anonymous',
+      subscriberCount,
+      totalPrizes,
+      upcomingRaffles: upcomingRaffles.length
+    };
+
+    res.json({
+      success: true,
+      data: channelWithDetails
+    });
+  } catch (error: any) {
+    console.error('Error fetching channel details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Kanal detayları alınırken hata oluştu',
+      error: error.message
+    });
+  }
+});
+
+// Get raffles for a specific channel
+router.get('/channels/:id/raffles', [
+  param('id').isInt().withMessage('Geçersiz kanal ID'),
+  validationMiddleware
+], async (req, res) => {
+  try {
+    const channelId = parseInt(req.params.id);
+    
+    const raffles = await storage.getUpcomingRafflesByChannel(channelId);
+
+    res.json({
+      success: true,
+      data: raffles
+    });
+  } catch (error: any) {
+    console.error('Error fetching channel raffles:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Kanal çekilişleri alınırken hata oluştu',
+      error: error.message
+    });
+  }
+});
+
 // Subscribe to a channel
 router.post('/channels/:id/subscribe', [
   param('id').isInt().withMessage('Geçersiz kanal ID'),
