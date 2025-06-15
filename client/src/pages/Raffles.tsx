@@ -34,7 +34,7 @@ export default function Raffles() {
   });
 
   // Filter and sort raffles
-  const filteredRaffles = raffles
+  const filteredRaffles = (Array.isArray(raffles) ? raffles : [])
     .filter((raffle: any) => {
       const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -83,11 +83,13 @@ export default function Raffles() {
 
   const getActiveRafflesCount = () => {
     const now = new Date();
-    return raffles.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
+    const rafflesArray = Array.isArray(raffles) ? raffles : [];
+    return rafflesArray.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
   };
 
   const getTotalPrizePool = () => {
-    return raffles
+    const rafflesArray = Array.isArray(raffles) ? raffles : [];
+    return rafflesArray
       .filter((raffle: any) => raffle.isActive)
       .reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0);
   };
@@ -133,7 +135,7 @@ export default function Raffles() {
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6 text-center">
               <div className="text-2xl font-bold text-orange-500 mb-2">
-                {raffles.length}
+                {Array.isArray(raffles) ? raffles.length : 0}
               </div>
               <div className="text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
             </CardContent>
@@ -168,7 +170,7 @@ export default function Raffles() {
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                   <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                  {categories.map((category: any) => (
+                  {(Array.isArray(categories) ? categories : []).map((category: any) => (
                     <SelectItem key={category.id} value={category.id.toString()}>
                       {category.name}
                     </SelectItem>
@@ -225,7 +227,7 @@ export default function Raffles() {
         {/* Results Info */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-duxxan-text-secondary">
-            Showing {filteredRaffles.length} of {raffles.length} raffles
+            Showing {filteredRaffles.length} of {Array.isArray(raffles) ? raffles.length : 0} raffles
           </p>
           {searchTerm && (
             <p className="text-sm text-duxxan-text-secondary">
@@ -288,7 +290,7 @@ export default function Raffles() {
         )}
 
         {/* Load More Button (if needed for pagination) */}
-        {filteredRaffles.length > 0 && filteredRaffles.length < raffles.length && (
+        {filteredRaffles.length > 0 && filteredRaffles.length < (Array.isArray(raffles) ? raffles.length : 0) && (
           <div className="text-center mt-12">
             <Button variant="outline" className="duxxan-button-secondary">
               Load More Raffles
