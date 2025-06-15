@@ -28,22 +28,58 @@ export class WalletManager {
     return WalletManager.instance;
   }
 
+  // BSC Network Configuration
+  private BSC_NETWORK = {
+    chainId: '0x38', // 56 in hexadecimal
+    chainName: 'BNB Smart Chain',
+    rpcUrls: ['https://bsc-dataseed1.binance.org/'],
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18
+    },
+    blockExplorerUrls: ['https://bscscan.com/']
+  };
+
   async connectWallet(walletType?: 'metamask' | 'trustwallet'): Promise<WalletConnection> {
     if (!window.ethereum) {
-      throw new Error('Hiçbir cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
+      throw new Error('No wallet found. Please install MetaMask or Trust Wallet.');
     }
 
-    // Always use window.ethereum and let the user's wallet respond
     const ethereum = window.ethereum;
     console.log(`Attempting ${walletType || 'default'} wallet connection...`);
-    
-    // If user selected Trust Wallet but only MetaMask is detected, 
-    // the user may have Trust Wallet installed but not properly detected
-    if (walletType === 'trustwallet' && ethereum.isMetaMask) {
-      console.log('Trust Wallet selected but MetaMask detected. Proceeding with connection attempt...');
-    }
 
     try {
+      // Check current network first
+      let currentChainId;
+      try {
+        currentChainId = await ethereum.request({ method: 'eth_chainId' });
+      } catch (error) {
+        console.log('Could not get current chain ID, proceeding with connection...');
+      }
+
+      // If not on BSC, try to switch/add BSC network
+      if (currentChainId !== this.BSC_NETWORK.chainId) {
+        try {
+          // Try to switch to BSC first
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: this.BSC_NETWORK.chainId }]
+          });
+        } catch (switchError: any) {
+          // If network doesn't exist (4902), add it
+          if (switchError.code === 4902) {
+            await ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [this.BSC_NETWORK]
+            });
+          } else {
+            console.warn('Network switch failed:', switchError);
+            // Continue anyway - user might be on testnet or development
+          }
+        }
+      }
+
       // Request account access
       const accounts = await ethereum.request({
         method: 'eth_requestAccounts'
@@ -56,13 +92,10 @@ export class WalletManager {
       const provider = new BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
-      const network = await provider.getNetwork();
-
-      // Verify BSC network (Chain ID 56 for mainnet, 97 for testnet)
-      const chainId = Number(network.chainId);
-      if (chainId !== 56 && chainId !== 97) {
-        await this.switchToBSC(ethereum);
-      }
+      
+      // Get final network after potential switching
+      const finalChainId = await ethereum.request({ method: 'eth_chainId' });
+      const chainId = parseInt(finalChainId, 16);
 
       this.connection = {
         address,
