@@ -2,8 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { testFirebaseConnection } from "./firebase-test";
-import { debugFirebaseKey } from "./firebase-debug";
+import { testFirebaseConnection } from "./tests/firebase-test";
+import { debugFirebaseKey } from "./tests/firebase-debug";
 import { 
   corsOptions, 
   globalRateLimit, 
@@ -13,7 +13,7 @@ import {
   deviceFingerprintMiddleware,
   requestSizeLimit,
   patternDetection
-} from "./security";
+} from "./middleware/security";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection

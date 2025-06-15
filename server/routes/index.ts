@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
 import { RaffleController } from '../controllers/RaffleController';
+import { DonationController } from '../controllers/DonationController';
 
 // Initialize controllers
 const userController = new UserController();
 const raffleController = new RaffleController();
+const donationController = new DonationController();
 
 // Create router
 const router = Router();
@@ -31,5 +33,21 @@ router.get('/raffles/creator/:creatorId', raffleController.getRafflesByCreator);
 router.post('/tickets', raffleController.purchaseTickets);
 router.get('/tickets/my', raffleController.getUserTickets);
 router.get('/raffles/:id/tickets', raffleController.getRaffleTickets);
+
+// Donation routes
+router.get('/donations', donationController.getDonations);
+router.get('/donations/active', donationController.getActiveDonations);
+router.get('/donations/my', donationController.getMyDonations);
+router.get('/donations/:id', donationController.getDonationById);
+router.post('/donations', donationController.createDonation);
+router.put('/donations/:id', donationController.updateDonation);
+router.get('/donations/creator/:creatorId', donationController.getDonationsByCreator);
+router.get('/donations/org/:orgType', donationController.getDonationsByOrganizationType);
+router.get('/donations/stats', donationController.getDonationStats);
+
+// Donation contribution routes
+router.post('/donations/:id/contribute', donationController.makeDonationContribution);
+router.get('/donations/:id/contributions', donationController.getDonationContributions);
+router.post('/donations/:id/startup-fee', donationController.processStartupFeePayment);
 
 export default router;
