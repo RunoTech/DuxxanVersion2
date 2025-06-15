@@ -3,12 +3,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RaffleCard } from '@/components/RaffleCard';
 import { DonationCard } from '@/components/DonationCard';
+import { RaffleCardSkeleton } from '@/components/skeletons/RaffleCardSkeleton';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useEffect, useState } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line } from 'recharts';
 
 export default function Home() {

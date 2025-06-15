@@ -6,7 +6,7 @@ const configSchema = z.object({
   DATABASE_URL: z.string().url(),
   
   // JWT
-  JWT_SECRET: z.string().min(32),
+  JWT_SECRET: z.string().min(32).optional(),
   JWT_EXPIRES_IN: z.string().default('24h'),
   
   // Server

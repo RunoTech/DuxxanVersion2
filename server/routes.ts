@@ -18,15 +18,32 @@ import {
   patternDetection,
   getSecurityStatus
 } from "./security";
+import { requestTimingMiddleware, healthCheckHandler, metricsHandler } from "../lib/monitoring";
+import { 
+  createRaffleSchema, 
+  createDonationSchema, 
+  purchaseTicketSchema,
+  contributionSchema,
+  chatMessageSchema,
+  userRatingSchema,
+  createValidationMiddleware
+} from "../lib/validation/schemas";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
   // Demo route moved to index.ts to bypass all middleware
 
-  // Apply basic security headers only (DDoS protection temporarily reduced)
+  // Apply basic security headers and monitoring
   app.use(securityHeaders);
   app.use(requestSizeLimit);
+  app.use(requestTimingMiddleware);
+  
+  // Health and monitoring endpoints
+  app.get('/health', healthCheckHandler);
+  app.get('/metrics', metricsHandler);
+  app.get('/api/monitoring/status', getSecurityStatus);
+  
   // Temporarily disabled aggressive protection to allow normal app functionality
   // app.use(patternDetection);
 

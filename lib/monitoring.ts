@@ -185,7 +185,7 @@ export class ErrorTracker {
       message: error.message,
       stack: error.stack,
       url: req?.path || 'unknown',
-      userId: req?.user?.id?.toString(),
+      userId: (req as any)?.user?.id?.toString() || undefined,
       severity
     };
 
