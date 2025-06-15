@@ -6,17 +6,24 @@ class RedisService {
   private publisher: Redis;
 
   constructor() {
-    // Use local Redis for testing, with fallback to external when available
-    const config = {
-      host: 'localhost',
-      port: 6379,
-      retryDelayOnFailover: 100,
-      maxRetriesPerRequest: 1,
-      lazyConnect: true,
-      connectTimeout: 2000,
-      // Fallback gracefully when Redis unavailable
-      enableOfflineQueue: false,
-    };
+    // First try external Redis URL, then localhost
+    let config: any;
+    
+    if (process.env.REDIS_URL && process.env.REDIS_URL !== 'redis://213.14.187.63:6379') {
+      // Use working Redis URL if provided
+      config = process.env.REDIS_URL;
+    } else {
+      // Use localhost Redis
+      config = {
+        host: 'localhost',
+        port: 6379,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 2,
+        lazyConnect: true,
+        connectTimeout: 5000,
+        enableOfflineQueue: false,
+      };
+    }
 
     this.client = new Redis(config);
     this.subscriber = new Redis(config);
