@@ -27,7 +27,7 @@ type CreateRaffleForm = z.infer<typeof createRaffleSchema>;
 
 export default function CreateRaffle() {
   const [, navigate] = useLocation();
-  const { isConnected, user, getApiHeaders } = useWallet();
+  const { isConnected, address, user, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -117,10 +117,10 @@ export default function CreateRaffle() {
   });
 
   const onSubmit = async (data: CreateRaffleForm) => {
-    if (!isConnected || !user) {
+    if (!isConnected || !address) {
       toast({
-        title: 'Wallet Required',
-        description: 'Please connect your wallet to create a raffle',
+        title: 'Cüzdanınızı Bağlayın',
+        description: 'Çekiliş oluşturmak için cüzdanınızı bağlamanız gerekiyor',
         variant: 'destructive',
       });
       return;
@@ -220,7 +220,7 @@ export default function CreateRaffle() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                          {categories.map((category: any) => (
+                          {(Array.isArray(categories) ? categories : []).map((category: any) => (
                             <SelectItem 
                               key={category.id} 
                               value={category.id.toString()}
