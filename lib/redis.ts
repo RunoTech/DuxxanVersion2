@@ -6,31 +6,52 @@ class RedisService {
   private publisher: Redis;
 
   constructor() {
-    let config: any;
+    let redisUrl = process.env.REDIS_URL;
     
-    if (process.env.REDIS_URL) {
-      // Use Redis URL if provided
-      config = {
-        url: process.env.REDIS_URL,
+    if (redisUrl) {
+      console.log(`Connecting to Redis: ${redisUrl}`);
+      this.client = new Redis(redisUrl, {
         retryDelayOnFailover: 100,
         maxRetriesPerRequest: 3,
         lazyConnect: true,
-      };
+        connectTimeout: 10000,
+      });
+      this.subscriber = new Redis(redisUrl, {
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        connectTimeout: 10000,
+      });
+      this.publisher = new Redis(redisUrl, {
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        connectTimeout: 10000,
+      });
     } else {
-      // Fallback to individual environment variables
-      config = {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-        password: process.env.REDIS_PASSWORD,
+      // Fallback to localhost for development
+      this.client = new Redis({
+        host: 'localhost',
+        port: 6379,
         retryDelayOnFailover: 100,
         maxRetriesPerRequest: 3,
         lazyConnect: true,
-      };
+      });
+      this.subscriber = new Redis({
+        host: 'localhost',
+        port: 6379,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+      });
+      this.publisher = new Redis({
+        host: 'localhost',
+        port: 6379,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+      });
     }
-
-    this.client = new Redis(config);
-    this.subscriber = new Redis(config);
-    this.publisher = new Redis(config);
 
     this.setupEventHandlers();
   }
