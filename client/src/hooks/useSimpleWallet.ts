@@ -28,14 +28,14 @@ export function useSimpleWallet() {
   const connectMetaMask = async () => {
     setIsConnecting(true);
     try {
-      const connection = await walletManager.connectWallet();
+      const connection = await walletManager.connectMetaMask();
       toast({
-        title: "Cüzdan Bağlandı",
+        title: "MetaMask Bağlandı",
         description: `${connection.address.slice(0, 6)}...${connection.address.slice(-4)} adresine bağlandınız`,
       });
     } catch (error: any) {
       toast({
-        title: "Bağlantı Hatası",
+        title: "MetaMask Bağlantı Hatası",
         description: error.message,
         variant: "destructive",
       });
@@ -44,7 +44,24 @@ export function useSimpleWallet() {
     }
   };
 
-  const connectTrustWallet = connectMetaMask; // Same function for both
+  const connectTrustWallet = async () => {
+    setIsConnecting(true);
+    try {
+      const connection = await walletManager.connectTrustWallet();
+      toast({
+        title: "Trust Wallet Bağlandı",
+        description: `${connection.address.slice(0, 6)}...${connection.address.slice(-4)} adresine bağlandınız`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Trust Wallet Bağlantı Hatası",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
 
   const disconnect = async () => {
     await walletManager.disconnectWallet();

@@ -3,6 +3,7 @@ import { BrowserProvider, JsonRpcSigner } from 'ethers';
 declare global {
   interface Window {
     ethereum?: any;
+    trustWallet?: any;
   }
 }
 
@@ -27,14 +28,30 @@ export class WalletManager {
     return WalletManager.instance;
   }
 
-  async connectWallet(): Promise<WalletConnection> {
-    if (!window.ethereum) {
-      throw new Error('MetaMask veya Trust Wallet yüklü değil. Lütfen yükleyip tekrar deneyin.');
+  async connectWallet(walletType?: 'metamask' | 'trustwallet'): Promise<WalletConnection> {
+    let ethereum;
+    
+    if (walletType === 'trustwallet') {
+      ethereum = this.getTrustWalletProvider();
+      if (!ethereum) {
+        throw new Error('Trust Wallet yüklü değil. Lütfen Trust Wallet\'ı yükleyip tekrar deneyin.');
+      }
+    } else if (walletType === 'metamask') {
+      ethereum = this.getMetaMaskProvider();
+      if (!ethereum) {
+        throw new Error('MetaMask yüklü değil. Lütfen MetaMask\'ı yükleyip tekrar deneyin.');
+      }
+    } else {
+      // Default behavior - use any available provider
+      if (!window.ethereum) {
+        throw new Error('MetaMask veya Trust Wallet yüklü değil. Lütfen yükleyip tekrar deneyin.');
+      }
+      ethereum = window.ethereum;
     }
 
     try {
       // Request account access
-      const accounts = await window.ethereum.request({
+      const accounts = await ethereum.request({
         method: 'eth_requestAccounts'
       });
 
@@ -42,7 +59,7 @@ export class WalletManager {
         throw new Error('Cüzdan bağlantısı reddedildi');
       }
 
-      const provider = new BrowserProvider(window.ethereum);
+      const provider = new BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
       const network = await provider.getNetwork();
@@ -50,7 +67,7 @@ export class WalletManager {
       // Verify BSC network (Chain ID 56 for mainnet, 97 for testnet)
       const chainId = Number(network.chainId);
       if (chainId !== 56 && chainId !== 97) {
-        await this.switchToBSC();
+        await this.switchToBSC(ethereum);
       }
 
       this.connection = {
@@ -69,19 +86,54 @@ export class WalletManager {
     }
   }
 
-  async switchToBSC(): Promise<void> {
-    if (!window.ethereum) return;
+  private getMetaMaskProvider() {
+    if (window.ethereum) {
+      if (window.ethereum.isMetaMask) {
+        return window.ethereum;
+      }
+      // If multiple providers exist, try to find MetaMask
+      if (window.ethereum.providers) {
+        return window.ethereum.providers.find((provider: any) => provider.isMetaMask);
+      }
+    }
+    return null;
+  }
+
+  private getTrustWalletProvider() {
+    if (window.ethereum) {
+      if (window.ethereum.isTrust) {
+        return window.ethereum;
+      }
+      // If multiple providers exist, try to find Trust Wallet
+      if (window.ethereum.providers) {
+        return window.ethereum.providers.find((provider: any) => provider.isTrust);
+      }
+    }
+    return null;
+  }
+
+  async connectMetaMask(): Promise<WalletConnection> {
+    return this.connectWallet('metamask');
+  }
+
+  async connectTrustWallet(): Promise<WalletConnection> {
+    return this.connectWallet('trustwallet');
+  }
+
+  async switchToBSC(ethereum?: any): Promise<void> {
+    const provider = ethereum || window.ethereum;
+    if (!provider) return;
 
     try {
       // Try to switch to BSC mainnet
-      await window.ethereum.request({
+      await provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: '0x38' }], // BSC mainnet
       });
     } catch (switchError: any) {
       // If BSC is not added, add it
       if (switchError.code === 4902) {
-        await window.ethereum.request({
+        await provider.request({
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: '0x38',
