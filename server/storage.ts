@@ -11,6 +11,10 @@ import {
   follows,
   userDevices,
   userPhotos,
+  channels,
+  channelSubscriptions,
+  upcomingRaffles,
+  upcomingRaffleInterests,
   type User,
   type InsertUser,
   type UserDevice,
@@ -28,6 +32,14 @@ import {
   type UserRating,
   type InsertUserRating,
   type Category,
+  type Channel,
+  type InsertChannel,
+  type ChannelSubscription,
+  type InsertChannelSubscription,
+  type UpcomingRaffle,
+  type InsertUpcomingRaffle,
+  type UpcomingRaffleInterest,
+  type InsertUpcomingRaffleInterest,
   type Country,
   type ChatMessage,
 } from "@shared/schema";
@@ -615,6 +627,104 @@ export class DatabaseStorage implements IStorage {
         eq(userPhotos.id, photoId),
         eq(userPhotos.userId, userId)
       ));
+  }
+
+  // Community Channel Methods
+  async createChannel(channelData: InsertChannel & { creatorId: number }): Promise<Channel> {
+    const [channel] = await db.insert(channels).values(channelData).returning();
+    return channel;
+  }
+
+  async getChannels(): Promise<Channel[]> {
+    return await db.select().from(channels).where(eq(channels.isActive, true));
+  }
+
+  async getChannelById(id: number): Promise<Channel | undefined> {
+    const [channel] = await db.select().from(channels).where(eq(channels.id, id));
+    return channel;
+  }
+
+  async updateChannelSubscriberCount(channelId: number, count: number): Promise<void> {
+    await db.update(channels).set({ subscriberCount: count }).where(eq(channels.id, channelId));
+  }
+
+  // Channel Subscription Methods
+  async subscribeToChannel(userId: number, channelId: number): Promise<ChannelSubscription> {
+    const [subscription] = await db.insert(channelSubscriptions).values({ userId, channelId }).returning();
+    
+    // Update subscriber count
+    const subscriberCount = await db.select({ count: sql`count(*)` }).from(channelSubscriptions).where(eq(channelSubscriptions.channelId, channelId));
+    await this.updateChannelSubscriberCount(channelId, Number(subscriberCount[0].count));
+    
+    return subscription;
+  }
+
+  async unsubscribeFromChannel(userId: number, channelId: number): Promise<void> {
+    await db.delete(channelSubscriptions).where(
+      and(eq(channelSubscriptions.userId, userId), eq(channelSubscriptions.channelId, channelId))
+    );
+    
+    // Update subscriber count
+    const subscriberCount = await db.select({ count: sql`count(*)` }).from(channelSubscriptions).where(eq(channelSubscriptions.channelId, channelId));
+    await this.updateChannelSubscriberCount(channelId, Number(subscriberCount[0].count));
+  }
+
+  async getUserChannelSubscriptions(userId: number): Promise<ChannelSubscription[]> {
+    return await db.select().from(channelSubscriptions).where(eq(channelSubscriptions.userId, userId));
+  }
+
+  async isUserSubscribedToChannel(userId: number, channelId: number): Promise<boolean> {
+    const [subscription] = await db.select().from(channelSubscriptions).where(
+      and(eq(channelSubscriptions.userId, userId), eq(channelSubscriptions.channelId, channelId))
+    );
+    return !!subscription;
+  }
+
+  // Upcoming Raffle Methods
+  async createUpcomingRaffle(raffleData: InsertUpcomingRaffle & { creatorId: number }): Promise<UpcomingRaffle> {
+    const [raffle] = await db.insert(upcomingRaffles).values(raffleData).returning();
+    return raffle;
+  }
+
+  async getUpcomingRaffles(): Promise<UpcomingRaffle[]> {
+    return await db.select().from(upcomingRaffles).where(eq(upcomingRaffles.isActive, true));
+  }
+
+  async getUpcomingRaffleById(id: number): Promise<UpcomingRaffle | undefined> {
+    const [raffle] = await db.select().from(upcomingRaffles).where(eq(upcomingRaffles.id, id));
+    return raffle;
+  }
+
+  async updateUpcomingRaffleInterestCount(raffleId: number, count: number): Promise<void> {
+    await db.update(upcomingRaffles).set({ interestedCount: count }).where(eq(upcomingRaffles.id, raffleId));
+  }
+
+  // Upcoming Raffle Interest Methods
+  async addUpcomingRaffleInterest(userId: number, upcomingRaffleId: number): Promise<UpcomingRaffleInterest> {
+    const [interest] = await db.insert(upcomingRaffleInterests).values({ userId, upcomingRaffleId }).returning();
+    
+    // Update interest count
+    const interestCount = await db.select({ count: sql`count(*)` }).from(upcomingRaffleInterests).where(eq(upcomingRaffleInterests.upcomingRaffleId, upcomingRaffleId));
+    await this.updateUpcomingRaffleInterestCount(upcomingRaffleId, Number(interestCount[0].count));
+    
+    return interest;
+  }
+
+  async removeUpcomingRaffleInterest(userId: number, upcomingRaffleId: number): Promise<void> {
+    await db.delete(upcomingRaffleInterests).where(
+      and(eq(upcomingRaffleInterests.userId, userId), eq(upcomingRaffleInterests.upcomingRaffleId, upcomingRaffleId))
+    );
+    
+    // Update interest count
+    const interestCount = await db.select({ count: sql`count(*)` }).from(upcomingRaffleInterests).where(eq(upcomingRaffleInterests.upcomingRaffleId, upcomingRaffleId));
+    await this.updateUpcomingRaffleInterestCount(upcomingRaffleId, Number(interestCount[0].count));
+  }
+
+  async isUserInterestedInUpcomingRaffle(userId: number, upcomingRaffleId: number): Promise<boolean> {
+    const [interest] = await db.select().from(upcomingRaffleInterests).where(
+      and(eq(upcomingRaffleInterests.userId, userId), eq(upcomingRaffleInterests.upcomingRaffleId, upcomingRaffleId))
+    );
+    return !!interest;
   }
 }
 
