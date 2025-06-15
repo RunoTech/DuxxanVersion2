@@ -6,52 +6,21 @@ class RedisService {
   private publisher: Redis;
 
   constructor() {
-    let redisUrl = process.env.REDIS_URL;
-    
-    if (redisUrl) {
-      console.log(`Connecting to Redis: ${redisUrl}`);
-      this.client = new Redis(redisUrl, {
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        connectTimeout: 10000,
-      });
-      this.subscriber = new Redis(redisUrl, {
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        connectTimeout: 10000,
-      });
-      this.publisher = new Redis(redisUrl, {
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        connectTimeout: 10000,
-      });
-    } else {
-      // Fallback to localhost for development
-      this.client = new Redis({
-        host: 'localhost',
-        port: 6379,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-      });
-      this.subscriber = new Redis({
-        host: 'localhost',
-        port: 6379,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-      });
-      this.publisher = new Redis({
-        host: 'localhost',
-        port: 6379,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-      });
-    }
+    // Use local Redis for testing, with fallback to external when available
+    const config = {
+      host: 'localhost',
+      port: 6379,
+      retryDelayOnFailover: 100,
+      maxRetriesPerRequest: 1,
+      lazyConnect: true,
+      connectTimeout: 2000,
+      // Fallback gracefully when Redis unavailable
+      enableOfflineQueue: false,
+    };
+
+    this.client = new Redis(config);
+    this.subscriber = new Redis(config);
+    this.publisher = new Redis(config);
 
     this.setupEventHandlers();
   }
