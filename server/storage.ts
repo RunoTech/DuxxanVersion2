@@ -640,14 +640,20 @@ export class DatabaseStorage implements IStorage {
       id: channels.id,
       name: channels.name,
       description: channels.description,
-      category: channels.category,
+      categoryId: channels.categoryId,
       creatorId: channels.creatorId,
       subscriberCount: channels.subscriberCount,
       isActive: channels.isActive,
       createdAt: channels.createdAt,
-      creator: users.username
+      isDemo: channels.isDemo,
+      demoContent: channels.demoContent,
+      totalPrizeAmount: channels.totalPrizeAmount,
+      activeRaffleCount: channels.activeRaffleCount,
+      creator: users.username,
+      categoryName: categories.name
     }).from(channels)
     .leftJoin(users, eq(channels.creatorId, users.id))
+    .leftJoin(categories, eq(channels.categoryId, categories.id))
     .where(eq(channels.isActive, true));
   }
 
