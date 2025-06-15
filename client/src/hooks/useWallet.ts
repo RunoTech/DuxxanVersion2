@@ -75,9 +75,31 @@ export function useWallet() {
       return newConnection;
     } catch (error: any) {
       console.error('Wallet connection failed:', error);
+      
+      // Provide Turkish error messages based on error type
+      let errorTitle = 'Bağlantı Başarısız';
+      let errorDescription = 'Cüzdan bağlantısı başarısız oldu';
+      
+      if (error.code === 4001) {
+        errorTitle = 'Bağlantı Reddedildi';
+        errorDescription = 'Cüzdan bağlantı isteğini onaylamanız gerekiyor';
+      } else if (error.code === -32002) {
+        errorTitle = 'Bekleyen İstek';
+        errorDescription = 'Cüzdan uygulamanızı kontrol edin ve bekleyen isteği onaylayın';
+      } else if (error.message?.includes('not found') || error.message?.includes('not installed')) {
+        errorTitle = 'Cüzdan Bulunamadı';
+        errorDescription = 'Lütfen MetaMask veya Trust Wallet uygulamasını yükleyin';
+      } else if (error.message?.includes('timeout')) {
+        errorTitle = 'Zaman Aşımı';
+        errorDescription = 'Bağlantı zaman aşımına uğradı, tekrar deneyin';
+      } else if (error.message?.includes('User rejected')) {
+        errorTitle = 'İstek Reddedildi';
+        errorDescription = 'Cüzdan bağlantı isteğini onaylamanız gerekiyor';
+      }
+      
       toast({
-        title: 'Connection Failed',
-        description: error.message || 'Failed to connect wallet',
+        title: errorTitle,
+        description: errorDescription,
         variant: 'destructive',
       });
       throw error;

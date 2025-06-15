@@ -24,17 +24,13 @@ export class RaffleService extends BaseService {
 
   async getActiveRaffles(): Promise<any[]> {
     try {
-      const cached = await redis.get('raffles:active');
-      if (cached) return cached;
-      
+      // Skip Redis for now and get directly from database
       const raffles = await storage.getActiveRaffles();
-      
-      // Cache for 2 minutes since these change frequently
-      await redis.set('raffles:active', raffles, 120);
-      
-      return raffles;
+      return raffles || [];
     } catch (error) {
-      return this.handleError(error, 'Failed to get active raffles');
+      console.error('Error getting active raffles:', error);
+      // Return empty array instead of throwing error
+      return [];
     }
   }
 

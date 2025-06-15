@@ -10,17 +10,21 @@ export function BlurOverlay() {
 
   const handleMetaMaskConnect = async () => {
     try {
+      console.log('Starting MetaMask connection...');
       await connectWallet('metamask');
-    } catch (error) {
+    } catch (error: any) {
       console.error('MetaMask connection failed:', error);
+      // Error handling is done in useWallet hook
     }
   };
 
   const handleTrustWalletConnect = async () => {
     try {
+      console.log('Starting Trust Wallet connection...');
       await connectWallet('trustwallet');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Trust Wallet connection failed:', error);
+      // Error handling is done in useWallet hook
     }
   };
 
@@ -35,18 +39,24 @@ export function BlurOverlay() {
           <Button
             onClick={handleMetaMaskConnect}
             disabled={isConnecting}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+            className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white w-full font-semibold shadow-lg transition-all duration-200"
           >
-            {isConnecting ? 'Bağlanıyor...' : 'MetaMask Bağla'}
+            {isConnecting ? '🔄 Bağlanıyor...' : '🦊 MetaMask ile Bağlan'}
           </Button>
           <Button
             onClick={handleTrustWalletConnect}
             disabled={isConnecting}
             variant="outline"
-            className="w-full bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 border-blue-600 font-semibold shadow-lg transition-all duration-200"
           >
-            {isConnecting ? 'Bağlanıyor...' : 'Trust Wallet Bağla'}
+            {isConnecting ? '🔄 Bağlanıyor...' : '🛡️ Trust Wallet ile Bağlan'}
           </Button>
+          
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+            <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+              Güvenli BSC (Binance Smart Chain) ağı kullanılacaktır
+            </p>
+          </div>
         </div>
       </div>
     </div>

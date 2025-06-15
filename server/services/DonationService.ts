@@ -24,17 +24,13 @@ export class DonationService extends BaseService {
 
   async getActiveDonations(): Promise<any[]> {
     try {
-      const cached = await redis.get('donations:active');
-      if (cached) return cached;
-      
+      // Skip Redis for now and get directly from database
       const donations = await storage.getActiveDonations();
-      
-      // Cache for 2 minutes
-      await redis.set('donations:active', donations, 120);
-      
-      return donations;
+      return donations || [];
     } catch (error) {
-      return this.handleError(error, 'Failed to get active donations');
+      console.error('Error getting active donations:', error);
+      // Return empty array instead of throwing error
+      return [];
     }
   }
 
