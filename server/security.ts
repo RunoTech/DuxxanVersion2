@@ -1,7 +1,149 @@
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import helmet from 'helmet';
+import cors from 'cors';
+import crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
+import DOMPurify from 'isomorphic-dompurify';
+import { body, validationResult } from 'express-validator';
+
+// CORS Configuration
+export const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (like mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5000',
+      'https://duxxan.replit.app',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
+    
+    // For development, allow localhost with any port
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+    
+    // Allow Replit domain variations
+    if (origin.includes('.replit.') || origin.includes('replit.dev')) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(null, false); // Don't throw error, just deny
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'X-CSRF-Token',
+    'X-Device-ID'
+  ]
+};
+
+// CSRF Protection
+class CSRFProtection {
+  private tokens = new Map<string, { token: string; expires: number }>();
+  private readonly TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
+
+  generateToken(sessionId: string): string {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.tokens.set(sessionId, {
+      token,
+      expires: Date.now() + this.TOKEN_EXPIRY
+    });
+    return token;
+  }
+
+  validateToken(sessionId: string, token: string): boolean {
+    const stored = this.tokens.get(sessionId);
+    if (!stored || stored.expires < Date.now()) {
+      this.tokens.delete(sessionId);
+      return false;
+    }
+    return stored.token === token;
+  }
+
+  cleanup() {
+    const now = Date.now();
+    const entries = Array.from(this.tokens.entries());
+    for (const [sessionId, data] of entries) {
+      if (data.expires < now) {
+        this.tokens.delete(sessionId);
+      }
+    }
+  }
+}
+
+export const csrfProtection = new CSRFProtection();
+
+// Cleanup expired CSRF tokens every hour
+setInterval(() => csrfProtection.cleanup(), 60 * 60 * 1000);
+
+// Device Fingerprinting System
+export interface DeviceFingerprint {
+  userAgent: string;
+  acceptLanguage: string;
+  acceptEncoding: string;
+  timezone: string;
+  screenResolution: string;
+  colorDepth: string;
+  hash: string;
+}
+
+export const generateDeviceFingerprint = (req: Request, clientData?: any): DeviceFingerprint => {
+  const userAgent = req.get('User-Agent') || '';
+  const acceptLanguage = req.get('Accept-Language') || '';
+  const acceptEncoding = req.get('Accept-Encoding') || '';
+  const timezone = clientData?.timezone || '';
+  const screenResolution = clientData?.screenResolution || '';
+  const colorDepth = clientData?.colorDepth || '';
+  
+  const fingerprint = `${userAgent}|${acceptLanguage}|${acceptEncoding}|${timezone}|${screenResolution}|${colorDepth}`;
+  const hash = crypto.createHash('sha256').update(fingerprint).digest('hex');
+  
+  return {
+    userAgent,
+    acceptLanguage,
+    acceptEncoding,
+    timezone,
+    screenResolution,
+    colorDepth,
+    hash
+  };
+};
+
+// SQL Injection Prevention Patterns
+const SQL_INJECTION_PATTERNS = [
+  /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/gi,
+  /(\b(OR|AND)\s+\d+\s*=\s*\d+)/gi,
+  /(--|\#|\/\*|\*\/)/g,
+  /(\bxp_cmdshell\b|\bsp_\w+)/gi,
+  /(\b(char|ascii|substring|len|right|left)\s*\()/gi,
+  /([\'\"][\s]*;[\s]*--)/g,
+  /([\'\"][\s]*\bor\b[\s]+[\'\"]?\w+[\'\"]?[\s]*=[\s]*[\'\"]?\w+)/gi
+];
+
+const XSS_PATTERNS = [
+  /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+  /javascript:/gi,
+  /on\w+\s*=/gi,
+  /<iframe\b[^>]*>/gi,
+  /<object\b[^>]*>/gi,
+  /<embed\b[^>]*>/gi,
+  /<link\b[^>]*>/gi,
+  /<meta\b[^>]*>/gi
+];
 
 // Advanced Rate Limiting Configuration
 export const createRateLimiter = (windowMs: number, max: number, message: string) => {
@@ -11,13 +153,11 @@ export const createRateLimiter = (windowMs: number, max: number, message: string
     message: { error: message },
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    // Skip successful requests to allow normal usage
     skipSuccessfulRequests: false,
-    // Skip failed requests to prevent abuse
     skipFailedRequests: true,
-    // Custom key generator for better tracking
     keyGenerator: (req: Request) => {
-      return req.ip + ':' + (req.get('User-Agent') || 'unknown');
+      const deviceId = req.get('X-Device-ID') || '';
+      return req.ip + ':' + deviceId + ':' + (req.get('User-Agent') || 'unknown');
     }
   });
 };
@@ -295,9 +435,149 @@ export const connectionLimiter = (req: Request, res: Response, next: NextFunctio
   next();
 };
 
+// Input Sanitization and Validation
+export const sanitizeInput = (input: any): any => {
+  if (typeof input === 'string') {
+    // Remove potential XSS patterns
+    let sanitized = input;
+    XSS_PATTERNS.forEach(pattern => {
+      sanitized = sanitized.replace(pattern, '');
+    });
+    
+    // Check for SQL injection patterns
+    SQL_INJECTION_PATTERNS.forEach(pattern => {
+      if (pattern.test(sanitized)) {
+        throw new Error('Potentially malicious input detected');
+      }
+    });
+    
+    // Use DOMPurify for additional XSS protection
+    sanitized = DOMPurify.sanitize(sanitized, {
+      ALLOWED_TAGS: [],
+      ALLOWED_ATTR: []
+    });
+    
+    return sanitized.trim();
+  }
+  
+  if (Array.isArray(input)) {
+    return input.map(item => sanitizeInput(item));
+  }
+  
+  if (typeof input === 'object' && input !== null) {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(input)) {
+      sanitized[sanitizeInput(key)] = sanitizeInput(value);
+    }
+    return sanitized;
+  }
+  
+  return input;
+};
+
+// Input validation middleware
+export const validationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      error: 'Validation failed',
+      details: errors.array()
+    });
+  }
+  next();
+};
+
+// Sanitization middleware
+export const sanitizationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (req.body) {
+      req.body = sanitizeInput(req.body);
+    }
+    if (req.query) {
+      req.query = sanitizeInput(req.query);
+    }
+    if (req.params) {
+      req.params = sanitizeInput(req.params);
+    }
+    next();
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// CSRF middleware
+export const csrfMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
+    return next();
+  }
+  
+  const sessionId = (req as any).sessionID || req.ip;
+  const token = req.get('X-CSRF-Token') || req.body?._csrf;
+  
+  if (!token || !csrfProtection.validateToken(sessionId, token)) {
+    return res.status(403).json({ error: 'Invalid or missing CSRF token' });
+  }
+  
+  next();
+};
+
+// Device fingerprint middleware
+export const deviceFingerprintMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const deviceId = req.get('X-Device-ID');
+  const fingerprint = generateDeviceFingerprint(req, req.body?.deviceInfo);
+  
+  // Store fingerprint in request for later use
+  (req as any).deviceFingerprint = fingerprint;
+  
+  if (deviceId && deviceId !== fingerprint.hash) {
+    console.warn('Device fingerprint mismatch:', { provided: deviceId, calculated: fingerprint.hash });
+  }
+  
+  next();
+};
+
+// Comprehensive validation schemas
+export const walletValidation = [
+  body('walletAddress')
+    .isLength({ min: 42, max: 42 })
+    .matches(/^0x[a-fA-F0-9]{40}$/)
+    .withMessage('Invalid wallet address format'),
+];
+
+export const amountValidation = [
+  body('amount')
+    .isNumeric()
+    .isFloat({ min: 0.01, max: 1000000 })
+    .withMessage('Amount must be between 0.01 and 1,000,000'),
+];
+
+export const textValidation = (field: string, minLength = 1, maxLength = 1000) => [
+  body(field)
+    .isLength({ min: minLength, max: maxLength })
+    .trim()
+    .escape()
+    .withMessage(`${field} must be between ${minLength} and ${maxLength} characters`),
+];
+
+export const emailValidation = [
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .isLength({ max: 255 })
+    .withMessage('Invalid email format'),
+];
+
+export const deviceInfoValidation = [
+  body('deviceInfo.timezone').optional().isLength({ max: 50 }),
+  body('deviceInfo.screenResolution').optional().matches(/^\d+x\d+$/),
+  body('deviceInfo.colorDepth').optional().isIn(['16', '24', '32']),
+];
+
 // Security Status Endpoint (admin only)
 export const getSecurityStatus = (req: Request, res: Response) => {
   const stats = securityMonitor.getStats();
+  const sessionId = (req as any).sessionID || req.ip;
+  const csrfToken = csrfProtection.generateToken(sessionId);
   
   res.json({
     timestamp: new Date().toISOString(),
@@ -315,5 +595,7 @@ export const getSecurityStatus = (req: Request, res: Response) => {
       authLimit: 10,
       createLimit: 5,
     },
+    csrfToken,
+    deviceFingerprint: (req as any).deviceFingerprint?.hash,
   });
 };

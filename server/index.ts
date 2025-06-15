@@ -1,13 +1,36 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { 
+  corsOptions, 
+  globalRateLimit, 
+  securityHeaders, 
+  securityMiddleware,
+  sanitizationMiddleware,
+  deviceFingerprintMiddleware,
+  requestSizeLimit,
+  patternDetection
+} from "./security";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
 
-// Demo route BEFORE any middleware  
-app.use(express.json()); // Need this for req.body parsing
-app.use(express.urlencoded({ extended: false }));
+// Apply security middleware first
+app.use(cors(corsOptions));
+app.use(securityHeaders);
+app.use(globalRateLimit);
+app.use(requestSizeLimit);
+app.use(patternDetection);
+app.use(securityMiddleware);
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Apply sanitization and device fingerprinting
+app.use(sanitizationMiddleware);
+app.use(deviceFingerprintMiddleware);
 
 app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
   try {
