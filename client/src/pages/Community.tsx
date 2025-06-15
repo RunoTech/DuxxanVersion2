@@ -303,7 +303,14 @@ export default function Community() {
     </select>
   );
 
-  const ChannelCard = ({ channel }: { channel: any }) => (
+  const ChannelCard = ({ channel }: { channel: any }) => {
+    // Debug wallet comparison
+    console.log('Channel:', channel.id, 'Creator:', channel.creatorWalletAddress, 'Current:', address);
+    const isOwner = isConnected && address && channel.creatorWalletAddress && 
+                   address.toLowerCase() === channel.creatorWalletAddress.toLowerCase();
+    console.log('Is owner:', isOwner);
+
+    return (
     <Card 
       key={channel.id}
       className="bg-duxxan-card border-duxxan-border hover:border-yellow-500 transition-all duration-200 cursor-pointer group"
@@ -329,8 +336,7 @@ export default function Community() {
             <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
               {channel.categoryName || 'Genel'}
             </Badge>
-            {isConnected && address && channel.creatorWalletAddress && 
-             address.toLowerCase() === channel.creatorWalletAddress.toLowerCase() && (
+            {isOwner && (
               <Button
                 size="sm"
                 variant="ghost"
@@ -388,7 +394,8 @@ export default function Community() {
         </div>
       </CardContent>
     </Card>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-duxxan-darker text-white">
