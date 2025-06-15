@@ -2,8 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { testFirebaseConnection } from "./tests/firebase-test";
-import { debugFirebaseKey } from "./tests/firebase-debug";
 import { 
   corsOptions, 
   globalRateLimit, 
@@ -14,6 +12,7 @@ import {
   requestSizeLimit,
   patternDetection
 } from "./middleware/security";
+import apiRoutes from "./routes/index";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
@@ -135,7 +134,7 @@ app.get('/api/raffles/:id/chat', async (req: any, res) => {
 
     const messages = await storage.getChatMessages(raffleId);
     res.json(messages);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Chat fetch error:', error);
     res.status(500).json({ message: 'Failed to fetch chat messages', error: error.message });
   }
@@ -215,6 +214,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add controller-based API routes
+app.use('/api', apiRoutes);
+
 (async () => {
   // Register routes but skip the demo route since it's already defined
   const server = await registerRoutes(app);
@@ -246,16 +248,6 @@ app.use((req, res, next) => {
     reusePort: true,
   }, async () => {
     log(`serving on port ${port}`);
-    
-    // Debug Firebase configuration
-    debugFirebaseKey();
-    
-    // Test Firebase connection
-    const firebaseConnected = await testFirebaseConnection();
-    if (firebaseConnected) {
-      log('Firebase integration active');
-    } else {
-      log('Firebase connection failed - check credentials');
-    }
+    log('DUXXAN server running with controller-based architecture');
   });
 })();
