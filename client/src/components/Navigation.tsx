@@ -73,7 +73,15 @@ function NavigationComponent() {
                   </Button>
                 </div>
               ) : (
-                <Dialog open={isWalletDialogOpen} onOpenChange={setIsWalletDialogOpen}>
+                <Dialog open={isWalletDialogOpen} onOpenChange={(open) => {
+                  if (open) {
+                    // Trigger wallet detection when dialog opens
+                    import('@/lib/wallet').then(({ walletManager }) => {
+                      walletManager.checkAvailableWallets();
+                    });
+                  }
+                  setIsWalletDialogOpen(open);
+                }}>
                   <DialogTrigger asChild>
                     <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black">
                       <Wallet className="mr-2 h-4 w-4" />
@@ -166,7 +174,15 @@ function NavigationComponent() {
                         </Button>
                       </div>
                     ) : (
-                      <Dialog open={isWalletDialogOpen} onOpenChange={setIsWalletDialogOpen}>
+                      <Dialog open={isWalletDialogOpen} onOpenChange={(open) => {
+                        if (open) {
+                          // Trigger wallet detection when dialog opens
+                          import('@/lib/wallet').then(({ walletManager }) => {
+                            walletManager.checkAvailableWallets();
+                          });
+                        }
+                        setIsWalletDialogOpen(open);
+                      }}>
                         <DialogTrigger asChild>
                           <Button className="w-full bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black">
                             <Wallet className="mr-2 h-4 w-4" />

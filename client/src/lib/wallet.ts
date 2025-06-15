@@ -31,20 +31,31 @@ export class WalletManager {
   async connectWallet(walletType?: 'metamask' | 'trustwallet'): Promise<WalletConnection> {
     let ethereum;
     
+    // Check what's available first
+    const available = this.checkAvailableWallets();
+    
     if (walletType === 'trustwallet') {
       ethereum = this.getTrustWalletProvider();
       if (!ethereum) {
-        throw new Error('Trust Wallet yüklü değil. Lütfen Trust Wallet\'ı yükleyip tekrar deneyin.');
+        if (!available.hasEthereum) {
+          throw new Error('Hiçbir cüzdan bulunamadı. Lütfen Trust Wallet veya MetaMask yükleyin.');
+        } else {
+          throw new Error('Trust Wallet bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
+        }
       }
     } else if (walletType === 'metamask') {
       ethereum = this.getMetaMaskProvider();
       if (!ethereum) {
-        throw new Error('MetaMask yüklü değil. Lütfen MetaMask\'ı yükleyip tekrar deneyin.');
+        if (!available.hasEthereum) {
+          throw new Error('Hiçbir cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
+        } else {
+          throw new Error('MetaMask bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
+        }
       }
     } else {
       // Default behavior - use any available provider
       if (!window.ethereum) {
-        throw new Error('MetaMask veya Trust Wallet yüklü değil. Lütfen yükleyip tekrar deneyin.');
+        throw new Error('Cüzdan bulunamadı. Lütfen MetaMask veya Trust Wallet yükleyin.');
       }
       ethereum = window.ethereum;
     }
@@ -87,29 +98,81 @@ export class WalletManager {
   }
 
   private getMetaMaskProvider() {
-    if (window.ethereum) {
-      if (window.ethereum.isMetaMask) {
+    // Check if MetaMask is available
+    if (typeof window !== 'undefined' && window.ethereum) {
+      // Direct MetaMask check
+      if (window.ethereum.isMetaMask && !window.ethereum.isTrust) {
         return window.ethereum;
       }
-      // If multiple providers exist, try to find MetaMask
-      if (window.ethereum.providers) {
-        return window.ethereum.providers.find((provider: any) => provider.isMetaMask);
+      
+      // Check in providers array
+      if (window.ethereum.providers?.length > 0) {
+        const metamask = window.ethereum.providers.find((provider: any) => 
+          provider.isMetaMask && !provider.isTrust
+        );
+        if (metamask) return metamask;
+      }
+      
+      // Fallback: if only MetaMask is installed
+      if (window.ethereum.isMetaMask) {
+        return window.ethereum;
       }
     }
     return null;
   }
 
   private getTrustWalletProvider() {
-    if (window.ethereum) {
+    // Check if Trust Wallet is available
+    if (typeof window !== 'undefined' && window.ethereum) {
+      // Direct Trust Wallet check
       if (window.ethereum.isTrust) {
         return window.ethereum;
       }
-      // If multiple providers exist, try to find Trust Wallet
-      if (window.ethereum.providers) {
-        return window.ethereum.providers.find((provider: any) => provider.isTrust);
+      
+      // Check in providers array
+      if (window.ethereum.providers?.length > 0) {
+        const trustwallet = window.ethereum.providers.find((provider: any) => 
+          provider.isTrust || provider.isTrustWallet
+        );
+        if (trustwallet) return trustwallet;
+      }
+      
+      // Alternative check for Trust Wallet
+      if (window.ethereum.isTrustWallet) {
+        return window.ethereum;
+      }
+      
+      // Fallback: if window.ethereum exists but we can't identify Trust Wallet specifically
+      // This handles cases where Trust Wallet doesn't properly set its identification flags
+      if (window.ethereum && !window.ethereum.isMetaMask) {
+        return window.ethereum;
       }
     }
     return null;
+  }
+
+  checkAvailableWallets() {
+    const metamask = this.getMetaMaskProvider();
+    const trustwallet = this.getTrustWalletProvider();
+    
+    // Debug information
+    if (typeof window !== 'undefined') {
+      console.log('Wallet Detection Debug:', {
+        hasEthereum: !!window.ethereum,
+        isMetaMask: window.ethereum?.isMetaMask,
+        isTrust: window.ethereum?.isTrust,
+        isTrustWallet: window.ethereum?.isTrustWallet,
+        providers: window.ethereum?.providers?.length || 0,
+        metamaskFound: !!metamask,
+        trustwalletFound: !!trustwallet
+      });
+    }
+    
+    return {
+      metamask: !!metamask,
+      trustwallet: !!trustwallet,
+      hasEthereum: !!window.ethereum
+    };
   }
 
   async connectMetaMask(): Promise<WalletConnection> {
