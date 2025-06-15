@@ -68,129 +68,19 @@ export default function Community() {
     },
   });
 
-  // Mock data for channels
-  const mockChannels = [
-    {
-      id: 1,
-      name: "CryptoKing Çekilişleri",
-      description: "En büyük kripto ödüllü çekilişler burada! Her hafta yeni fırsatlar.",
-      creator: "TechMaster2024",
-      subscribers: 2847,
-      avatar: "/avatars/tech.jpg",
-      category: "Kripto",
-      isSubscribed: false,
-      upcomingRaffles: 3,
-      totalPrizes: "45,000"
-    },
-    {
-      id: 2,
-      name: "NFT Koleksiyoncu",
-      description: "Değerli NFT'ler ve dijital sanat çekilişleri. Topluluk odaklı etkinlikler.",
-      creator: "CryptoQueen",
-      subscribers: 1925,
-      avatar: "/avatars/queen.jpg",
-      category: "NFT",
-      isSubscribed: true,
-      upcomingRaffles: 2,
-      totalPrizes: "28,500"
-    },
-    {
-      id: 3,
-      name: "Gaming Rewards",
-      description: "Oyun ekipmanları, konsol ve oyun kredileri çekilişleri. Gamer topluluğu.",
-      creator: "GamerPro",
-      subscribers: 3156,
-      avatar: "/avatars/gamer.jpg",
-      category: "Oyun",
-      isSubscribed: false,
-      upcomingRaffles: 5,
-      totalPrizes: "62,800"
-    },
-    {
-      id: 4,
-      name: "Luxury Lifestyle",
-      description: "Lüks ürünler, mücevherler ve premium deneyimler. VIP çekiliş kanalı.",
-      creator: "LuxuryDealer",
-      subscribers: 1683,
-      avatar: "/avatars/luxury.jpg",
-      category: "Lüks",
-      isSubscribed: true,
-      upcomingRaffles: 1,
-      totalPrizes: "120,000"
-    },
-    {
-      id: 5,
-      name: "Spor Dünyası",
-      description: "Spor malzemeleri, etkinlik biletleri ve fitness ürünleri çekilişleri.",
-      creator: "SportsFan88",
-      subscribers: 2241,
-      avatar: "/avatars/sports.jpg",
-      category: "Spor",
-      isSubscribed: false,
-      upcomingRaffles: 4,
-      totalPrizes: "38,200"
-    }
-  ];
+  // Fetch channels from database
+  const { data: channelsData, isLoading: channelsLoading } = useQuery({
+    queryKey: ['/api/channels'],
+  });
 
-  // Mock data for upcoming raffles
-  const mockUpcomingRaffles = [
-    {
-      id: 1,
-      title: "iPhone 15 Pro Max Çekilişi",
-      description: "256GB Space Black iPhone 15 Pro Max kazanma şansı!",
-      creator: "TechMaster2024",
-      channel: "CryptoKing Çekilişleri",
-      prizeValue: "52,000",
-      ticketPrice: "25",
-      startDate: "2025-06-20T19:00:00Z",
-      category: "Teknoloji",
-      previewImage: "🔥",
-      interestedCount: 1847,
-      isInterested: false
-    },
-    {
-      id: 2,
-      title: "Bored Ape NFT Koleksiyonu",
-      description: "Değerli Bored Ape Yacht Club NFT'si kazanın!",
-      creator: "CryptoQueen",
-      channel: "NFT Koleksiyoncu",
-      prizeValue: "85,000",
-      ticketPrice: "50",
-      startDate: "2025-06-22T20:00:00Z",
-      category: "NFT",
-      previewImage: "🎨",
-      interestedCount: 2156,
-      isInterested: true
-    },
-    {
-      id: 3,
-      title: "PlayStation 5 + Oyun Paketi",
-      description: "PS5 konsol + 5 popüler oyun paketi çekilişi!",
-      creator: "GamerPro",
-      channel: "Gaming Rewards",
-      prizeValue: "18,500",
-      ticketPrice: "15",
-      startDate: "2025-06-18T21:00:00Z",
-      category: "Oyun",
-      previewImage: "🎮",
-      interestedCount: 3284,
-      isInterested: false
-    },
-    {
-      id: 4,
-      title: "Rolex Submariner Saat",
-      description: "Lüks Rolex Submariner kol saati kazanma fırsatı!",
-      creator: "LuxuryDealer",
-      channel: "Luxury Lifestyle",
-      prizeValue: "180,000",
-      ticketPrice: "100",
-      startDate: "2025-06-25T22:00:00Z",
-      category: "Lüks",
-      previewImage: "⌚",
-      interestedCount: 987,
-      isInterested: true
-    }
-  ];
+  const channels = channelsData?.data || [];
+
+  // Fetch upcoming raffles from database
+  const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
+    queryKey: ['/api/upcoming-raffles'],
+  });
+
+  const upcomingRaffles = upcomingRafflesData?.data || [];
 
   // Categories for filtering
   const categories = [
@@ -205,10 +95,9 @@ export default function Community() {
 
   // Filtered channels based on search and category
   const filteredChannels = useMemo(() => {
-    return mockChannels.filter(channel => {
+    return channels.filter((channel: any) => {
       const matchesSearch = searchQuery === '' || 
         channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        channel.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
         channel.description.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesCategory = selectedCategory === 'all' || 
@@ -216,23 +105,21 @@ export default function Community() {
       
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [channels, searchQuery, selectedCategory]);
 
   // Filtered upcoming raffles based on search and category
   const filteredUpcomingRaffles = useMemo(() => {
-    return mockUpcomingRaffles.filter(raffle => {
+    return upcomingRaffles.filter((raffle: any) => {
       const matchesSearch = searchQuery === '' || 
         raffle.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        raffle.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        raffle.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        raffle.channel.toLowerCase().includes(searchQuery.toLowerCase());
+        raffle.description.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesCategory = selectedCategory === 'all' || 
         raffle.category.toLowerCase() === selectedCategory;
       
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [upcomingRaffles, searchQuery, selectedCategory]);
 
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
@@ -278,6 +165,45 @@ export default function Community() {
     },
   });
 
+  const subscribeChannelMutation = useMutation({
+    mutationFn: async (channelId: number) => {
+      const isCurrentlySubscribed = subscribedChannels.has(channelId);
+      if (isCurrentlySubscribed) {
+        return apiRequest(`/api/channels/${channelId}/subscribe`, 'DELETE');
+      } else {
+        return apiRequest(`/api/channels/${channelId}/subscribe`, 'POST');
+      }
+    },
+    onSuccess: (data, channelId) => {
+      const isCurrentlySubscribed = subscribedChannels.has(channelId);
+      const newSubscribedChannels = new Set(subscribedChannels);
+      
+      if (isCurrentlySubscribed) {
+        newSubscribedChannels.delete(channelId);
+        toast({
+          title: "Abonelik İptal Edildi",
+          description: "Kanaldan aboneliğiniz iptal edildi.",
+        });
+      } else {
+        newSubscribedChannels.add(channelId);
+        toast({
+          title: "Başarılı!",
+          description: "Kanala abone oldunuz.",
+        });
+      }
+      
+      setSubscribedChannels(newSubscribedChannels);
+      queryClient.invalidateQueries({ queryKey: ['/api/channels'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata",
+        description: error.message || "Abonelik işlemi sırasında bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSubscribe = async (channelId: number) => {
     if (!isConnected) {
       toast({
@@ -288,25 +214,29 @@ export default function Community() {
       return;
     }
 
-    const isCurrentlySubscribed = subscribedChannels.has(channelId);
-    const newSubscribedChannels = new Set(subscribedChannels);
-    
-    if (isCurrentlySubscribed) {
-      newSubscribedChannels.delete(channelId);
-      toast({
-        title: "Abonelik İptal Edildi",
-        description: "Kanaldan aboneliğiniz iptal edildi.",
-      });
-    } else {
-      newSubscribedChannels.add(channelId);
+    subscribeChannelMutation.mutate(channelId);
+  };
+
+  const interestMutation = useMutation({
+    mutationFn: async (raffleId: number) => {
+      // Check if user is already interested (this would need state management)
+      return apiRequest(`/api/upcoming-raffles/${raffleId}/interest`, 'POST');
+    },
+    onSuccess: () => {
       toast({
         title: "Başarılı!",
-        description: "Kanala abone oldunuz.",
+        description: "Çekilişe ilgi bildirdiniz.",
       });
-    }
-    
-    setSubscribedChannels(newSubscribedChannels);
-  };
+      queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata",
+        description: error.message || "İlgi bildirme sırasında bir hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleInterest = async (raffleId: number) => {
     if (!isConnected) {
@@ -318,10 +248,7 @@ export default function Community() {
       return;
     }
 
-    toast({
-      title: "Başarılı!",
-      description: "Çekilişe ilgi bildirdiniz.",
-    });
+    interestMutation.mutate(raffleId);
   };
 
   const formatDate = (dateString: string) => {

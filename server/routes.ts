@@ -868,6 +868,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Community Channels API
+  app.get('/api/channels', async (req, res) => {
+    try {
+      const channels = await storage.getChannels();
+      res.json({ success: true, data: channels });
+    } catch (error) {
+      console.error('Error fetching channels:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch channels' });
+    }
+  });
+
+  app.post('/api/channels', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const channelData = { ...req.body, creatorId: req.user.id };
+      const channel = await storage.createChannel(channelData);
+      
+      res.status(201).json({ success: true, data: channel, message: 'Channel created successfully' });
+    } catch (error) {
+      console.error('Error creating channel:', error);
+      res.status(500).json({ success: false, message: 'Failed to create channel' });
+    }
+  });
+
+  app.post('/api/channels/:id/subscribe', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const channelId = parseInt(req.params.id);
+      const subscription = await storage.subscribeToChannel(req.user.id, channelId);
+      
+      res.json({ success: true, data: subscription, message: 'Subscribed to channel' });
+    } catch (error) {
+      console.error('Error subscribing to channel:', error);
+      res.status(500).json({ success: false, message: 'Failed to subscribe to channel' });
+    }
+  });
+
+  app.delete('/api/channels/:id/subscribe', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const channelId = parseInt(req.params.id);
+      await storage.unsubscribeFromChannel(req.user.id, channelId);
+      
+      res.json({ success: true, message: 'Unsubscribed from channel' });
+    } catch (error) {
+      console.error('Error unsubscribing from channel:', error);
+      res.status(500).json({ success: false, message: 'Failed to unsubscribe from channel' });
+    }
+  });
+
+  // Upcoming Raffles API
+  app.get('/api/upcoming-raffles', async (req, res) => {
+    try {
+      const raffles = await storage.getUpcomingRaffles();
+      res.json({ success: true, data: raffles });
+    } catch (error) {
+      console.error('Error fetching upcoming raffles:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch upcoming raffles' });
+    }
+  });
+
+  app.post('/api/upcoming-raffles', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const raffleData = { ...req.body, creatorId: req.user.id };
+      const raffle = await storage.createUpcomingRaffle(raffleData);
+      
+      res.status(201).json({ success: true, data: raffle, message: 'Upcoming raffle created successfully' });
+    } catch (error) {
+      console.error('Error creating upcoming raffle:', error);
+      res.status(500).json({ success: false, message: 'Failed to create upcoming raffle' });
+    }
+  });
+
+  app.post('/api/upcoming-raffles/:id/interest', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const raffleId = parseInt(req.params.id);
+      const interest = await storage.addUpcomingRaffleInterest(req.user.id, raffleId);
+      
+      res.json({ success: true, data: interest, message: 'Interest added to upcoming raffle' });
+    } catch (error) {
+      console.error('Error adding interest to upcoming raffle:', error);
+      res.status(500).json({ success: false, message: 'Failed to add interest' });
+    }
+  });
+
+  app.delete('/api/upcoming-raffles/:id/interest', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const raffleId = parseInt(req.params.id);
+      await storage.removeUpcomingRaffleInterest(req.user.id, raffleId);
+      
+      res.json({ success: true, message: 'Interest removed from upcoming raffle' });
+    } catch (error) {
+      console.error('Error removing interest from upcoming raffle:', error);
+      res.status(500).json({ success: false, message: 'Failed to remove interest' });
+    }
+  });
+
   // Integrate controller-based routes with proper middleware
   app.use('/api', 
     globalRateLimit,
