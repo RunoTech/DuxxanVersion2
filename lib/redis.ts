@@ -1,51 +1,117 @@
 import Redis from 'ioredis';
+import { redisCircuitBreaker } from './circuit-breaker';
 
 class RedisService {
   private client: Redis;
   private subscriber: Redis;
   private publisher: Redis;
+  private isConnected: boolean = false;
+  private performanceMetrics = {
+    operationCount: 0,
+    errorCount: 0,
+    totalResponseTime: 0,
+    startTime: Date.now()
+  };
 
   constructor() {
-    // Use the provided Redis URL directly
     const redisUrl = process.env.REDIS_URL;
     
     if (redisUrl) {
-      console.log(`Redis bağlanıyor: ${redisUrl}`);
-      this.client = new Redis(redisUrl, {
+      console.log(`Redis connecting to: ${redisUrl.replace(/\/\/.*@/, '//***@')}`);
+      
+      const config = {
         maxRetriesPerRequest: 3,
         lazyConnect: true,
         connectTimeout: 10000,
         commandTimeout: 5000,
-      });
-      this.subscriber = new Redis(redisUrl, {
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        connectTimeout: 10000,
-      });
-      this.publisher = new Redis(redisUrl, {
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        connectTimeout: 10000,
-      });
+        retryDelayOnFailover: 100,
+        enableOfflineQueue: false,
+        family: 4,
+        reconnectOnError: (err: Error) => {
+          const targetError = 'READONLY';
+          return err.message.includes(targetError);
+        }
+      };
+
+      this.client = new Redis(redisUrl, config);
+      this.subscriber = new Redis(redisUrl, { ...config, enableOfflineQueue: true });
+      this.publisher = new Redis(redisUrl, { ...config, enableOfflineQueue: true });
     } else {
       throw new Error('REDIS_URL environment variable is required');
     }
 
     this.setupEventHandlers();
+    this.startMetricsCollection();
   }
 
   private setupEventHandlers() {
     this.client.on('connect', () => {
       console.log('Redis client connected');
+      this.isConnected = true;
     });
 
     this.client.on('error', (error) => {
       console.error('Redis client error:', error);
+      this.isConnected = false;
+      this.performanceMetrics.errorCount++;
     });
 
     this.client.on('ready', () => {
       console.log('Redis client ready');
+      this.isConnected = true;
     });
+
+    this.client.on('close', () => {
+      console.log('Redis connection closed');
+      this.isConnected = false;
+    });
+  }
+
+  private startMetricsCollection() {
+    setInterval(() => {
+      this.resetMetrics();
+    }, 60000); // Reset metrics every minute
+  }
+
+  private resetMetrics() {
+    this.performanceMetrics = {
+      operationCount: 0,
+      errorCount: 0,
+      totalResponseTime: 0,
+      startTime: Date.now()
+    };
+  }
+
+  private async executeWithMetrics<T>(operation: () => Promise<T>): Promise<T> {
+    const startTime = Date.now();
+    this.performanceMetrics.operationCount++;
+    
+    try {
+      const result = await redisCircuitBreaker.execute(operation);
+      this.performanceMetrics.totalResponseTime += Date.now() - startTime;
+      return result;
+    } catch (error) {
+      this.performanceMetrics.errorCount++;
+      throw error;
+    }
+  }
+
+  getPerformanceMetrics() {
+    const runtime = Date.now() - this.performanceMetrics.startTime;
+    const avgResponseTime = this.performanceMetrics.operationCount > 0 
+      ? this.performanceMetrics.totalResponseTime / this.performanceMetrics.operationCount 
+      : 0;
+    
+    return {
+      isConnected: this.isConnected,
+      operationCount: this.performanceMetrics.operationCount,
+      errorCount: this.performanceMetrics.errorCount,
+      errorRate: this.performanceMetrics.operationCount > 0 
+        ? (this.performanceMetrics.errorCount / this.performanceMetrics.operationCount) * 100 
+        : 0,
+      averageResponseTime: avgResponseTime,
+      operationsPerSecond: runtime > 0 ? (this.performanceMetrics.operationCount / runtime) * 1000 : 0
+    };
   }
 
   // Basic operations
