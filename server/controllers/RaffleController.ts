@@ -52,7 +52,7 @@ export class RaffleController extends BaseController {
       }
 
       // Get user by wallet address
-      const userService = new (await import('../services/UserService')).UserService();
+      const userService = new UserService();
       const user = await userService.getUserByWallet(walletAddress);
       
       if (!user) {
