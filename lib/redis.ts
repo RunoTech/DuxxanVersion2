@@ -20,12 +20,12 @@ class RedisService {
       console.log(`Redis connecting to: ${redisUrl.replace(/\/\/.*@/, '//***@')}`);
       
       const config = {
-        maxRetriesPerRequest: 3,
+        maxRetriesPerRequest: 2,
         lazyConnect: true,
-        connectTimeout: 10000,
-        commandTimeout: 5000,
+        connectTimeout: 5000,
+        commandTimeout: 3000,
         retryDelayOnFailover: 100,
-        enableOfflineQueue: true,
+        enableOfflineQueue: false, // Disable queue to fail fast
         family: 4,
         reconnectOnError: (err: Error) => {
           const targetError = 'READONLY';
@@ -34,10 +34,14 @@ class RedisService {
       };
 
       this.client = new Redis(redisUrl, config);
-      this.subscriber = new Redis(redisUrl, { ...config, enableOfflineQueue: true });
-      this.publisher = new Redis(redisUrl, { ...config, enableOfflineQueue: true });
+      this.subscriber = new Redis(redisUrl, { ...config, enableOfflineQueue: false });
+      this.publisher = new Redis(redisUrl, { ...config, enableOfflineQueue: false });
     } else {
-      throw new Error('REDIS_URL environment variable is required');
+      console.warn('REDIS_URL not provided, Redis features will be disabled');
+      // Create mock instances that always fail gracefully
+      this.client = {} as Redis;
+      this.subscriber = {} as Redis;
+      this.publisher = {} as Redis;
     }
 
     this.setupEventHandlers();
