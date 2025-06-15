@@ -40,7 +40,12 @@ export class WalletManager {
         if (!available.hasEthereum) {
           throw new Error('Hiçbir cüzdan bulunamadı. Lütfen Trust Wallet veya MetaMask yükleyin.');
         } else {
-          throw new Error('Trust Wallet bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
+          // Fallback: use any available provider for Trust Wallet if we can't detect it specifically
+          console.log('Trust Wallet detection failed, using fallback provider');
+          ethereum = window.ethereum;
+          if (!ethereum) {
+            throw new Error('Trust Wallet bulunamadı. Eğer yüklüyse tarayıcıyı yeniden başlatın.');
+          }
         }
       }
     } else if (walletType === 'metamask') {
@@ -123,29 +128,49 @@ export class WalletManager {
 
   private getTrustWalletProvider() {
     // Check if Trust Wallet is available
-    if (typeof window !== 'undefined' && window.ethereum) {
-      // Direct Trust Wallet check
-      if (window.ethereum.isTrust) {
-        return window.ethereum;
+    if (typeof window !== 'undefined') {
+      
+      // Check for Trust Wallet specific global
+      if ((window as any).trustWallet) {
+        return (window as any).trustWallet;
       }
       
-      // Check in providers array
-      if (window.ethereum.providers?.length > 0) {
-        const trustwallet = window.ethereum.providers.find((provider: any) => 
-          provider.isTrust || provider.isTrustWallet
-        );
-        if (trustwallet) return trustwallet;
+      // Check window.ethereum for Trust Wallet
+      if (window.ethereum) {
+        // Direct Trust Wallet checks
+        if (window.ethereum.isTrust || window.ethereum.isTrustWallet) {
+          return window.ethereum;
+        }
+        
+        // Check provider name/brand
+        if (window.ethereum.name === 'TrustWallet' || 
+            window.ethereum.selectedProvider?.name === 'TrustWallet') {
+          return window.ethereum;
+        }
+        
+        // Check in providers array
+        if (window.ethereum.providers?.length > 0) {
+          const trustwallet = window.ethereum.providers.find((provider: any) => 
+            provider.isTrust || 
+            provider.isTrustWallet || 
+            provider.name === 'TrustWallet' ||
+            provider.selectedProvider?.name === 'TrustWallet'
+          );
+          if (trustwallet) return trustwallet;
+        }
+        
+        // Check user agent for Trust Wallet browser
+        if (navigator.userAgent.includes('Trust')) {
+          return window.ethereum;
+        }
       }
       
-      // Alternative check for Trust Wallet
-      if (window.ethereum.isTrustWallet) {
-        return window.ethereum;
-      }
-      
-      // Fallback: if window.ethereum exists but we can't identify Trust Wallet specifically
-      // This handles cases where Trust Wallet doesn't properly set its identification flags
-      if (window.ethereum && !window.ethereum.isMetaMask) {
-        return window.ethereum;
+      // Check for Trust Wallet in window object with different names
+      const trustWalletGlobals = ['trustwallet', 'TrustWallet', 'trust'];
+      for (const global of trustWalletGlobals) {
+        if ((window as any)[global]?.ethereum) {
+          return (window as any)[global].ethereum;
+        }
       }
     }
     return null;
@@ -162,10 +187,32 @@ export class WalletManager {
         isMetaMask: window.ethereum?.isMetaMask,
         isTrust: window.ethereum?.isTrust,
         isTrustWallet: window.ethereum?.isTrustWallet,
+        ethereumName: window.ethereum?.name,
+        selectedProvider: window.ethereum?.selectedProvider?.name,
         providers: window.ethereum?.providers?.length || 0,
+        userAgent: navigator.userAgent.includes('Trust'),
+        trustWalletGlobal: !!(window as any).trustWallet,
+        trustwallet: !!(window as any).trustwallet,
+        TrustWallet: !!(window as any).TrustWallet,
+        trust: !!(window as any).trust,
         metamaskFound: !!metamask,
-        trustwalletFound: !!trustwallet
+        trustwalletFound: !!trustwallet,
+        availableGlobals: Object.keys(window).filter(key => 
+          key.toLowerCase().includes('trust') || 
+          key.toLowerCase().includes('wallet')
+        ).slice(0, 10)
       });
+      
+      // Additional provider details if available
+      if (window.ethereum?.providers?.length > 0) {
+        console.log('Available Providers:', window.ethereum.providers.map((p: any) => ({
+          isMetaMask: p.isMetaMask,
+          isTrust: p.isTrust,
+          isTrustWallet: p.isTrustWallet,
+          name: p.name,
+          selectedProvider: p.selectedProvider?.name
+        })));
+      }
     }
     
     return {
