@@ -6,14 +6,27 @@ class RedisService {
   private publisher: Redis;
 
   constructor() {
-    const config = {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379'),
-      password: process.env.REDIS_PASSWORD,
-      retryDelayOnFailover: 100,
-      maxRetriesPerRequest: 3,
-      lazyConnect: true,
-    };
+    let config: any;
+    
+    if (process.env.REDIS_URL) {
+      // Use Redis URL if provided
+      config = {
+        url: process.env.REDIS_URL,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+      };
+    } else {
+      // Fallback to individual environment variables
+      config = {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+        password: process.env.REDIS_PASSWORD,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+      };
+    }
 
     this.client = new Redis(config);
     this.subscriber = new Redis(config);
