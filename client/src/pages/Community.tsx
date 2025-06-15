@@ -125,7 +125,7 @@ export default function Community() {
 
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
-      return apiRequest('/api/channels', 'POST', data);
+      return apiRequest('POST', '/api/channels', data);
     },
     onSuccess: () => {
       toast({
@@ -147,7 +147,7 @@ export default function Community() {
 
   const createUpcomingRaffleMutation = useMutation({
     mutationFn: async (data: CreateUpcomingRaffleForm) => {
-      return apiRequest('/api/upcoming-raffles', 'POST', data);
+      return apiRequest('POST', '/api/upcoming-raffles', data);
     },
     onSuccess: () => {
       toast({
