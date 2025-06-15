@@ -150,6 +150,51 @@ export const follows = pgTable("follows", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Community channels
+export const channels = pgTable("channels", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 50 }).notNull(),
+  description: text("description").notNull(),
+  category: varchar("category", { length: 20 }).notNull(),
+  creatorId: integer("creator_id").references(() => users.id).notNull(),
+  subscriberCount: integer("subscriber_count").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Channel subscriptions
+export const channelSubscriptions = pgTable("channel_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  channelId: integer("channel_id").references(() => channels.id).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Upcoming raffles (preview announcements)
+export const upcomingRaffles = pgTable("upcoming_raffles", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description").notNull(),
+  prizeValue: decimal("prize_value", { precision: 10, scale: 6 }).notNull(),
+  ticketPrice: decimal("ticket_price", { precision: 10, scale: 6 }).notNull(),
+  maxTickets: integer("max_tickets").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  category: varchar("category", { length: 20 }).notNull(),
+  creatorId: integer("creator_id").references(() => users.id).notNull(),
+  channelId: integer("channel_id").references(() => channels.id),
+  interestedCount: integer("interested_count").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Interest tracking for upcoming raffles
+export const upcomingRaffleInterests = pgTable("upcoming_raffle_interests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  upcomingRaffleId: integer("upcoming_raffle_id").references(() => upcomingRaffles.id).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Device login logging table with enhanced fingerprinting
 export const userDevices = pgTable("user_devices", {
   id: serial("id").primaryKey(),
@@ -253,6 +298,49 @@ export const donationsRelations = relations(donations, ({ one, many }) => ({
     references: [users.id],
   }),
   contributions: many(donationContributions),
+}));
+
+export const channelsRelations = relations(channels, ({ one, many }) => ({
+  creator: one(users, {
+    fields: [channels.creatorId],
+    references: [users.id],
+  }),
+  subscriptions: many(channelSubscriptions),
+  upcomingRaffles: many(upcomingRaffles),
+}));
+
+export const channelSubscriptionsRelations = relations(channelSubscriptions, ({ one }) => ({
+  user: one(users, {
+    fields: [channelSubscriptions.userId],
+    references: [users.id],
+  }),
+  channel: one(channels, {
+    fields: [channelSubscriptions.channelId],
+    references: [channels.id],
+  }),
+}));
+
+export const upcomingRafflesRelations = relations(upcomingRaffles, ({ one, many }) => ({
+  creator: one(users, {
+    fields: [upcomingRaffles.creatorId],
+    references: [users.id],
+  }),
+  channel: one(channels, {
+    fields: [upcomingRaffles.channelId],
+    references: [channels.id],
+  }),
+  interests: many(upcomingRaffleInterests),
+}));
+
+export const upcomingRaffleInterestsRelations = relations(upcomingRaffleInterests, ({ one }) => ({
+  user: one(users, {
+    fields: [upcomingRaffleInterests.userId],
+    references: [users.id],
+  }),
+  upcomingRaffle: one(upcomingRaffles, {
+    fields: [upcomingRaffleInterests.upcomingRaffleId],
+    references: [upcomingRaffles.id],
+  }),
 }));
 
 // Insert schemas
@@ -425,6 +513,31 @@ export const insertUserRatingSchema = createInsertSchema(userRatings).pick({
   rating: true,
 });
 
+export const insertChannelSchema = createInsertSchema(channels).pick({
+  name: true,
+  description: true,
+  category: true,
+});
+
+export const insertChannelSubscriptionSchema = createInsertSchema(channelSubscriptions).pick({
+  channelId: true,
+});
+
+export const insertUpcomingRaffleSchema = createInsertSchema(upcomingRaffles).pick({
+  title: true,
+  description: true,
+  prizeValue: true,
+  ticketPrice: true,
+  maxTickets: true,
+  startDate: true,
+  category: true,
+  channelId: true,
+});
+
+export const insertUpcomingRaffleInterestSchema = createInsertSchema(upcomingRaffleInterests).pick({
+  upcomingRaffleId: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -445,3 +558,11 @@ export type InsertUserRating = z.infer<typeof insertUserRatingSchema>;
 export type Category = typeof categories.$inferSelect;
 export type Country = typeof countries.$inferSelect;
 export type ChatMessage = typeof chatMessages.$inferSelect;
+export type Channel = typeof channels.$inferSelect;
+export type InsertChannel = z.infer<typeof insertChannelSchema>;
+export type ChannelSubscription = typeof channelSubscriptions.$inferSelect;
+export type InsertChannelSubscription = z.infer<typeof insertChannelSubscriptionSchema>;
+export type UpcomingRaffle = typeof upcomingRaffles.$inferSelect;
+export type InsertUpcomingRaffle = z.infer<typeof insertUpcomingRaffleSchema>;
+export type UpcomingRaffleInterest = typeof upcomingRaffleInterests.$inferSelect;
+export type InsertUpcomingRaffleInterest = z.infer<typeof insertUpcomingRaffleInterestSchema>;
