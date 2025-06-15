@@ -44,11 +44,22 @@ export default function Community() {
   const [activeTab, setActiveTab] = useState<'channels' | 'upcoming'>('channels');
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showCreateRaffle, setShowCreateRaffle] = useState(false);
+  const [showEditChannel, setShowEditChannel] = useState(false);
+  const [editingChannel, setEditingChannel] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2])); // Channel 2 is initially subscribed
+  const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2]));
 
   const channelForm = useForm<CreateChannelForm>({
+    resolver: zodResolver(createChannelSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      categoryId: 0,
+    },
+  });
+
+  const editChannelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
     defaultValues: {
       name: '',
@@ -97,749 +108,718 @@ export default function Community() {
   // Filtered channels based on search and category
   const filteredChannels = useMemo(() => {
     return channels.filter((channel: any) => {
-      const matchesSearch = searchQuery === '' || 
-        channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        channel.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesCategory = selectedCategory === 'all' || 
-        channel.category.toLowerCase() === selectedCategory;
-      
+      const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          channel.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || channel.categoryId === parseInt(selectedCategory);
       return matchesSearch && matchesCategory;
     });
   }, [channels, searchQuery, selectedCategory]);
 
-  // Filtered upcoming raffles based on search and category
-  const filteredUpcomingRaffles = useMemo(() => {
-    return upcomingRaffles.filter((raffle: any) => {
-      const matchesSearch = searchQuery === '' || 
-        raffle.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        raffle.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesCategory = selectedCategory === 'all' || 
-        raffle.category.toLowerCase() === selectedCategory;
-      
-      return matchesSearch && matchesCategory;
-    });
-  }, [upcomingRaffles, searchQuery, selectedCategory]);
-
+  // Create channel mutation
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
-      return apiRequest('POST', '/api/channels', data);
+      const response = await apiRequest('POST', '/api/channels', data);
+      return response.json();
     },
     onSuccess: () => {
       toast({
-        title: "Başarılı!",
-        description: "Kanalınız başarıyla oluşturuldu.",
+        title: "Başarılı",
+        description: "Kanal başarıyla oluşturuldu",
       });
+      queryClient.invalidateQueries({ queryKey: ['/api/channels'] });
       setShowCreateChannel(false);
       channelForm.reset();
-      queryClient.invalidateQueries({ queryKey: ['/api/channels'] });
     },
-    onError: (error: any) => {
+    onError: () => {
       toast({
         title: "Hata",
-        description: error.message || "Kanal oluşturulurken bir hata oluştu.",
+        description: "Kanal oluşturulurken bir hata oluştu",
         variant: "destructive",
       });
     },
   });
 
+  // Edit channel mutation
+  const editChannelMutation = useMutation({
+    mutationFn: async (data: CreateChannelForm) => {
+      const response = await apiRequest('PUT', `/api/channels/${editingChannel.id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Başarılı",
+        description: "Kanal başarıyla güncellendi",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/channels'] });
+      setShowEditChannel(false);
+      setEditingChannel(null);
+      editChannelForm.reset();
+    },
+    onError: (error: any) => {
+      const errorMessage = error.response?.status === 403 
+        ? "Bu kanalı düzenleme yetkiniz yok. Sadece kanal yaratıcısı düzenleyebilir."
+        : "Kanal güncellenirken bir hata oluştu";
+      toast({
+        title: "Hata",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Create upcoming raffle mutation
   const createUpcomingRaffleMutation = useMutation({
     mutationFn: async (data: CreateUpcomingRaffleForm) => {
-      return apiRequest('POST', '/api/upcoming-raffles', data);
+      const response = await apiRequest('POST', '/api/upcoming-raffles', data);
+      return response.json();
     },
     onSuccess: () => {
       toast({
-        title: "Başarılı!",
-        description: "Gelecek çekiliş duyurunuz oluşturuldu.",
+        title: "Başarılı",
+        description: "Gelecek çekiliş duyurusu oluşturuldu",
       });
+      queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
       setShowCreateRaffle(false);
       raffleForm.reset();
-      queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
     },
-    onError: (error: any) => {
+    onError: () => {
       toast({
         title: "Hata",
-        description: error.message || "Çekiliş duyurusu oluşturulurken bir hata oluştu.",
+        description: "Çekiliş duyurusu oluşturulurken bir hata oluştu",
         variant: "destructive",
       });
     },
   });
 
-  const subscribeChannelMutation = useMutation({
-    mutationFn: async (channelId: number) => {
-      const isCurrentlySubscribed = subscribedChannels.has(channelId);
-      if (isCurrentlySubscribed) {
-        return apiRequest(`/api/channels/${channelId}/subscribe`, 'DELETE');
-      } else {
-        return apiRequest(`/api/channels/${channelId}/subscribe`, 'POST');
-      }
+  // Subscribe/Unsubscribe mutation
+  const subscribeMutation = useMutation({
+    mutationFn: async ({ channelId, action }: { channelId: number; action: 'subscribe' | 'unsubscribe' }) => {
+      const method = action === 'subscribe' ? 'POST' : 'DELETE';
+      const response = await apiRequest(method, `/api/channels/${channelId}/subscribe`);
+      return response.json();
     },
-    onSuccess: (data, channelId) => {
-      const isCurrentlySubscribed = subscribedChannels.has(channelId);
-      const newSubscribedChannels = new Set(subscribedChannels);
-      
-      if (isCurrentlySubscribed) {
-        newSubscribedChannels.delete(channelId);
+    onSuccess: (_, { channelId, action }) => {
+      if (action === 'subscribe') {
+        setSubscribedChannels(prev => new Set([...prev, channelId]));
         toast({
-          title: "Abonelik İptal Edildi",
-          description: "Kanaldan aboneliğiniz iptal edildi.",
+          title: "Başarılı",
+          description: "Kanala abone oldunuz",
         });
       } else {
-        newSubscribedChannels.add(channelId);
+        setSubscribedChannels(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(channelId);
+          return newSet;
+        });
         toast({
-          title: "Başarılı!",
-          description: "Kanala abone oldunuz.",
+          title: "Başarılı",
+          description: "Kanal aboneliğiniz iptal edildi",
         });
       }
-      
-      setSubscribedChannels(newSubscribedChannels);
       queryClient.invalidateQueries({ queryKey: ['/api/channels'] });
     },
-    onError: (error: any) => {
+    onError: () => {
       toast({
         title: "Hata",
-        description: error.message || "Abonelik işlemi sırasında bir hata oluştu.",
+        description: "İşlem sırasında bir hata oluştu",
         variant: "destructive",
       });
     },
   });
 
-  const handleSubscribe = async (channelId: number) => {
+  const handleSubscribe = (channelId: number) => {
     if (!isConnected) {
       toast({
-        title: "Cüzdan Bağlantısı Gerekli",
-        description: "Kanala abone olmak için cüzdanınızı bağlamanız gerekiyor.",
+        title: "Uyarı",
+        description: "Abone olmak için cüzdan bağlantısı gerekli",
         variant: "destructive",
       });
       return;
     }
 
-    subscribeChannelMutation.mutate(channelId);
+    const action = subscribedChannels.has(channelId) ? 'unsubscribe' : 'subscribe';
+    subscribeMutation.mutate({ channelId, action });
   };
 
-  const interestMutation = useMutation({
-    mutationFn: async (raffleId: number) => {
-      // Check if user is already interested (this would need state management)
-      return apiRequest(`/api/upcoming-raffles/${raffleId}/interest`, 'POST');
-    },
-    onSuccess: () => {
-      toast({
-        title: "Başarılı!",
-        description: "Çekilişe ilgi bildirdiniz.",
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Hata",
-        description: error.message || "İlgi bildirme sırasında bir hata oluştu.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleInterest = async (raffleId: number) => {
-    if (!isConnected) {
-      toast({
-        title: "Cüzdan Bağlantısı Gerekli",
-        description: "İlgi bildirmek için cüzdanınızı bağlamanız gerekiyor.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    interestMutation.mutate(raffleId);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
-      day: 'numeric',
-      month: 'long',
-      hour: '2-digit',
-      minute: '2-digit'
+  const handleEditChannel = (channel: any) => {
+    setEditingChannel(channel);
+    editChannelForm.reset({
+      name: channel.name,
+      description: channel.description,
+      categoryId: channel.categoryId,
     });
+    setShowEditChannel(true);
   };
 
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            <span className="text-yellow-500">Topluluk</span> Merkezi
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            İçerik üreticilerini takip edin, gelecek çekilişleri keşfedin ve kendi kanalınızı oluşturun.
-          </p>
-        </div>
+  const onSubmitChannel = async (data: CreateChannelForm) => {
+    if (!isConnected) {
+      toast({
+        title: "Uyarı",
+        description: "Kanal oluşturmak için cüzdan bağlantısı gerekli",
+        variant: "destructive",
+      });
+      return;
+    }
+    createChannelMutation.mutate(data);
+  };
 
-        {/* Search and Filter Section */}
-        <div className="mb-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            {/* Search Bar */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-yellow-500" />
-              <Input
-                placeholder={activeTab === 'channels' ? "Kanal ara..." : "Çekiliş ara..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-lg focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-              />
+  const onSubmitEditChannel = async (data: CreateChannelForm) => {
+    if (!isConnected) {
+      toast({
+        title: "Uyarı",
+        description: "Kanal düzenlemek için cüzdan bağlantısı gerekli",
+        variant: "destructive",
+      });
+      return;
+    }
+    editChannelMutation.mutate(data);
+  };
+
+  const onSubmitRaffle = async (data: CreateUpcomingRaffleForm) => {
+    if (!isConnected) {
+      toast({
+        title: "Uyarı",
+        description: "Çekiliş duyurusu oluşturmak için cüzdan bağlantısı gerekli",
+        variant: "destructive",
+      });
+      return;
+    }
+    createUpcomingRaffleMutation.mutate(data);
+  };
+
+  const CategorySelect = ({ field, categories }: { field: any; categories: any[] }) => (
+    <select
+      {...field}
+      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+      value={field.value}
+      className="w-full p-3 bg-duxxan-card border border-duxxan-border rounded-md text-white"
+    >
+      <option value={0}>Kategori seçin</option>
+      {categories.filter(cat => cat.id !== 'all').map((category: any) => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      ))}
+    </select>
+  );
+
+  const ChannelCard = ({ channel }: { channel: any }) => (
+    <Card 
+      key={channel.id}
+      className="bg-duxxan-card border-duxxan-border hover:border-yellow-500 transition-all duration-200 cursor-pointer group"
+      onClick={() => setLocation(`/community/${channel.id}`)}
+    >
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center space-x-3">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={`/api/placeholder/48/48`} />
+              <AvatarFallback className="bg-yellow-500 text-black font-bold">
+                {channel.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <CardTitle className="text-lg text-white group-hover:text-yellow-400 transition-colors">
+                {channel.name}
+              </CardTitle>
+              <p className="text-sm text-gray-400">@{channel.creator}</p>
             </div>
-            
-            {/* Category Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-yellow-500" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-gray-900 dark:text-white rounded-lg px-3 py-2 min-w-[140px] focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-              >
-                {categories.map((category) => (
-                  <option 
-                    key={category.value} 
-                    value={category.value}
-                    className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                  >
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            {/* Clear Filters */}
-            {(searchQuery || selectedCategory !== 'all') && (
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
+              {channel.categoryName || 'Genel'}
+            </Badge>
+            {channel.creator === 'currentUser' && (
               <Button
-                variant="outline"
                 size="sm"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
+                variant="ghost"
+                className="h-8 w-8 p-0 text-gray-400 hover:text-yellow-400"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEditChannel(channel);
                 }}
-                className="bg-white border-2 border-yellow-400 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-all"
               >
-                Temizle
+                <Edit className="h-4 w-4" />
               </Button>
             )}
           </div>
         </div>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-          <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border-2 border-yellow-200 dark:border-yellow-600">
-            <Button
-              variant={activeTab === 'channels' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('channels')}
-              className={activeTab === 'channels' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Kanallar ({filteredChannels.length})
-            </Button>
-            <Button
-              variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('upcoming')}
-              className={activeTab === 'upcoming' ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'}
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Gelecek Çekilişler ({filteredUpcomingRaffles.length})
-            </Button>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+          {channel.description}
+        </p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4 text-sm text-gray-400">
+            <div className="flex items-center space-x-1">
+              <Users className="h-4 w-4" />
+              <span>{channel.subscriberCount}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Trophy className="h-4 w-4" />
+              <span>{channel.totalPrizes || 0} USDT</span>
+            </div>
           </div>
-
-          <div className="flex space-x-3">
-            {isConnected && (
+          <Button
+            size="sm"
+            variant={subscribedChannels.has(channel.id) ? "secondary" : "outline"}
+            className={subscribedChannels.has(channel.id) 
+              ? "bg-yellow-500 text-black hover:bg-yellow-600" 
+              : "border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSubscribe(channel.id);
+            }}
+          >
+            {subscribedChannels.has(channel.id) ? (
               <>
-                <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
-                  <DialogTrigger asChild>
-                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Kanal Oluştur
+                <CheckCircle className="h-4 w-4 mr-1" />
+                Abone
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4 mr-1" />
+                Abone Ol
+              </>
+            )}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen bg-duxxan-darker text-white">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Topluluk Merkezi</h1>
+          <p className="text-gray-400">Kanalları keşfedin, çekilişleri takip edin ve topluluğa katılın</p>
+        </div>
+
+        {/* Search and Filter */}
+        <div className="mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Kanal ara..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-duxxan-card border-duxxan-border text-white"
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Filter className="text-gray-400 h-4 w-4" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-duxxan-card border border-duxxan-border rounded-md px-3 py-2 text-white"
+            >
+              {categories.map((category: any) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex space-x-1 bg-duxxan-card rounded-lg p-1 mb-6">
+          <Button
+            variant={activeTab === 'channels' ? 'default' : 'ghost'}
+            className={`flex-1 ${activeTab === 'channels' ? 'bg-yellow-500 text-black' : 'text-gray-400 hover:text-white'}`}
+            onClick={() => setActiveTab('channels')}
+          >
+            <Users className="h-4 w-4 mr-2" />
+            Kanallar
+          </Button>
+          <Button
+            variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
+            className={`flex-1 ${activeTab === 'upcoming' ? 'bg-yellow-500 text-black' : 'text-gray-400 hover:text-white'}`}
+            onClick={() => setActiveTab('upcoming')}
+          >
+            <Calendar className="h-4 w-4 mr-2" />
+            Gelecek Çekilişler
+          </Button>
+        </div>
+
+        {/* Content */}
+        {activeTab === 'channels' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Topluluk Kanalları</h2>
+              <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+                <DialogTrigger asChild>
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Kanal Oluştur
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-duxxan-card border-duxxan-border text-white">
+                  <DialogHeader>
+                    <DialogTitle>Yeni Kanal Oluştur</DialogTitle>
+                  </DialogHeader>
+                  <Form {...channelForm}>
+                    <form onSubmit={channelForm.handleSubmit(onSubmitChannel)} className="space-y-4">
+                      <FormField
+                        control={channelForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white">Kanal Adı</FormLabel>
+                            <FormControl>
+                              <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={channelForm.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white">Açıklama</FormLabel>
+                            <FormControl>
+                              <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={channelForm.control}
+                        name="categoryId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white">Kategori</FormLabel>
+                            <FormControl>
+                              <CategorySelect field={field} categories={categories} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={createChannelMutation.isPending}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                      >
+                        {createChannelMutation.isPending ? 'Oluşturuluyor...' : 'Kanal Oluştur'}
+                      </Button>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Edit Channel Dialog */}
+            <Dialog open={showEditChannel} onOpenChange={setShowEditChannel}>
+              <DialogContent className="bg-duxxan-card border-duxxan-border text-white">
+                <DialogHeader>
+                  <DialogTitle>Kanalı Düzenle</DialogTitle>
+                </DialogHeader>
+                <Form {...editChannelForm}>
+                  <form onSubmit={editChannelForm.handleSubmit(onSubmitEditChannel)} className="space-y-4">
+                    <FormField
+                      control={editChannelForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Kanal Adı</FormLabel>
+                          <FormControl>
+                            <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={editChannelForm.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Açıklama</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={editChannelForm.control}
+                      name="categoryId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Kategori</FormLabel>
+                          <FormControl>
+                            <CategorySelect field={field} categories={categories} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={editChannelMutation.isPending}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                    >
+                      {editChannelMutation.isPending ? 'Güncelleniyor...' : 'Kanalı Güncelle'}
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500">
-                    <DialogHeader>
-                      <DialogTitle className="text-gray-900 dark:text-white">Yeni Kanal Oluştur</DialogTitle>
-                    </DialogHeader>
-                    <Form {...channelForm}>
-                      <form onSubmit={channelForm.handleSubmit((data) => createChannelMutation.mutate(data))} className="space-y-4">
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+
+            {channelsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-12 h-12 bg-gray-600 rounded-full"></div>
+                      <div className="space-y-2">
+                        <div className="w-24 h-4 bg-gray-600 rounded"></div>
+                        <div className="w-16 h-3 bg-gray-600 rounded"></div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="w-full h-3 bg-gray-600 rounded"></div>
+                      <div className="w-3/4 h-3 bg-gray-600 rounded"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredChannels.map((channel: any) => (
+                  <ChannelCard key={channel.id} channel={channel} />
+                ))}
+              </div>
+            )}
+
+            {!channelsLoading && filteredChannels.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  <Users className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">Kanal bulunamadı</p>
+                  <p className="text-sm">Arama kriterlerinizi değiştirmeyi deneyin</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'upcoming' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Gelecek Çekilişler</h2>
+              <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
+                <DialogTrigger asChild>
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Çekiliş Duyuru
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-duxxan-card border-duxxan-border text-white max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Gelecek Çekiliş Duyurusu</DialogTitle>
+                  </DialogHeader>
+                  <Form {...raffleForm}>
+                    <form onSubmit={raffleForm.handleSubmit(onSubmitRaffle)} className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
-                          control={channelForm.control}
-                          name="name"
+                          control={raffleForm.control}
+                          name="title"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-900">Kanal Adı</FormLabel>
+                              <FormLabel className="text-white">Başlık</FormLabel>
                               <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Kanal adınızı girin"
-                                  className="bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500"
-                                />
+                                <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                         <FormField
-                          control={channelForm.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-900">Açıklama</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  {...field}
-                                  placeholder="Kanalınızı tanıtın"
-                                  className="bg-white border-2 border-yellow-400 text-gray-900 placeholder:text-gray-500"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={channelForm.control}
+                          control={raffleForm.control}
                           name="categoryId"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-white">Kategori</FormLabel>
                               <FormControl>
-                                <select
-                                  {...field}
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                                  value={field.value}
-                                  className="w-full p-3 bg-duxxan-card border border-duxxan-border rounded-md text-white"
-                                >
-                                  <option value="">Kategori seçin</option>
-                                  <option value="crypto">Kripto</option>
-                                  <option value="nft">NFT</option>
-                                  <option value="gaming">Oyun</option>
-                                  <option value="luxury">Lüks</option>
-                                  <option value="sports">Spor</option>
-                                  <option value="tech">Teknoloji</option>
-                                </select>
+                                <CategorySelect field={field} categories={categories} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <Button
-                          type="submit"
-                          disabled={createChannelMutation.isPending}
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white w-full border-2 border-yellow-500"
-                        >
-                          {createChannelMutation.isPending ? 'Oluşturuluyor...' : 'Kanal Oluştur'}
-                        </Button>
-                      </form>
-                    </Form>
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
-                  <DialogTrigger asChild>
-                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
-                      <Trophy className="h-4 w-4 mr-2" />
-                      Çekiliş Duyuru
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-white border-2 border-yellow-400 max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-gray-900">Gelecek Çekiliş Duyurusu</DialogTitle>
-                    </DialogHeader>
-                    <Form {...raffleForm}>
-                      <form onSubmit={raffleForm.handleSubmit((data) => createUpcomingRaffleMutation.mutate(data))} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <FormField
-                            control={raffleForm.control}
-                            name="title"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white">Çekiliş Başlığı</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Çekiliş başlığı"
-                                    className="bg-duxxan-card border-duxxan-border text-white"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={raffleForm.control}
-                            name="prizeValue"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white">Ödül Değeri (USDT)</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="number"
-                                    placeholder="1000"
-                                    className="bg-duxxan-card border-duxxan-border text-white"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                      </div>
+                      <FormField
+                        control={raffleForm.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white">Açıklama</FormLabel>
+                            <FormControl>
+                              <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <FormField
                           control={raffleForm.control}
-                          name="description"
+                          name="prizeValue"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Açıklama</FormLabel>
+                              <FormLabel className="text-white">Ödül (USDT)</FormLabel>
                               <FormControl>
-                                <Textarea
-                                  {...field}
-                                  placeholder="Çekiliş detaylarını açıklayın"
-                                  className="bg-duxxan-card border-duxxan-border text-white"
-                                />
+                                <Input {...field} type="number" step="0.000001" className="bg-duxxan-darker border-duxxan-border text-white" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <FormField
-                            control={raffleForm.control}
-                            name="ticketPrice"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white">Bilet Fiyatı (USDT)</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="number"
-                                    placeholder="10"
-                                    className="bg-duxxan-card border-duxxan-border text-white"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={raffleForm.control}
-                            name="maxTickets"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white">Max Bilet</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="number"
-                                    placeholder="1000"
-                                    className="bg-duxxan-card border-duxxan-border text-white"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={raffleForm.control}
-                            name="startDate"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white">Başlangıç Tarihi</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    type="datetime-local"
-                                    className="bg-duxxan-card border-duxxan-border text-white"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
                         <FormField
                           control={raffleForm.control}
-                          name="category"
+                          name="ticketPrice"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Kategori</FormLabel>
+                              <FormLabel className="text-white">Bilet Fiyatı (USDT)</FormLabel>
                               <FormControl>
-                                <select
-                                  {...field}
-                                  className="w-full p-3 bg-duxxan-card border border-duxxan-border rounded-md text-white"
-                                >
-                                  <option value="">Kategori seçin</option>
-                                  <option value="crypto">Kripto</option>
-                                  <option value="nft">NFT</option>
-                                  <option value="gaming">Oyun</option>
-                                  <option value="luxury">Lüks</option>
-                                  <option value="sports">Spor</option>
-                                  <option value="tech">Teknoloji</option>
-                                </select>
+                                <Input {...field} type="number" step="0.000001" className="bg-duxxan-darker border-duxxan-border text-white" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <Button
-                          type="submit"
-                          disabled={createUpcomingRaffleMutation.isPending}
-                          className="duxxan-button-primary w-full"
+                        <FormField
+                          control={raffleForm.control}
+                          name="maxTickets"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-white">Max Bilet</FormLabel>
+                              <FormControl>
+                                <Input {...field} type="number" className="bg-duxxan-darker border-duxxan-border text-white" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={raffleForm.control}
+                        name="startDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white">Başlangıç Tarihi</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="datetime-local" className="bg-duxxan-darker border-duxxan-border text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={createUpcomingRaffleMutation.isPending}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                      >
+                        {createUpcomingRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Duyuru Oluştur'}
+                      </Button>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {rafflesLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
+                    <div className="space-y-4">
+                      <div className="w-3/4 h-6 bg-gray-600 rounded"></div>
+                      <div className="space-y-2">
+                        <div className="w-full h-3 bg-gray-600 rounded"></div>
+                        <div className="w-2/3 h-3 bg-gray-600 rounded"></div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="w-20 h-4 bg-gray-600 rounded"></div>
+                        <div className="w-16 h-4 bg-gray-600 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingRaffles.map((raffle: any) => (
+                  <Card key={raffle.id} className="bg-duxxan-card border-duxxan-border hover:border-yellow-500 transition-all duration-200">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-white">{raffle.title}</CardTitle>
+                      <div className="flex items-center justify-between">
+                        <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
+                          {raffle.category}
+                        </Badge>
+                        <Badge variant="outline" className="border-green-500 text-green-400">
+                          Yakında
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+                        {raffle.description}
+                      </p>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between text-gray-400">
+                          <span>Ödül:</span>
+                          <span className="text-yellow-400 font-semibold">{raffle.prizeValue} USDT</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400">
+                          <span>Bilet Fiyatı:</span>
+                          <span className="text-white">{raffle.ticketPrice} USDT</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400">
+                          <span>Max Bilet:</span>
+                          <span className="text-white">{raffle.maxTickets}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400">
+                          <span>Başlangıç:</span>
+                          <span className="text-white">{new Date(raffle.startDate).toLocaleDateString('tr-TR')}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center space-x-1 text-sm text-gray-400">
+                          <Heart className="h-4 w-4" />
+                          <span>{raffle.interestedCount || 0} ilgilenen</span>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
                         >
-                          {createUpcomingRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Duyuru Oluştur'}
+                          <Bell className="h-4 w-4 mr-1" />
+                          Hatırlat
                         </Button>
-                      </form>
-                    </Form>
-                  </DialogContent>
-                </Dialog>
-              </>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             )}
-          </div>
-        </div>
 
-        {/* Content */}
-        {activeTab === 'channels' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredChannels.map((channel) => (
-              <Card 
-                key={channel.id} 
-                className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 cursor-pointer"
-                onClick={() => setLocation(`/community/${channel.id}`)}
-              >
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={channel.avatar} alt={channel.creator || 'Creator'} />
-                        <AvatarFallback className="bg-yellow-500 text-white">
-                          {(channel.creator || 'User').slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <CardTitle className="text-gray-900 dark:text-white text-lg">{channel.name}</CardTitle>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">{channel.creator || 'Anonymous'}</p>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
-                      {channel.category}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                    {channel.description}
-                  </p>
-                  
-                  <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="text-center">
-                      <div className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">
-                        {(channel.subscriberCount || 0).toLocaleString()}
-                      </div>
-                      <div className="text-gray-500 dark:text-gray-400 text-xs">Abone</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-green-600 font-bold text-lg">
-                        {channel.upcomingRaffles || 0}
-                      </div>
-                      <div className="text-gray-500 text-xs">Gelecek</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-orange-600 font-bold text-lg">
-                        ${channel.totalPrizes || 0}
-                      </div>
-                      <div className="text-gray-500 text-xs">Ödül</div>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={() => handleSubscribe(channel.id)}
-                      variant="default"
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"
-                      disabled={!isConnected}
-                    >
-                      {subscribedChannels.has(channel.id) ? (
-                        <>
-                          <CheckCircle className="h-5 w-5 mr-2 text-blue-600 font-bold stroke-2" />
-                          Abonesin
-                        </>
-                      ) : (
-                        <>
-                          <Bell className="h-4 w-4 mr-2" />
-                          Abone Ol
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-600 hover:text-yellow-600"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'upcoming' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filteredUpcomingRaffles.map((raffle) => (
-              <Card key={raffle.id} className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 transition-colors">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-4xl">{raffle.previewImage}</div>
-                      <div>
-                        <CardTitle className="text-gray-900 dark:text-white text-lg">{raffle.title}</CardTitle>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">{raffle.channel}</p>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
-                      {raffle.category}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                    {raffle.description}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-50 dark:bg-gray-700 border border-yellow-200 dark:border-yellow-600 rounded-lg p-3">
-                      <div className="text-green-600 dark:text-green-400 font-bold text-lg">
-                        ${raffle.prizeValue}
-                      </div>
-                      <div className="text-gray-500 dark:text-gray-400 text-xs">Ödül Değeri</div>
-                    </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 border border-yellow-200 dark:border-yellow-600 rounded-lg p-3">
-                      <div className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">
-                        {raffle.ticketPrice} USDT
-                      </div>
-                      <div className="text-gray-500 dark:text-gray-400 text-xs">Bilet Fiyatı</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-gray-600 dark:text-gray-400 text-sm">
-                        {formatDate(raffle.startDate)}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Eye className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-gray-600 dark:text-gray-400 text-sm">
-                        {(raffle.interestedCount || 0).toLocaleString()} ilgileniyor
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={() => handleInterest(raffle.id)}
-                      variant={raffle.isInterested ? "outline" : "default"}
-                      className={raffle.isInterested ? "bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700 flex-1" : "bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 flex-1"}
-                      disabled={!isConnected}
-                    >
-                      <Heart className={`h-4 w-4 mr-2 ${raffle.isInterested ? 'fill-current' : ''}`} />
-                      {raffle.isInterested ? 'İlgileniyorsun' : 'İlgi Bildir'}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* Loading states */}
-        {(channelsLoading || rafflesLoading) && (
-          <div className="text-center py-12">
-            <div className="animate-spin w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Veriler yükleniyor...</p>
-          </div>
-        )}
-
-        {/* Empty states and No results */}
-        {!channelsLoading && activeTab === 'channels' && filteredChannels.length === 0 && (
-          <div className="text-center py-12">
-            {channels.length === 0 ? (
-              <>
-                <Users className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Henüz kanal yok</h3>
-                <p className="text-duxxan-text-secondary mb-6">
-                  İlk kanalı sen oluştur ve topluluğunu büyütmeye başla!
-                </p>
-                {isConnected && (
-                  <Button onClick={() => setShowCreateChannel(true)} className="duxxan-button-primary">
-                    <Plus className="h-4 w-4 mr-2" />
-                    İlk Kanalı Oluştur
-                  </Button>
-                )}
-              </>
-            ) : (
-              <>
-                <Search className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Sonuç bulunamadı</h3>
-                <p className="text-duxxan-text-secondary mb-6">
-                  Arama kriterlerinize uygun kanal bulunamadı. Filtreleri temizleyip tekrar deneyin.
-                </p>
-                <Button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('all');
-                  }}
-                  className="duxxan-button-secondary"
-                >
-                  Filtreleri Temizle
-                </Button>
-              </>
-            )}
-          </div>
-        )}
-
-        {!rafflesLoading && activeTab === 'upcoming' && filteredUpcomingRaffles.length === 0 && (
-          <div className="text-center py-12">
-            {upcomingRaffles.length === 0 ? (
-              <>
-                <Calendar className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Gelecek çekiliş yok</h3>
-                <p className="text-duxxan-text-secondary mb-6">
-                  Gelecek çekilişinizi duyurun ve topluluğunuzu heyecanlandırın!
-                </p>
-                {isConnected && (
-                  <Button onClick={() => setShowCreateRaffle(true)} className="duxxan-button-primary">
-                    <Trophy className="h-4 w-4 mr-2" />
-                    İlk Duyuruyu Oluştur
-                  </Button>
-                )}
-              </>
-            ) : (
-              <>
-                <Search className="h-16 w-16 text-duxxan-text-secondary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Sonuç bulunamadı</h3>
-                <p className="text-duxxan-text-secondary mb-6">
-                  Arama kriterlerinize uygun çekiliş bulunamadı. Filtreleri temizleyip tekrar deneyin.
-                </p>
-                <Button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('all');
-                  }}
-                  className="duxxan-button-secondary"
-                >
-                  Filtreleri Temizle
-                </Button>
-              </>
+            {!rafflesLoading && upcomingRaffles.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">Gelecek çekiliş bulunamadı</p>
+                  <p className="text-sm">Yakında yeni duyurular yapılacak</p>
+                </div>
+              </div>
             )}
           </div>
         )}
