@@ -650,6 +650,7 @@ export class DatabaseStorage implements IStorage {
       totalPrizeAmount: channels.totalPrizeAmount,
       activeRaffleCount: channels.activeRaffleCount,
       creator: users.username,
+      creatorWalletAddress: users.walletAddress,
       categoryName: categories.name
     }).from(channels)
     .leftJoin(users, eq(channels.creatorId, users.id))

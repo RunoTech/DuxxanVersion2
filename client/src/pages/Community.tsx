@@ -37,7 +37,7 @@ type CreateChannelForm = z.infer<typeof createChannelSchema>;
 type CreateUpcomingRaffleForm = z.infer<typeof createUpcomingRaffleSchema>;
 
 export default function Community() {
-  const { isConnected } = useWallet();
+  const { isConnected, address } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
@@ -329,7 +329,8 @@ export default function Community() {
             <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
               {channel.categoryName || 'Genel'}
             </Badge>
-            {channel.creator === 'currentUser' && (
+            {isConnected && address && channel.creatorWalletAddress && 
+             address.toLowerCase() === channel.creatorWalletAddress.toLowerCase() && (
               <Button
                 size="sm"
                 variant="ghost"
