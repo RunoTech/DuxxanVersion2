@@ -1,46 +1,97 @@
 import admin from 'firebase-admin';
 
 class FirebaseService {
-  private app: admin.app.App;
-  private db: admin.firestore.Firestore;
-  private auth: admin.auth.Auth;
-  private messaging: admin.messaging.Messaging;
+  private app?: admin.app.App;
+  private db?: admin.firestore.Firestore;
+  private auth?: admin.auth.Auth;
+  private messaging?: admin.messaging.Messaging;
+  private initialized: boolean = false;
 
   constructor() {
     this.initializeFirebase();
-    this.db = admin.firestore();
-    this.auth = admin.auth();
-    this.messaging = admin.messaging();
   }
 
   private initializeFirebase() {
     if (!admin.apps.length) {
-      const serviceAccount = {
-        type: "service_account",
-        project_id: process.env.FIREBASE_PROJECT_ID,
-        private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-        private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        client_email: process.env.FIREBASE_CLIENT_EMAIL,
-        client_id: process.env.FIREBASE_CLIENT_ID,
-        auth_uri: "https://accounts.google.com/o/oauth2/auth",
-        token_uri: "https://oauth2.googleapis.com/token",
-        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-        client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
-      };
+      try {
+        // Check if required environment variables exist
+        if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_PRIVATE_KEY || !process.env.FIREBASE_CLIENT_EMAIL) {
+          console.log('Firebase credentials not provided, skipping Firebase initialization');
+          return;
+        }
 
-      this.app = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-        projectId: process.env.FIREBASE_PROJECT_ID,
-      });
+        // Clean and format the private key
+        let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+        
+        // Remove quotes if present
+        privateKey = privateKey.replace(/^["']|["']$/g, '');
+        
+        // Ensure proper line breaks
+        if (!privateKey.includes('\n')) {
+          privateKey = privateKey.replace(/\\n/g, '\n');
+        }
+        
+        // Ensure proper PEM format
+        if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
+          throw new Error('Private key must start with -----BEGIN PRIVATE KEY-----');
+        }
+        
+        if (!privateKey.endsWith('-----END PRIVATE KEY-----')) {
+          throw new Error('Private key must end with -----END PRIVATE KEY-----');
+        }
 
-      console.log('Firebase Admin initialized successfully');
+        const serviceAccount = {
+          type: "service_account",
+          project_id: process.env.FIREBASE_PROJECT_ID,
+          private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID || 'dummy-key-id',
+          private_key: privateKey,
+          client_email: process.env.FIREBASE_CLIENT_EMAIL,
+          client_id: process.env.FIREBASE_CLIENT_ID || '0',
+          auth_uri: "https://accounts.google.com/o/oauth2/auth",
+          token_uri: "https://oauth2.googleapis.com/token",
+          auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+          client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL || `https://www.googleapis.com/robot/v1/metadata/x509/${encodeURIComponent(process.env.FIREBASE_CLIENT_EMAIL || '')}`
+        };
+
+        this.app = admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+          projectId: process.env.FIREBASE_PROJECT_ID,
+        });
+
+        this.db = admin.firestore();
+        this.auth = admin.auth();
+        this.messaging = admin.messaging();
+        this.initialized = true;
+
+        console.log('Firebase Admin initialized successfully');
+      } catch (error) {
+        console.error('Firebase initialization failed:', error);
+        console.log('Continuing without Firebase...');
+        this.initialized = false;
+        return;
+      }
     } else {
       this.app = admin.apps[0] as admin.app.App;
+      this.db = admin.firestore();
+      this.auth = admin.auth();
+      this.messaging = admin.messaging();
+      this.initialized = true;
     }
+  }
+
+  private checkInitialized(): boolean {
+    if (!this.initialized) {
+      console.warn('Firebase not initialized, skipping operation');
+      return false;
+    }
+    return true;
   }
 
   // Authentication methods
   async verifyIdToken(idToken: string): Promise<admin.auth.DecodedIdToken> {
+    if (!this.checkInitialized() || !this.auth) {
+      throw new Error('Firebase not initialized');
+    }
     try {
       return await this.auth.verifyIdToken(idToken);
     } catch (error) {
