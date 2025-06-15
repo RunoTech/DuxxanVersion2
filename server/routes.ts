@@ -880,16 +880,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/channels/:id', async (req, res) => {
+    try {
+      const channelId = parseInt(req.params.id);
+      const channel = await storage.getChannelById(channelId);
+      
+      if (!channel) {
+        return res.status(404).json({ success: false, message: 'Channel not found' });
+      }
+
+      // Get creator information
+      let creator = null;
+      if (channel.creatorId) {
+        creator = await storage.getUser(channel.creatorId);
+      }
+
+      // Get subscriber count
+      const subscriberCount = await storage.getChannelSubscriptionCount(channelId);
+
+      res.json({ 
+        success: true, 
+        data: {
+          ...channel,
+          creator,
+          subscriberCount
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching channel:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch channel' });
+    }
+  });
+
+  app.get('/api/channels/:id/raffles', async (req, res) => {
+    try {
+      const channelId = parseInt(req.params.id);
+      const raffles = await storage.getUpcomingRafflesByChannel(channelId);
+      res.json({ success: true, data: raffles });
+    } catch (error) {
+      console.error('Error fetching channel raffles:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch channel raffles' });
+    }
+  });
+
   app.post('/api/channels', getUser, async (req: any, res) => {
     try {
       if (!req.user) {
         return res.status(401).json({ success: false, message: 'Authentication required' });
       }
 
-      const channelData = { ...req.body, creatorId: req.user.id };
+      // Only allow demo channel creation, not real channels
+      const channelData = { 
+        ...req.body, 
+        creatorId: req.user.id,
+        isDemo: true,
+        demoContent: JSON.stringify({
+          sampleRaffles: [
+            {
+              title: "Demo Çekiliş 1",
+              description: "Bu bir demo çekilişidir",
+              prizeValue: "100 USDT",
+              endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            },
+            {
+              title: "Demo Çekiliş 2", 
+              description: "Bu ikinci demo çekilişidir",
+              prizeValue: "250 USDT",
+              endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+            }
+          ],
+          features: [
+            "Demo içerik görüntüleme",
+            "Örnek çekiliş deneyimi",
+            "Topluluk etkileşimi"
+          ]
+        })
+      };
+      
       const channel = await storage.createChannel(channelData);
       
-      res.status(201).json({ success: true, data: channel, message: 'Channel created successfully' });
+      res.status(201).json({ success: true, data: channel, message: 'Demo kanal başarıyla oluşturuldu' });
     } catch (error) {
       console.error('Error creating channel:', error);
       res.status(500).json({ success: false, message: 'Failed to create channel' });

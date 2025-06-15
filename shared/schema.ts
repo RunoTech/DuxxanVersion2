@@ -160,6 +160,10 @@ export const channels = pgTable("channels", {
   subscriberCount: integer("subscriber_count").default(0),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
+  isDemo: boolean("is_demo").default(false),
+  demoContent: text("demo_content"),
+  totalPrizeAmount: varchar("total_prize_amount", { length: 50 }).default('0'),
+  activeRaffleCount: integer("active_raffle_count").default(0),
 });
 
 // Channel subscriptions
