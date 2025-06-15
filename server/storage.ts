@@ -36,10 +36,18 @@ import { eq, desc, asc, and, sql, gt, lt } from "drizzle-orm";
 
 export interface IStorage {
   // Users
+  getUser(id: number): Promise<User | undefined>;
   getUserByWalletAddress(walletAddress: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User>;
+  deleteUser(id: number): Promise<boolean>;
+  getUserStats(userId: number): Promise<{
+    totalRaffles: number;
+    totalDonations: number;
+    totalSpent: string;
+    totalWon: string;
+  }>;
   
   // User Devices
   createUserDevice(device: InsertUserDevice & { userId: number }): Promise<UserDevice>;
@@ -139,6 +147,51 @@ export class DatabaseStorage implements IStorage {
   async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
     const [user] = await db.update(users).set(updates).where(eq(users.id, id)).returning();
     return user;
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.withErrorHandling(async () => {
+      const [user] = await db.select().from(users).where(eq(users.id, id));
+      return user || undefined;
+    }, 'getUser');
+  }
+
+  async deleteUser(id: number): Promise<boolean> {
+    return this.withErrorHandling(async () => {
+      const result = await db.delete(users).where(eq(users.id, id));
+      return result.count > 0;
+    }, 'deleteUser');
+  }
+
+  async getUserStats(userId: number): Promise<{
+    totalRaffles: number;
+    totalDonations: number;
+    totalSpent: string;
+    totalWon: string;
+  }> {
+    return this.withErrorHandling(async () => {
+      // Get raffle statistics
+      const raffleStats = await db.select({
+        count: sql<number>`count(*)::int`,
+        totalSpent: sql<string>`coalesce(sum(${tickets.totalAmount}), '0')`
+      }).from(tickets).where(eq(tickets.userId, userId));
+
+      // Get donation statistics  
+      const donationStats = await db.select({
+        count: sql<number>`count(*)::int`,
+        totalDonated: sql<string>`coalesce(sum(${donationContributions.amount}), '0')`
+      }).from(donationContributions).where(eq(donationContributions.userId, userId));
+
+      // Get won raffles (this would need a winners table in a real implementation)
+      const totalWon = "0"; // Placeholder until winners tracking is implemented
+
+      return {
+        totalRaffles: raffleStats[0]?.count || 0,
+        totalDonations: donationStats[0]?.count || 0,
+        totalSpent: raffleStats[0]?.totalSpent || "0",
+        totalWon
+      };
+    }, 'getUserStats');
   }
 
   async getCategories(): Promise<Category[]> {
