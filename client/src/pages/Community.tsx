@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit } from 'lucide-react';
 
 const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
@@ -84,15 +84,14 @@ export default function Community() {
 
   const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
 
-  // Categories for filtering
+  // Fetch categories from database
+  const { data: categoriesData } = useQuery({
+    queryKey: ['/api/categories'],
+  });
+
   const categories = [
-    { value: 'all', label: 'Tüm Kategoriler' },
-    { value: 'crypto', label: 'Kripto' },
-    { value: 'nft', label: 'NFT' },
-    { value: 'gaming', label: 'Oyun' },
-    { value: 'luxury', label: 'Lüks' },
-    { value: 'sports', label: 'Spor' },
-    { value: 'tech', label: 'Teknoloji' },
+    { id: 'all', name: 'Tüm Kategoriler' },
+    ...(((categoriesData as any)?.data || []) as Array<{id: number; name: string; slug: string}>)
   ];
 
   // Filtered channels based on search and category
@@ -400,13 +399,15 @@ export default function Community() {
                         />
                         <FormField
                           control={channelForm.control}
-                          name="category"
+                          name="categoryId"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-white">Kategori</FormLabel>
                               <FormControl>
                                 <select
                                   {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  value={field.value}
                                   className="w-full p-3 bg-duxxan-card border border-duxxan-border rounded-md text-white"
                                 >
                                   <option value="">Kategori seçin</option>
