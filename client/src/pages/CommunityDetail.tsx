@@ -28,12 +28,14 @@ export default function CommunityDetail() {
 
   // Fetch channel details
   const { data: channelData, isLoading: channelLoading } = useQuery({
-    queryKey: ['/api/channels', id],
+    queryKey: [`/api/channels/${id}`],
+    enabled: !!id,
   });
 
   // Fetch channel raffles
   const { data: rafflesData, isLoading: rafflesLoading } = useQuery({
-    queryKey: ['/api/channels', id, 'raffles'],
+    queryKey: [`/api/channels/${id}/raffles`],
+    enabled: !!id,
   });
 
   const channel = (channelData as any)?.data;
