@@ -70,6 +70,7 @@ export const raffles = pgTable("raffles", {
   winnerId: integer("winner_id").references(() => users.id),
   isApprovedByCreator: boolean("is_approved_by_creator").default(false),
   isApprovedByWinner: boolean("is_approved_by_winner").default(false),
+  transactionHash: varchar("transaction_hash", { length: 66 }),
   // Country filtering fields
   countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
   allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
@@ -336,6 +337,8 @@ export const insertRaffleSchema = createInsertSchema(raffles).pick({
   allowedCountries: true,
   excludedCountries: true,
 }).extend({
+  transactionHash: z.string().optional(),
+}).extend({
   title: z.string()
     .min(5, "Title must be at least 5 characters")
     .max(200, "Title must be less than 200 characters")
@@ -356,6 +359,10 @@ export const insertRaffleSchema = createInsertSchema(raffles).pick({
   categoryId: z.number()
     .int("Category ID must be a whole number")
     .min(1, "Invalid category selected"),
+  endDate: z.union([
+    z.date(),
+    z.string().transform((val) => new Date(val))
+  ]).refine((date) => date > new Date(), "End date must be in the future"),
 });
 
 export const insertDonationSchema = createInsertSchema(donations).pick({
