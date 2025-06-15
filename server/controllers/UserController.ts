@@ -124,20 +124,28 @@ export class UserController extends BaseController {
       
       if (!user) {
         // Create new user if doesn't exist
-        const userData = {
-          walletAddress: walletAddress.toLowerCase(),
-          username: `user_${walletAddress.slice(2, 8).toLowerCase()}`,
-          organizationType: 'individual' as const
-        };
-        user = await this.userService.createUser(userData);
+        try {
+          const userData = {
+            walletAddress: walletAddress.toLowerCase(),
+            username: `user_${walletAddress.slice(2, 8).toLowerCase()}`,
+            organizationType: 'individual' as const
+          };
+          user = await this.userService.createUser(userData);
+        } catch (error: any) {
+          // If user already exists (race condition), fetch the existing user
+          if (error.message.includes('duplicate key value violates unique constraint')) {
+            user = await this.userService.getUserByWallet(walletAddress.toLowerCase());
+            if (!user) {
+              return this.sendError(res, 'Failed to authenticate wallet', 500);
+            }
+          } else {
+            throw error;
+          }
+        }
       }
 
-      // Store wallet address in session for authentication
-      if (req.session) {
-        req.session.walletAddress = walletAddress.toLowerCase();
-        req.session.userId = user.id;
-        req.session.isAuthenticated = true;
-      }
+      // Store user data in session-compatible format
+      (req as any).user = user;
 
       this.sendSuccess(res, user, 'Authentication successful');
     })

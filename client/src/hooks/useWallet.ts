@@ -14,9 +14,18 @@ export function useWallet() {
       const response = await apiRequest('POST', '/api/users/auth/wallet', {
         walletAddress: walletAddress.toLowerCase()
       });
+      
+      // Store authentication state in localStorage for persistence
+      if (response) {
+        localStorage.setItem('wallet_authenticated', 'true');
+        localStorage.setItem('wallet_address', walletAddress.toLowerCase());
+      }
+      
       return response;
     } catch (error: any) {
       console.error('Wallet authentication failed:', error);
+      localStorage.removeItem('wallet_authenticated');
+      localStorage.removeItem('wallet_address');
       return null;
     }
   };
@@ -77,16 +86,31 @@ export function useWallet() {
     const autoConnect = async () => {
       const walletManager = WalletManager.getInstance();
       try {
+        // Check if user was previously authenticated
+        const wasAuthenticated = localStorage.getItem('wallet_authenticated') === 'true';
+        const storedAddress = localStorage.getItem('wallet_address');
+        
         const connected = await walletManager.autoConnect();
         if (connected) {
           const connection = walletManager.getConnection();
           if (connection) {
             setConnection(connection);
-            await createOrGetUser(connection.address);
+            
+            // Only re-authenticate if address matches stored address
+            if (wasAuthenticated && storedAddress === connection.address.toLowerCase()) {
+              // User was previously authenticated with this address
+              console.log('Restoring authenticated session for:', connection.address);
+            } else {
+              // New address or no previous authentication
+              await createOrGetUser(connection.address);
+            }
           }
         }
       } catch (error) {
         console.error('Auto-connect failed:', error);
+        // Clear stored authentication on error
+        localStorage.removeItem('wallet_authenticated');
+        localStorage.removeItem('wallet_address');
       }
     };
 
@@ -99,9 +123,9 @@ export function useWallet() {
       await walletManager.disconnectWallet();
       setConnection(null);
       
-      // Clear demo connection storage
-      localStorage.removeItem('demo_wallet_connected');
-      localStorage.removeItem('demo_wallet_address');
+      // Clear authentication state
+      localStorage.removeItem('wallet_authenticated');
+      localStorage.removeItem('wallet_address');
 
       toast({
         title: 'Wallet Disconnected',
