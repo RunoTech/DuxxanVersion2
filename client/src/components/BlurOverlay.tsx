@@ -2,11 +2,27 @@ import { Button } from '@/components/ui/button';
 import { useWallet } from '@/hooks/useWallet';
 
 export function BlurOverlay() {
-  const { isConnected, isConnecting, connectMetaMask, connectTrustWallet } = useWallet();
+  const { isConnected, isConnecting, connectWallet } = useWallet();
 
   if (isConnected) {
     return null;
   }
+
+  const handleMetaMaskConnect = async () => {
+    try {
+      await connectWallet('metamask');
+    } catch (error) {
+      console.error('MetaMask connection failed:', error);
+    }
+  };
+
+  const handleTrustWalletConnect = async () => {
+    try {
+      await connectWallet('trustwallet');
+    } catch (error) {
+      console.error('Trust Wallet connection failed:', error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex items-center justify-center">
@@ -17,14 +33,14 @@ export function BlurOverlay() {
         </p>
         <div className="space-y-3">
           <Button
-            onClick={connectMetaMask}
+            onClick={handleMetaMaskConnect}
             disabled={isConnecting}
             className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
           >
             {isConnecting ? 'Bağlanıyor...' : 'MetaMask Bağla'}
           </Button>
           <Button
-            onClick={connectTrustWallet}
+            onClick={handleTrustWalletConnect}
             disabled={isConnecting}
             variant="outline"
             className="w-full bg-blue-600 text-white hover:bg-blue-700 border-blue-600"

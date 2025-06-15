@@ -139,17 +139,29 @@ export class WalletManager {
     
     const ethereum = this.getMetaMaskProvider();
     if (!ethereum) {
-      throw new Error('MetaMask not found. Please install MetaMask extension.');
+      // More specific error messages for different scenarios
+      if (typeof window === 'undefined') {
+        throw new Error('MetaMask can only be used in a browser environment.');
+      }
+      if (!window.ethereum) {
+        throw new Error('MetaMask not installed. Please install MetaMask extension from metamask.io');
+      }
+      throw new Error('MetaMask not detected. Please ensure MetaMask is properly installed and enabled.');
     }
 
     try {
-      // Request account access
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      // Request account access with timeout
+      const accounts = await Promise.race([
+        ethereum.request({
+          method: 'eth_requestAccounts',
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Connection timeout. Please try again.')), 30000)
+        )
+      ]) as string[];
 
       if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts found. Please connect your MetaMask wallet.');
+        throw new Error('No accounts found. Please unlock your MetaMask wallet and try again.');
       }
 
       // Create provider and signer
@@ -175,10 +187,23 @@ export class WalletManager {
       this.setupEventListeners();
       this.notifyListeners(true, address);
 
+      console.log('MetaMask connected successfully:', address);
       return connection;
     } catch (error: any) {
       console.error('MetaMask connection failed:', error);
-      throw new Error(`MetaMask connection failed: ${error.message}`);
+      
+      // Provide more specific error messages
+      if (error.code === 4001) {
+        throw new Error('Connection rejected. Please approve the connection request in MetaMask.');
+      }
+      if (error.code === -32002) {
+        throw new Error('Connection request pending. Please check your MetaMask extension.');
+      }
+      if (error.message?.includes('timeout')) {
+        throw new Error('Connection timeout. Please try again and ensure MetaMask is responding.');
+      }
+      
+      throw new Error(`MetaMask connection failed: ${error.message || 'Unknown error occurred'}`);
     }
   }
 
@@ -187,17 +212,25 @@ export class WalletManager {
     
     const ethereum = this.getTrustWalletProvider() || this.getMetaMaskProvider();
     if (!ethereum) {
-      throw new Error('Trust Wallet not found. Please install Trust Wallet or use Trust Wallet browser.');
+      if (typeof window === 'undefined') {
+        throw new Error('Trust Wallet can only be used in a browser environment.');
+      }
+      throw new Error('Trust Wallet not found. Please install Trust Wallet app or use Trust Wallet browser.');
     }
 
     try {
-      // Request account access
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      // Request account access with timeout
+      const accounts = await Promise.race([
+        ethereum.request({
+          method: 'eth_requestAccounts',
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Connection timeout. Please try again.')), 30000)
+        )
+      ]) as string[];
 
       if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts found. Please connect your Trust Wallet.');
+        throw new Error('No accounts found. Please unlock your Trust Wallet and try again.');
       }
 
       // Create provider and signer
@@ -223,10 +256,23 @@ export class WalletManager {
       this.setupEventListeners();
       this.notifyListeners(true, address);
 
+      console.log('Trust Wallet connected successfully:', address);
       return connection;
     } catch (error: any) {
       console.error('Trust Wallet connection failed:', error);
-      throw new Error(`Trust Wallet connection failed: ${error.message}`);
+      
+      // Provide more specific error messages
+      if (error.code === 4001) {
+        throw new Error('Connection rejected. Please approve the connection request in Trust Wallet.');
+      }
+      if (error.code === -32002) {
+        throw new Error('Connection request pending. Please check your Trust Wallet app.');
+      }
+      if (error.message?.includes('timeout')) {
+        throw new Error('Connection timeout. Please try again and ensure Trust Wallet is responding.');
+      }
+      
+      throw new Error(`Trust Wallet connection failed: ${error.message || 'Unknown error occurred'}`);
     }
   }
 
