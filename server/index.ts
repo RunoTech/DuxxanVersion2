@@ -3,6 +3,7 @@ import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { testFirebaseConnection } from "./firebase-test";
+import { debugFirebaseKey } from "./firebase-debug";
 import { 
   corsOptions, 
   globalRateLimit, 
@@ -245,6 +246,9 @@ app.use((req, res, next) => {
     reusePort: true,
   }, async () => {
     log(`serving on port ${port}`);
+    
+    // Debug Firebase configuration
+    debugFirebaseKey();
     
     // Test Firebase connection
     const firebaseConnected = await testFirebaseConnection();

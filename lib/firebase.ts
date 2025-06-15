@@ -504,6 +504,10 @@ class FirebaseService {
 
   // Health check
   async healthCheck(): Promise<boolean> {
+    if (!this.checkInitialized() || !this.db || !this.auth) {
+      return false;
+    }
+    
     try {
       // Test Firestore connection
       await this.db.collection('health_check').doc('test').set({ 
