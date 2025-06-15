@@ -41,6 +41,12 @@ export default function CommunityDetail() {
   const channel = (channelData as any)?.data;
   const raffles = (rafflesData as any)?.data || [];
 
+  // Debug logging
+  console.log('Channel ID:', id);
+  console.log('Channel Data:', channelData);
+  console.log('Extracted Channel:', channel);
+  console.log('Loading state:', channelLoading);
+
   const handleJoin = () => {
     // Simulate wallet connection action
     toast({
