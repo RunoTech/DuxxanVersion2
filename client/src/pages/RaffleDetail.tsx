@@ -128,7 +128,7 @@ export default function RaffleDetail() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold dark:text-duxxan-text mb-2 text-[#ffc929]">
               {safeRaffle.title}
             </h1>
             <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
