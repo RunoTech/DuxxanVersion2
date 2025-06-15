@@ -5,6 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import {
@@ -20,7 +25,21 @@ import {
   Send,
   Info,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Settings,
+  Edit,
+  Star,
+  TrendingUp,
+  Clock,
+  Target,
+  Award,
+  MessageCircle,
+  Heart,
+  Bookmark,
+  MoreHorizontal,
+  Plus,
+  Eye,
+  Activity
 } from 'lucide-react';
 
 export default function CommunityDetail() {
@@ -28,9 +47,15 @@ export default function CommunityDetail() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    description: '',
+    category: ''
+  });
 
   // Fetch channel details
-  const { data: channelData, isLoading: channelLoading } = useQuery({
+  const { data: channelData, isLoading: channelLoading, refetch } = useQuery({
     queryKey: [`/api/channels/${id}`],
     enabled: !!id,
   });
@@ -47,6 +72,18 @@ export default function CommunityDetail() {
   // Parse demo content if available
   const demoContent = channel?.demoContent ? JSON.parse(channel.demoContent) : null;
   const displayRaffles = channel?.isDemo && demoContent?.sampleRaffles ? demoContent.sampleRaffles : raffles;
+
+  // Check if current user is the channel creator (simplified for demo)
+  const isChannelCreator = true; // In real app, check against authenticated user ID
+
+  // Initialize edit form when channel data loads
+  if (channel && editForm.name === '') {
+    setEditForm({
+      name: channel.name || '',
+      description: channel.description || '',
+      category: channel.category || ''
+    });
+  }
 
   const handleJoin = () => {
     // Simulate wallet connection action
@@ -102,6 +139,33 @@ export default function CommunityDetail() {
     });
   };
 
+  const handleEditChannel = async () => {
+    try {
+      const response = await apiRequest('PUT', `/api/channels/${id}`, editForm);
+      if (response.ok) {
+        toast({
+          title: "Kanal güncellendi!",
+          description: "Kanal bilgileri başarıyla güncellendi.",
+        });
+        setIsEditing(false);
+        refetch();
+      }
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Kanal güncellenirken bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditFormChange = (field: string, value: string) => {
+    setEditForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   if (channelLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
@@ -132,232 +196,465 @@ export default function CommunityDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
+      {/* Hero Section with Cover Image */}
+      <div className="relative h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        
+        {/* Navigation */}
+        <div className="relative z-10 flex items-center justify-between p-6">
           <Button
             onClick={() => setLocation('/community')}
             variant="ghost"
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Geri Dön
+            Topluluklar
           </Button>
           
-          <div className="relative">
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-500 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              Paylaş
-            </Button>
-            
-            {showShareMenu && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                <div className="p-2">
-                  <button
-                    onClick={copyToClipboard}
-                    className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          <div className="flex items-center gap-3">
+            {isChannelCreator && (
+              <Dialog open={isEditing} onOpenChange={setIsEditing}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
                   >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Bağlantıyı Kopyala
-                  </button>
-                  <button
-                    onClick={() => shareToSocial('twitter')}
-                    className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                  >
-                    <Twitter className="h-4 w-4 mr-2" />
-                    Twitter'da Paylaş
-                  </button>
-                  <button
-                    onClick={() => shareToSocial('facebook')}
-                    className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                  >
-                    <Facebook className="h-4 w-4 mr-2" />
-                    Facebook'ta Paylaş
-                  </button>
-                  <button
-                    onClick={() => shareToSocial('telegram')}
-                    className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Telegram'da Paylaş
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Community Header */}
-        <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 mb-6">
-          <CardHeader className="pb-4">
-            <div className="flex items-start space-x-6">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={channel.avatar} alt={channel.name} />
-                <AvatarFallback className="bg-yellow-500 text-white text-2xl">
-                  {(channel.name || 'T').slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white">
-                        {channel.name}
-                      </CardTitle>
-                      {channel.isDemo && (
-                        <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 border border-orange-300 dark:border-orange-600 px-3 py-1">
-                          DEMO
-                        </Badge>
-                      )}
+                    <Settings className="h-4 w-4 mr-2" />
+                    Düzenle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Kanal Düzenle</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="name">Kanal Adı</Label>
+                      <Input
+                        id="name"
+                        value={editForm.name}
+                        onChange={(e) => handleEditFormChange('name', e.target.value)}
+                        placeholder="Kanal adını girin"
+                      />
                     </div>
-                    <div className="flex items-center space-x-2 mb-3">
-                      <Badge variant="secondary" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-600">
-                        {channel.category}
-                      </Badge>
-                      <span className="text-gray-600 dark:text-gray-400 text-sm">
-                        Oluşturan: {channel.creator?.username || 'Anonymous'}
-                      </span>
+                    <div>
+                      <Label htmlFor="description">Açıklama</Label>
+                      <Textarea
+                        id="description"
+                        value={editForm.description}
+                        onChange={(e) => handleEditFormChange('description', e.target.value)}
+                        placeholder="Kanal açıklamasını girin"
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="category">Kategori</Label>
+                      <Select
+                        value={editForm.category}
+                        onValueChange={(value) => handleEditFormChange('category', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Kategori seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="kripto">Kripto</SelectItem>
+                          <SelectItem value="teknoloji">Teknoloji</SelectItem>
+                          <SelectItem value="finans">Finans</SelectItem>
+                          <SelectItem value="egitim">Eğitim</SelectItem>
+                          <SelectItem value="genel">Genel</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex gap-2 pt-4">
+                      <Button onClick={handleEditChannel} className="flex-1">
+                        Kaydet
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEditing(false)}
+                        className="flex-1"
+                      >
+                        İptal
+                      </Button>
                     </div>
                   </div>
-                  
-                  <Button
-                    onClick={handleJoin}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 text-lg font-semibold"
-                  >
-                    <Users className="h-5 w-5 mr-2" />
-                    Katıl
+                </DialogContent>
+              </Dialog>
+            )}
+            
+            <div className="relative">
+              <Button
+                onClick={handleShare}
+                variant="ghost"
+                className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
+              >
+                <Share2 className="h-4 w-4 mr-2" />
+                Paylaş
+              </Button>
+              
+              {showShareMenu && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl backdrop-blur-sm z-20">
+                  <div className="p-2">
+                    <button
+                      onClick={copyToClipboard}
+                      className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Bağlantıyı Kopyala
+                    </button>
+                    <button
+                      onClick={() => shareToSocial('twitter')}
+                      className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                    >
+                      <Twitter className="h-4 w-4 mr-2" />
+                      Twitter'da Paylaş
+                    </button>
+                    <button
+                      onClick={() => shareToSocial('facebook')}
+                      className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                    >
+                      <Facebook className="h-4 w-4 mr-2" />
+                      Facebook'ta Paylaş
+                    </button>
+                    <button
+                      onClick={() => shareToSocial('telegram')}
+                      className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Telegram'da Paylaş
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="absolute bottom-6 left-6 right-6 z-10">
+          <div className="flex items-end gap-6">
+            <Avatar className="h-24 w-24 border-4 border-white/20 shadow-2xl">
+              <AvatarImage src={channel?.avatar} alt={channel?.name} />
+              <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white text-2xl font-bold">
+                {(channel?.name || 'C').slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            
+            <div className="flex-1 text-white">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-4xl font-bold">{channel?.name}</h1>
+                {channel?.isDemo && (
+                  <Badge className="bg-orange-500/90 text-white border-orange-400 px-3 py-1 text-sm backdrop-blur-sm">
+                    DEMO
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-4 mb-3">
+                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                  {channel?.category}
+                </Badge>
+                <span className="text-white/80 text-sm flex items-center gap-1">
+                  <Users className="h-4 w-4" />
+                  {channel?.creator?.username || 'Anonymous'}
+                </span>
+              </div>
+              <p className="text-white/90 text-lg leading-relaxed max-w-2xl">
+                {channel?.description}
+              </p>
+            </div>
+            
+            <Button
+              onClick={handleJoin}
+              size="lg"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-0 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+            >
+              <Users className="h-5 w-5 mr-2" />
+              Katıl
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 -mt-16 relative z-10">
+          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                {(channel?.subscriberCount || 0).toLocaleString()}
+              </div>
+              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Abone</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <DollarSign className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                ${(channel?.totalPrizeAmount || 0).toLocaleString()}
+              </div>
+              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Toplam Ödül</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Activity className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                {channel?.activeRaffleCount || 0}
+              </div>
+              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Aktif Çekiliş</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                {Math.floor(Math.random() * 100)}%
+              </div>
+              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Büyüme</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Action Bar */}
+        <div className="flex flex-col lg:flex-row gap-6 mb-8">
+          <Card className="flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    Topluluk Aktivitesi
+                  </h3>
+                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <Eye className="h-4 w-4" />
+                      1.2k görüntüleme
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="h-4 w-4" />
+                      45 yorum
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Heart className="h-4 w-4" />
+                      234 beğeni
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="gap-2">
+                    <Heart className="h-4 w-4" />
+                    Beğen
+                  </Button>
+                  <Button size="sm" variant="outline" className="gap-2">
+                    <Bookmark className="h-4 w-4" />
+                    Kaydet
                   </Button>
                 </div>
-                
-                <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                  {channel.description}
-                </p>
               </div>
-            </div>
-          </CardHeader>
+            </CardContent>
+          </Card>
           
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 text-center">
-                <Users className="h-8 w-8 text-yellow-600 dark:text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                  {(channel.subscriberCount || 0).toLocaleString()}
+          {isChannelCreator && (
+            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-700">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      Kanal Yönetimi
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Kanalınızı yönetin ve yeni içerik ekleyin
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Çekiliş Ekle
+                    </Button>
+                    <Button size="sm" variant="outline" className="gap-2">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Abone</div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
-                <DollarSign className="h-8 w-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  ${(channel.totalPrizes || 0).toLocaleString()}
-                </div>
-                <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Toplam Ödül</div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 text-center">
-                <Calendar className="h-8 w-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {raffles.length}
-                </div>
-                <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Aktif Çekiliş</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
         {/* Raffles Section */}
-        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-          <CardHeader>
+        <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <CardHeader className="border-b border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                {channel?.isDemo ? 'Demo Çekilişler' : 'Aktif ve Gelecek Çekilişler'}
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                  <Target className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {channel?.isDemo ? 'Demo Çekilişler' : 'Aktif ve Gelecek Çekilişler'}
+                  </CardTitle>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {displayRaffles.length} çekiliş bulundu
+                  </p>
+                </div>
+              </div>
               {channel?.isDemo && (
-                <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 border border-blue-300 dark:border-blue-600">
+                <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700 px-3 py-1">
                   Örnek İçerik
                 </Badge>
               )}
             </div>
             {channel?.isDemo && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                Bu demo kanalında örnek çekiliş içerikleri görüntülenmektedir. Gerçek çekiliş değildir.
-              </p>
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+                <p className="text-sm text-blue-700 dark:text-blue-400 flex items-center gap-2">
+                  <Info className="h-4 w-4" />
+                  Bu demo kanalında örnek çekiliş içerikleri görüntülenmektedir. Gerçek çekiliş değildir.
+                </p>
+              </div>
             )}
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             {rafflesLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin w-6 h-6 border-4 border-yellow-500 border-t-transparent rounded-full" />
+              <div className="flex items-center justify-center py-16">
+                <div className="text-center">
+                  <div className="animate-spin w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-400">Çekilişler yükleniyor...</p>
+                </div>
               </div>
             ) : displayRaffles.length > 0 ? (
-              <div className="space-y-4">
+              <div className="divide-y divide-gray-100 dark:divide-gray-700">
                 {displayRaffles.map((raffle: any, index: number) => (
                   <div
                     key={channel?.isDemo ? `demo-${index}` : raffle.id}
-                    className={`flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors ${
+                    className={`p-6 transition-all duration-200 ${
                       channel?.isDemo 
-                        ? 'cursor-default border-dashed' 
-                        : 'hover:border-yellow-400 dark:hover:border-yellow-500 cursor-pointer'
+                        ? 'cursor-default' 
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer'
                     }`}
                     onClick={() => !channel?.isDemo && setLocation(`/raffles/${raffle.id}`)}
                   >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
-                          {raffle.title}
-                        </h3>
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Award className="h-8 w-8 text-white" />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
+                                {raffle.title}
+                              </h3>
+                              {channel?.isDemo && (
+                                <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600 border-orange-200">
+                                  DEMO
+                                </Badge>
+                              )}
+                              <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
+                                Aktif
+                              </Badge>
+                            </div>
+                            
+                            {raffle.description && (
+                              <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                                {raffle.description}
+                              </p>
+                            )}
+                            
+                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                                <Clock className="h-4 w-4" />
+                                <span>
+                                  {channel?.isDemo 
+                                    ? formatDate(raffle.endDate) 
+                                    : formatDate(raffle.startDate || raffle.createdAt)
+                                  }
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1 text-green-600 dark:text-green-400 font-semibold">
+                                <DollarSign className="h-4 w-4" />
+                                <span>{raffle.prizeValue} USDT</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                                <Users className="h-4 w-4" />
+                                <span>{Math.floor(Math.random() * 500) + 50} katılımcı</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col items-end gap-2">
+                            {!channel?.isDemo ? (
+                              <Button size="sm" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white">
+                                Katıl
+                              </Button>
+                            ) : (
+                              <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
+                                Önizleme
+                              </div>
+                            )}
+                            
+                            <div className="flex items-center gap-1">
+                              {!channel?.isDemo && <ExternalLink className="h-4 w-4 text-gray-400" />}
+                              <Star className="h-4 w-4 text-yellow-500" />
+                              <span className="text-xs text-gray-500">{(Math.random() * 5).toFixed(1)}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Progress Bar for Demo */}
                         {channel?.isDemo && (
-                          <Badge variant="outline" className="text-xs">
-                            DEMO
-                          </Badge>
+                          <div className="mt-4">
+                            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
+                              <span>İlerleme</span>
+                              <span>{Math.floor(Math.random() * 80) + 20}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div 
+                                className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" 
+                                style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }}
+                              />
+                            </div>
+                          </div>
                         )}
                       </div>
-                      {raffle.description && (
-                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                          {raffle.description}
-                        </p>
-                      )}
-                      <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {channel?.isDemo 
-                            ? formatDate(raffle.endDate) 
-                            : formatDate(raffle.startDate || raffle.createdAt)
-                          }
-                        </div>
-                        <div className="flex items-center">
-                          <DollarSign className="h-4 w-4 mr-1" />
-                          {raffle.prizeValue}
-                        </div>
-                      </div>
                     </div>
-                    {!channel?.isDemo && <ExternalLink className="h-5 w-5 text-gray-400" />}
-                    {channel?.isDemo && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded">
-                        Önizleme
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <div className="text-center py-16">
+                <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="h-12 w-12 text-gray-400" />
+                </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {channel?.isDemo ? 'Demo İçerik Yükleniyor' : 'Henüz Çekiliş Yok'}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
                   {channel?.isDemo 
-                    ? 'Demo çekiliş içerikleri hazırlanıyor...'
-                    : 'Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor.'
+                    ? 'Demo çekiliş içerikleri hazırlanıyor. Lütfen bekleyin.'
+                    : 'Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor. İlk çekilişi başlatmak için kanal oluşturucusuyla iletişime geçin.'
                   }
                 </p>
+                {!channel?.isDemo && isChannelCreator && (
+                  <Button className="mt-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
+                    <Plus className="h-4 w-4 mr-2" />
+                    İlk Çekilişi Oluştur
+                  </Button>
+                )}
               </div>
             )}
           </CardContent>
