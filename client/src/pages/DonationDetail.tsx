@@ -416,7 +416,7 @@ export default function DonationDetail() {
                   ))}
                 </div>
                 
-                <div className="bg-yellow-50 dark:bg-duxxan-dark p-3 rounded-lg border border-yellow-200 dark:border-duxxan-border">
+                <div className="bg-white dark:bg-duxxan-dark p-3 rounded-lg border border-yellow-300 dark:border-duxxan-border">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600 dark:text-duxxan-text-secondary">Bağış Tutarı:</span>
                     <span className="text-gray-900 dark:text-duxxan-text">{donationAmount} USDT</span>
