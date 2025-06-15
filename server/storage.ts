@@ -497,11 +497,16 @@ export class DatabaseStorage implements IStorage {
 
   // User Device methods
   async createUserDevice(device: InsertUserDevice & { userId: number }): Promise<UserDevice> {
-    const [newDevice] = await db
-      .insert(userDevices)
-      .values(device)
-      .returning();
-    return newDevice;
+    return this.withErrorHandling(async () => {
+      const [newDevice] = await db
+        .insert(userDevices)
+        .values({
+          ...device,
+          deviceFingerprint: device.deviceFingerprint || 'unknown'
+        })
+        .returning();
+      return newDevice;
+    }, 'createUserDevice');
   }
 
   async getUserDevices(userId: number): Promise<UserDevice[]> {

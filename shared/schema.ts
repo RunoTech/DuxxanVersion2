@@ -149,7 +149,7 @@ export const follows = pgTable("follows", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Device login logging table
+// Device login logging table with enhanced fingerprinting
 export const userDevices = pgTable("user_devices", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -160,6 +160,17 @@ export const userDevices = pgTable("user_devices", {
   ipAddress: varchar("ip_address", { length: 45 }), // supports IPv6
   userAgent: text("user_agent"),
   location: varchar("location", { length: 100 }), // city, country if available
+  // Enhanced device fingerprinting for security
+  deviceFingerprint: varchar("device_fingerprint", { length: 64 }).notNull(),
+  acceptLanguage: varchar("accept_language", { length: 100 }),
+  acceptEncoding: varchar("accept_encoding", { length: 100 }),
+  screenResolution: varchar("screen_resolution", { length: 20 }),
+  colorDepth: varchar("color_depth", { length: 10 }),
+  // Security and trust tracking
+  isVerified: boolean("is_verified").default(false),
+  isTrusted: boolean("is_trusted").default(false),
+  suspiciousActivity: integer("suspicious_activity").default(0),
+  securityScore: integer("security_score").default(50), // 0-100 trust score
   // Detailed geolocation tracking
   countryCode: varchar("country_code", { length: 3 }), // ISO country code
   countryName: varchar("country_name", { length: 100 }),

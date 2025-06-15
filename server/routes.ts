@@ -16,7 +16,17 @@ import {
   securityMiddleware,
   requestSizeLimit,
   patternDetection,
-  getSecurityStatus
+  getSecurityStatus,
+  csrfMiddleware,
+  deviceFingerprintMiddleware,
+  sanitizationMiddleware,
+  validationMiddleware,
+  walletValidation,
+  amountValidation,
+  textValidation,
+  deviceInfoValidation,
+  generateDeviceFingerprint,
+  csrfProtection
 } from "./security";
 import { requestTimingMiddleware, healthCheckHandler, metricsHandler } from "../lib/monitoring";
 import { 
@@ -42,7 +52,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health and monitoring endpoints
   app.get('/health', healthCheckHandler);
   app.get('/metrics', metricsHandler);
-  app.get('/api/monitoring/status', getSecurityStatus);
+  app.get('/api/security/status', getSecurityStatus);
+  
+  // Security endpoints with enhanced validation
+  app.post('/api/security/csrf-token', (req, res) => {
+    const sessionId = (req as any).sessionID || req.ip;
+    const token = csrfProtection.generateToken(sessionId);
+    res.json({ csrfToken: token });
+  });
+  
+  app.post('/api/security/device-fingerprint', deviceInfoValidation, validationMiddleware, (req, res) => {
+    const fingerprint = generateDeviceFingerprint(req, req.body);
+    res.json({ deviceFingerprint: fingerprint });
+  });
   
   // Temporarily disabled aggressive protection to allow normal app functionality
   // app.use(patternDetection);
