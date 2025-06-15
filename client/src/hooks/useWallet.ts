@@ -39,14 +39,48 @@ export function useWallet() {
     // Check for existing connection on mount
     const walletManager = WalletManager.getInstance();
     const existingConnection = walletManager.getConnection();
-    if (existingConnection) {
+    
+    // Also check localStorage for stored connection
+    const storedConnection = localStorage.getItem('wallet_connection');
+    const storedAuth = localStorage.getItem('wallet_authenticated') === 'true';
+    
+    if (existingConnection && storedAuth) {
       setConnection(existingConnection);
+      // Restore user data from localStorage
+      const storedAddress = localStorage.getItem('wallet_address');
+      if (storedAddress) {
+        setUser({ walletAddress: storedAddress });
+      }
+    } else if (storedConnection && storedAuth) {
+      // Restore connection from localStorage
+      try {
+        const parsedConnection = JSON.parse(storedConnection);
+        setConnection(parsedConnection);
+        const storedAddress = localStorage.getItem('wallet_address');
+        if (storedAddress) {
+          setUser({ walletAddress: storedAddress });
+        }
+      } catch (error) {
+        console.error('Failed to restore connection from localStorage:', error);
+        localStorage.removeItem('wallet_connection');
+      }
     }
 
     // Listen for connection changes
     const handleConnectionChange = (connected: boolean, address?: string) => {
       if (!connected) {
         setConnection(null);
+        setUser(null);
+        localStorage.removeItem('wallet_connection');
+        localStorage.removeItem('wallet_authenticated');
+        localStorage.removeItem('wallet_address');
+      } else if (address) {
+        // Update connection when address changes
+        const walletManager = WalletManager.getInstance();
+        const currentConnection = walletManager.getConnection();
+        if (currentConnection) {
+          setConnection(currentConnection);
+        }
       }
     };
 

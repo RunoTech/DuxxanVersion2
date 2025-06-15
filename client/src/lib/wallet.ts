@@ -9,9 +9,11 @@ declare global {
 
 export interface WalletConnection {
   address: string;
-  provider: BrowserProvider;
-  signer: JsonRpcSigner;
-  chainId: number;
+  provider?: BrowserProvider;
+  signer?: JsonRpcSigner;
+  chainId: string;
+  walletType: 'metamask' | 'trustwallet';
+  isConnected: boolean;
 }
 
 export class WalletManager {
@@ -377,16 +379,45 @@ export class WalletManager {
 
   async autoConnect(): Promise<boolean> {
     try {
-      const ethereum = this.getMetaMaskProvider();
+      if (typeof window === 'undefined') return false;
+      
+      const ethereum = this.getMetaMaskProvider() || this.getTrustWalletProvider();
       if (!ethereum) return false;
 
-      const accounts = await ethereum.request({ method: 'eth_accounts' });
+      // Check if already connected
+      const accounts = await ethereum.request({
+        method: 'eth_accounts',
+      }) as string[];
+
       if (accounts && accounts.length > 0) {
-        await this.connectMetaMask();
+        const address = accounts[0];
+        
+        // Verify network is correct
+        await this.switchToBSC(ethereum);
+        
+        const walletType = ethereum.isMetaMask ? 'metamask' : 'trustwallet';
+        this.connection = {
+          address,
+          walletType,
+          isConnected: true,
+          chainId: '0x38', // BSC
+        };
+        
+        // Store connection in localStorage for persistence
+        localStorage.setItem('wallet_connection', JSON.stringify({
+          address: address,
+          walletType: walletType,
+          isConnected: true,
+          chainId: '0x38'
+        }));
+        
+        this.notifyListeners(true, address);
         return true;
       }
     } catch (error) {
       console.error('Auto-connect failed:', error);
+      // Clear stored connection on error
+      localStorage.removeItem('wallet_connection');
     }
     return false;
   }
