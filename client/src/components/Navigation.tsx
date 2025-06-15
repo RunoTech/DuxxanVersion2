@@ -3,13 +3,15 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Sun, Moon } from 'lucide-react';
-import { useWallet } from '@/hooks/useWallet';
+import { walletManager } from '@/lib/wallet';
+import { WalletConnect } from '@/components/WalletConnect';
 import { useTheme } from '@/components/ThemeProvider';
 
 function NavigationComponent() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected, connectMetaMask, connectTrustWallet, disconnect, connection } = useWallet();
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const { theme, toggleTheme } = useTheme();
 
   const navItems = [

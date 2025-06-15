@@ -58,7 +58,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/metrics', metricsHandler);
   app.get('/api/security/status', getSecurityStatus);
   
-  // Authentication endpoints with JWT and device fingerprinting
+  // Wallet authentication for MetaMask/Trust Wallet
+  app.post('/api/auth/wallet-login', authRateLimit, async (req, res) => {
+    try {
+      const { walletAddress, chainId } = req.body;
+      
+      if (!walletAddress || !walletAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+        return res.status(400).json({ error: "Invalid wallet address" });
+      }
+
+      // Find or create user
+      let user = await storage.getUserByWalletAddress(walletAddress);
+      
+      if (!user) {
+        const userData = {
+          walletAddress,
+          username: `user_${walletAddress.slice(-8)}`,
+          name: null,
+          profession: null,
+          bio: null,
+          profileImage: null,
+          profilePhoto: null,
+          email: null,
+          phoneNumber: null,
+          dateOfBirth: null,
+          gender: null,
+          city: null,
+          address: null,
+          website: null,
+          socialMediaTwitter: null,
+          socialMediaInstagram: null,
+          socialMediaLinkedin: null,
+          socialMediaFacebook: null,
+          organizationType: "individual" as const,
+          organizationName: null,
+          verificationUrl: null,
+          country: null
+        };
+        
+        user = await storage.createUser(userData);
+        
+        await firebase.saveUserActivity(user.id, 'wallet_registration', {
+          walletAddress,
+          chainId,
+          registrationTime: new Date().toISOString()
+        });
+      }
+
+      // Create Redis session
+      const sessionKey = `duxxan:user:${user.id}:session`;
+      await redis.hset(sessionKey, 'userId', user.id.toString());
+      await redis.hset(sessionKey, 'username', user.username);
+      await redis.hset(sessionKey, 'walletAddress', user.walletAddress);
+      await redis.hset(sessionKey, 'lastLoginTime', new Date().toISOString());
+      await redis.hset(sessionKey, 'chainId', chainId?.toString() || '56');
+      await redis.hset(sessionKey, 'deviceType', 'web');
+      await redis.hset(sessionKey, 'status', 'active');
+
+      await firebase.saveUserActivity(user.id, 'wallet_login', {
+        walletAddress,
+        chainId,
+        loginTime: new Date().toISOString(),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent')
+      });
+
+      res.json({ 
+        user: {
+          id: user.id,
+          walletAddress: user.walletAddress,
+          username: user.username,
+          name: user.name,
+          profileImage: user.profileImage
+        },
+        message: "Wallet connected successfully" 
+      });
+
+    } catch (error: any) {
+      console.error('Wallet authentication error:', error);
+      res.status(500).json({ error: "Wallet authentication failed" });
+    }
+  });
+
+  app.post('/api/auth/logout', async (req, res) => {
+    try {
+      await redis.invalidateCache('duxxan:user:*:session');
+      res.json({ message: "Logged out successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Logout failed" });
+    }
+  });
+
+  // Legacy authentication endpoints
   app.post('/api/auth/login', authRateLimit, walletValidation, deviceInfoValidation, validationMiddleware, async (req, res) => {
     try {
       const { walletAddress, deviceInfo } = req.body;
