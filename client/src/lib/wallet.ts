@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BrowserProvider, JsonRpcSigner } from 'ethers';
 
 declare global {
   interface Window {
@@ -8,96 +8,100 @@ declare global {
 
 export interface WalletConnection {
   address: string;
-  provider: ethers.BrowserProvider;
-  signer: ethers.JsonRpcSigner;
+  provider: BrowserProvider;
+  signer: JsonRpcSigner;
+  chainId: number;
 }
 
-export class WalletService {
-  private static instance: WalletService;
+export class WalletManager {
+  private static instance: WalletManager;
   private connection: WalletConnection | null = null;
+  private listeners: Set<(connected: boolean, address?: string) => void> = new Set();
 
-  static getInstance(): WalletService {
-    if (!WalletService.instance) {
-      WalletService.instance = new WalletService();
+  private constructor() {}
+
+  static getInstance(): WalletManager {
+    if (!WalletManager.instance) {
+      WalletManager.instance = new WalletManager();
     }
-    return WalletService.instance;
+    return WalletManager.instance;
   }
 
-  async connectMetaMask(): Promise<WalletConnection> {
+  async connectWallet(): Promise<WalletConnection> {
     if (!window.ethereum) {
-      throw new Error('MetaMask not installed');
+      throw new Error('MetaMask veya Trust Wallet yüklü değil. Lütfen yükleyip tekrar deneyin.');
     }
 
     try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      // Request account access
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('Cüzdan bağlantısı reddedildi');
+      }
+
+      const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
+      const network = await provider.getNetwork();
 
-      // Switch to BSC network
-      await this.switchToBSC();
+      // Verify BSC network (Chain ID 56 for mainnet, 97 for testnet)
+      const chainId = Number(network.chainId);
+      if (chainId !== 56 && chainId !== 97) {
+        await this.switchToBSC();
+      }
 
-      this.connection = { address, provider, signer };
+      this.connection = {
+        address,
+        provider,
+        signer,
+        chainId
+      };
+
+      this.notifyListeners(true, address);
       return this.connection;
-    } catch (error) {
-      throw new Error('Failed to connect to MetaMask');
+
+    } catch (error: any) {
+      console.error('Wallet connection failed:', error);
+      throw new Error(error.message || 'Cüzdan bağlantısı başarısız');
     }
   }
 
-  async connectTrustWallet(): Promise<WalletConnection> {
-    // Trust Wallet uses the same ethereum provider interface
-    return this.connectMetaMask();
-  }
+  async switchToBSC(): Promise<void> {
+    if (!window.ethereum) return;
 
-  private async switchToBSC(): Promise<void> {
-    const BSC_CHAIN_ID = '0x38'; // BSC Mainnet
-    const BSC_TESTNET_CHAIN_ID = '0x61'; // BSC Testnet
-    
-    // Use testnet for development
-    const chainId = process.env.NODE_ENV === 'development' ? BSC_TESTNET_CHAIN_ID : BSC_CHAIN_ID;
-    
     try {
+      // Try to switch to BSC mainnet
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId }],
+        params: [{ chainId: '0x38' }], // BSC mainnet
       });
     } catch (switchError: any) {
-      // Chain not added, add it
+      // If BSC is not added, add it
       if (switchError.code === 4902) {
-        const chainParams = chainId === BSC_TESTNET_CHAIN_ID ? {
-          chainId: BSC_TESTNET_CHAIN_ID,
-          chainName: 'BSC Testnet',
-          nativeCurrency: {
-            name: 'BNB',
-            symbol: 'BNB',
-            decimals: 18,
-          },
-          rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-          blockExplorerUrls: ['https://testnet.bscscan.com/'],
-        } : {
-          chainId: BSC_CHAIN_ID,
-          chainName: 'BSC Mainnet',
-          nativeCurrency: {
-            name: 'BNB',
-            symbol: 'BNB',
-            decimals: 18,
-          },
-          rpcUrls: ['https://bsc-dataseed.binance.org/'],
-          blockExplorerUrls: ['https://bscscan.com/'],
-        };
-
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
-          params: [chainParams],
+          params: [{
+            chainId: '0x38',
+            chainName: 'Binance Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'BNB',
+              decimals: 18
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            blockExplorerUrls: ['https://bscscan.com/']
+          }],
         });
-      } else {
-        throw switchError;
       }
     }
   }
 
-  async disconnect(): Promise<void> {
+  async disconnectWallet(): Promise<void> {
     this.connection = null;
+    this.notifyListeners(false);
   }
 
   getConnection(): WalletConnection | null {
@@ -108,36 +112,78 @@ export class WalletService {
     return this.connection !== null;
   }
 
+  getAddress(): string | null {
+    return this.connection?.address || null;
+  }
+
+  onConnectionChange(callback: (connected: boolean, address?: string) => void): () => void {
+    this.listeners.add(callback);
+    return () => this.listeners.delete(callback);
+  }
+
+  private notifyListeners(connected: boolean, address?: string): void {
+    this.listeners.forEach(callback => callback(connected, address));
+  }
+
+  async signMessage(message: string): Promise<string> {
+    if (!this.connection) {
+      throw new Error('Cüzdan bağlı değil');
+    }
+
+    return await this.connection.signer.signMessage(message);
+  }
+
   async getBalance(): Promise<string> {
     if (!this.connection) {
-      throw new Error('Wallet not connected');
+      throw new Error('Cüzdan bağlı değil');
     }
 
     const balance = await this.connection.provider.getBalance(this.connection.address);
-    return ethers.formatEther(balance);
+    return balance.toString();
   }
 
-  async getUSDTBalance(): Promise<string> {
-    if (!this.connection) {
-      throw new Error('Wallet not connected');
+  // Auto-connect if previously connected
+  async autoConnect(): Promise<boolean> {
+    if (!window.ethereum) return false;
+
+    try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_accounts'
+      });
+
+      if (accounts && accounts.length > 0) {
+        await this.connectWallet();
+        return true;
+      }
+    } catch (error) {
+      console.error('Auto-connect failed:', error);
     }
 
-    // USDT contract address on BSC
-    const USDT_CONTRACT = process.env.NODE_ENV === 'development' 
-      ? '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd' // BSC Testnet USDT
-      : '0x55d398326f99059fF775485246999027B3197955'; // BSC Mainnet USDT
+    return false;
+  }
 
-    const usdtAbi = [
-      'function balanceOf(address owner) view returns (uint256)',
-      'function decimals() view returns (uint8)'
-    ];
+  // Listen for account changes
+  setupEventListeners(): void {
+    if (!window.ethereum) return;
 
-    const contract = new ethers.Contract(USDT_CONTRACT, usdtAbi, this.connection.provider);
-    const balance = await contract.balanceOf(this.connection.address);
-    const decimals = await contract.decimals();
-    
-    return ethers.formatUnits(balance, decimals);
+    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      if (accounts.length === 0) {
+        this.disconnectWallet();
+      } else {
+        this.connectWallet();
+      }
+    });
+
+    window.ethereum.on('chainChanged', (chainId: string) => {
+      // Reload page on chain change
+      window.location.reload();
+    });
   }
 }
 
-export const walletService = WalletService.getInstance();
+export const walletManager = WalletManager.getInstance();
+
+// Initialize event listeners
+if (typeof window !== 'undefined') {
+  walletManager.setupEventListeners();
+}
