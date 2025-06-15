@@ -73,14 +73,14 @@ export default function Community() {
     queryKey: ['/api/channels'],
   });
 
-  const channels = channelsData?.data || [];
+  const channels = (channelsData as any)?.data || [];
 
   // Fetch upcoming raffles from database
   const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
     queryKey: ['/api/upcoming-raffles'],
   });
 
-  const upcomingRaffles = upcomingRafflesData?.data || [];
+  const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
 
   // Categories for filtering
   const categories = [
