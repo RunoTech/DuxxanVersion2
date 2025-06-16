@@ -243,17 +243,54 @@ html, body {
   overflow: visible;
 }
 
-/* Remove chart hover effects */
-.recharts-rectangle:hover,
-.recharts-bar-rectangle:hover {
-  filter: none !important;
-  opacity: 1 !important;
+/* Chart tooltip theme compatibility */
+.recharts-tooltip-wrapper {
+  z-index: 1000;
 }
 
-.recharts-active-bar,
-.recharts-bar:hover {
-  filter: none !important;
-  opacity: 1 !important;
+.recharts-default-tooltip {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border: 1px solid rgba(75, 85, 99, 0.3) !important;
+  border-radius: 8px !important;
+  color: #F9FAFB !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.dark .recharts-default-tooltip {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border-color: rgba(75, 85, 99, 0.3) !important;
+  color: #F9FAFB !important;
+}
+
+.recharts-tooltip-label {
+  color: #E5E7EB !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.recharts-tooltip-item {
+  color: #F9FAFB !important;
+}
+
+/* Light theme tooltip overrides */
+@media (prefers-color-scheme: light) {
+  .recharts-default-tooltip {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(229, 231, 235, 0.8) !important;
+    color: #111827 !important;
+  }
+  
+  .recharts-tooltip-label {
+    color: #374151 !important;
+  }
+  
+  .recharts-tooltip-item {
+    color: #111827 !important;
+  }
 }
 
 /* Flex Container Overflow Prevention */

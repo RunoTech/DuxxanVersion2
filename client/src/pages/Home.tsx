@@ -386,7 +386,28 @@ export default function Home() {
                         tick={{ fill: '#9CA3AF' }}
                         tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
                       />
-
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          padding: '8px 12px',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                          backdropFilter: 'blur(8px)'
+                        }}
+                        labelStyle={{ 
+                          color: '#ffffff', 
+                          fontWeight: '600',
+                          marginBottom: '2px'
+                        }}
+                        formatter={(value) => [`$${Number(value).toLocaleString()}`, 'İşlem Hacmi']}
+                        wrapperStyle={{
+                          filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2))'
+                        }}
+                      />
                       <Bar 
                         dataKey="volume" 
                         fill="url(#volumeGradient)"
