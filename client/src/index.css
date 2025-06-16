@@ -243,6 +243,19 @@ html, body {
   overflow: visible;
 }
 
+/* Remove chart hover effects */
+.recharts-rectangle:hover,
+.recharts-bar-rectangle:hover {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.recharts-active-bar,
+.recharts-bar:hover {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
 /* Flex Container Overflow Prevention */
 .duxxan-grid .flex {
   flex-wrap: wrap;
