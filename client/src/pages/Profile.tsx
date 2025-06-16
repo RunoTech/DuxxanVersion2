@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
+import { WalletStatus } from '@/components/WalletStatus';
 import { Separator } from '@/components/ui/separator';
 
 export default function Profile() {
@@ -101,6 +102,11 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-duxxan-dark py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Wallet Status */}
+        <div className="mb-6">
+          <WalletStatus />
+        </div>
+
         <h1 className="text-3xl font-bold mb-8">My Profile</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
