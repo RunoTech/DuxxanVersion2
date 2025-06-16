@@ -1,13 +1,13 @@
-import { ethers } from 'ethers';
+import { ethers, BrowserProvider, Contract, formatUnits, parseUnits, JsonRpcSigner } from 'ethers';
 import { DUXXAN_CONTRACT_ABI } from './contractABI';
 
 export class ContractService {
-  private contract: ethers.Contract | null = null;
-  private provider: ethers.providers.Web3Provider | null = null;
-  private signer: ethers.Signer | null = null;
+  private contract: Contract | null = null;
+  private provider: BrowserProvider | null = null;
+  private signer: JsonRpcSigner | null = null;
 
   // BSC Contract Addresses
-  private readonly CONTRACT_ADDRESS = process.env.VITE_CONTRACT_ADDRESS || '';
+  private readonly CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || '';
   private readonly USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955'; // BSC Mainnet USDT
 
   async initialize() {
@@ -15,15 +15,15 @@ export class ContractService {
       throw new Error('MetaMask not found');
     }
 
-    this.provider = new ethers.providers.Web3Provider(window.ethereum);
+    this.provider = new BrowserProvider(window.ethereum);
     await this.provider.send("eth_requestAccounts", []);
-    this.signer = this.provider.getSigner();
+    this.signer = await this.provider.getSigner();
     
     if (!this.CONTRACT_ADDRESS) {
       throw new Error('Contract address not configured');
     }
 
-    this.contract = new ethers.Contract(
+    this.contract = new Contract(
       this.CONTRACT_ADDRESS,
       DUXXAN_CONTRACT_ABI,
       this.signer
@@ -39,7 +39,7 @@ export class ContractService {
     const network = await this.provider.getNetwork();
     const BSC_CHAIN_ID = 56; // BSC Mainnet
 
-    if (network.chainId !== BSC_CHAIN_ID) {
+    if (Number(network.chainId) !== BSC_CHAIN_ID) {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
@@ -72,7 +72,7 @@ export class ContractService {
   async approveUSDT(amount: string) {
     if (!this.signer) throw new Error('Signer not initialized');
     
-    const usdtContract = new ethers.Contract(
+    const usdtContract = new Contract(
       this.USDT_ADDRESS,
       [
         'function approve(address spender, uint256 amount) external returns (bool)',
@@ -81,7 +81,7 @@ export class ContractService {
       this.signer
     );
 
-    const amountWei = ethers.utils.parseUnits(amount, 18);
+    const amountWei = parseUnits(amount, 18);
     const tx = await usdtContract.approve(this.CONTRACT_ADDRESS, amountWei);
     await tx.wait();
     return tx.hash;
@@ -97,13 +97,13 @@ export class ContractService {
   ) {
     if (!this.contract) throw new Error('Contract not initialized');
 
-    const prizeAmountWei = ethers.utils.parseUnits(prizeAmount, 18);
-    const ticketPriceWei = ethers.utils.parseUnits(ticketPrice, 18);
+    const prizeAmountWei = parseUnits(prizeAmount, 18);
+    const ticketPriceWei = parseUnits(ticketPrice, 18);
     const durationSeconds = duration * 24 * 60 * 60; // Convert days to seconds
 
     // First approve USDT for prize amount + creation fee
-    const totalAmount = ethers.utils.parseUnits((parseFloat(prizeAmount) + 25).toString(), 18);
-    await this.approveUSDT(ethers.utils.formatUnits(totalAmount, 18));
+    const totalAmount = parseUnits((parseFloat(prizeAmount) + 25).toString(), 18);
+    await this.approveUSDT(formatUnits(totalAmount, 18));
 
     const tx = await this.contract.createRaffle(
       title,
@@ -131,14 +131,14 @@ export class ContractService {
     const totalCost = raffle.ticketPrice.mul(quantity);
 
     // Approve USDT for ticket purchase
-    await this.approveUSDT(ethers.utils.formatUnits(totalCost, 18));
+    await this.approveUSDT(formatUnits(totalCost, 18));
 
     const tx = await this.contract.buyTickets(raffleId, quantity);
     const receipt = await tx.wait();
 
     return {
       transactionHash: tx.hash,
-      totalCost: ethers.utils.formatUnits(totalCost, 18),
+      totalCost: formatUnits(totalCost, 18),
       gasUsed: receipt.gasUsed.toString(),
     };
   }
@@ -152,7 +152,7 @@ export class ContractService {
   ) {
     if (!this.contract) throw new Error('Contract not initialized');
 
-    const goalAmountWei = ethers.utils.parseUnits(goalAmount, 18);
+    const goalAmountWei = parseUnits(goalAmount, 18);
     const durationSeconds = duration > 0 ? duration * 24 * 60 * 60 : 0;
 
     // Approve USDT for creation fee
