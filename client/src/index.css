@@ -48,7 +48,12 @@
   
   .duxxan-grid {
     gap: 16px;
+    grid-template-columns: repeat(6, 1fr);
   }
+  
+  .duxxan-col-4 { grid-column: span 6; }
+  .duxxan-col-6 { grid-column: span 6; }
+  .duxxan-col-8 { grid-column: span 6; }
 }
 
 @media (max-width: 480px) {
@@ -59,7 +64,23 @@
   
   .duxxan-grid {
     gap: 12px;
+    grid-template-columns: repeat(1, 1fr);
   }
+  
+  .duxxan-col-1, .duxxan-col-2, .duxxan-col-3, .duxxan-col-4,
+  .duxxan-col-5, .duxxan-col-6, .duxxan-col-7, .duxxan-col-8,
+  .duxxan-col-9, .duxxan-col-10, .duxxan-col-11, .duxxan-col-12 {
+    grid-column: span 1;
+  }
+}
+
+/* Overflow Protection */
+.duxxan-container,
+.duxxan-grid,
+.duxxan-grid > * {
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 :root {
