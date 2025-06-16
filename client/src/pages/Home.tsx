@@ -154,8 +154,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
         {/* Live Connected Wallets - Section Corner */}
-        <div className="absolute top-6 right-6 z-10">
-          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-2 sm:px-3 py-1 sm:py-2 shadow-lg">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
               <span className="text-duxxan-success font-semibold text-sm">
@@ -354,9 +354,9 @@ export default function Home() {
                     ${chartData[chartData.length - 1]?.volume.toLocaleString()}
                   </div>
                 </div>
-                <div className="h-40">
+                <div className="h-40 w-full overflow-hidden">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                    <BarChart data={chartData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
                       <defs>
                         <linearGradient id="volumeGradient" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
@@ -415,16 +415,16 @@ export default function Home() {
       {/* Popular Raffles Section */}
       <section className="py-20 bg-white dark:bg-duxxan-dark">
         <div className="duxxan-container">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-black text-black dark:text-white">Popüler Çekilişler</h2>
-            <div className="flex space-x-4">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-12 gap-6">
+            <h2 className="text-2xl md:text-3xl font-black text-black dark:text-white">Popüler Çekilişler</h2>
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/raffles">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
                   Tüm Çekilişler
                 </Button>
               </Link>
               <Link href="/create-raffle">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
                   Çekiliş Oluştur
                 </Button>
               </Link>
@@ -467,21 +467,21 @@ export default function Home() {
       {/* Donations Section */}
       <section className="py-20 bg-gray-50 dark:bg-duxxan-surface">
         <div className="duxxan-container">
-          <div className="flex justify-between items-center mb-12">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-12 gap-6">
             <div>
-              <h2 className="text-3xl font-black mb-2 text-black dark:text-white">Bağış Kampanyaları</h2>
+              <h2 className="text-2xl md:text-3xl font-black mb-2 text-black dark:text-white">Bağış Kampanyaları</h2>
               <p className="text-gray-600 dark:text-duxxan-text-secondary">
                 Şeffaf blockchain bağışları ile önemli amaçları destekleyin
               </p>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
               <Link href="/donations">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
                   Tüm Kampanyalar
                 </Button>
               </Link>
               <Link href="/create-donation">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
+                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
                   Kampanya Başlat
                 </Button>
               </Link>
@@ -547,11 +547,11 @@ export default function Home() {
             <p className="text-xl text-duxxan-text-secondary mb-8">
               Çekilişlere katılmaya ve bağış kampanyalarını desteklemeye başlamak için cüzdanınızı bağlayın.
             </p>
-            <div className="flex justify-center space-x-4">
-              <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold px-8 py-3 w-full sm:w-auto">
                 MetaMask Bağla
               </Button>
-              <Button variant="outline" className="border-duxxan-yellow text-duxxan-yellow hover:bg-duxxan-yellow hover:text-black font-bold">
+              <Button variant="outline" className="border-duxxan-yellow text-duxxan-yellow hover:bg-duxxan-yellow hover:text-black font-bold px-8 py-3 w-full sm:w-auto">
                 Daha Fazla Bilgi
               </Button>
             </div>
