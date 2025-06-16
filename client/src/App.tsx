@@ -91,7 +91,7 @@ function AppContent() {
   useWebSocket();
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 bg-[#1d2025]">
+    <div className="min-h-screen bg-white dark:bg-[#1D2025] text-gray-900 dark:text-white transition-colors duration-200">
       <Navigation />
       <Router />
       <Footer />

@@ -1,571 +1,428 @@
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RaffleCard } from '@/components/RaffleCard';
-import { DonationCard } from '@/components/DonationCard';
-import { RaffleCardSkeleton } from '@/components/skeletons/RaffleCardSkeleton';
+import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
-import { useWebSocket } from '@/hooks/useWebSocket';
-import { useEffect, useState } from 'react';
-import { useTheme } from '@/components/ThemeProvider';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line } from 'recharts';
+import { 
+  Shield, 
+  Globe, 
+  TrendingUp, 
+  Users, 
+  Heart, 
+  Gift, 
+  Zap, 
+  CheckCircle, 
+  ArrowRight,
+  Star,
+  Award,
+  Lock,
+  Coins,
+  BarChart3,
+  Timer,
+  Target
+} from 'lucide-react';
 
 export default function Home() {
   const { isConnected } = useWallet();
-  const { lastMessage } = useWebSocket();
-  const { theme } = useTheme();
-  const [liveStats, setLiveStats] = useState({
-    totalRaffles: 0,
-    totalPrizePool: '0',
-    totalDonations: '0',
-    activeUsers: 0,
-  });
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Live connected wallets counter - demo range 1300-100,000 + real connected wallets
-  const [demoWalletCount, setDemoWalletCount] = useState(() => 
-    Math.floor(Math.random() * (100000 - 1300 + 1)) + 1300
-  );
-  const [realConnectedWallets, setRealConnectedWallets] = useState(0);
-  const [previousDemoCount, setPreviousDemoCount] = useState(demoWalletCount);
-
-  // Generate a new unique demo wallet count
-  const generateNewDemoCount = (current: number, previous: number) => {
-    let newCount;
-    let attempts = 0;
-    do {
-      newCount = Math.floor(Math.random() * (100000 - 1300 + 1)) + 1300;
-      attempts++;
-    } while ((newCount === current || newCount === previous) && attempts < 50);
-    return newCount;
-  };
-
-  // Fast-changing demo wallet counter
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDemoWalletCount(prev => {
-        const newCount = generateNewDemoCount(prev, previousDemoCount);
-        setPreviousDemoCount(prev);
-        return newCount;
-      });
-    }, 800 + Math.random() * 400); // Update every 0.8-1.2 seconds
-
-    return () => clearInterval(interval);
-  }, [previousDemoCount]);
-
-  // Track real connected wallets (when users actually connect)
-  useEffect(() => {
-    if (isConnected) {
-      setRealConnectedWallets(prev => prev < 1 ? 1 : prev);
-    }
-  }, [isConnected]);
-
-  // Total displayed wallet count
-  const totalConnectedWallets = demoWalletCount + realConnectedWallets;
-
-  // Chart data for trading-style visualization
-  const [chartData, setChartData] = useState([
-    { name: '00:00', raffles: 2, prizes: 1200, donations: 800, volume: 2000 },
-    { name: '04:00', raffles: 3, prizes: 1800, donations: 1200, volume: 3000 },
-    { name: '08:00', raffles: 5, prizes: 3200, donations: 1800, volume: 5000 },
-    { name: '12:00', raffles: 8, prizes: 7120, donations: 2400, volume: 9520 },
-    { name: '16:00', raffles: 6, prizes: 5800, donations: 2100, volume: 7900 },
-    { name: '20:00', raffles: 7, prizes: 6500, donations: 2800, volume: 9300 },
-    { name: '24:00', raffles: 8, prizes: 7120, donations: 3200, volume: 10320 }
-  ]);
-
-  // Update chart data only when stats change
-  useEffect(() => {
-    if (liveStats) {
-      setChartData(prev => {
-        const newData = [...prev];
-        const lastPoint = newData[newData.length - 1];
-        
-        newData[newData.length - 1] = {
-          ...lastPoint,
-          raffles: parseInt(liveStats.totalRaffles.toString()) || 1,
-          prizes: parseFloat(liveStats.totalPrizePool) || 100,
-          donations: parseFloat(liveStats.totalDonations) || 100,
-          volume: lastPoint.volume
-        };
-        
-        return newData;
-      });
-    }
-  }, [liveStats]);
-
-  // Fetch platform stats
+  // Fetch platform statistics
   const { data: stats } = useQuery({
     queryKey: ['/api/stats'],
+    refetchInterval: 30000,
   });
 
-  // Fetch active raffles
-  const { data: raffles = [], isLoading: rafflesLoading } = useQuery({
+  const { data: activeRaffles } = useQuery({
     queryKey: ['/api/raffles/active'],
+    refetchInterval: 30000,
   });
 
-  // Fetch active donations
-  const { data: donations = [], isLoading: donationsLoading } = useQuery({
+  const { data: activeDonations } = useQuery({
     queryKey: ['/api/donations/active'],
+    refetchInterval: 30000,
   });
 
-  // Update live stats from WebSocket messages
-  useEffect(() => {
-    if (stats) {
-      setLiveStats({
-        totalRaffles: (stats as any).totalRaffles || 0,
-        totalPrizePool: (stats as any).totalPrizePool || '0',
-        totalDonations: (stats as any).totalDonations || '0',
-        activeUsers: (stats as any).activeUsers || 0
-      });
+  const heroSlides = [
+    {
+      title: "Blockchain Tabanlı Şeffaflık",
+      subtitle: "Her işlem blockchain üzerinde doğrulanır",
+      icon: Shield,
+      color: "text-green-500"
+    },
+    {
+      title: "Küresel Erişim",
+      subtitle: "Dünya çapında bağış ve çekiliş platformu",
+      icon: Globe,
+      color: "text-blue-500"
+    },
+    {
+      title: "Gerçek Zamanlı Güncellemeler",
+      subtitle: "Canlı veriler ve anlık bildirimler",
+      icon: Zap,
+      color: "text-yellow-500"
     }
-  }, [stats]);
+  ];
+
+  const features = [
+    {
+      icon: Heart,
+      title: "Şeffaf Bağışlar",
+      description: "Her bağış blockchain üzerinde takip edilebilir ve şeffaftır",
+      stats: activeDonations?.length || 0
+    },
+    {
+      icon: Gift,
+      title: "Adil Çekilişler",
+      description: "Blockchain tabanlı rastgele sayı üretimi ile adil çekilişler",
+      stats: activeRaffles?.length || 0
+    },
+    {
+      icon: Users,
+      title: "Topluluk Odaklı",
+      description: "Dernekler, vakıflar ve bireysel kampanyalar için platform",
+      stats: "1000+"
+    },
+    {
+      icon: Shield,
+      title: "Güvenli İşlemler",
+      description: "Smart contract tabanlı güvenli ödeme sistemi",
+      stats: "100%"
+    }
+  ];
+
+  const platformStats = [
+    {
+      value: stats?.totalRaffles || "0",
+      label: "Toplam Çekiliş",
+      icon: Gift,
+      color: "text-purple-500"
+    },
+    {
+      value: `${stats?.totalPrizePool || "0"} USDT`,
+      label: "Toplam Ödül Havuzu",
+      icon: Coins,
+      color: "text-green-500"
+    },
+    {
+      value: stats?.totalDonations || "0",
+      label: "Toplam Bağış",
+      icon: Heart,
+      color: "text-red-500"
+    },
+    {
+      value: stats?.totalUsers || "500+",
+      label: "Aktif Kullanıcı",
+      icon: Users,
+      color: "text-blue-500"
+    }
+  ];
+
+  const advantages = [
+    {
+      icon: Lock,
+      title: "Güvenlik",
+      description: "Smart contract tabanlı güvenli işlemler"
+    },
+    {
+      icon: BarChart3,
+      title: "Şeffaflık",
+      description: "Tüm işlemler blockchain üzerinde görülebilir"
+    },
+    {
+      icon: Timer,
+      title: "Hız",
+      description: "Anında işlem onayları ve hızlı transferler"
+    },
+    {
+      icon: Target,
+      title: "Doğruluk",
+      description: "Manipüle edilemeyen adil sistem"
+    }
+  ];
 
   useEffect(() => {
-    if (lastMessage) {
-      // Update stats based on real-time events
-      switch (lastMessage.type) {
-        case 'RAFFLE_CREATED':
-          setLiveStats(prev => ({
-            ...prev,
-            totalRaffles: prev.totalRaffles + 1,
-          }));
-          break;
-        case 'TICKET_PURCHASED':
-          // Could update prize pool here
-          break;
-        case 'DONATION_CREATED':
-          // Could update donation stats
-          break;
-        case 'DONATION_CONTRIBUTION':
-          setLiveStats(prev => ({
-            ...prev,
-            totalDonations: (parseFloat(prev.totalDonations) + parseFloat(lastMessage.data.amount)).toString(),
-          }));
-          break;
-      }
-    }
-  }, [lastMessage]);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-duxxan-dark">
+    <div className="min-h-screen bg-white dark:bg-[#1D2025] transition-colors duration-200">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
-        {/* Live Connected Wallets - Section Corner */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
-          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-2 sm:px-3 py-1 sm:py-2 shadow-lg">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
-              <span className="text-duxxan-success font-semibold text-sm">
-                76.428
-              </span>
-              <span className="text-gray-600 dark:text-duxxan-text-secondary text-xs">
-                bağlı
-              </span>
-              <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success border-duxxan-success/30 text-xs px-1.5 py-0.5">
-                LIVE
-              </Badge>
+      <section className="relative bg-gradient-to-br from-yellow-50 via-white to-yellow-50 dark:from-[#1D2025] dark:via-[#2A2D35] dark:to-[#1D2025] py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 mb-6">
+              {heroSlides.map((slide, index) => {
+                const IconComponent = slide.icon;
+                return (
+                  <div
+                    key={index}
+                    className={`transition-all duration-500 ${
+                      index === currentSlide
+                        ? `${slide.color} scale-110 opacity-100`
+                        : 'text-gray-400 scale-90 opacity-50'
+                    }`}
+                  >
+                    <IconComponent className="w-12 h-12" />
+                  </div>
+                );
+              })}
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+              DUXXAN
+            </h1>
+            
+            <div className="h-20 mb-8">
+              {heroSlides.map((slide, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${
+                    index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 absolute'
+                  }`}
+                >
+                  <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white mb-2">
+                    {slide.title}
+                  </h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-400">
+                    {slide.subtitle}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-12">
+              Blockchain teknolojisi ile desteklenen şeffaf, güvenli ve adil bağış ve çekiliş platformu. 
+              Dernekler, vakıflar ve bireyler için tasarlanmış yenilikçi çözüm.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/donations">
+                <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg">
+                  <Heart className="mr-2 h-5 w-5" />
+                  Bağış Yap
+                </Button>
+              </Link>
+              <Link href="/raffles">
+                <Button size="lg" variant="outline" className="border-2 border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white px-8 py-4 text-lg">
+                  <Gift className="mr-2 h-5 w-5" />
+                  Çekilişlere Katıl
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-        
-        <div className="duxxan-container text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-black dark:text-white leading-tight">
-            <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-4xl mx-auto leading-relaxed">
-            Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
-          </p>
+      </section>
+
+      {/* Platform Statistics */}
+      <section className="py-16 bg-gray-50 dark:bg-[#2A2D35]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Platform İstatistikleri</h2>
+            <p className="text-gray-600 dark:text-gray-400">Gerçek zamanlı verilerle platform performansı</p>
+          </div>
           
-          {/* Trading-Style Chart */}
-          <Card className="bg-duxxan-yellow/10 dark:bg-duxxan-surface border-2 border-duxxan-yellow/50 dark:border-duxxan-border mt-16">
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
-                <h3 className="text-lg md:text-xl font-black text-black dark:text-white">Platform İstatistikleri</h3>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
-                    <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
-                    <span>Canlı Veriler</span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3 text-xs">
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-duxxan-yellow rounded-full"></div>
-                      <span>Çekilişler</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {platformStats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <Card key={index} className="bg-white dark:bg-[#1D2025] border-gray-200 dark:border-gray-700 text-center hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <IconComponent className={`w-8 h-8 mx-auto mb-3 ${stat.color}`} />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                      {stat.value}
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-duxxan-success rounded-full"></div>
-                      <span>Ödül Havuzu</span>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {stat.label}
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-duxxan-warning rounded-full"></div>
-                      <span>Bağışlar</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="duxxan-grid">
-                {/* Key metrics */}
-                <div className="duxxan-col-4 space-y-4">
-                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Aktif Çekilişler</span>
-                      <span className="text-xs text-duxxan-success">+5.2%</span>
-                    </div>
-                    <div className="text-2xl font-bold text-duxxan-yellow">
-                      {liveStats.totalRaffles.toLocaleString()}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Ödül Havuzu</span>
-                      <span className="text-xs text-duxxan-success">+12.8%</span>
-                    </div>
-                    <div className="text-2xl font-bold text-duxxan-success">
-                      ${parseFloat(liveStats.totalPrizePool).toLocaleString()}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Bağışlar</span>
-                      <span className="text-xs text-duxxan-success">+8.4%</span>
-                    </div>
-                    <div className="text-2xl font-bold text-duxxan-warning">
-                      ${parseFloat(liveStats.totalDonations).toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Main Chart */}
-                <div className="duxxan-col-8 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-3 md:p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
-                    <div>
-                      <div className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
-                      <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Gerçek zamanlı platform veriler</div>
-                    </div>
-                    <div className="flex items-center space-x-2 px-3 py-1 bg-duxxan-success/20 rounded-full flex-shrink-0">
-                      <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
-                      <span className="text-xs text-duxxan-success font-medium">LIVE</span>
-                    </div>
-                  </div>
-                  <div className="h-64 md:h-72 w-full overflow-hidden">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="prizesGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
-                          </linearGradient>
-                          <linearGradient id="donationsGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.1}/>
-                          </linearGradient>
-                          <linearGradient id="rafflesGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#EAB308" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#EAB308" stopOpacity={0.1}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid 
-                          strokeDasharray="1 3" 
-                          stroke="#374151" 
-                          opacity={0.2} 
-                          horizontal={true}
-                          vertical={false}
-                        />
-                        <XAxis 
-                          dataKey="name" 
-                          stroke="#6B7280" 
-                          fontSize={11}
-                          tickLine={false}
-                          axisLine={false}
-                          tick={{ fill: '#9CA3AF' }}
-                        />
-                        <YAxis 
-                          stroke="#6B7280" 
-                          fontSize={11}
-                          tickLine={false}
-                          axisLine={false}
-                          tick={{ fill: '#9CA3AF' }}
-                          tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                        />
-                        <Tooltip 
-                          contentStyle={{
-                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                            border: '1px solid #374151',
-                            borderRadius: '12px',
-                            color: '#F3F4F6',
-                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
-                            backdropFilter: 'blur(10px)'
-                          }}
-                          labelStyle={{ color: '#D1D5DB', fontWeight: '600' }}
-                          formatter={(value, name) => [
-                            name === 'Çekilişler' ? value : `$${Number(value).toLocaleString()}`,
-                            name
-                          ]}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="prizes"
-                          stroke="#10B981"
-                          fill="url(#prizesGradient)"
-                          strokeWidth={3}
-                          name="Ödül Havuzu"
-                          dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
-                          activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 2, fill: '#ffffff' }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="donations"
-                          stroke="#F59E0B"
-                          fill="url(#donationsGradient)"
-                          strokeWidth={3}
-                          name="Bağışlar"
-                          dot={{ fill: '#F59E0B', strokeWidth: 2, r: 4 }}
-                          activeDot={{ r: 6, stroke: '#F59E0B', strokeWidth: 2, fill: '#ffffff' }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="raffles"
-                          stroke="#EAB308"
-                          fill="url(#rafflesGradient)"
-                          strokeWidth={3}
-                          name="Çekilişler"
-                          dot={{ fill: '#EAB308', strokeWidth: 2, r: 4 }}
-                          activeDot={{ r: 6, stroke: '#EAB308', strokeWidth: 2, fill: '#ffffff' }}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Volume Chart */}
-              <div className="mt-6 bg-gradient-to-r from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-3 md:p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
-                  <div>
-                    <div className="text-base md:text-lg font-semibold text-black dark:text-white mb-1">İşlem Hacmi</div>
-                    <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">24 saatlik toplam aktivite</div>
-                  </div>
-                  <div className="text-sm text-duxxan-yellow font-bold flex-shrink-0">
-                    ${chartData[chartData.length - 1]?.volume.toLocaleString()}
-                  </div>
-                </div>
-                <div className="h-32 md:h-40 w-full overflow-hidden">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
-                      <defs>
-                        <linearGradient id="volumeGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
-                          <stop offset="95%" stopColor="#1E40AF" stopOpacity={0.8}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid 
-                        strokeDasharray="1 3" 
-                        stroke="#374151" 
-                        opacity={0.15} 
-                        horizontal={true}
-                        vertical={false}
-                      />
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="#6B7280" 
-                        fontSize={10}
-                        tickLine={false}
-                        axisLine={false}
-                        tick={{ fill: '#9CA3AF' }}
-                      />
-                      <YAxis 
-                        stroke="#6B7280" 
-                        fontSize={10}
-                        tickLine={false}
-                        axisLine={false}
-                        tick={{ fill: '#9CA3AF' }}
-                        tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                      />
-                      <Tooltip 
-                        contentStyle={{
-                          backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                          border: '1px solid rgba(75, 85, 99, 0.2)',
-                          borderRadius: '6px',
-                          color: '#F9FAFB',
-                          fontSize: '13px',
-                          fontWeight: '500',
-                          padding: '6px 10px',
-                          boxShadow: 'none',
-                          backdropFilter: 'none'
-                        }}
-                        labelStyle={{ 
-                          color: '#F9FAFB', 
-                          fontWeight: '600',
-                          fontSize: '13px'
-                        }}
-                        formatter={(value) => [`$${Number(value).toLocaleString()}`, 'İşlem Hacmi']}
-                        cursor={false}
-                      />
-                      <Bar 
-                        dataKey="volume" 
-                        fill="url(#volumeGradient)"
-                        radius={[4, 4, 0, 0]}
-                        name="İşlem Hacmi"
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </section>
-      {/* Popular Raffles Section */}
-      <section className="py-20 bg-white dark:bg-duxxan-dark">
-        <div className="duxxan-container">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-12 gap-6">
-            <h2 className="text-2xl md:text-3xl font-black text-black dark:text-white">Popüler Çekilişler</h2>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/raffles">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
-                  Tüm Çekilişler
-                </Button>
-              </Link>
-              <Link href="/create-raffle">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
-                  Çekiliş Oluştur
-                </Button>
-              </Link>
-            </div>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Platform Özellikleri</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              Neden DUXXAN?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              Blockchain teknolojisinin gücüyle desteklenen güvenli, şeffaf ve kullanıcı dostu platform
+            </p>
           </div>
 
-          {rafflesLoading ? (
-            <div className="duxxan-grid">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="duxxan-col-4">
-                  <RaffleCardSkeleton />
-                </div>
-              ))}
-            </div>
-          ) : (raffles as any)?.length > 0 ? (
-            <div className="duxxan-grid">
-              {(raffles as any).slice(0, 6).map((raffle: any) => (
-                <div key={raffle.id} className="duxxan-col-4">
-                  <RaffleCard raffle={raffle} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border text-center">
-              <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Aktif Çekiliş Yok</h3>
-                <p className="text-gray-600 dark:text-duxxan-text-secondary mb-6">
-                  DUXXAN'da heyecan verici bir çekiliş oluşturan ilk kişi olun!
-                </p>
-                <Link href="/create-raffle">
-                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
-                    İlk Çekilişi Oluştur
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <Card key={index} className="bg-white dark:bg-[#2A2D35] border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mb-4">
+                      <IconComponent className="w-8 h-8 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-gray-900 dark:text-white">
+                      {feature.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {feature.description}
+                    </p>
+                    <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                      {feature.stats}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </section>
-      {/* Donations Section */}
-      <section className="py-20 bg-gray-50 dark:bg-duxxan-surface">
-        <div className="duxxan-container">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-12 gap-6">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-black mb-2 text-black dark:text-white">Bağış Kampanyaları</h2>
-              <p className="text-gray-600 dark:text-duxxan-text-secondary">
-                Şeffaf blockchain bağışları ile önemli amaçları destekleyin
+
+      {/* How It Works */}
+      <section className="py-20 bg-gray-50 dark:bg-[#2A2D35]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              Nasıl Çalışır?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              Üç basit adımda DUXXAN platformunu kullanmaya başlayın
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cüzdan Bağlayın</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                MetaMask veya Trust Wallet ile güvenli bağlantı kurun
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
-              <Link href="/donations">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
-                  Tüm Kampanyalar
-                </Button>
-              </Link>
-              <Link href="/create-donation">
-                <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold w-full sm:w-auto">
-                  Kampanya Başlat
-                </Button>
-              </Link>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Kampanya Seçin</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Bağış kampanyalarına katılın veya çekilişlerde şansınızı deneyin
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">İşlem Yapın</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Blockchain üzerinde güvenli ve şeffaf işlemler gerçekleştirin
+              </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Donation Market Cap Display */}
-          <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border mb-8">
-            <CardContent className="p-6">
-              <div className="text-center">
-                <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary mb-2">
-                  Toplam Bağış Piyasa Değeri
-                </div>
-                <div className="text-4xl font-bold text-duxxan-success mb-4">
-                  ${parseFloat(liveStats.totalDonations).toLocaleString()}
-                </div>
-                <div className="flex justify-center items-center space-x-4 text-sm">
-                  <span className="text-duxxan-success">↗ Anlık Güncellemeler</span>
-                  <span className="text-gray-600 dark:text-duxxan-text-secondary">Blockchain Doğrulanmış</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Platform Advantages */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              Platform Avantajları
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              Blockchain teknolojisinin sunduğu benzersiz avantajlar
+            </p>
+          </div>
 
-          {donationsLoading ? (
-            <div className="duxxan-grid">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="duxxan-col-6">
-                  <RaffleCardSkeleton />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {advantages.map((advantage, index) => {
+              const IconComponent = advantage.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <IconComponent className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {advantage.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {advantage.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : (donations as any)?.length > 0 ? (
-            <div className="duxxan-grid">
-              {(donations as any).slice(0, 4).map((donation: any) => (
-                <div key={donation.id} className="duxxan-col-6">
-                  <DonationCard donation={donation} />
-                </div>
-              ))}
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-yellow-500 to-orange-500">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            DUXXAN'a Katılmaya Hazır mısınız?
+          </h2>
+          <p className="text-xl text-white/90 mb-8">
+            Blockchain tabanlı şeffaf ve güvenli platform ile bağış yapın veya çekilişlere katılın
+          </p>
+          
+          {!isConnected ? (
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg"
+              >
+                <Shield className="mr-2 h-5 w-5" />
+                Cüzdan Bağla
+              </Button>
+              <Link href="/donations">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg"
+                >
+                  Platformu Keşfet
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           ) : (
-            <Card className="bg-white dark:bg-duxxan-surface border border-gray-200 dark:border-duxxan-border text-center">
-              <CardContent className="p-12">
-                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Aktif Kampanya Yok</h3>
-                <p className="text-gray-600 dark:text-duxxan-text-secondary mb-6">
-                  İlk bağış kampanyasını başlatın ve fark yaratın!
-                </p>
-                <Link href="/create-donation">
-                  <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold">
-                    İlk Kampanyayı Başlat
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/donations">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg"
+                >
+                  <Heart className="mr-2 h-5 w-5" />
+                  Bağış Yap
+                </Button>
+              </Link>
+              <Link href="/raffles">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg"
+                >
+                  Çekilişlere Katıl
+                  <Gift className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </section>
-      {/* CTA Section */}
-      {!isConnected && (
-        <section className="py-20 bg-duxxan-dark">
-          <div className="duxxan-container text-center">
-            <h2 className="text-3xl font-bold mb-4">Başlamaya Hazır mısınız?</h2>
-            <p className="text-xl text-duxxan-text-secondary mb-8">
-              Çekilişlere katılmaya ve bağış kampanyalarını desteklemeye başlamak için cüzdanınızı bağlayın.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-              <Button className="bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black font-bold px-8 py-3 w-full sm:w-auto">
-                MetaMask Bağla
-              </Button>
-              <Button variant="outline" className="border-duxxan-yellow text-duxxan-yellow hover:bg-duxxan-yellow hover:text-black font-bold px-8 py-3 w-full sm:w-auto">
-                Daha Fazla Bilgi
-              </Button>
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 }

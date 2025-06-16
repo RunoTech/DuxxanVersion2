@@ -15,6 +15,7 @@ function NavigationComponent() {
   const { isConnected, address, connectWallet, disconnectWallet, isConnecting } = useWallet();
 
   const navItems = [
+    { href: '/', label: 'Ana Sayfa' },
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
     { href: '/community', label: 'Topluluk' },
