@@ -154,7 +154,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
         {/* Live Connected Wallets - Fixed Position */}
-        <div className="fixed top-6 right-6 z-50" style={{ right: '120px' }}>
+        <div className="fixed top-6 z-50 fixed-wallet-counter">
           <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>

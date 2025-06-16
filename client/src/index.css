@@ -138,6 +138,47 @@
   max-width: calc(100vw - 240px);
 }
 
+/* Responsive fixed positioning */
+.fixed-wallet-counter {
+  right: 120px;
+}
+
+@media (max-width: 1400px) {
+  .fixed-wallet-counter {
+    right: 80px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .fixed-wallet-counter {
+    right: 60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .fixed-wallet-counter {
+    right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed-wallet-counter {
+    right: 24px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .fixed-wallet-counter {
+    right: 16px;
+    top: 1rem;
+  }
+  
+  .fixed-wallet-counter .inline-flex {
+    transform: scale(0.9);
+  }
+}
+
 /* Card content overflow prevention */
 .duxxan-grid .bg-gradient-to-br,
 .duxxan-grid .bg-gradient-to-r {
