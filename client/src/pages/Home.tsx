@@ -386,9 +386,7 @@ export default function Home() {
                         tick={{ fill: '#9CA3AF' }}
                         tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
                       />
-                      <Tooltip 
-                        content={() => null}
-                      />
+
                       <Bar 
                         dataKey="volume" 
                         fill="url(#volumeGradient)"
