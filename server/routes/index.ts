@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
 import { RaffleController } from '../controllers/RaffleController';
 import { DonationController } from '../controllers/DonationController';
+import { translationService } from '../../lib/translation';
 
 // Initialize controllers
 const userController = new UserController();
@@ -49,5 +50,28 @@ router.get('/donations/stats', donationController.getDonationStats);
 router.post('/donations/:id/contribute', donationController.makeDonationContribution);
 router.get('/donations/:id/contributions', donationController.getDonationContributions);
 router.post('/donations/:id/startup-fee', donationController.processStartupFeePayment);
+
+// Translation API
+router.post('/translate', async (req, res) => {
+  try {
+    const { text, targetLanguage, sourceLanguage = 'tr' } = req.body;
+    
+    if (!text || !targetLanguage) {
+      return res.status(400).json({ error: 'Text and target language are required' });
+    }
+
+    const translatedText = await translationService.translateText(text, targetLanguage, sourceLanguage);
+    
+    res.json({ 
+      translatedText,
+      sourceLanguage,
+      targetLanguage,
+      originalText: text
+    });
+  } catch (error) {
+    console.error('Translation API error:', error);
+    res.status(500).json({ error: 'Translation failed' });
+  }
+});
 
 export default router;

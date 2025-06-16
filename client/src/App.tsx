@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { BlurOverlay } from "@/components/BlurOverlay";
 import { useWallet } from "@/hooks/useWallet";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { TranslationProvider } from "@/hooks/useTranslation";
 
 // Pages
 import Home from "@/pages/Home";
@@ -141,8 +142,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ThemeProvider>
-          <AppContent />
-          <Toaster />
+          <TranslationProvider>
+            <AppContent />
+            <Toaster />
+          </TranslationProvider>
         </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>

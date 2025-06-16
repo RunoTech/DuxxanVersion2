@@ -137,13 +137,44 @@ class TranslationService {
    */
   async detectCountryFromIP(ip: string): Promise<string> {
     try {
-      // Use a free IP geolocation service
-      const response = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`);
-      const data = await response.json();
-      return data.countryCode || 'US'; // Default to US
+      // Try multiple IP geolocation services
+      const services = [
+        `https://ipapi.co/${ip}/country/`,
+        `https://api.ipgeolocation.io/ipgeo?apiKey=free&ip=${ip}&fields=country_code2`,
+        `http://ip-api.com/json/${ip}?fields=countryCode`
+      ];
+
+      for (const serviceUrl of services) {
+        try {
+          const response = await fetch(serviceUrl, { 
+            headers: { 'User-Agent': 'DUXXAN/1.0' }
+          });
+          
+          if (serviceUrl.includes('ipapi.co')) {
+            const countryCode = await response.text();
+            if (countryCode && countryCode.length === 2) {
+              return countryCode.toUpperCase();
+            }
+          } else if (serviceUrl.includes('ipgeolocation.io')) {
+            const data = await response.json();
+            if (data.country_code2) {
+              return data.country_code2;
+            }
+          } else {
+            const data = await response.json();
+            if (data.countryCode) {
+              return data.countryCode;
+            }
+          }
+        } catch (serviceError) {
+          continue; // Try next service
+        }
+      }
+      
+      return 'TR'; // Default to Turkey for DUXXAN platform
     } catch (error) {
       console.warn('Could not detect country from IP:', error);
-      return 'US'; // Default to US
+      return 'TR'; // Default to Turkey
     }
   }
 

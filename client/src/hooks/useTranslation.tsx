@@ -42,19 +42,38 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
 
   const detectUserLanguage = async () => {
     try {
-      // Try to get country from IP geolocation API
-      const response = await fetch('http://ip-api.com/json/?fields=countryCode');
-      const data = await response.json();
-      const countryCode = data.countryCode || 'TR';
-      const language = COUNTRY_LANGUAGE_MAP[countryCode] || 'tr';
+      // First check browser language as primary indicator
+      const browserLanguage = navigator.language.split('-')[0].toLowerCase();
+      const browserCountry = navigator.language.split('-')[1]?.toUpperCase() || 'TR';
       
-      setUserCountry(countryCode);
-      setUserLanguage(language);
+      // Try to get more accurate location from multiple sources
+      try {
+        const geoResponse = await fetch('https://ipapi.co/json/');
+        const geoData = await geoResponse.json();
+        if (geoData.country_code) {
+          const detectedCountry = geoData.country_code.toUpperCase();
+          const detectedLanguage = COUNTRY_LANGUAGE_MAP[detectedCountry] || browserLanguage;
+          
+          setUserCountry(detectedCountry);
+          setUserLanguage(detectedLanguage);
+          return;
+        }
+      } catch (geoError) {
+        console.warn('Geolocation service unavailable, using browser settings');
+      }
+      
+      // Fallback to browser language and estimated country
+      const estimatedCountry = browserCountry || 'TR';
+      const finalLanguage = COUNTRY_LANGUAGE_MAP[estimatedCountry] || browserLanguage || 'tr';
+      
+      setUserCountry(estimatedCountry);
+      setUserLanguage(finalLanguage);
+      
     } catch (error) {
       console.warn('Could not detect user location:', error);
-      // Fallback: try to get language from browser
-      const browserLanguage = navigator.language.split('-')[0];
-      setUserLanguage(browserLanguage === 'tr' ? 'tr' : 'en');
+      // Ultimate fallback
+      setUserCountry('TR');
+      setUserLanguage('tr');
     }
   };
 
