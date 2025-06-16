@@ -179,7 +179,7 @@ export class ContractService {
   async donate(donationId: number, amount: string) {
     if (!this.contract) throw new Error('Contract not initialized');
 
-    const amountWei = ethers.utils.parseUnits(amount, 18);
+    const amountWei = parseUnits(amount, 18);
 
     // Approve USDT for donation
     await this.approveUSDT(amount);
@@ -203,15 +203,15 @@ export class ContractService {
       creator: raffle.creator,
       title: raffle.title,
       description: raffle.description,
-      prizeAmount: ethers.utils.formatUnits(raffle.prizeAmount, 18),
-      ticketPrice: ethers.utils.formatUnits(raffle.ticketPrice, 18),
+      prizeAmount: formatUnits(raffle.prizeAmount, 18),
+      ticketPrice: formatUnits(raffle.ticketPrice, 18),
       maxTickets: raffle.maxTickets.toNumber(),
       ticketsSold: raffle.ticketsSold.toNumber(),
       endTime: new Date(raffle.endTime.toNumber() * 1000),
       isActive: raffle.isActive,
       isCompleted: raffle.isCompleted,
       winner: raffle.winner,
-      totalAmount: ethers.utils.formatUnits(raffle.totalAmount, 18),
+      totalAmount: formatUnits(raffle.totalAmount, 18),
     };
   }
 
@@ -224,8 +224,8 @@ export class ContractService {
       creator: donation.creator,
       title: donation.title,
       description: donation.description,
-      goalAmount: ethers.utils.formatUnits(donation.goalAmount, 18),
-      currentAmount: ethers.utils.formatUnits(donation.currentAmount, 18),
+      goalAmount: formatUnits(donation.goalAmount, 18),
+      currentAmount: formatUnits(donation.currentAmount, 18),
       endTime: donation.endTime.toNumber() > 0 ? new Date(donation.endTime.toNumber() * 1000) : null,
       isActive: donation.isActive,
       isUnlimited: donation.isUnlimited,
@@ -244,7 +244,7 @@ export class ContractService {
     if (!this.contract) throw new Error('Contract not initialized');
     
     const amount = await this.contract.getUserDonations(donationId, userAddress);
-    return ethers.utils.formatUnits(amount, 18);
+    return formatUnits(amount, 18);
   }
 
   async getActiveRafflesCount() {
