@@ -12,6 +12,7 @@ import {
   requestSizeLimit,
   patternDetection
 } from "./middleware/security";
+import { languageDetectionMiddleware, translationHeadersMiddleware } from "./middleware/translation";
 import apiRoutes from "./routes/index";
 
 const app = express();
@@ -32,6 +33,10 @@ app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 // Apply sanitization and device fingerprinting
 app.use(sanitizationMiddleware);
 app.use(deviceFingerprintMiddleware);
+
+// Apply translation middleware
+app.use(languageDetectionMiddleware);
+app.use(translationHeadersMiddleware);
 
 app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
   try {

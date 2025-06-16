@@ -70,13 +70,13 @@ export default function Home() {
       icon: Heart,
       title: "Şeffaf Bağışlar",
       description: "Her bağış blockchain üzerinde takip edilebilir ve şeffaftır",
-      stats: activeDonations?.length || 0
+      stats: Array.isArray(activeDonations) ? activeDonations.length : 0
     },
     {
       icon: Gift,
       title: "Adil Çekilişler",
       description: "Blockchain tabanlı rastgele sayı üretimi ile adil çekilişler",
-      stats: activeRaffles?.length || 0
+      stats: Array.isArray(activeRaffles) ? activeRaffles.length : 0
     },
     {
       icon: Users,
@@ -94,25 +94,25 @@ export default function Home() {
 
   const platformStats = [
     {
-      value: stats?.totalRaffles || "0",
+      value: (stats as any)?.totalRaffles || "0",
       label: "Toplam Çekiliş",
       icon: Gift,
       color: "text-purple-500"
     },
     {
-      value: `${stats?.totalPrizePool || "0"} USDT`,
+      value: `${(stats as any)?.totalPrizePool || "0"} USDT`,
       label: "Toplam Ödül Havuzu",
       icon: Coins,
       color: "text-green-500"
     },
     {
-      value: stats?.totalDonations || "0",
+      value: (stats as any)?.totalDonations || "0",
       label: "Toplam Bağış",
       icon: Heart,
       color: "text-red-500"
     },
     {
-      value: stats?.totalUsers || "500+",
+      value: (stats as any)?.totalUsers || "500+",
       label: "Aktif Kullanıcı",
       icon: Users,
       color: "text-blue-500"
