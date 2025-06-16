@@ -205,7 +205,7 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 transition-colors duration-200">
+    <div className="min-h-screen dark:bg-gray-900 py-8 transition-colors duration-200 bg-[#1d2025]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -624,7 +624,7 @@ export default function Donations() {
             {/* Countries Grid - Show all countries */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
               {countries.slice(1).map((country) => ( // Skip "Tüm Ülkeler" option
-                <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
+                (<Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
                   <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600 hover:border-yellow-400 transition-colors cursor-pointer group h-full">
                     <CardContent className="p-4 text-center">
                       <div className="text-2xl mb-2">{country.label.split(' ')[0]}</div>
@@ -636,7 +636,7 @@ export default function Donations() {
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
+                </Link>)
               ))}
             </div>
             
