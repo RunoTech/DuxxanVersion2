@@ -154,15 +154,16 @@ export default function Community() {
     ...(((categoriesData as any)?.data || []) as Array<{id: number; name: string; slug: string}>)
   ];
 
-  // Filtered channels based on search and category
+  // Filtered channels based on search, category, and country
   const filteredChannels = useMemo(() => {
     return channels.filter((channel: any) => {
       const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           channel.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || channel.categoryId === parseInt(selectedCategory);
-      return matchesSearch && matchesCategory;
+      const matchesCountry = selectedCountry === 'all' || channel.country === selectedCountry;
+      return matchesSearch && matchesCategory && matchesCountry;
     });
-  }, [channels, searchQuery, selectedCategory]);
+  }, [channels, searchQuery, selectedCategory, selectedCountry]);
 
   // Create channel mutation
   const createChannelMutation = useMutation({
