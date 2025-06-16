@@ -182,14 +182,14 @@ export default function Home() {
           {/* Trading-Style Chart */}
           <Card className="bg-duxxan-yellow/10 dark:bg-duxxan-surface border-2 border-duxxan-yellow/50 dark:border-duxxan-border mt-16">
             <CardContent className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-black text-black dark:text-white">Platform İstatistikleri</h3>
-                <div className="flex items-center space-x-4">
+              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
+                <h3 className="text-lg md:text-xl font-black text-black dark:text-white">Platform İstatistikleri</h3>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex items-center space-x-2 text-sm text-duxxan-text-secondary">
                     <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
                     <span>Canlı Veriler</span>
                   </div>
-                  <div className="flex items-center space-x-4 text-xs">
+                  <div className="flex flex-wrap items-center gap-3 text-xs">
                     <div className="flex items-center space-x-1">
                       <div className="w-2 h-2 bg-duxxan-yellow rounded-full"></div>
                       <span>Çekilişler</span>
@@ -241,20 +241,20 @@ export default function Home() {
                 </div>
                 
                 {/* Main Chart */}
-                <div className="duxxan-col-8 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
-                  <div className="flex justify-between items-center mb-6">
+                <div className="duxxan-col-8 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-3 md:p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
                     <div>
-                      <div className="text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
+                      <div className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
                       <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">Gerçek zamanlı platform veriler</div>
                     </div>
-                    <div className="flex items-center space-x-2 px-3 py-1 bg-duxxan-success/20 rounded-full">
+                    <div className="flex items-center space-x-2 px-3 py-1 bg-duxxan-success/20 rounded-full flex-shrink-0">
                       <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
                       <span className="text-xs text-duxxan-success font-medium">LIVE</span>
                     </div>
                   </div>
-                  <div className="h-72 w-full overflow-hidden">
+                  <div className="h-64 md:h-72 w-full overflow-hidden">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
                         <defs>
                           <linearGradient id="prizesGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
@@ -344,13 +344,13 @@ export default function Home() {
               </div>
               
               {/* Volume Chart */}
-              <div className="mt-6 bg-gradient-to-r from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
-                <div className="flex justify-between items-center mb-6">
+              <div className="mt-6 bg-gradient-to-r from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-3 md:p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
                   <div>
-                    <div className="text-lg font-semibold text-black dark:text-white mb-1">İşlem Hacmi</div>
+                    <div className="text-base md:text-lg font-semibold text-black dark:text-white mb-1">İşlem Hacmi</div>
                     <div className="text-xs text-gray-600 dark:text-duxxan-text-secondary">24 saatlik toplam aktivite</div>
                   </div>
-                  <div className="text-sm text-duxxan-yellow font-bold">
+                  <div className="text-sm text-duxxan-yellow font-bold flex-shrink-0">
                     ${chartData[chartData.length - 1]?.volume.toLocaleString()}
                   </div>
                 </div>

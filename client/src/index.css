@@ -11,6 +11,7 @@
   padding: 0 120px; /* Exact 120px margins */
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .duxxan-grid {
@@ -88,11 +89,12 @@
 
 @media (max-width: 640px) {
   .duxxan-container {
-    padding: 0 min(40px, 6.25vw);
+    padding: 0 min(24px, 3.75vw);
+    max-width: 100vw;
   }
   
   .duxxan-grid {
-    gap: min(16px, 2.5vw);
+    gap: min(12px, 1.875vw);
   }
   
   /* All content full width on mobile */
@@ -109,6 +111,8 @@
   .duxxan-col-11,
   .duxxan-col-12 { 
     grid-column: span 12; 
+    min-width: 0;
+    max-width: 100%;
   }
 }
 
@@ -132,9 +136,21 @@
   }
 }
 
-/* Overflow Prevention - Global Box Sizing */
+/* Overflow Prevention - Global Box Sizing and Root Constraints */
 * {
   box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Grid Item Overflow Prevention */
@@ -187,6 +203,37 @@
 .duxxan-grid .duxxan-card {
   max-width: 100%;
   overflow: hidden;
+}
+
+/* Chart Container Strict Constraints */
+.duxxan-grid .recharts-wrapper,
+.duxxan-grid .recharts-surface,
+.duxxan-grid svg {
+  max-width: 100% !important;
+  overflow: visible;
+}
+
+/* Flex Container Overflow Prevention */
+.duxxan-grid .flex {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Prevent Text Overflow in Small Containers */
+.duxxan-grid .text-xs,
+.duxxan-grid .text-sm {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+  .duxxan-grid .text-xs,
+  .duxxan-grid .text-sm {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
 }
 
 :root {
