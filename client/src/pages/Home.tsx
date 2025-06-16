@@ -387,16 +387,7 @@ export default function Home() {
                         tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
                       />
                       <Tooltip 
-                        contentStyle={{
-                          backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                          border: '1px solid #374151',
-                          borderRadius: '12px',
-                          color: '#F3F4F6',
-                          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
-                          backdropFilter: 'blur(10px)'
-                        }}
-                        labelStyle={{ color: '#D1D5DB', fontWeight: '600' }}
-                        formatter={(value) => [`$${Number(value).toLocaleString()}`, 'İşlem Hacmi']}
+                        content={() => null}
                       />
                       <Bar 
                         dataKey="volume" 
