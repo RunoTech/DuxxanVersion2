@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
+import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
 import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';
@@ -207,6 +208,11 @@ export default function Donations() {
   return (
     <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Wallet Status */}
+        <div className="mb-6">
+          <WalletStatus />
+        </div>
+
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RaffleCard } from '@/components/RaffleCard';
+import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
 import { Search, Filter, Globe } from 'lucide-react';

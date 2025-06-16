@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
 import { useWallet } from '@/hooks/useWallet';
+import { WalletConnectButton } from '@/components/WalletConnectButton';
 import { 
   Shield, 
   Globe, 
@@ -202,18 +203,29 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/donations">
-                <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg">
-                  <Heart className="mr-2 h-5 w-5" />
-                  Bağış Yap
-                </Button>
-              </Link>
-              <Link href="/raffles">
-                <Button size="lg" variant="outline" className="border-2 border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white px-8 py-4 text-lg">
-                  <Gift className="mr-2 h-5 w-5" />
-                  Çekilişlere Katıl
-                </Button>
-              </Link>
+              {!isConnected ? (
+                <div className="flex flex-col items-center space-y-4">
+                  <WalletConnectButton size="lg" className="px-8 py-4 text-lg" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Önce cüzdanınızı bağlayın, sonra platformu kullanmaya başlayın
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <Link href="/donations">
+                    <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg">
+                      <Heart className="mr-2 h-5 w-5" />
+                      Bağış Yap
+                    </Button>
+                  </Link>
+                  <Link href="/raffles">
+                    <Button size="lg" variant="outline" className="border-2 border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white px-8 py-4 text-lg">
+                      <Gift className="mr-2 h-5 w-5" />
+                      Çekilişlere Katıl
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -380,13 +392,10 @@ export default function Home() {
           
           {!isConnected ? (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
+              <WalletConnectButton 
                 size="lg" 
                 className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg"
-              >
-                <Shield className="mr-2 h-5 w-5" />
-                Cüzdan Bağla
-              </Button>
+              />
               <Link href="/donations">
                 <Button 
                   size="lg" 
