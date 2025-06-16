@@ -1,4 +1,4 @@
-import { ethers, BrowserProvider, Contract, formatUnits, parseUnits, JsonRpcSigner } from 'ethers';
+import { BrowserProvider, Contract, formatUnits, parseUnits, JsonRpcSigner } from 'ethers';
 import { DUXXAN_CONTRACT_ABI } from './contractABI';
 
 export class ContractService {
