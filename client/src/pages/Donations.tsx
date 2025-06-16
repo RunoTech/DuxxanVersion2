@@ -20,13 +20,10 @@ export default function Donations() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Fetch donations
-  const { data: donationsResponse, isLoading } = useQuery({
+  const { data: donations = [], isLoading } = useQuery({
     queryKey: ['/api/donations'],
     refetchInterval: isConnected ? 30000 : false, // Refresh every 30 seconds if connected
   });
-  
-  // Ensure donations is always an array
-  const donations = Array.isArray(donationsResponse?.data) ? donationsResponse.data : [];
 
   // Organization types and countries
   const organizationTypes = [
@@ -208,7 +205,7 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 py-8 transition-colors duration-200 bg-[#1d2025]">
+    <div className="min-h-screen dark:bg-gray-900 py-8 transition-colors duration-200 bg-[#ffffff]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
