@@ -7,14 +7,24 @@ import { firebase } from '../../lib/firebase';
 export class RaffleService extends BaseService {
   async getRaffles(limit?: number, offset?: number): Promise<any[]> {
     try {
-      // Try cache first
-      const cached = await redis.get(`raffles:${limit}:${offset}`);
+      // Try cache first, but handle Redis failures gracefully
+      let cached = null;
+      try {
+        cached = await redis.get(`raffles:${limit}:${offset}`);
+      } catch (redisError) {
+        console.warn('Redis cache read failed, falling back to database:', redisError.message);
+      }
+      
       if (cached) return cached;
       
       const raffles = await storage.getRaffles(limit, offset);
       
-      // Cache for 5 minutes
-      await redis.set(`raffles:${limit}:${offset}`, raffles, 300);
+      // Try to cache for 5 minutes, but don't fail if Redis is down
+      try {
+        await redis.set(`raffles:${limit}:${offset}`, raffles, 300);
+      } catch (redisError) {
+        console.warn('Redis cache write failed, continuing without cache:', redisError.message);
+      }
       
       return raffles;
     } catch (error) {
