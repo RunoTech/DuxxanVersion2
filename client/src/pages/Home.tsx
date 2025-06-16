@@ -354,9 +354,9 @@ export default function Home() {
                     ${chartData[chartData.length - 1]?.volume.toLocaleString()}
                   </div>
                 </div>
-                <div className="h-40 w-full overflow-hidden">
+                <div className="h-32 md:h-40 w-full overflow-hidden">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+                    <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
                       <defs>
                         <linearGradient id="volumeGradient" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3B82F6" stopOpacity={1}/>
