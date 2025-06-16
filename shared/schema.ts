@@ -489,10 +489,6 @@ export const insertTicketSchema = createInsertSchema(tickets).pick({
 export const insertDonationContributionSchema = createInsertSchema(donationContributions).pick({
   donationId: true,
   amount: true,
-  commissionAmount: true,
-  netAmount: true,
-  transactionHash: true,
-  blockNumber: true,
   donorCountry: true,
 }).extend({
   amount: z.string()
