@@ -388,25 +388,23 @@ export default function Home() {
                       />
                       <Tooltip 
                         contentStyle={{
-                          backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          borderRadius: '8px',
-                          color: '#ffffff',
-                          fontSize: '14px',
+                          backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                          border: '1px solid rgba(75, 85, 99, 0.2)',
+                          borderRadius: '6px',
+                          color: '#F9FAFB',
+                          fontSize: '13px',
                           fontWeight: '500',
-                          padding: '8px 12px',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                          backdropFilter: 'blur(8px)'
+                          padding: '6px 10px',
+                          boxShadow: 'none',
+                          backdropFilter: 'none'
                         }}
                         labelStyle={{ 
-                          color: '#ffffff', 
+                          color: '#F9FAFB', 
                           fontWeight: '600',
-                          marginBottom: '2px'
+                          fontSize: '13px'
                         }}
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, 'İşlem Hacmi']}
-                        wrapperStyle={{
-                          filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2))'
-                        }}
+                        cursor={false}
                       />
                       <Bar 
                         dataKey="volume" 
