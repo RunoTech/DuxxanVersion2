@@ -155,7 +155,7 @@ export default function Home() {
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
         {/* Live Connected Wallets - Section Corner */}
         <div className="absolute top-6 left-6 z-10">
-          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg text-left ml-[1221px] mr-[1221px] text-[#ffffff] mt-[210px] mb-[210px] pt-[8px] pb-[8px]">
+          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg text-left text-[#ffffff] mt-[210px] mb-[210px] pt-[8px] pb-[8px] ml-[1080px] mr-[1080px]">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
               <span className="text-duxxan-success font-semibold text-sm">
