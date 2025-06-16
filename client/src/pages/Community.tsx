@@ -398,7 +398,7 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen text-black dark:text-white bg-[#1d2025]">
+    <div className="min-h-screen text-black dark:text-white bg-white dark:bg-[#1d2025]">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

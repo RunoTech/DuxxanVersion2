@@ -95,7 +95,7 @@ export default function Raffles() {
   };
 
   return (
-    <div className="min-h-screen py-8 transition-colors duration-200 bg-[#1d2025]">
+    <div className="min-h-screen py-8 transition-colors duration-200 bg-gray-50 dark:bg-[#1d2025]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">

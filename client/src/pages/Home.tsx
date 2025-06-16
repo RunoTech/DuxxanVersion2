@@ -150,7 +150,7 @@ export default function Home() {
   }, [lastMessage]);
 
   return (
-    <div className="min-h-screen bg-[#1d2025]">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#1d2025]">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
         {/* Live Connected Wallets - Section Corner */}
