@@ -20,10 +20,13 @@ export default function Donations() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Fetch donations
-  const { data: donations = [], isLoading } = useQuery({
+  const { data: donationsResponse, isLoading } = useQuery({
     queryKey: ['/api/donations'],
     refetchInterval: isConnected ? 30000 : false, // Refresh every 30 seconds if connected
   });
+  
+  // Ensure donations is always an array
+  const donations = Array.isArray(donationsResponse?.data) ? donationsResponse.data : [];
 
   // Organization types and countries
   const organizationTypes = [
