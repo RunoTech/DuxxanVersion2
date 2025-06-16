@@ -257,7 +257,7 @@ export default function Raffles() {
             ))}
           </div>
         ) : (
-          <Card className="duxxan-card text-center">
+          <Card className="rounded-lg border text-card-foreground shadow-sm duxxan-card text-center bg-[#1f2937]">
             <CardContent className="p-12">
               <h3 className="text-xl font-bold mb-4">No Raffles Found</h3>
               <p className="text-duxxan-text-secondary mb-6">
