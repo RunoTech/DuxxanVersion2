@@ -15,12 +15,15 @@ import { z } from 'zod';
 import { useWallet } from '@/hooks/useWallet';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
   description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(500, 'Açıklama en fazla 500 karakter olabilir'),
   categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
+  country: z.string().min(1, 'Ülke seçimi zorunlu'),
+  tags: z.string().optional(),
 });
 
 const createUpcomingRaffleSchema = z.object({
@@ -36,6 +39,47 @@ const createUpcomingRaffleSchema = z.object({
 type CreateChannelForm = z.infer<typeof createChannelSchema>;
 type CreateUpcomingRaffleForm = z.infer<typeof createUpcomingRaffleSchema>;
 
+// Countries list for selection
+const countries = [
+  { value: 'TR', label: '🇹🇷 Türkiye' },
+  { value: 'US', label: '🇺🇸 Amerika Birleşik Devletleri' },
+  { value: 'DE', label: '🇩🇪 Almanya' },
+  { value: 'FR', label: '🇫🇷 Fransa' },
+  { value: 'GB', label: '🇬🇧 Birleşik Krallık' },
+  { value: 'IT', label: '🇮🇹 İtalya' },
+  { value: 'ES', label: '🇪🇸 İspanya' },
+  { value: 'NL', label: '🇳🇱 Hollanda' },
+  { value: 'BE', label: '🇧🇪 Belçika' },
+  { value: 'AT', label: '🇦🇹 Avusturya' },
+  { value: 'CH', label: '🇨🇭 İsviçre' },
+  { value: 'SE', label: '🇸🇪 İsveç' },
+  { value: 'NO', label: '🇳🇴 Norveç' },
+  { value: 'DK', label: '🇩🇰 Danimarka' },
+  { value: 'FI', label: '🇫🇮 Finlandiya' },
+  { value: 'PL', label: '🇵🇱 Polonya' },
+  { value: 'CZ', label: '🇨🇿 Çek Cumhuriyeti' },
+  { value: 'HU', label: '🇭🇺 Macaristan' },
+  { value: 'GR', label: '🇬🇷 Yunanistan' },
+  { value: 'PT', label: '🇵🇹 Portekiz' },
+  { value: 'IE', label: '🇮🇪 İrlanda' },
+  { value: 'LU', label: '🇱🇺 Lüksemburg' },
+  { value: 'MT', label: '🇲🇹 Malta' },
+  { value: 'CY', label: '🇨🇾 Kıbrıs' },
+  { value: 'CA', label: '🇨🇦 Kanada' },
+  { value: 'AU', label: '🇦🇺 Avustralya' },
+  { value: 'NZ', label: '🇳🇿 Yeni Zelanda' },
+  { value: 'JP', label: '🇯🇵 Japonya' },
+  { value: 'KR', label: '🇰🇷 Güney Kore' },
+  { value: 'SG', label: '🇸🇬 Singapur' },
+  { value: 'AE', label: '🇦🇪 Birleşik Arap Emirlikleri' },
+  { value: 'SA', label: '🇸🇦 Suudi Arabistan' },
+  { value: 'QA', label: '🇶🇦 Katar' },
+  { value: 'KW', label: '🇰🇼 Kuveyt' },
+  { value: 'BH', label: '🇧🇭 Bahreyn' },
+  { value: 'OM', label: '🇴🇲 Umman' },
+  { value: 'GLOBAL', label: '🌍 Küresel' }
+];
+
 export default function Community() {
   const { isConnected, address } = useWallet();
   const { toast } = useToast();
@@ -48,6 +92,7 @@ export default function Community() {
   const [editingChannel, setEditingChannel] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState('all');
   const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2]));
 
   const channelForm = useForm<CreateChannelForm>({
@@ -56,6 +101,8 @@ export default function Community() {
       name: '',
       description: '',
       categoryId: 0,
+      country: '',
+      tags: '',
     },
   });
 
@@ -65,6 +112,8 @@ export default function Community() {
       name: '',
       description: '',
       categoryId: 0,
+      country: '',
+      tags: '',
     },
   });
 
@@ -336,6 +385,11 @@ export default function Community() {
             <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
               {channel.categoryName || 'Genel'}
             </Badge>
+            {channel.country && (
+              <Badge variant="outline" className="text-gray-300 border-gray-600">
+                {countries.find(c => c.value === channel.country)?.label || channel.country}
+              </Badge>
+            )}
             {isOwner && (
               <Button
                 size="sm"
@@ -430,6 +484,20 @@ export default function Community() {
                 </option>
               ))}
             </select>
+            
+            <Globe className="text-gray-400 dark:text-gray-400 h-4 w-4" />
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
+            >
+              <option value="all">Tüm Ülkeler</option>
+              {countries.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -460,63 +528,166 @@ export default function Community() {
               <h2 className="text-xl font-semibold">Topluluk Kanalları</h2>
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                  <Button className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-black font-semibold shadow-lg">
                     <Plus className="h-4 w-4 mr-2" />
                     Kanal Oluştur
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-duxxan-card border-duxxan-border text-white">
-                  <DialogHeader>
-                    <DialogTitle>Yeni Kanal Oluştur</DialogTitle>
+                <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                  <DialogHeader className="text-center pb-4">
+                    <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
+                      Yeni Kanal Oluştur
+                    </DialogTitle>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                      Topluluk için yeni bir kanal oluşturun ve üyelerle etkileşime geçin
+                    </p>
                   </DialogHeader>
                   <Form {...channelForm}>
-                    <form onSubmit={channelForm.handleSubmit(onSubmitChannel)} className="space-y-4">
+                    <form onSubmit={channelForm.handleSubmit(onSubmitChannel)} className="space-y-5">
                       <FormField
                         control={channelForm.control}
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Kanal Adı</FormLabel>
+                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                              <Users className="w-4 h-4 mr-2" />
+                              Kanal Adı
+                            </FormLabel>
                             <FormControl>
-                              <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                              <Input 
+                                {...field} 
+                                placeholder="Örn: Kripto Tartışmaları"
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent" 
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                      
                       <FormField
                         control={channelForm.control}
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Açıklama</FormLabel>
+                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                              <Edit className="w-4 h-4 mr-2" />
+                              Açıklama
+                            </FormLabel>
                             <FormControl>
-                              <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                              <Textarea 
+                                {...field} 
+                                placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent min-h-[80px]" 
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={channelForm.control}
+                          name="categoryId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Trophy className="w-4 h-4 mr-2" />
+                                Kategori
+                              </FormLabel>
+                              <FormControl>
+                                <CategorySelect field={field} categories={categories} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={channelForm.control}
+                          name="country"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Globe className="w-4 h-4 mr-2" />
+                                Ülke
+                              </FormLabel>
+                              <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    <SelectValue placeholder="Ülke seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                                    {countries.map((country) => (
+                                      <SelectItem 
+                                        key={country.value} 
+                                        value={country.value}
+                                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                      >
+                                        {country.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      
                       <FormField
                         control={channelForm.control}
-                        name="categoryId"
+                        name="tags"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Kategori</FormLabel>
+                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                              <Tag className="w-4 h-4 mr-2" />
+                              Etiketler (Opsiyonel)
+                            </FormLabel>
                             <FormControl>
-                              <CategorySelect field={field} categories={categories} />
+                              <Input 
+                                {...field} 
+                                placeholder="Örn: kripto, nft, blockchain (virgülle ayırın)"
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent" 
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <Button
-                        type="submit"
-                        disabled={createChannelMutation.isPending}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
-                      >
-                        {createChannelMutation.isPending ? 'Oluşturuluyor...' : 'Kanal Oluştur'}
-                      </Button>
+                      
+                      <div className="flex gap-3 pt-4">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setShowCreateChannel(false)}
+                          className="flex-1 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        >
+                          İptal
+                        </Button>
+                        <Button
+                          type="submit"
+                          disabled={createChannelMutation.isPending}
+                          className="flex-1 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-black font-semibold shadow-lg disabled:opacity-50"
+                        >
+                          {createChannelMutation.isPending ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
+                              Oluşturuluyor...
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4 mr-2" />
+                              Kanal Oluştur
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </form>
                   </Form>
                 </DialogContent>
