@@ -7,14 +7,25 @@ import { firebase } from '../../lib/firebase';
 export class DonationService extends BaseService {
   async getDonations(limit?: number, offset?: number, filter?: string): Promise<any[]> {
     try {
+      // Try cache first, but handle Redis failures gracefully
       const cacheKey = `donations:${limit}:${offset}:${filter || 'all'}`;
-      const cached = await redis.get(cacheKey);
+      let cached = null;
+      try {
+        cached = await redis.get(cacheKey);
+      } catch (redisError) {
+        console.warn('Redis cache read failed, falling back to database:', redisError.message);
+      }
+      
       if (cached) return cached;
       
       const donations = await storage.getDonations(limit, offset, filter);
       
-      // Cache for 5 minutes
-      await redis.set(cacheKey, donations, 300);
+      // Try to cache for 5 minutes, but don't fail if Redis is down
+      try {
+        await redis.set(cacheKey, donations, 300);
+      } catch (redisError) {
+        console.warn('Redis cache write failed, continuing without cache:', redisError.message);
+      }
       
       return donations;
     } catch (error) {

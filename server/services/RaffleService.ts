@@ -11,8 +11,8 @@ export class RaffleService extends BaseService {
       let cached = null;
       try {
         cached = await redis.get(`raffles:${limit}:${offset}`);
-      } catch (redisError) {
-        console.warn('Redis cache read failed, falling back to database:', redisError.message);
+      } catch (redisError: any) {
+        console.warn('Redis cache read failed, falling back to database:', redisError?.message);
       }
       
       if (cached) return cached;
