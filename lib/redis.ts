@@ -20,17 +20,14 @@ class RedisService {
       console.log(`Redis connecting to: ${redisUrl.replace(/\/\/.*@/, '//***@')}`);
       
       const config = {
-        maxRetriesPerRequest: 2,
+        maxRetriesPerRequest: 1,
         lazyConnect: true,
-        connectTimeout: 5000,
-        commandTimeout: 3000,
+        connectTimeout: 2000,
+        commandTimeout: 1000,
         retryDelayOnFailover: 100,
-        enableOfflineQueue: false, // Disable queue to fail fast
+        enableOfflineQueue: false,
         family: 4,
-        reconnectOnError: (err: Error) => {
-          const targetError = 'READONLY';
-          return err.message.includes(targetError);
-        }
+        reconnectOnError: () => false, // Don't reconnect on errors
       };
 
       this.client = new Redis(redisUrl, config);
@@ -118,114 +115,234 @@ class RedisService {
     };
   }
 
-  // Basic operations
+  // Basic operations with fallback handling
   async set(key: string, value: any, ttl?: number): Promise<void> {
-    const serializedValue = JSON.stringify(value);
-    if (ttl) {
-      await this.client.setex(key, ttl, serializedValue);
-    } else {
-      await this.client.set(key, serializedValue);
+    if (!this.isConnected) return;
+    
+    try {
+      const serializedValue = JSON.stringify(value);
+      if (ttl) {
+        await this.client.setex(key, ttl, serializedValue);
+      } else {
+        await this.client.set(key, serializedValue);
+      }
+    } catch (error) {
+      // Fail silently when Redis is unavailable
     }
   }
 
   async get<T>(key: string): Promise<T | null> {
-    const value = await this.client.get(key);
-    return value ? JSON.parse(value) : null;
+    if (!this.isConnected) return null;
+    
+    try {
+      const value = await this.client.get(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async del(key: string): Promise<void> {
-    await this.client.del(key);
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.del(key);
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async exists(key: string): Promise<boolean> {
-    const result = await this.client.exists(key);
-    return result === 1;
+    if (!this.isConnected) return false;
+    
+    try {
+      const result = await this.client.exists(key);
+      return result === 1;
+    } catch (error) {
+      return false;
+    }
   }
 
-  // Hash operations
+  // Hash operations with fallback handling
   async hset(key: string, field: string, value: any): Promise<void> {
-    await this.client.hset(key, field, JSON.stringify(value));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.hset(key, field, JSON.stringify(value));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async hget<T>(key: string, field: string): Promise<T | null> {
-    const value = await this.client.hget(key, field);
-    return value ? JSON.parse(value) : null;
+    if (!this.isConnected) return null;
+    
+    try {
+      const value = await this.client.hget(key, field);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async hgetall<T>(key: string): Promise<Record<string, T>> {
-    const hash = await this.client.hgetall(key);
-    const result: Record<string, T> = {};
+    if (!this.isConnected) return {};
     
-    for (const [field, value] of Object.entries(hash)) {
-      result[field] = JSON.parse(value);
+    try {
+      const hash = await this.client.hgetall(key);
+      const result: Record<string, T> = {};
+      
+      for (const [field, value] of Object.entries(hash)) {
+        result[field] = JSON.parse(value);
+      }
+      
+      return result;
+    } catch (error) {
+      return {};
     }
-    
-    return result;
   }
 
   async hdel(key: string, field: string): Promise<void> {
-    await this.client.hdel(key, field);
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.hdel(key, field);
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
-  // List operations
+  // List operations with fallback handling
   async lpush(key: string, value: any): Promise<void> {
-    await this.client.lpush(key, JSON.stringify(value));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.lpush(key, JSON.stringify(value));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async rpush(key: string, value: any): Promise<void> {
-    await this.client.rpush(key, JSON.stringify(value));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.rpush(key, JSON.stringify(value));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async lpop<T>(key: string): Promise<T | null> {
-    const value = await this.client.lpop(key);
-    return value ? JSON.parse(value) : null;
+    if (!this.isConnected) return null;
+    
+    try {
+      const value = await this.client.lpop(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async rpop<T>(key: string): Promise<T | null> {
-    const value = await this.client.rpop(key);
-    return value ? JSON.parse(value) : null;
+    if (!this.isConnected) return null;
+    
+    try {
+      const value = await this.client.rpop(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async lrange<T>(key: string, start: number, stop: number): Promise<T[]> {
-    const values = await this.client.lrange(key, start, stop);
-    return values.map(value => JSON.parse(value));
+    if (!this.isConnected) return [];
+    
+    try {
+      const values = await this.client.lrange(key, start, stop);
+      return values.map(value => JSON.parse(value));
+    } catch (error) {
+      return [];
+    }
   }
 
-  // Set operations
+  // Set operations with fallback handling
   async sadd(key: string, member: any): Promise<void> {
-    await this.client.sadd(key, JSON.stringify(member));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.sadd(key, JSON.stringify(member));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async srem(key: string, member: any): Promise<void> {
-    await this.client.srem(key, JSON.stringify(member));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.client.srem(key, JSON.stringify(member));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async smembers<T>(key: string): Promise<T[]> {
-    const members = await this.client.smembers(key);
-    return members.map(member => JSON.parse(member));
+    if (!this.isConnected) return [];
+    
+    try {
+      const members = await this.client.smembers(key);
+      return members.map(member => JSON.parse(member));
+    } catch (error) {
+      return [];
+    }
   }
 
   async sismember(key: string, member: any): Promise<boolean> {
-    const result = await this.client.sismember(key, JSON.stringify(member));
-    return result === 1;
+    if (!this.isConnected) return false;
+    
+    try {
+      const result = await this.client.sismember(key, JSON.stringify(member));
+      return result === 1;
+    } catch (error) {
+      return false;
+    }
   }
 
-  // Pub/Sub operations
+  // Pub/Sub operations with fallback handling
   async publish(channel: string, message: any): Promise<void> {
-    await this.publisher.publish(channel, JSON.stringify(message));
+    if (!this.isConnected) return;
+    
+    try {
+      await this.publisher.publish(channel, JSON.stringify(message));
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async subscribe(channel: string, callback: (message: any) => void): Promise<void> {
-    await this.subscriber.subscribe(channel);
-    this.subscriber.on('message', (receivedChannel, message) => {
-      if (receivedChannel === channel) {
-        callback(JSON.parse(message));
-      }
-    });
+    if (!this.isConnected) return;
+    
+    try {
+      await this.subscriber.subscribe(channel);
+      this.subscriber.on('message', (receivedChannel, message) => {
+        if (receivedChannel === channel) {
+          callback(JSON.parse(message));
+        }
+      });
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   async unsubscribe(channel: string): Promise<void> {
-    await this.subscriber.unsubscribe(channel);
+    if (!this.isConnected) return;
+    
+    try {
+      await this.subscriber.unsubscribe(channel);
+    } catch (error) {
+      // Fail silently when Redis is unavailable
+    }
   }
 
   // Session management
