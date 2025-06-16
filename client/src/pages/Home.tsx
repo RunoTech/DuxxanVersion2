@@ -154,8 +154,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-100 to-gray-200 dark:duxxan-gradient py-20 relative">
         {/* Live Connected Wallets - Section Corner */}
-        <div className="absolute top-6 left-6 z-10">
-          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg text-left text-[#ffffff] mt-[210px] mb-[210px] pt-[8px] pb-[8px] ml-[1080px] mr-[1080px]">
+        <div className="absolute top-6 right-6 z-10">
+          <div className="inline-flex items-center bg-duxxan-success/10 backdrop-blur-sm border border-duxxan-success/30 rounded-full px-3 py-2 shadow-lg">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-duxxan-success rounded-full animate-pulse"></div>
               <span className="text-duxxan-success font-semibold text-sm">
@@ -172,10 +172,10 @@ export default function Home() {
         </div>
         
         <div className="duxxan-container text-center">
-          <h1 className="text-5xl md:text-7xl font-black mb-6 text-black dark:text-white">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-black dark:text-white leading-tight">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
-          <p className="text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-duxxan-text-secondary mb-8 max-w-4xl mx-auto leading-relaxed">
             Kripto çekilişlerin ve bağışların geleceğine katılın. Binance Smart Chain üzerinde oluşturun, katılın ve harika ödüller kazanın.
           </p>
           
@@ -252,9 +252,9 @@ export default function Home() {
                       <span className="text-xs text-duxxan-success font-medium">LIVE</span>
                     </div>
                   </div>
-                  <div className="h-72">
+                  <div className="h-72 w-full overflow-hidden">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                         <defs>
                           <linearGradient id="prizesGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
