@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Menu, Sun, Moon, Wallet } from 'lucide-react';
+import { Menu, Sun, Moon, Wallet, ArrowUpRight } from 'lucide-react';
 import { useWallet } from '@/hooks/useWallet';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -65,11 +65,23 @@ function NavigationComponent() {
             {/* Wallet Connection */}
             <div className="hidden md:block">
               {isConnected ? (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {address?.slice(0, 6)}...{address?.slice(-4)}
-                  </span>
-                  <Button onClick={disconnectWallet} variant="outline" size="sm">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <code className="text-sm font-mono text-green-700 dark:text-green-300">
+                      {address?.slice(0, 8)}...{address?.slice(-6)}
+                    </code>
+                    <Button
+                      onClick={() => window.open(`https://bscscan.com/address/${address}`, '_blank')}
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 w-6 p-0 hover:bg-green-100 dark:hover:bg-green-800"
+                      title="BSC Scan'de Görüntüle"
+                    >
+                      <ArrowUpRight className="w-3 h-3 text-green-600 dark:text-green-400" />
+                    </Button>
+                  </div>
+                  <Button onClick={disconnectWallet} variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
                     Çıkış
                   </Button>
                 </div>
