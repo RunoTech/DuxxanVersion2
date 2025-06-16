@@ -70,7 +70,6 @@ export const raffles = pgTable("raffles", {
   winnerId: integer("winner_id").references(() => users.id),
   isApprovedByCreator: boolean("is_approved_by_creator").default(false),
   isApprovedByWinner: boolean("is_approved_by_winner").default(false),
-  transactionHash: varchar("transaction_hash", { length: 66 }),
   // Country filtering fields
   countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
   allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
@@ -84,7 +83,6 @@ export const tickets = pgTable("tickets", {
   userId: integer("user_id").references(() => users.id).notNull(),
   quantity: integer("quantity").notNull(),
   totalAmount: decimal("total_amount", { precision: 10, scale: 6 }).notNull(),
-  transactionHash: varchar("transaction_hash", { length: 66 }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -120,8 +118,6 @@ export const donationContributions = pgTable("donation_contributions", {
   amount: decimal("amount", { precision: 10, scale: 6 }).notNull(),
   commissionAmount: decimal("commission_amount", { precision: 10, scale: 6 }).default("0"),
   netAmount: decimal("net_amount", { precision: 10, scale: 6 }).default("0"), // amount - commission
-  transactionHash: varchar("transaction_hash", { length: 66 }),
-  blockNumber: integer("block_number"),
   donorCountry: varchar("donor_country", { length: 3 }), // For live chart display
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -488,7 +484,6 @@ export const insertTicketSchema = createInsertSchema(tickets).pick({
   raffleId: true,
   quantity: true,
   totalAmount: true,
-  transactionHash: true,
 });
 
 export const insertDonationContributionSchema = createInsertSchema(donationContributions).pick({
