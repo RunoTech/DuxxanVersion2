@@ -4,6 +4,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* DUXXAN Grid System */
+.duxxan-container {
+  max-width: calc(100vw - 240px); /* 120px margins on each side */
+  margin: 0 auto;
+  padding: 0 120px;
+  width: 100%;
+}
+
+.duxxan-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.duxxan-col-1 { grid-column: span 1; }
+.duxxan-col-2 { grid-column: span 2; }
+.duxxan-col-3 { grid-column: span 3; }
+.duxxan-col-4 { grid-column: span 4; }
+.duxxan-col-5 { grid-column: span 5; }
+.duxxan-col-6 { grid-column: span 6; }
+.duxxan-col-7 { grid-column: span 7; }
+.duxxan-col-8 { grid-column: span 8; }
+.duxxan-col-9 { grid-column: span 9; }
+.duxxan-col-10 { grid-column: span 10; }
+.duxxan-col-11 { grid-column: span 11; }
+.duxxan-col-12 { grid-column: span 12; }
+
+/* Responsive Grid System */
+@media (max-width: 1200px) {
+  .duxxan-container {
+    max-width: calc(100vw - 120px);
+    padding: 0 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .duxxan-container {
+    max-width: calc(100vw - 48px);
+    padding: 0 24px;
+  }
+  
+  .duxxan-grid {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .duxxan-container {
+    max-width: calc(100vw - 32px);
+    padding: 0 16px;
+  }
+  
+  .duxxan-grid {
+    gap: 12px;
+  }
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(240, 10%, 3.9%);

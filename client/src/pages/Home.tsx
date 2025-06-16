@@ -171,7 +171,7 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="duxxan-container text-center">
           <h1 className="text-5xl md:text-7xl font-black mb-6 text-black dark:text-white">
             <span className="text-duxxan-yellow">DUXXAN</span> ile Büyük Kazan
           </h1>
@@ -206,9 +206,9 @@ export default function Home() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="duxxan-grid">
                 {/* Key metrics */}
-                <div className="space-y-4">
+                <div className="duxxan-col-4 space-y-4">
                   <div className="bg-gray-100 dark:bg-duxxan-dark/30 rounded-lg p-4 border border-gray-200 dark:border-duxxan-border/20">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Aktif Çekilişler</span>
@@ -241,7 +241,7 @@ export default function Home() {
                 </div>
                 
                 {/* Main Chart */}
-                <div className="lg:col-span-2 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
+                <div className="duxxan-col-8 bg-gradient-to-br from-duxxan-yellow/20 to-duxxan-yellow/10 dark:from-duxxan-dark/40 dark:to-duxxan-dark/20 rounded-xl p-6 border border-duxxan-yellow/30 dark:border-duxxan-border/30 backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <div className="text-lg font-semibold text-gray-900 dark:text-white mb-1">24 Saatlik Aktivite Grafiği</div>
@@ -415,7 +415,7 @@ export default function Home() {
 
       {/* Popular Raffles Section */}
       <section className="py-20 bg-white dark:bg-duxxan-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="duxxan-container">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-black text-black dark:text-white">Popüler Çekilişler</h2>
             <div className="flex space-x-4">
@@ -433,15 +433,19 @@ export default function Home() {
           </div>
 
           {rafflesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="duxxan-grid">
               {[...Array(6)].map((_, i) => (
-                <RaffleCardSkeleton key={i} />
+                <div key={i} className="duxxan-col-4">
+                  <RaffleCardSkeleton />
+                </div>
               ))}
             </div>
           ) : (raffles as any)?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="duxxan-grid">
               {(raffles as any).slice(0, 6).map((raffle: any) => (
-                <RaffleCard key={raffle.id} raffle={raffle} />
+                <div key={raffle.id} className="duxxan-col-4">
+                  <RaffleCard raffle={raffle} />
+                </div>
               ))}
             </div>
           ) : (
@@ -464,7 +468,7 @@ export default function Home() {
 
       {/* Donations Section */}
       <section className="py-20 bg-gray-50 dark:bg-duxxan-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="duxxan-container">
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-3xl font-black mb-2 text-black dark:text-white">Bağış Kampanyaları</h2>
@@ -505,15 +509,19 @@ export default function Home() {
           </Card>
 
           {donationsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="duxxan-grid">
               {[...Array(4)].map((_, i) => (
-                <RaffleCardSkeleton key={i} />
+                <div key={i} className="duxxan-col-6">
+                  <RaffleCardSkeleton />
+                </div>
               ))}
             </div>
           ) : (donations as any)?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="duxxan-grid">
               {(donations as any).slice(0, 4).map((donation: any) => (
-                <DonationCard key={donation.id} donation={donation} />
+                <div key={donation.id} className="duxxan-col-6">
+                  <DonationCard donation={donation} />
+                </div>
               ))}
             </div>
           ) : (
@@ -537,7 +545,7 @@ export default function Home() {
       {/* CTA Section */}
       {!isConnected && (
         <section className="py-20 bg-duxxan-dark">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="duxxan-container text-center">
             <h2 className="text-3xl font-bold mb-4">Başlamaya Hazır mısınız?</h2>
             <p className="text-xl text-duxxan-text-secondary mb-8">
               Çekilişlere katılmaya ve bağış kampanyalarını desteklemeye başlamak için cüzdanınızı bağlayın.
