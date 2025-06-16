@@ -357,6 +357,8 @@ html, body {
   --duxxan-success: hsl(159, 94%, 35%);
   --duxxan-error: hsl(349, 89%, 63%);
   --duxxan-warning: hsl(45, 100%, 58%);
+  --duxxan-bg-light: #ffffff;
+  --duxxan-bg-dark: #1D2025;
   
   /* Typography Scale - Rubik Font */
   --font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -587,6 +589,14 @@ html, body {
 
   .bg-duxxan-text-secondary {
     background-color: var(--duxxan-text-secondary);
+  }
+
+  .bg-duxxan-page {
+    background-color: var(--duxxan-bg-light);
+  }
+
+  .dark .bg-duxxan-page {
+    background-color: var(--duxxan-bg-dark);
   }
 
   .border-duxxan-border {
