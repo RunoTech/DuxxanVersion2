@@ -16,7 +16,8 @@ class RedisService {
   constructor() {
     const redisUrl = process.env.REDIS_URL;
     
-    if (redisUrl) {
+    // Disable Redis to prevent blocking
+    if (false && redisUrl) {
       console.log(`Redis connecting to: ${redisUrl.replace(/\/\/.*@/, '//***@')}`);
       
       const config = {
@@ -49,6 +50,9 @@ class RedisService {
   }
 
   private setupEventHandlers() {
+    // Skip Redis event handlers when disabled
+    if (!this.client.on) return;
+    
     this.client.on('connect', () => {
       console.log('Redis client connected');
       this.isConnected = true;
