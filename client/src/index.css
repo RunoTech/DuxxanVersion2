@@ -4,12 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* DUXXAN Grid System */
+/* DUXXAN Grid System - 12 Columns, 120px Margins, 24px Gutters */
 .duxxan-container {
   max-width: calc(100vw - 240px); /* 120px margins on each side */
   margin: 0 auto;
   padding: 0 120px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .duxxan-grid {
@@ -17,8 +18,10 @@
   grid-template-columns: repeat(12, 1fr);
   gap: 24px;
   width: 100%;
+  box-sizing: border-box;
 }
 
+/* Column Spans */
 .duxxan-col-1 { grid-column: span 1; }
 .duxxan-col-2 { grid-column: span 2; }
 .duxxan-col-3 { grid-column: span 3; }
@@ -32,12 +35,38 @@
 .duxxan-col-11 { grid-column: span 11; }
 .duxxan-col-12 { grid-column: span 12; }
 
-/* Responsive Grid System */
+/* Responsive Breakpoints */
+@media (max-width: 1400px) {
+  .duxxan-container {
+    max-width: calc(100vw - 160px);
+    padding: 0 80px;
+  }
+}
+
 @media (max-width: 1200px) {
   .duxxan-container {
     max-width: calc(100vw - 120px);
     padding: 0 60px;
   }
+  
+  .duxxan-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .duxxan-container {
+    max-width: calc(100vw - 80px);
+    padding: 0 40px;
+  }
+  
+  .duxxan-grid {
+    gap: 18px;
+  }
+  
+  /* Responsive column adjustments */
+  .duxxan-col-4 { grid-column: span 6; }
+  .duxxan-col-8 { grid-column: span 12; }
 }
 
 @media (max-width: 768px) {
@@ -48,10 +77,16 @@
   
   .duxxan-grid {
     gap: 16px;
+    grid-template-columns: repeat(6, 1fr);
   }
+  
+  /* Mobile column spans */
+  .duxxan-col-4 { grid-column: span 6; }
+  .duxxan-col-6 { grid-column: span 6; }
+  .duxxan-col-8 { grid-column: span 6; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .duxxan-container {
     max-width: calc(100vw - 32px);
     padding: 0 16px;
@@ -59,7 +94,131 @@
   
   .duxxan-grid {
     gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
   }
+  
+  /* Small mobile - stack columns */
+  .duxxan-col-3,
+  .duxxan-col-4,
+  .duxxan-col-6,
+  .duxxan-col-8,
+  .duxxan-col-12 { 
+    grid-column: span 4; 
+  }
+}
+
+/* Prevent overflow */
+* {
+  box-sizing: border-box;
+}
+
+.duxxan-container * {
+  max-width: 100%;
+}
+
+/* Grid items overflow prevention */
+.duxxan-grid > * {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* Additional layout constraints */
+.duxxan-container section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Ensure charts and content respect container bounds */
+.duxxan-container .recharts-wrapper {
+  max-width: 100%;
+}
+
+/* Fixed positioned elements respect margins */
+.fixed {
+  max-width: calc(100vw - 240px);
+}
+
+/* Responsive fixed positioning */
+.fixed-wallet-counter {
+  right: 120px;
+}
+
+@media (max-width: 1400px) {
+  .fixed-wallet-counter {
+    right: 80px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .fixed-wallet-counter {
+    right: 60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .fixed-wallet-counter {
+    right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed-wallet-counter {
+    right: 24px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .fixed-wallet-counter {
+    right: 16px;
+    top: 1rem;
+  }
+  
+  .fixed-wallet-counter .inline-flex {
+    transform: scale(0.9);
+  }
+}
+
+/* Card content overflow prevention */
+.duxxan-grid .bg-gradient-to-br,
+.duxxan-grid .bg-gradient-to-r {
+  overflow: hidden;
+}
+
+/* Responsive images and media */
+.duxxan-container img,
+.duxxan-container video,
+.duxxan-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Text content overflow handling */
+.duxxan-container h1,
+.duxxan-container h2,
+.duxxan-container h3,
+.duxxan-container h4,
+.duxxan-container h5,
+.duxxan-container h6,
+.duxxan-container p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Table responsiveness */
+.duxxan-container table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Button and interactive element constraints */
+.duxxan-container button,
+.duxxan-container .button {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 :root {
