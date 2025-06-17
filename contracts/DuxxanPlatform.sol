@@ -227,7 +227,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         
         // Auto-end if all tickets sold
         if (raffle.ticketsSold == raffle.maxTickets) {
-            _endRaffle(_raffleId);
+            _endRaffleWithApproval(_raffleId);
         }
     }
     
@@ -242,7 +242,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             "Cannot end raffle yet"
         );
         
-        _endRaffle(_raffleId);
+        _endRaffleWithApproval(_raffleId);
     }
     
     function _endRaffle(uint256 _raffleId) internal {
@@ -352,6 +352,139 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         }
     }
     
+    // Multi-signature approval system for raffle results
+    function approveRaffleResult(uint256 _raffleId, bool _approve) external {
+        require(_raffleId < raffleCounter, "Invalid raffle ID");
+        Raffle storage raffle = raffles[_raffleId];
+        require(raffle.isCompleted, "Raffle not completed");
+        require(!raffle.payoutReleased, "Payout already released");
+        require(raffle.winner != address(0), "No winner determined");
+        
+        if (msg.sender == raffle.creator) {
+            raffle.creatorApproved = _approve;
+            emit RaffleApproval(_raffleId, msg.sender, _approve);
+        } else if (msg.sender == raffle.winner) {
+            raffle.platformApproved = _approve; // Winner approval stored in platformApproved
+            emit RaffleApproval(_raffleId, msg.sender, _approve);
+        } else {
+            revert("Only creator or winner can approve");
+        }
+        
+        // Check if both parties approved and release payout
+        if (raffle.creatorApproved && raffle.platformApproved) {
+            _releasePayout(_raffleId);
+        }
+    }
+    
+    function _releasePayout(uint256 _raffleId) internal {
+        Raffle storage raffle = raffles[_raffleId];
+        require(!raffle.payoutReleased, "Payout already released");
+        
+        if (raffle.prizeType == PrizeType.USDT_ONLY) {
+            // Direct USDT transfer to winner
+            require(USDT.transfer(raffle.winner, raffle.prizeAmount), "Prize transfer failed");
+            raffle.payoutReleased = true;
+            emit PayoutReleased(_raffleId, raffle.winner, raffle.prizeAmount);
+        } else if (raffle.prizeType == PrizeType.PHYSICAL_ITEM) {
+            // For physical prizes, just mark as approved for claim process
+            raffle.payoutReleased = false; // Keep false until physical claim is processed
+            emit PayoutReleased(_raffleId, raffle.winner, 0); // 0 amount indicates approval for physical claim
+        }
+    }
+    
+    // Override the _endRaffle function to require approvals
+    function _endRaffleWithApproval(uint256 _raffleId) internal {
+        Raffle storage raffle = raffles[_raffleId];
+        require(!raffle.isCompleted, "Raffle already completed");
+        
+        raffle.isActive = false;
+        raffle.isCompleted = true;
+        
+        if (raffle.ticketsSold > 0) {
+            // Advanced multi-layer randomness system (same as before)
+            address[] memory participants = raffleParticipants[_raffleId];
+            uint256 totalTickets = raffle.ticketsSold;
+            
+            // Layer 1: Time-delayed seed evolution
+            bytes32 evolvedSeed = keccak256(abi.encodePacked(
+                raffle.randomSeed,
+                block.timestamp - raffle.seedCommitTime,
+                block.number
+            ));
+            
+            // Layer 2: Participant-influenced entropy
+            bytes32 participantEntropy = keccak256(abi.encodePacked(
+                participants[0], // First participant
+                participants[participants.length - 1], // Last participant
+                participants.length,
+                raffle.totalAmount
+            ));
+            
+            // Layer 3: Block-based entropy with BSC-optimized data
+            bytes32 blockEntropy = keccak256(abi.encodePacked(
+                blockhash(block.number - 1),
+                blockhash(block.number - 2),
+                block.chainid,        // BSC chain ID: 56
+                block.gaslimit,       // Block gas limit
+                block.coinbase,       // BSC validator address
+                block.timestamp,
+                gasleft()
+            ));
+            
+            // Layer 4: Purchase history entropy
+            bytes32 historyEntropy = bytes32(0);
+            uint256 historyLength = entropyHistory[_raffleId].length;
+            if (historyLength > 0) {
+                for (uint256 i = 0; i < historyLength && i < 10; i++) {
+                    historyEntropy = keccak256(abi.encodePacked(historyEntropy, entropyHistory[_raffleId][i]));
+                }
+            }
+            
+            // Layer 5: BSC validator-specific entropy
+            bytes32 validatorEntropy = keccak256(abi.encodePacked(
+                block.number % 21,    // BSC 21 validator rotation cycle
+                block.coinbase        // Current BSC validator
+            ));
+            
+            // Layer 6: Final entropy combination with triple hashing
+            uint256 finalEntropy = uint256(keccak256(abi.encodePacked(
+                evolvedSeed,
+                participantEntropy,
+                blockEntropy,
+                historyEntropy,
+                validatorEntropy,
+                globalEntropySeed
+            )));
+            
+            // Additional randomness layers
+            finalEntropy = uint256(keccak256(abi.encodePacked(finalEntropy, block.timestamp)));
+            finalEntropy = uint256(keccak256(abi.encodePacked(finalEntropy, block.number)));
+            finalEntropy = uint256(keccak256(abi.encodePacked(finalEntropy, gasleft())));
+            
+            // Use large prime multiplication for uniform distribution
+            uint256 winningTicket = (finalEntropy * 2654435761) % totalTickets;
+            
+            // Find winner based on ticket distribution
+            uint256 ticketCount = 0;
+            for (uint256 i = 0; i < participants.length; i++) {
+                ticketCount += raffleTickets[_raffleId][participants[i]];
+                if (winningTicket < ticketCount) {
+                    raffle.winner = participants[i];
+                    break;
+                }
+            }
+            
+            emit RaffleEnded(_raffleId, raffle.winner, raffle.prizeAmount);
+            
+            // DO NOT release payout automatically - wait for both approvals
+            
+        } else {
+            // No tickets sold, return prize to creator
+            require(USDT.transfer(raffle.creator, raffle.prizeAmount), "Prize return failed");
+            emit RaffleEnded(_raffleId, address(0), 0);
+        }
+    }
+    
     // Physical Prize Management Functions
     function claimPhysicalPrize(uint256 _raffleId, bool _claimed) external {
         require(_raffleId < raffleCounter, "Invalid raffle ID");
@@ -360,6 +493,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         require(raffle.prizeType == PrizeType.PHYSICAL_ITEM, "Not a physical prize");
         require(msg.sender == raffle.winner, "Only winner can claim");
         require(block.timestamp <= raffle.claimDeadline, "Claim deadline passed");
+        require(raffle.creatorApproved && raffle.platformApproved, "Both parties must approve first");
         require(!raffle.payoutReleased, "Payout already released");
         
         raffle.prizeClaimed = _claimed;
@@ -391,6 +525,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         require(raffle.isCompleted, "Raffle not completed");
         require(raffle.prizeType == PrizeType.PHYSICAL_ITEM, "Not a physical prize");
         require(block.timestamp > raffle.claimDeadline, "Claim period still active");
+        require(raffle.creatorApproved && raffle.platformApproved, "Both parties must approve first");
         require(!raffle.payoutReleased, "Payout already released");
         
         // Deadline passed without claim, winner gets 60% of USDT
