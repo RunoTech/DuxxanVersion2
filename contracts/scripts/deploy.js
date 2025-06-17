@@ -5,14 +5,17 @@ async function main() {
 
   // Get the ContractFactory and Signers here.
   const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const deployerAddress = deployer.address || await deployer.getAddress();
+  console.log("Deploying contracts with the account:", deployerAddress);
+  
+  const balance = await ethers.provider.getBalance(deployerAddress);
+  console.log("Account balance:", balance.toString());
 
   // BSC Mainnet USDT address
   const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
   
   // Commission wallet address (should be provided via environment variable)
-  const COMMISSION_WALLET = process.env.COMMISSION_WALLET || deployer.address;
+  const COMMISSION_WALLET = process.env.COMMISSION_WALLET || deployerAddress;
 
   console.log("USDT Token Address:", USDT_ADDRESS);
   console.log("Commission Wallet:", COMMISSION_WALLET);
@@ -21,9 +24,11 @@ async function main() {
   const DuxxanPlatform = await ethers.getContractFactory("DuxxanPlatform");
   const duxxanPlatform = await DuxxanPlatform.deploy(USDT_ADDRESS, COMMISSION_WALLET);
 
-  await duxxanPlatform.deployed();
-
-  console.log("DuxxanPlatform deployed to:", duxxanPlatform.address);
+  // Wait for deployment
+  const deploymentReceipt = await duxxanPlatform.deployTransaction?.wait();
+  const contractAddress = duxxanPlatform.address || await duxxanPlatform.getAddress();
+  
+  console.log("DuxxanPlatform deployed to:", contractAddress);
   
   // Verify contract configuration
   console.log("\n=== Contract Configuration ===");
@@ -36,23 +41,21 @@ async function main() {
   
   // Save deployment info
   const deploymentInfo = {
-    network: network.name,
-    contractAddress: duxxanPlatform.address,
+    network: "bsc",
+    contractAddress: contractAddress,
     usdtAddress: USDT_ADDRESS,
     commissionWallet: COMMISSION_WALLET,
-    deployer: deployer.address,
+    deployer: deployerAddress,
     deploymentTime: new Date().toISOString(),
-    transactionHash: duxxanPlatform.deployTransaction.hash,
+    transactionHash: duxxanPlatform.deployTransaction?.hash || deploymentReceipt?.transactionHash,
   };
 
   console.log("\n=== Deployment Info ===");
   console.log(JSON.stringify(deploymentInfo, null, 2));
 
   // Verification command for BSCScan
-  if (network.name === "bsc" || network.name === "bscTestnet") {
-    console.log("\n=== Verification Command ===");
-    console.log(`npx hardhat verify --network ${network.name} ${duxxanPlatform.address} "${USDT_ADDRESS}" "${COMMISSION_WALLET}"`);
-  }
+  console.log("\n=== Verification Command ===");
+  console.log(`npx hardhat verify --network bsc ${contractAddress} "${USDT_ADDRESS}" "${COMMISSION_WALLET}"`);
 }
 
 main()
