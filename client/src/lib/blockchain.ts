@@ -1,24 +1,6 @@
 import { ethers } from 'ethers';
 import { walletManager } from './wallet';
-
-// Smart contract ABIs (would be generated from actual contracts)
-const RAFFLE_CONTRACT_ABI = [
-  'function createRaffle(uint256 ticketPrice, uint256 maxTickets, uint256 endTime) external payable',
-  'function buyTickets(uint256 raffleId, uint256 quantity) external payable',
-  'function drawWinner(uint256 raffleId) external',
-  'function claimPrize(uint256 raffleId) external',
-  'event RaffleCreated(uint256 indexed raffleId, address indexed creator)',
-  'event TicketsPurchased(uint256 indexed raffleId, address indexed buyer, uint256 quantity)',
-  'event WinnerDrawn(uint256 indexed raffleId, address indexed winner)'
-];
-
-const DONATION_CONTRACT_ABI = [
-  'function createDonation(uint256 goalAmount, uint256 endTime) external payable',
-  'function donate(uint256 donationId) external payable',
-  'function withdrawDonations(uint256 donationId) external',
-  'event DonationCreated(uint256 indexed donationId, address indexed creator)',
-  'event DonationReceived(uint256 indexed donationId, address indexed donor, uint256 amount)'
-];
+import { DUXXAN_CONTRACT_ABI } from './contractABI';
 
 const USDT_ABI = [
   'function transfer(address to, uint256 amount) external returns (bool)',
@@ -30,9 +12,10 @@ const USDT_ABI = [
 export class BlockchainService {
   private static instance: BlockchainService;
   
-  // Contract addresses (would be deployed contracts)
-  private RAFFLE_CONTRACT = import.meta.env.VITE_RAFFLE_CONTRACT || '0x0000000000000000000000000000000000000000';
-  private DONATION_CONTRACT = import.meta.env.VITE_DONATION_CONTRACT || '0x0000000000000000000000000000000000000000';
+  // Contract addresses - BSC Mainnet deployed
+  private DUXXAN_CONTRACT = '0x7e1B19CE44AcCF69360A23cAdCBeA551B215Cade';
+  private RAFFLE_CONTRACT = this.DUXXAN_CONTRACT; // Unified contract
+  private DONATION_CONTRACT = this.DUXXAN_CONTRACT; // Unified contract
   private USDT_CONTRACT = import.meta.env.MODE === 'development' 
     ? '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd' // BSC Testnet USDT
     : '0x55d398326f99059fF775485246999027B3197955'; // BSC Mainnet USDT
@@ -84,15 +67,38 @@ export class BlockchainService {
   }
 
   // Raffle operations
-  async createRaffle(ticketPrice: string, maxTickets: number, endTime: number): Promise<string> {
+  async createRaffle(
+    title: string,
+    description: string,
+    prizeAmount: string,
+    ticketPrice: string,
+    maxTickets: number,
+    duration: number,
+    prizeType: number = 0 // 0 = USDT_ONLY, 1 = PHYSICAL_ITEM
+  ): Promise<string> {
     const { signer } = this.getConnection();
-    const raffleContract = new ethers.Contract(this.RAFFLE_CONTRACT, RAFFLE_CONTRACT_ABI, signer);
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
     
     // First approve USDT for the creation fee (25 USDT)
-    await this.approveUSDT(this.RAFFLE_CONTRACT, '25');
+    await this.approveUSDT(this.DUXXAN_CONTRACT, '25');
     
+    // For USDT prizes, also approve the prize amount
+    if (prizeType === 0) {
+      await this.approveUSDT(this.DUXXAN_CONTRACT, prizeAmount);
+    }
+    
+    const prizeAmountWei = ethers.parseUnits(prizeAmount, 6);
     const ticketPriceWei = ethers.parseUnits(ticketPrice, 6);
-    const tx = await raffleContract.createRaffle(ticketPriceWei, maxTickets, endTime);
+    
+    const tx = await duxxanContract.createRaffle(
+      title,
+      description,
+      prizeAmountWei,
+      ticketPriceWei,
+      maxTickets,
+      duration,
+      prizeType
+    );
     await tx.wait();
     
     return tx.hash;
@@ -100,73 +106,101 @@ export class BlockchainService {
 
   async buyTickets(raffleId: number, quantity: number, ticketPrice: string): Promise<string> {
     const { signer } = this.getConnection();
-    const raffleContract = new ethers.Contract(this.RAFFLE_CONTRACT, RAFFLE_CONTRACT_ABI, signer);
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
     
     const totalAmount = (parseFloat(ticketPrice) * quantity).toString();
-    await this.approveUSDT(this.RAFFLE_CONTRACT, totalAmount);
+    await this.approveUSDT(this.DUXXAN_CONTRACT, totalAmount);
     
-    const tx = await raffleContract.buyTickets(raffleId, quantity);
+    const tx = await duxxanContract.buyTickets(raffleId, quantity);
     await tx.wait();
     
     return tx.hash;
   }
 
   // Donation operations
-  async createDonation(goalAmount: string, endTime: number): Promise<string> {
+  async createDonation(
+    title: string,
+    description: string,
+    goalAmount: string,
+    duration: number,
+    isUnlimited: boolean = false
+  ): Promise<string> {
     const { signer } = this.getConnection();
-    const donationContract = new ethers.Contract(this.DONATION_CONTRACT, DONATION_CONTRACT_ABI, signer);
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
     
     // First approve USDT for the creation fee (25 USDT)
-    await this.approveUSDT(this.DONATION_CONTRACT, '25');
+    await this.approveUSDT(this.DUXXAN_CONTRACT, '25');
     
     const goalAmountWei = ethers.parseUnits(goalAmount, 6);
-    const tx = await donationContract.createDonation(goalAmountWei, endTime);
+    const tx = await duxxanContract.createDonation(title, description, goalAmountWei, duration, isUnlimited);
     await tx.wait();
     
     return tx.hash;
   }
 
-  async donate(donationId: number, amount: string): Promise<string> {
+  async makeDonation(donationId: number, amount: string): Promise<string> {
     const { signer } = this.getConnection();
-    const donationContract = new ethers.Contract(this.DONATION_CONTRACT, DONATION_CONTRACT_ABI, signer);
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
     
-    await this.approveUSDT(this.DONATION_CONTRACT, amount);
+    await this.approveUSDT(this.DUXXAN_CONTRACT, amount);
     
-    const tx = await donationContract.donate(donationId);
+    const tx = await duxxanContract.makeDonation(donationId, ethers.parseUnits(amount, 6));
     await tx.wait();
     
     return tx.hash;
   }
 
   // Event listeners for real-time updates
-  subscribeToRaffleEvents(callback: (event: any) => void) {
+  subscribeToEvents(callback: (event: any) => void) {
     const { provider } = this.getConnection();
-    const raffleContract = new ethers.Contract(this.RAFFLE_CONTRACT, RAFFLE_CONTRACT_ABI, provider);
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, provider);
     
-    raffleContract.on('RaffleCreated', (raffleId, creator, event) => {
-      callback({ type: 'RaffleCreated', raffleId, creator, event });
+    // Raffle events
+    duxxanContract.on('RaffleCreated', (raffleId, creator, prizeAmount, prizeType, event) => {
+      callback({ type: 'RaffleCreated', raffleId, creator, prizeAmount, prizeType, event });
     });
     
-    raffleContract.on('TicketsPurchased', (raffleId, buyer, quantity, event) => {
-      callback({ type: 'TicketsPurchased', raffleId, buyer, quantity, event });
+    duxxanContract.on('TicketPurchased', (raffleId, buyer, quantity, event) => {
+      callback({ type: 'TicketPurchased', raffleId, buyer, quantity, event });
     });
     
-    raffleContract.on('WinnerDrawn', (raffleId, winner, event) => {
-      callback({ type: 'WinnerDrawn', raffleId, winner, event });
+    duxxanContract.on('RaffleEnded', (raffleId, winner, prizeAmount, event) => {
+      callback({ type: 'RaffleEnded', raffleId, winner, prizeAmount, event });
+    });
+    
+    duxxanContract.on('PayoutReleased', (raffleId, winner, amount, event) => {
+      callback({ type: 'PayoutReleased', raffleId, winner, amount, event });
+    });
+    
+    // Donation events
+    duxxanContract.on('DonationCreated', (donationId, creator, goalAmount, event) => {
+      callback({ type: 'DonationCreated', donationId, creator, goalAmount, event });
+    });
+    
+    duxxanContract.on('DonationMade', (donationId, donor, amount, event) => {
+      callback({ type: 'DonationMade', donationId, donor, amount, event });
     });
   }
 
-  subscribeToDonationEvents(callback: (event: any) => void) {
-    const { provider } = this.getConnection();
-    const donationContract = new ethers.Contract(this.DONATION_CONTRACT, DONATION_CONTRACT_ABI, provider);
+  // Admin functions
+  async endRaffle(raffleId: number): Promise<string> {
+    const { signer } = this.getConnection();
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
     
-    donationContract.on('DonationCreated', (donationId, creator, event) => {
-      callback({ type: 'DonationCreated', donationId, creator, event });
-    });
+    const tx = await duxxanContract.endRaffle(raffleId);
+    await tx.wait();
     
-    donationContract.on('DonationReceived', (donationId, donor, amount, event) => {
-      callback({ type: 'DonationReceived', donationId, donor, amount, event });
-    });
+    return tx.hash;
+  }
+
+  async approveRaffleResult(raffleId: number, approve: boolean): Promise<string> {
+    const { signer } = this.getConnection();
+    const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
+    
+    const tx = await duxxanContract.approveRaffleResult(raffleId, approve);
+    await tx.wait();
+    
+    return tx.hash;
   }
 }
 
