@@ -25,8 +25,13 @@ export const corsOptions = {
       return callback(null, true);
     }
     
-    // Allow Replit domain variations
-    if (origin.includes('.replit.') || origin.includes('replit.dev')) {
+    // Allow all Replit domain variations
+    if (origin.includes('.replit.') || origin.includes('replit.dev') || origin.includes('replit.app')) {
+      return callback(null, true);
+    }
+    
+    // Allow any origin during development
+    if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
     
@@ -106,12 +111,12 @@ export const progressiveSlowdown = slowDown({
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "wss:", "ws:"]
+      defaultSrc: ["'self'", "*.replit.dev", "*.replit.app"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "*.replit.dev", "*.replit.app"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "*.replit.dev", "*.replit.app"],
+      imgSrc: ["'self'", "data:", "https:", "*.replit.dev", "*.replit.app"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "*.replit.dev", "*.replit.app"],
+      connectSrc: ["'self'", "wss:", "ws:", "*.replit.dev", "*.replit.app", "wss://*.replit.dev", "ws://*.replit.dev"]
     }
   },
   hsts: {
