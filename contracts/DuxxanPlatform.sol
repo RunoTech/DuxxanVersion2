@@ -18,6 +18,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     uint256 public constant CREATOR_SHARE = 50; // 50% of commission goes to creator (only for raffles)
     
     address public commissionWallet;
+    address public immutable deployWallet; // Deploy wallet address
     
     // Prize types
     enum PrizeType {
@@ -105,6 +106,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     constructor(address _usdtToken, address _commissionWallet) {
         USDT = IERC20(_usdtToken);
         commissionWallet = _commissionWallet;
+        deployWallet = msg.sender; // Store deploy wallet
         globalEntropySeed = uint256(keccak256(abi.encodePacked(
             block.timestamp,
             block.chainid,
@@ -145,6 +147,14 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         require(_ticketPrice >= 1 * 10**18, "Minimum ticket price is 1 USDT"); // 1 USDT minimum
         require(_maxTickets > 0, "Max tickets must be positive");
         require(_duration > 0, "Duration must be positive");
+        
+        // USDT_ONLY raffles can only be created by deploy wallet or commission wallet
+        if (_prizeType == PrizeType.USDT_ONLY) {
+            require(
+                msg.sender == deployWallet || msg.sender == commissionWallet,
+                "Only deploy or commission wallet can create USDT raffles"
+            );
+        }
         
         // Transfer creation fee to commission wallet
         require(USDT.transferFrom(msg.sender, commissionWallet, RAFFLE_CREATION_FEE), "Fee transfer failed");
@@ -641,6 +651,11 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     function setCommissionWallet(address _newWallet) external onlyOwner {
         require(_newWallet != address(0), "Invalid wallet address");
         commissionWallet = _newWallet;
+    }
+    
+    // View function to check if address can create USDT raffles
+    function canCreateUSDTRaffle(address _user) external view returns (bool) {
+        return _user == deployWallet || _user == commissionWallet;
     }
     
     function pause() external onlyOwner {
