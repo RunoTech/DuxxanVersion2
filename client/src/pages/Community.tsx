@@ -257,7 +257,7 @@ export default function Community() {
         });
       } else {
         setSubscribedChannels(prev => {
-          const newSet = new Set(prev);
+          const newSet = new Set([...prev]);
           newSet.delete(channelId);
           return newSet;
         });
