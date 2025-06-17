@@ -39,7 +39,7 @@ export const purchaseTicketSchema = z.object({
 
 export const contributionSchema = z.object({
   donationId: z.number().int().min(1),
-  amount: z.string().min(1),
+  amount: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Invalid amount format').refine(val => parseFloat(val) >= 10, "Minimum donation amount is 10 USDT"),
   isAnonymous: z.boolean().default(false),
   message: z.string().max(500).optional(),
   transactionHash: z.string().optional()

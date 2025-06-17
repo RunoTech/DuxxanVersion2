@@ -54,7 +54,7 @@ export const purchaseTicketSchema = z.object({
 
 // Donation contribution validation
 export const contributionSchema = z.object({
-  amount: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Invalid amount format'),
+  amount: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Invalid amount format').refine(val => parseFloat(val) >= 10, "Minimum donation amount is 10 USDT"),
   transactionHash: z.string().length(66).regex(/^0x[a-fA-F0-9]{64}$/),
 });
 
