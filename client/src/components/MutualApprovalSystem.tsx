@@ -5,12 +5,14 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useWallet } from '@/hooks/useWallet';
 
 interface MutualApprovalSystemProps {
   raffle: {
     id: number;
     title: string;
     winnerId?: number;
+    creatorId: number;
     isApprovedByCreator: boolean;
     isApprovedByWinner: boolean;
     creator: {
@@ -28,11 +30,16 @@ interface MutualApprovalSystemProps {
 export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprovalSystemProps) {
   const [isApproving, setIsApproving] = useState(false);
   const { toast } = useToast();
+  const { user } = useWallet();
 
   // Don't show approval system if no winner is assigned
   if (!raffle.winnerId) {
     return null;
   }
+
+  // Check if current user is creator or winner
+  const isCreator = user?.id === raffle.creatorId;
+  const isWinner = user?.id === raffle.winnerId;
 
   const handleCreatorApproval = async () => {
     setIsApproving(true);
@@ -149,7 +156,7 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
                                        raffle.creator.organizationType === 'association' ? 'Dernek' : 'Bireysel'}</p>
             </div>
             
-            {!raffle.isApprovedByCreator && (
+            {!raffle.isApprovedByCreator && isCreator && (
               <Button 
                 onClick={handleCreatorApproval}
                 disabled={isApproving}
@@ -158,6 +165,12 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
               >
                 {isApproving ? 'Onaylanıyor...' : 'Organizasyon Olarak Onayla'}
               </Button>
+            )}
+            
+            {!raffle.isApprovedByCreator && !isCreator && (
+              <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+                {isWinner ? "Organizasyon onayı bekleniyor" : "Sadece organizasyon onay verebilir"}
+              </div>
             )}
           </div>
 
@@ -185,7 +198,7 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
               <p><strong>Statü:</strong> Çekiliş Kazananı</p>
             </div>
             
-            {!raffle.isApprovedByWinner && (
+            {!raffle.isApprovedByWinner && isWinner && (
               <Button 
                 onClick={handleWinnerApproval}
                 disabled={isApproving}
@@ -194,6 +207,12 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
               >
                 {isApproving ? 'Onaylanıyor...' : 'Kazanan Olarak Onayla'}
               </Button>
+            )}
+            
+            {!raffle.isApprovedByWinner && !isWinner && (
+              <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+                {isCreator ? "Kazanan kullanıcının onayı bekleniyor" : "Sadece kazanan onay verebilir"}
+              </div>
             )}
           </div>
         </div>

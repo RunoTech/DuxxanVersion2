@@ -461,6 +461,7 @@ export default function RaffleDetail() {
                   id: safeRaffle.id || 0,
                   title: safeRaffle.title || '',
                   winnerId: safeRaffle.winnerId,
+                  creatorId: safeRaffle.creatorId || 0,
                   isApprovedByCreator: safeRaffle.isApprovedByCreator || false,
                   isApprovedByWinner: safeRaffle.isApprovedByWinner || false,
                   creator: {
