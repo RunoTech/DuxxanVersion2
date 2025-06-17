@@ -246,7 +246,7 @@ export default function CreateDonation() {
                             <div className="space-y-2 text-sm text-green-800 dark:text-green-200">
                               <div className="flex justify-between">
                                 <span>• Platform Komisyonu:</span>
-                                <span className="font-medium">%2</span>
+                                <span className="font-medium">%2 (Bağışçıdan alınır)</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>• Para Birimi:</span>
@@ -254,11 +254,15 @@ export default function CreateDonation() {
                               </div>
                               <div className="flex justify-between">
                                 <span>• Minimum Bağış:</span>
-                                <span className="font-medium">0.1 USDT</span>
+                                <span className="font-medium">10 USDT</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>• Ödeme Sistemi:</span>
+                                <span className="font-medium">Anlık cüzdan transferi</span>
                               </div>
                             </div>
                             <p className="text-xs text-green-700 dark:text-green-300 mt-3 bg-green-100 dark:bg-green-800 p-2 rounded">
-                              ❤️ Düşük komisyon ile daha fazla yardım ulaştırın!
+                              ❤️ Bağışlar anlık cüzdanınıza aktarılır! Komisyon bağışçıdan otomatik kesilir.
                             </p>
                           </div>
                         </div>

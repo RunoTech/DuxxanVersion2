@@ -553,7 +553,7 @@ export const insertDonationContributionSchema = createInsertSchema(donationContr
 }).extend({
   amount: z.string()
     .regex(/^\d+(\.\d{1,6})?$/, "Amount must be a valid number with up to 6 decimal places")
-    .refine(val => parseFloat(val) > 0, "Amount must be greater than 0"),
+    .refine(val => parseFloat(val) >= 10, "Minimum donation amount is 10 USDT"),
   commissionAmount: z.string()
     .regex(/^\d+(\.\d{1,6})?$/, "Commission amount must be a valid number")
     .optional(),
