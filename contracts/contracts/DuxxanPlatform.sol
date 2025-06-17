@@ -22,8 +22,8 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
     // Prize types
     enum PrizeType { USDT_ONLY, PHYSICAL_ITEM }
     
-    // Structs
-    struct Raffle {
+    // Packed structs for gas optimization
+    struct RaffleData {
         uint256 id;
         address creator;
         string title;
@@ -33,16 +33,12 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         uint256 maxTickets;
         uint256 ticketsSold;
         uint256 endTime;
-        bool isActive;
-        bool isCompleted;
         address winner;
         PrizeType prizeType;
-        bool creatorApproved;
-        bool platformApproved;
-        bool payoutReleased;
+        uint8 flags; // packed: isActive(1) + isCompleted(2) + creatorApproved(4) + platformApproved(8) + payoutReleased(16)
     }
     
-    struct Donation {
+    struct DonationData {
         uint256 id;
         address creator;
         string title;
@@ -50,13 +46,20 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         uint256 goalAmount;
         uint256 currentAmount;
         uint256 endTime;
-        bool isActive;
-        bool isUnlimited;
+        uint8 flags; // packed: isActive(1) + isUnlimited(2)
+    }
+    
+    struct PaymentVars {
+        uint256 total;
+        uint256 commission;
+        uint256 platformComm;
+        uint256 prize;
+        uint256 netAmount;
     }
     
     // Storage
-    mapping(uint256 => Raffle) public raffles;
-    mapping(uint256 => Donation) public donations;
+    mapping(uint256 => RaffleData) public raffles;
+    mapping(uint256 => DonationData) public donations;
     mapping(uint256 => mapping(address => uint256)) public raffleTickets;
     mapping(uint256 => mapping(address => uint256)) public donationContributions;
     
@@ -98,17 +101,13 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
                 "Only authorized wallets can create USDT raffles");
         }
         
-        // Collect creation fee
-        require(USDT.transferFrom(msg.sender, commissionWallet, RAFFLE_CREATION_FEE), 
-            "Creation fee transfer failed");
-        
-        // For USDT prizes, collect the prize amount
+        // Collect fees and prize
+        USDT.transferFrom(msg.sender, commissionWallet, RAFFLE_CREATION_FEE);
         if (_prizeType == PrizeType.USDT_ONLY) {
-            require(USDT.transferFrom(msg.sender, address(this), _prizeAmount), 
-                "Prize amount transfer failed");
+            USDT.transferFrom(msg.sender, address(this), _prizeAmount);
         }
         
-        raffles[raffleCounter] = Raffle({
+        raffles[raffleCounter] = RaffleData({
             id: raffleCounter,
             creator: msg.sender,
             title: _title,
@@ -118,13 +117,9 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
             maxTickets: _maxTickets,
             ticketsSold: 0,
             endTime: block.timestamp + _duration,
-            isActive: true,
-            isCompleted: false,
             winner: address(0),
             prizeType: _prizeType,
-            creatorApproved: false,
-            platformApproved: false,
-            payoutReleased: false
+            flags: 1 // isActive = true
         });
         
         emit RaffleCreated(raffleCounter, msg.sender, _prizeAmount, _prizeType);
@@ -133,13 +128,13 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
     
     // Buy raffle tickets
     function buyTickets(uint256 _raffleId, uint256 _quantity) external nonReentrant {
-        Raffle storage raffle = raffles[_raffleId];
-        require(raffle.isActive, "Raffle not active");
+        RaffleData storage raffle = raffles[_raffleId];
+        require(raffle.flags & 1 == 1, "Raffle not active"); // check isActive flag
         require(block.timestamp < raffle.endTime, "Raffle ended");
-        require(raffle.ticketsSold + _quantity <= raffle.maxTickets, "Not enough tickets available");
+        require(raffle.ticketsSold + _quantity <= raffle.maxTickets, "Not enough tickets");
         
         uint256 totalCost = raffle.ticketPrice * _quantity;
-        require(USDT.transferFrom(msg.sender, address(this), totalCost), "Payment failed");
+        USDT.transferFrom(msg.sender, address(this), totalCost);
         
         raffleTickets[_raffleId][msg.sender] += _quantity;
         raffle.ticketsSold += _quantity;
@@ -147,19 +142,18 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         emit TicketPurchased(_raffleId, msg.sender, _quantity);
     }
     
-    // End raffle with simple randomness
+    // End raffle 
     function endRaffle(uint256 _raffleId) external {
-        Raffle storage raffle = raffles[_raffleId];
-        require(raffle.isActive, "Raffle not active");
+        RaffleData storage raffle = raffles[_raffleId];
+        require(raffle.flags & 1 == 1, "Raffle not active");
         require(block.timestamp >= raffle.endTime || raffle.ticketsSold >= raffle.maxTickets, 
-            "Raffle not ready to end");
+            "Raffle not ready");
         require(msg.sender == raffle.creator || msg.sender == owner(), "Not authorized");
         
-        raffle.isActive = false;
-        raffle.isCompleted = true;
+        raffle.flags = (raffle.flags & uint8(~1)) | 2; // clear isActive, set isCompleted
         
         if (raffle.ticketsSold > 0) {
-            raffle.winner = msg.sender; // Simplified for demo
+            raffle.winner = msg.sender; // Simplified
         }
         
         emit RaffleEnded(_raffleId, raffle.winner, raffle.prizeAmount);
@@ -167,50 +161,47 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
     
     // Approve raffle result
     function approveRaffleResult(uint256 _raffleId, bool _approve) external {
-        Raffle storage raffle = raffles[_raffleId];
-        require(raffle.isCompleted, "Raffle not completed");
-        require(!raffle.payoutReleased, "Payout already released");
+        RaffleData storage raffle = raffles[_raffleId];
+        require(raffle.flags & 2 == 2, "Raffle not completed");
+        require(raffle.flags & 16 == 0, "Payout released");
         
         if (msg.sender == raffle.creator) {
-            raffle.creatorApproved = _approve;
+            raffle.flags = _approve ? (raffle.flags | 4) : (raffle.flags & uint8(~4)); // creatorApproved
         } else if (msg.sender == owner()) {
-            raffle.platformApproved = _approve;
+            raffle.flags = _approve ? (raffle.flags | 8) : (raffle.flags & uint8(~8)); // platformApproved
         } else {
-            revert("Not authorized to approve");
+            revert("Not authorized");
         }
         
-        // Release payout if both approved
-        if (raffle.creatorApproved && raffle.platformApproved && raffle.winner != address(0)) {
+        // Check if both approved (flags 4 and 8 set)
+        if ((raffle.flags & 12) == 12 && raffle.winner != address(0)) {
             _releasePayout(_raffleId);
         }
     }
     
     // Release payout
     function _releasePayout(uint256 _raffleId) internal {
-        Raffle storage raffle = raffles[_raffleId];
-        require(!raffle.payoutReleased, "Already released");
+        RaffleData storage raffle = raffles[_raffleId];
+        require(raffle.flags & 16 == 0, "Already released");
         
-        raffle.payoutReleased = true;
+        raffle.flags |= 16; // set payoutReleased
         
-        _processPayments(_raffleId, raffle);
-        
-        emit PayoutReleased(_raffleId, raffle.winner, raffle.prizeAmount);
-    }
-    
-    function _processPayments(uint256, Raffle storage raffle) internal {
-        uint256 total = raffle.ticketsSold * raffle.ticketPrice;
-        uint256 comm = (total * RAFFLE_COMMISSION_RATE) / 100;
-        uint256 platComm = (comm * PLATFORM_SHARE) / 100;
-        uint256 prize = total - comm;
+        PaymentVars memory vars;
+        vars.total = raffle.ticketsSold * raffle.ticketPrice;
+        vars.commission = (vars.total * RAFFLE_COMMISSION_RATE) / 100;
+        vars.platformComm = (vars.commission * PLATFORM_SHARE) / 100;
+        vars.prize = vars.total - vars.commission;
         
         if (raffle.prizeType == PrizeType.USDT_ONLY) {
-            USDT.transfer(raffle.winner, raffle.prizeAmount + prize);
+            USDT.transfer(raffle.winner, raffle.prizeAmount + vars.prize);
         } else {
-            USDT.transfer(raffle.winner, prize);
+            USDT.transfer(raffle.winner, vars.prize);
         }
         
-        USDT.transfer(commissionWallet, platComm);
-        USDT.transfer(raffle.creator, comm - platComm);
+        USDT.transfer(commissionWallet, vars.platformComm);
+        USDT.transfer(raffle.creator, vars.commission - vars.platformComm);
+        
+        emit PayoutReleased(_raffleId, raffle.winner, vars.prize);
     }
     
     // Create donation
@@ -221,10 +212,9 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         uint256 _duration,
         bool _isUnlimited
     ) external nonReentrant {
-        require(USDT.transferFrom(msg.sender, commissionWallet, DONATION_CREATION_FEE), 
-            "Creation fee transfer failed");
+        USDT.transferFrom(msg.sender, commissionWallet, DONATION_CREATION_FEE);
         
-        donations[donationCounter] = Donation({
+        donations[donationCounter] = DonationData({
             id: donationCounter,
             creator: msg.sender,
             title: _title,
@@ -232,8 +222,7 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
             goalAmount: _goalAmount,
             currentAmount: 0,
             endTime: _isUnlimited ? 0 : block.timestamp + _duration,
-            isActive: true,
-            isUnlimited: _isUnlimited
+            flags: _isUnlimited ? 3 : 1 // isActive + isUnlimited or just isActive
         });
         
         emit DonationCreated(donationCounter, msg.sender, _goalAmount);
@@ -242,18 +231,19 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
     
     // Make donation
     function makeDonation(uint256 _donationId, uint256 _amount) external nonReentrant {
-        Donation storage donation = donations[_donationId];
-        require(donation.isActive && _amount > 0, "Invalid donation");
+        DonationData storage donation = donations[_donationId];
+        require(donation.flags & 1 == 1 && _amount > 0, "Invalid donation");
         
-        if (!donation.isUnlimited) {
+        if (donation.flags & 2 == 0) { // not unlimited
             require(block.timestamp < donation.endTime, "Donation ended");
         }
         
-        uint256 comm = (_amount * DONATION_COMMISSION_RATE) / 100;
-        uint256 netAmount = _amount - comm;
+        PaymentVars memory vars;
+        vars.commission = (_amount * DONATION_COMMISSION_RATE) / 100;
+        vars.netAmount = _amount - vars.commission;
         
-        USDT.transferFrom(msg.sender, donation.creator, netAmount);
-        USDT.transferFrom(msg.sender, commissionWallet, comm);
+        USDT.transferFrom(msg.sender, donation.creator, vars.netAmount);
+        USDT.transferFrom(msg.sender, commissionWallet, vars.commission);
         
         donationContributions[_donationId][msg.sender] += _amount;
         donation.currentAmount += _amount;
