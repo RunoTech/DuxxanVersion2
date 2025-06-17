@@ -41,6 +41,30 @@ export const categories = pgTable("categories", {
   slug: varchar("slug", { length: 50 }).notNull().unique(),
 });
 
+// Footer content management
+export const footerSections = pgTable("footer_sections", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  content: text("content").notNull(),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const footerLinks = pgTable("footer_links", {
+  id: serial("id").primaryKey(),
+  sectionId: integer("section_id").references(() => footerSections.id),
+  title: varchar("title", { length: 100 }).notNull(),
+  url: varchar("url", { length: 500 }).notNull(),
+  description: text("description"),
+  isExternal: boolean("is_external").default(false),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Countries table for international filtering
 export const countries = pgTable("countries", {
   id: serial("id").primaryKey(),
@@ -270,6 +294,17 @@ export const userPhotosRelations = relations(userPhotos, ({ one }) => ({
   user: one(users, {
     fields: [userPhotos.userId],
     references: [users.id],
+  }),
+}));
+
+export const footerSectionsRelations = relations(footerSections, ({ many }) => ({
+  links: many(footerLinks),
+}));
+
+export const footerLinksRelations = relations(footerLinks, ({ one }) => ({
+  section: one(footerSections, {
+    fields: [footerLinks.sectionId],
+    references: [footerSections.id],
   }),
 }));
 
