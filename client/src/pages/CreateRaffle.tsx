@@ -218,24 +218,28 @@ export default function CreateRaffle() {
                       <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Komisyon ve Ücret Bilgileri</h3>
                       <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
                         <div className="flex justify-between">
-                          <span>• Platform Komisyonu:</span>
+                          <span>• Oluşturma Ücreti:</span>
+                          <span className="font-medium">25 USDT</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Toplam Komisyon:</span>
+                          <span className="font-medium">%10</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Platform Payı:</span>
                           <span className="font-medium">%5</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>• Oluşturan Komisyonu (Size):</span>
+                          <span>• Oluşturan Payı (Size):</span>
                           <span className="font-medium text-green-600 dark:text-green-400">%5</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Para Birimi:</span>
                           <span className="font-medium">USDT (BNB Smart Chain)</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span>• Minimum Bilet Fiyatı:</span>
-                          <span className="font-medium">1 USDT</span>
-                        </div>
                       </div>
                       <p className="text-xs text-blue-700 dark:text-blue-300 mt-3 bg-blue-100 dark:bg-blue-800 p-2 rounded">
-                        💡 Pasif Gelir: Her çekilişinizden %5 komisyon kazanırsınız!
+                        Pasif Gelir: Her bilet satışından %5 komisyon kazanırsınız!
                       </p>
                     </div>
                   </div>

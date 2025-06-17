@@ -91,24 +91,12 @@ export function DonationCard({ donation }: DonationCardProps) {
   };
 
   const getCommissionBadge = () => {
-    const orgType = donation.creator?.organizationType || donation.organizationType;
-    const isVerified = donation.creator?.organizationVerified;
-    
-    if ((orgType === 'foundation' || orgType === 'association') && isVerified) {
-      return (
-        <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
-          %2 Komisyon
-        </Badge>
-      );
-    }
-    if (orgType === 'individual') {
-      return (
-        <Badge className="bg-orange-100 text-orange-800 border border-orange-200">
-          %10 Komisyon
-        </Badge>
-      );
-    }
-    return null;
+    // Contract: All donations have 2% commission rate
+    return (
+      <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
+        %2 Komisyon
+      </Badge>
+    );
   };
 
   const getCountryFlag = () => {
@@ -147,7 +135,7 @@ export function DonationCard({ donation }: DonationCardProps) {
     setIsContributing(true);
     try {
       // First, handle blockchain transaction
-      const transactionHash = await blockchainService.donate(
+      const transactionHash = await blockchainService.makeDonation(
         donation.id,
         donationAmount
       );

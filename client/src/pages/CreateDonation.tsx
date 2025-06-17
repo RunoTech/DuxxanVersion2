@@ -88,9 +88,9 @@ export default function CreateDonation() {
   const isOrganization = userData?.organizationType !== 'individual';
   const canCreateUnlimited = isOrganization && userData?.organizationVerified;
 
-  // Calculate commission rate and startup fee
-  const commissionRate = isOrganization ? 2 : 10;
-  const startupFee = isUnlimited && isOrganization ? 100 : 0;
+  // Calculate commission rate and startup fee based on contract
+  const commissionRate = 2; // Contract: DONATION_COMMISSION_RATE = 2%
+  const startupFee = 25; // Contract: DONATION_CREATION_FEE = 25 USDT for all donations
 
   const createDonationMutation = useMutation({
     mutationFn: async (data: CreateDonationForm) => {
@@ -525,13 +525,13 @@ export default function CreateDonation() {
                 <CardContent className="space-y-3">
                   <div className="text-sm text-gray-600">
                     <p className="mb-2">
-                      <strong>Bireysel Hesaplar:</strong> %10 komisyon, maksimum 30 gün süre
+                      <strong>Oluşturma Ücreti:</strong> 25 USDT (iade edilmez)
                     </p>
                     <p className="mb-2">
-                      <strong>Organizasyonlar:</strong> %2 komisyon
+                      <strong>Komisyon Oranı:</strong> %2 (her bağıştan düşülür)
                     </p>
                     <p>
-                      <strong>Sınırsız Bağışlar:</strong> 100 USDT başlangıç ücreti (iade edilmez)
+                      <strong>Sınırsız Bağışlar:</strong> 25 USDT başlangıç ücreti
                     </p>
                   </div>
                   {startupFee > 0 && (
