@@ -547,6 +547,7 @@ app.use('/api', apiRoutes);
             </div>
             
             <div style="margin-top: 1.5rem;">
+              <a href="/app" class="button" style="background: #10b981;">🚀 Uygulama Aç</a>
               <a href="/test" class="button">🧪 Test Sayfası</a>
               <a href="/health" class="button">📊 Sistem Durumu</a>
               <a href="/api/stats" class="button">📈 API Verileri</a>
@@ -568,6 +569,250 @@ app.use('/api', apiRoutes);
                   console.error('❌ API hatası:', err);
                   document.getElementById('api-result').innerHTML = '❌ Hata';
                 });
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
+  });
+
+  // Raffles page
+  app.get('/raffles', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="tr">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Çekilişler - DUXXAN</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              min-height: 100vh;
+              padding: 2rem;
+            }
+            .container { max-width: 1200px; margin: 0 auto; }
+            .header {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+              margin-bottom: 2rem;
+              text-align: center;
+            }
+            .raffle-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+              gap: 1.5rem;
+            }
+            .raffle-card {
+              background: white;
+              border-radius: 1rem;
+              padding: 2rem;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+              transition: transform 0.3s ease;
+            }
+            .raffle-card:hover { transform: translateY(-5px); }
+            .raffle-title { font-size: 1.5rem; font-weight: bold; color: #667eea; margin-bottom: 1rem; }
+            .raffle-info { margin: 0.5rem 0; color: #6b7280; }
+            .prize-amount { font-size: 2rem; font-weight: bold; color: #10b981; }
+            .btn { 
+              background: #667eea; 
+              color: white; 
+              padding: 0.75rem 1.5rem; 
+              border: none; 
+              border-radius: 0.5rem; 
+              cursor: pointer; 
+              text-decoration: none; 
+              display: inline-block;
+              margin-top: 1rem;
+            }
+            .btn:hover { background: #5a67d8; }
+            .nav { margin-bottom: 2rem; }
+            .nav a { 
+              background: rgba(255,255,255,0.2); 
+              color: white; 
+              padding: 0.5rem 1rem; 
+              margin: 0.25rem; 
+              border-radius: 0.5rem; 
+              text-decoration: none;
+              display: inline-block;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="nav">
+              <a href="/">🏠 Ana Sayfa</a>
+              <a href="/app">🚀 Uygulama</a>
+              <a href="/donations">💰 Bağışlar</a>
+            </div>
+            
+            <div class="header">
+              <h1>🎲 Çekilişler</h1>
+              <p>Blockchain tabanlı adil ve şeffaf çekiliş sistemi</p>
+            </div>
+            
+            <div class="raffle-grid" id="raffles-container">
+              <div class="raffle-card">
+                <div class="raffle-title">Mega Crypto Çekiliş</div>
+                <div class="raffle-info">📅 Başlangıç: 15 Haziran 2025</div>
+                <div class="raffle-info">⏰ Bitiş: 30 Haziran 2025</div>
+                <div class="raffle-info">👥 Katılımcı: 150 kişi</div>
+                <div class="prize-amount">25.0 BNB</div>
+                <div class="raffle-info">Ödül Havuzu</div>
+                <a href="#" class="btn">Çekilişe Katıl</a>
+              </div>
+              
+              <div class="raffle-card">
+                <div class="raffle-title">Gelecek Çekiliş</div>
+                <div class="raffle-info">📅 Yakında başlayacak</div>
+                <div class="raffle-info">⏰ Tarih: TBA</div>
+                <div class="raffle-info">👥 Katılımcı: 0 kişi</div>
+                <div class="prize-amount">TBA</div>
+                <div class="raffle-info">Ödül Havuzu</div>
+                <a href="#" class="btn" style="background: #6b7280;">Yakında</a>
+              </div>
+            </div>
+            
+            <script>
+              fetch('/api/raffles/active')
+                .then(res => res.json())
+                .then(data => {
+                  console.log('Çekiliş verileri:', data);
+                })
+                .catch(err => console.error('API hatası:', err));
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
+  });
+
+  // Donations page
+  app.get('/donations', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="tr">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Bağışlar - DUXXAN</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+              min-height: 100vh;
+              padding: 2rem;
+            }
+            .container { max-width: 1200px; margin: 0 auto; }
+            .header {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+              margin-bottom: 2rem;
+              text-align: center;
+            }
+            .donation-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+              gap: 1.5rem;
+            }
+            .donation-card {
+              background: white;
+              border-radius: 1rem;
+              padding: 2rem;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            .donation-title { font-size: 1.5rem; font-weight: bold; color: #10b981; margin-bottom: 1rem; }
+            .progress-bar {
+              background: #e5e7eb;
+              border-radius: 1rem;
+              height: 1rem;
+              margin: 1rem 0;
+              overflow: hidden;
+            }
+            .progress-fill {
+              background: #10b981;
+              height: 100%;
+              border-radius: 1rem;
+              transition: width 0.3s ease;
+            }
+            .btn { 
+              background: #10b981; 
+              color: white; 
+              padding: 0.75rem 1.5rem; 
+              border: none; 
+              border-radius: 0.5rem; 
+              cursor: pointer; 
+              text-decoration: none; 
+              display: inline-block;
+              margin-top: 1rem;
+            }
+            .nav { margin-bottom: 2rem; }
+            .nav a { 
+              background: rgba(255,255,255,0.2); 
+              color: white; 
+              padding: 0.5rem 1rem; 
+              margin: 0.25rem; 
+              border-radius: 0.5rem; 
+              text-decoration: none;
+              display: inline-block;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="nav">
+              <a href="/">🏠 Ana Sayfa</a>
+              <a href="/app">🚀 Uygulama</a>
+              <a href="/raffles">🎲 Çekilişler</a>
+            </div>
+            
+            <div class="header">
+              <h1>💰 Bağış Kampanyaları</h1>
+              <p>Sosyal sorumluluk projeleri için güvenli bağış sistemi</p>
+            </div>
+            
+            <div class="donation-grid">
+              <div class="donation-card">
+                <div class="donation-title">Eğitim Desteği Kampanyası</div>
+                <p>Dezavantajlı çocuklar için eğitim materyali desteği</p>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 65%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                  <span>Toplanan: 6.5 BNB</span>
+                  <span>Hedef: 10 BNB</span>
+                </div>
+                <a href="#" class="btn">Bağış Yap</a>
+              </div>
+              
+              <div class="donation-card">
+                <div class="donation-title">Çevre Koruma Projesi</div>
+                <p>Ağaçlandırma ve çevre temizlik çalışmaları</p>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 30%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                  <span>Toplanan: 1.5 BNB</span>
+                  <span>Hedef: 5 BNB</span>
+                </div>
+                <a href="#" class="btn">Bağış Yap</a>
+              </div>
+            </div>
+            
+            <script>
+              fetch('/api/donations/active')
+                .then(res => res.json())
+                .then(data => {
+                  console.log('Bağış verileri:', data);
+                })
+                .catch(err => console.error('API hatası:', err));
             </script>
           </div>
         </body>
