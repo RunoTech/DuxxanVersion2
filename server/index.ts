@@ -547,10 +547,10 @@ app.use('/api', apiRoutes);
             </div>
             
             <div style="margin-top: 1.5rem;">
-              <a href="/app" class="button" style="background: #10b981;">🚀 Uygulama Aç</a>
-              <a href="/test" class="button">🧪 Test Sayfası</a>
-              <a href="/health" class="button">📊 Sistem Durumu</a>
-              <a href="/api/stats" class="button">📈 API Verileri</a>
+              <a href="/react-app" class="button" style="background: #10b981; font-size: 1.1rem; padding: 1rem 2rem;">🚀 Ana Uygulamayı Aç</a>
+              <a href="/raffles" class="button">🎲 Çekilişler</a>
+              <a href="/donations" class="button">💰 Bağışlar</a>
+              <a href="/test" class="button">🧪 Test</a>
             </div>
             
             <div style="margin-top: 1rem; font-size: 0.9rem; color: #6b7280;">
@@ -820,20 +820,300 @@ app.use('/api', apiRoutes);
     `);
   });
 
-  // Disable Vite for iframe compatibility
-  // Use static file serving instead to avoid iframe restrictions
-  app.use(express.static('client/dist', { 
-    fallthrough: true,
-    maxAge: '1d'
-  }));
+  // Direct React app serving without Vite for iframe compatibility
+  app.get('/react-app', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="tr">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>DUXXAN - React App</title>
+          <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+          <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+          <script src="https://unpkg.com/@tanstack/react-query@5/build/umd/index.production.js"></script>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: #f8fafc;
+            }
+            .app-container { min-height: 100vh; }
+            .navbar {
+              background: white;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+              padding: 1rem 2rem;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .logo { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+            .nav-links { display: flex; gap: 1rem; }
+            .nav-link {
+              padding: 0.5rem 1rem;
+              border-radius: 0.5rem;
+              text-decoration: none;
+              color: #374151;
+              transition: all 0.2s;
+            }
+            .nav-link:hover, .nav-link.active {
+              background: #667eea;
+              color: white;
+            }
+            .main-content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+            .page-header {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+              margin-bottom: 2rem;
+              text-align: center;
+            }
+            .grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 1.5rem;
+              margin: 2rem 0;
+            }
+            .card {
+              background: white;
+              border-radius: 1rem;
+              padding: 2rem;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+              transition: transform 0.2s;
+            }
+            .card:hover { transform: translateY(-2px); }
+            .card-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; }
+            .btn {
+              background: #667eea;
+              color: white;
+              border: none;
+              padding: 0.75rem 1.5rem;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              text-decoration: none;
+              display: inline-block;
+              margin: 0.5rem 0.5rem 0.5rem 0;
+              transition: background 0.2s;
+            }
+            .btn:hover { background: #5a67d8; }
+            .btn-success { background: #10b981; }
+            .btn-success:hover { background: #059669; }
+            .stats-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1rem;
+              margin: 2rem 0;
+            }
+            .stat-card {
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: white;
+              padding: 1.5rem;
+              border-radius: 1rem;
+              text-align: center;
+            }
+            .stat-value { font-size: 2rem; font-weight: bold; }
+            .stat-label { opacity: 0.9; margin-top: 0.5rem; }
+            .loading { text-align: center; padding: 2rem; color: #6b7280; }
+          </style>
+        </head>
+        <body>
+          <div id="root"></div>
+          
+          <script>
+            const { useState, useEffect } = React;
+            const { createRoot } = ReactDOM;
+            
+            // Simple router
+            function useRouter() {
+              const [path, setPath] = useState(window.location.hash.slice(1) || '/');
+              
+              useEffect(() => {
+                const handleHashChange = () => setPath(window.location.hash.slice(1) || '/');
+                window.addEventListener('hashchange', handleHashChange);
+                return () => window.removeEventListener('hashchange', handleHashChange);
+              }, []);
+              
+              return { path, navigate: (newPath) => window.location.hash = newPath };
+            }
+            
+            // Components
+            function Navbar({ currentPath, navigate }) {
+              return React.createElement('nav', { className: 'navbar' },
+                React.createElement('div', { className: 'logo' }, 'DUXXAN'),
+                React.createElement('div', { className: 'nav-links' },
+                  React.createElement('a', {
+                    className: 'nav-link' + (currentPath === '/' ? ' active' : ''),
+                    href: '#/',
+                    onClick: () => navigate('/')
+                  }, 'Ana Sayfa'),
+                  React.createElement('a', {
+                    className: 'nav-link' + (currentPath === '/raffles' ? ' active' : ''),
+                    href: '#/raffles',
+                    onClick: () => navigate('/raffles')
+                  }, 'Çekilişler'),
+                  React.createElement('a', {
+                    className: 'nav-link' + (currentPath === '/donations' ? ' active' : ''),
+                    href: '#/donations',
+                    onClick: () => navigate('/donations')
+                  }, 'Bağışlar'),
+                  React.createElement('a', {
+                    className: 'nav-link' + (currentPath === '/community' ? ' active' : ''),
+                    href: '#/community',
+                    onClick: () => navigate('/community')
+                  }, 'Topluluk')
+                )
+              );
+            }
+            
+            function HomePage() {
+              const [stats, setStats] = useState(null);
+              
+              useEffect(() => {
+                fetch('/api/stats')
+                  .then(res => res.json())
+                  .then(setStats)
+                  .catch(console.error);
+              }, []);
+              
+              return React.createElement('div', { className: 'main-content' },
+                React.createElement('div', { className: 'page-header' },
+                  React.createElement('h1', { style: { color: '#667eea', marginBottom: '1rem' } }, 'DUXXAN Platform'),
+                  React.createElement('p', { style: { color: '#6b7280', fontSize: '1.1rem' } }, 'Blockchain tabanlı çekiliş ve bağış platformu')
+                ),
+                
+                stats ? React.createElement('div', { className: 'stats-grid' },
+                  React.createElement('div', { className: 'stat-card' },
+                    React.createElement('div', { className: 'stat-value' }, stats.totalRaffles),
+                    React.createElement('div', { className: 'stat-label' }, 'Toplam Çekiliş')
+                  ),
+                  React.createElement('div', { className: 'stat-card' },
+                    React.createElement('div', { className: 'stat-value' }, stats.totalPrizePool),
+                    React.createElement('div', { className: 'stat-label' }, 'Ödül Havuzu (BNB)')
+                  ),
+                  React.createElement('div', { className: 'stat-card' },
+                    React.createElement('div', { className: 'stat-value' }, stats.totalDonations),
+                    React.createElement('div', { className: 'stat-label' }, 'Toplam Bağış')
+                  ),
+                  React.createElement('div', { className: 'stat-card' },
+                    React.createElement('div', { className: 'stat-value' }, stats.activeUsers),
+                    React.createElement('div', { className: 'stat-label' }, 'Aktif Kullanıcı')
+                  )
+                ) : React.createElement('div', { className: 'loading' }, 'İstatistikler yükleniyor...'),
+                
+                React.createElement('div', { className: 'grid' },
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title' }, '🎲 Çekiliş Sistemi'),
+                    React.createElement('p', null, 'Blockchain tabanlı adil ve şeffaf çekiliş mekanizması'),
+                    React.createElement('a', { href: '#/raffles', className: 'btn' }, 'Çekilişleri Gör')
+                  ),
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title' }, '💰 Bağış Kampanyaları'),
+                    React.createElement('p', null, 'Sosyal sorumluluk projeleri için güvenli bağış sistemi'),
+                    React.createElement('a', { href: '#/donations', className: 'btn btn-success' }, 'Bağış Yap')
+                  ),
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title' }, '🔐 Cüzdan Entegrasyonu'),
+                    React.createElement('p', null, 'MetaMask ve Trust Wallet ile güvenli işlemler'),
+                    React.createElement('button', { className: 'btn', onClick: () => alert('Cüzdan bağlantısı yakında...') }, 'Cüzdan Bağla')
+                  ),
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title' }, '👥 Topluluk'),
+                    React.createElement('p', null, 'Kanallar, sohbet ve topluluk etkinlikleri'),
+                    React.createElement('a', { href: '#/community', className: 'btn' }, 'Topluluğa Katıl')
+                  )
+                )
+              );
+            }
+            
+            function RafflesPage() {
+              const [raffles, setRaffles] = useState([]);
+              
+              useEffect(() => {
+                fetch('/api/raffles/active')
+                  .then(res => res.json())
+                  .then(data => setRaffles(data.raffles || []))
+                  .catch(console.error);
+              }, []);
+              
+              return React.createElement('div', { className: 'main-content' },
+                React.createElement('div', { className: 'page-header' },
+                  React.createElement('h1', null, '🎲 Çekilişler'),
+                  React.createElement('p', null, 'Aktif çekilişlere katılın ve ödül kazanın')
+                ),
+                React.createElement('div', { className: 'grid' },
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title', style: { color: '#667eea' } }, 'Mega Crypto Çekiliş'),
+                    React.createElement('p', null, 'Ödül: 25.0 BNB'),
+                    React.createElement('p', null, 'Katılımcı: 150 kişi'),
+                    React.createElement('p', null, 'Durum: Aktif'),
+                    React.createElement('button', { className: 'btn', onClick: () => alert('Çekiliş katılımı yakında...') }, 'Katıl')
+                  )
+                )
+              );
+            }
+            
+            function DonationsPage() {
+              return React.createElement('div', { className: 'main-content' },
+                React.createElement('div', { className: 'page-header' },
+                  React.createElement('h1', null, '💰 Bağış Kampanyaları'),
+                  React.createElement('p', null, 'İyilik için bağış yapın')
+                ),
+                React.createElement('div', { className: 'grid' },
+                  React.createElement('div', { className: 'card' },
+                    React.createElement('h3', { className: 'card-title', style: { color: '#10b981' } }, 'Eğitim Desteği'),
+                    React.createElement('p', null, 'Dezavantajlı çocuklar için eğitim materyali'),
+                    React.createElement('p', null, 'Hedef: 10 BNB'),
+                    React.createElement('button', { className: 'btn btn-success', onClick: () => alert('Bağış sistemi yakında...') }, 'Bağış Yap')
+                  )
+                )
+              );
+            }
+            
+            function CommunityPage() {
+              return React.createElement('div', { className: 'main-content' },
+                React.createElement('div', { className: 'page-header' },
+                  React.createElement('h1', null, '👥 Topluluk'),
+                  React.createElement('p', null, 'Topluluk kanalları ve etkinlikler')
+                ),
+                React.createElement('div', { className: 'card' },
+                  React.createElement('h3', { className: 'card-title' }, 'Genel Sohbet'),
+                  React.createElement('p', null, 'Topluluk üyeleri ile sohbet edin'),
+                  React.createElement('button', { className: 'btn', onClick: () => alert('Sohbet sistemi yakında...') }, 'Sohbete Katıl')
+                )
+              );
+            }
+            
+            // Main App Component
+            function App() {
+              const { path, navigate } = useRouter();
+              
+              return React.createElement('div', { className: 'app-container' },
+                React.createElement(Navbar, { currentPath: path, navigate }),
+                path === '/' ? React.createElement(HomePage) :
+                path === '/raffles' ? React.createElement(RafflesPage) :
+                path === '/donations' ? React.createElement(DonationsPage) :
+                path === '/community' ? React.createElement(CommunityPage) :
+                React.createElement('div', { className: 'main-content' },
+                  React.createElement('h1', null, '404 - Sayfa Bulunamadı')
+                )
+              );
+            }
+            
+            // Render App
+            const root = createRoot(document.getElementById('root'));
+            root.render(React.createElement(App));
+          </script>
+        </body>
+      </html>
+    `);
+  });
   
-  // Fallback to React app for SPA routing
+  // Fallback routing
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'API endpoint not found' });
     }
-    
-    // Serve the main app route instead of trying Vite
     res.redirect('/');
   });
 
