@@ -18,6 +18,11 @@ import apiRoutes from "./routes/index";
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
 
+// Direct health check endpoint - bypasses all middleware
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Apply security middleware first
 app.use(cors(corsOptions));
 app.use(securityHeaders);
