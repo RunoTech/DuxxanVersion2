@@ -154,7 +154,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         
         uint256 raffleId = raffleCounter++;
         uint256 claimDeadline = (_prizeType == PrizeType.PHYSICAL_ITEM) ? 
-            block.timestamp + _duration + 30 days : 0; // 30 days after raffle ends to claim physical prize
+            block.timestamp + _duration + 6 days : 0; // 6 days after raffle ends to claim physical prize
         
         raffles[raffleId] = Raffle({
             id: raffleId,

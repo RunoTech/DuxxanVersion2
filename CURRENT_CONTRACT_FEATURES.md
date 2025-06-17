@@ -24,7 +24,7 @@
 ### Fiziksel Ödül Sistemi
 - **Ev/Araba Çekilişleri:** Fiziksel ödüller
 - **USDT Backing:** Fiziksel ödülün USDT karşılığı
-- **30 Gün Claim Süresi:** Fiziksel ödül teslim alma
+- **6 Gün Claim Süresi:** Fiziksel ödül teslim alma
 - **%60-40 Dağılım:** Alamazsa winner %60, platform %40
 
 ### Multi-Signature Onay
@@ -133,7 +133,7 @@
 - **Physical Prize Split:** %60 winner + %40 platform
 
 ### Zaman Limitleri
-- **Physical Prize Claim:** 30 gün
+- **Physical Prize Claim:** 6 gün
 - **Seed Commit Time:** Her çekiliş için
 - **End Time Validation:** Süre kontrolü
 
