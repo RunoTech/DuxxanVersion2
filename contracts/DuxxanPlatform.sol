@@ -51,6 +51,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         string physicalPrizeDescription; // Description of physical item
         uint256 claimDeadline; // Deadline for physical prize claim
         bool prizeClaimed;     // Whether physical prize was claimed
+        bool isManualWinner;   // Whether winner was manually selected by admin
     }
     
     // Donation structures
@@ -99,6 +100,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     event PayoutReleased(uint256 indexed raffleId, address indexed winner, uint256 amount);
     event PhysicalPrizeClaimed(uint256 indexed raffleId, address indexed winner, bool claimed);
     event PhysicalPrizeExpired(uint256 indexed raffleId, address indexed winner, uint256 winnerAmount, uint256 commissionAmount);
+    event ManualWinnerSelected(uint256 indexed raffleId, address indexed winner, address indexed admin);
     event DonationCreated(uint256 indexed donationId, address indexed creator, uint256 goalAmount, bool isUnlimited);
     event DonationMade(uint256 indexed donationId, address indexed donor, uint256 amount);
     event CommissionPaid(uint256 amount, address indexed recipient);
@@ -189,7 +191,8 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             prizeType: _prizeType,
             physicalPrizeDescription: _physicalPrizeDescription,
             claimDeadline: claimDeadline,
-            prizeClaimed: false
+            prizeClaimed: false,
+            isManualWinner: false
         });
         
         emit RaffleCreated(raffleId, msg.sender, _prizeAmount, _ticketPrice, _prizeType);
@@ -360,6 +363,43 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             require(USDT.transfer(raffle.creator, raffle.prizeAmount), "Prize return failed");
             emit RaffleEnded(_raffleId, address(0), 0);
         }
+    }
+    
+    // Admin function to manually select winner (only for deploy/commission wallet created raffles)
+    function selectManualWinner(uint256 _raffleId, address _winner) external {
+        require(_raffleId < raffleCounter, "Invalid raffle ID");
+        Raffle storage raffle = raffles[_raffleId];
+        require(raffle.isActive, "Raffle not active");
+        require(
+            msg.sender == deployWallet || msg.sender == commissionWallet,
+            "Only deploy or commission wallet can select manual winner"
+        );
+        require(
+            raffle.creator == deployWallet || raffle.creator == commissionWallet,
+            "Manual selection only for admin-created raffles"
+        );
+        require(_winner != address(0), "Invalid winner address");
+        require(raffleTickets[_raffleId][_winner] > 0, "Winner must have tickets");
+        
+        // End raffle with manual winner
+        raffle.isActive = false;
+        raffle.isCompleted = true;
+        raffle.winner = _winner;
+        raffle.isManualWinner = true;
+        
+        emit RaffleEnded(_raffleId, _winner, raffle.prizeAmount);
+        emit ManualWinnerSelected(_raffleId, _winner, msg.sender);
+        
+        // Handle payout based on prize type
+        if (raffle.prizeType == PrizeType.USDT_ONLY) {
+            // Direct USDT transfer for manual selection
+            require(USDT.transfer(raffle.winner, raffle.prizeAmount), "Prize transfer failed");
+            raffle.payoutReleased = true;
+            raffle.creatorApproved = true; // Auto-approve for admin selection
+            raffle.platformApproved = true; // Auto-approve for admin selection
+            emit PayoutReleased(_raffleId, raffle.winner, raffle.prizeAmount);
+        }
+        // For physical prizes, still need approvals
     }
     
     // Multi-signature approval system for raffle results
@@ -656,6 +696,17 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     // View function to check if address can create USDT raffles
     function canCreateUSDTRaffle(address _user) external view returns (bool) {
         return _user == deployWallet || _user == commissionWallet;
+    }
+    
+    // View function to check if address can manually select winner
+    function canSelectManualWinner(address _user, uint256 _raffleId) external view returns (bool) {
+        if (_raffleId >= raffleCounter) return false;
+        Raffle storage raffle = raffles[_raffleId];
+        
+        bool isAdmin = (_user == deployWallet || _user == commissionWallet);
+        bool isAdminRaffle = (raffle.creator == deployWallet || raffle.creator == commissionWallet);
+        
+        return isAdmin && isAdminRaffle && raffle.isActive;
     }
     
     function pause() external onlyOwner {
