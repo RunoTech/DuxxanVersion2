@@ -448,6 +448,31 @@ export const insertUserPhotoSchema = createInsertSchema(userPhotos).pick({
   fileSize: true,
 });
 
+// Footer schema types
+export const insertFooterSectionSchema = createInsertSchema(footerSections).pick({
+  title: true,
+  slug: true,
+  content: true,
+  isActive: true,
+  sortOrder: true,
+});
+
+export const insertFooterLinkSchema = createInsertSchema(footerLinks).pick({
+  sectionId: true,
+  title: true,
+  url: true,
+  description: true,
+  isExternal: true,
+  isActive: true,
+  sortOrder: true,
+});
+
+// Types
+export type FooterSection = typeof footerSections.$inferSelect;
+export type FooterLink = typeof footerLinks.$inferSelect;
+export type InsertFooterSection = z.infer<typeof insertFooterSectionSchema>;
+export type InsertFooterLink = z.infer<typeof insertFooterLinkSchema>;
+
 export const insertRaffleSchema = createInsertSchema(raffles).pick({
   categoryId: true,
   title: true,
