@@ -107,7 +107,7 @@ export default function Home() {
       color: "text-green-500"
     },
     {
-      value: (stats as any)?.totalDonations || "0",
+      value: `${(stats as any)?.totalDonations || "0"} USDT`,
       label: "Toplam Bağış",
       icon: Heart,
       color: "text-red-500"

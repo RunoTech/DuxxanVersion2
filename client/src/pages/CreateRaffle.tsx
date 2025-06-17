@@ -144,9 +144,12 @@ export default function CreateRaffle() {
     const maxTickets = form.getValues('maxTickets') || 100;
     
     if (prizeValue > 0 && maxTickets > 0) {
-      // Platform takes 10% commission, so we need 110% of prize value to cover prize + commission
+      // Platform takes 5% + Creator takes 5% = 10% total commission
+      // Need 110% of prize value to cover prize + commission
       const suggestedPrice = (prizeValue * 1.1) / maxTickets;
-      form.setValue('ticketPrice', suggestedPrice.toFixed(2));
+      // Minimum 1 USDT per ticket
+      const finalPrice = Math.max(1, suggestedPrice);
+      form.setValue('ticketPrice', finalPrice.toFixed(6));
     }
   };
 
@@ -203,6 +206,41 @@ export default function CreateRaffle() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* Komisyon Bilgilendirme Kartı */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded-full">
+                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Komisyon ve Ücret Bilgileri</h3>
+                      <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
+                        <div className="flex justify-between">
+                          <span>• Platform Komisyonu:</span>
+                          <span className="font-medium">%5</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Oluşturan Komisyonu (Size):</span>
+                          <span className="font-medium text-green-600 dark:text-green-400">%5</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Para Birimi:</span>
+                          <span className="font-medium">USDT (BNB Smart Chain)</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Minimum Bilet Fiyatı:</span>
+                          <span className="font-medium">1 USDT</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-blue-700 dark:text-blue-300 mt-3 bg-blue-100 dark:bg-blue-800 p-2 rounded">
+                        💡 Pasif Gelir: Her çekilişinizden %5 komisyon kazanırsınız!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <FormField
                   control={form.control}
                   name="categoryId"

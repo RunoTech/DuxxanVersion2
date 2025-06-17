@@ -495,11 +495,11 @@ export const insertRaffleSchema = createInsertSchema(raffles).pick({
     .min(10, "Description must be at least 10 characters")
     .max(2000, "Description must be less than 2000 characters"),
   prizeValue: z.string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Prize value must be a valid number with up to 2 decimal places")
-    .refine(val => parseFloat(val) > 0 && parseFloat(val) <= 10000000, "Prize value must be between $1 and $10,000,000"),
+    .regex(/^\d+(\.\d{1,6})?$/, "Prize value must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) > 0 && parseFloat(val) <= 10000000, "Prize value must be between 1 USDT and 10,000,000 USDT"),
   ticketPrice: z.string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Ticket price must be a valid number with up to 2 decimal places")
-    .refine(val => parseFloat(val) >= 0.01 && parseFloat(val) <= 100000, "Ticket price must be between $0.01 and $100,000"),
+    .regex(/^\d+(\.\d{1,6})?$/, "Ticket price must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) >= 1 && parseFloat(val) <= 100000, "Ticket price must be between 1 USDT and 100,000 USDT"),
   maxTickets: z.number()
     .int("Max tickets must be a whole number")
     .min(1, "Must have at least 1 ticket")

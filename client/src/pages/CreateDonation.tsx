@@ -233,6 +233,37 @@ export default function CreateDonation() {
                 <CardContent>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      {/* Komisyon Bilgilendirme Kartı */}
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+                        <div className="flex items-start space-x-3">
+                          <div className="bg-green-100 dark:bg-green-800 p-2 rounded-full">
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">Bağış Komisyon Bilgileri</h3>
+                            <div className="space-y-2 text-sm text-green-800 dark:text-green-200">
+                              <div className="flex justify-between">
+                                <span>• Platform Komisyonu:</span>
+                                <span className="font-medium">%2</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>• Para Birimi:</span>
+                                <span className="font-medium">USDT (BNB Smart Chain)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>• Minimum Bağış:</span>
+                                <span className="font-medium">0.1 USDT</span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-green-700 dark:text-green-300 mt-3 bg-green-100 dark:bg-green-800 p-2 rounded">
+                              ❤️ Düşük komisyon ile daha fazla yardım ulaştırın!
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
                       <FormField
                         control={form.control}
                         name="title"
