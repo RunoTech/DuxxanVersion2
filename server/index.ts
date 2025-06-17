@@ -250,5 +250,19 @@ app.use('/api', apiRoutes);
   server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
     log('DUXXAN server running with controller-based architecture');
+    
+    // Test server connectivity
+    setTimeout(async () => {
+      try {
+        const response = await fetch(`http://localhost:${port}/api/stats`);
+        log(`Server health check: ${response.status}`);
+      } catch (err: any) {
+        log(`Server connectivity issue: ${err.message}`);
+      }
+    }, 2000);
+  });
+  
+  server.on('error', (err: any) => {
+    log(`Server error: ${err.message}`);
   });
 })();
