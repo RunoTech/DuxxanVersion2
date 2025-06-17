@@ -159,13 +159,7 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         raffle.isCompleted = true;
         
         if (raffle.ticketsSold > 0) {
-            // Simple randomness for demo
-            uint256 randomNum = uint256(keccak256(abi.encodePacked(
-                block.timestamp, block.difficulty, block.number, _raffleId
-            ))) % raffle.ticketsSold;
-            
-            // Find winner (simplified)
-            raffle.winner = msg.sender; // For demo purposes
+            raffle.winner = msg.sender; // Simplified for demo
         }
         
         emit RaffleEnded(_raffleId, raffle.winner, raffle.prizeAmount);
@@ -203,21 +197,20 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         emit PayoutReleased(_raffleId, raffle.winner, raffle.prizeAmount);
     }
     
-    function _processPayments(uint256 _raffleId, Raffle storage raffle) internal {
-        uint256 totalAmount = raffle.ticketsSold * raffle.ticketPrice;
-        uint256 commission = (totalAmount * RAFFLE_COMMISSION_RATE) / 100;
-        uint256 platformCommission = (commission * PLATFORM_SHARE) / 100;
-        uint256 creatorCommission = commission - platformCommission;
-        uint256 prizeAmount = totalAmount - commission;
+    function _processPayments(uint256, Raffle storage raffle) internal {
+        uint256 total = raffle.ticketsSold * raffle.ticketPrice;
+        uint256 comm = (total * RAFFLE_COMMISSION_RATE) / 100;
+        uint256 platComm = (comm * PLATFORM_SHARE) / 100;
+        uint256 prize = total - comm;
         
         if (raffle.prizeType == PrizeType.USDT_ONLY) {
-            require(USDT.transfer(raffle.winner, raffle.prizeAmount + prizeAmount), "Prize transfer failed");
+            USDT.transfer(raffle.winner, raffle.prizeAmount + prize);
         } else {
-            require(USDT.transfer(raffle.winner, prizeAmount), "Prize transfer failed");
+            USDT.transfer(raffle.winner, prize);
         }
         
-        require(USDT.transfer(commissionWallet, platformCommission), "Platform commission failed");
-        require(USDT.transfer(raffle.creator, creatorCommission), "Creator commission failed");
+        USDT.transfer(commissionWallet, platComm);
+        USDT.transfer(raffle.creator, comm - platComm);
     }
     
     // Create donation
@@ -250,18 +243,17 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
     // Make donation
     function makeDonation(uint256 _donationId, uint256 _amount) external nonReentrant {
         Donation storage donation = donations[_donationId];
-        require(donation.isActive, "Donation not active");
-        require(_amount > 0, "Amount must be greater than 0");
+        require(donation.isActive && _amount > 0, "Invalid donation");
         
         if (!donation.isUnlimited) {
-            require(block.timestamp < donation.endTime, "Donation period ended");
+            require(block.timestamp < donation.endTime, "Donation ended");
         }
         
-        uint256 commission = (_amount * DONATION_COMMISSION_RATE) / 100;
-        uint256 donationAmount = _amount - commission;
+        uint256 comm = (_amount * DONATION_COMMISSION_RATE) / 100;
+        uint256 netAmount = _amount - comm;
         
-        require(USDT.transferFrom(msg.sender, donation.creator, donationAmount), "Donation transfer failed");
-        require(USDT.transferFrom(msg.sender, commissionWallet, commission), "Commission transfer failed");
+        USDT.transferFrom(msg.sender, donation.creator, netAmount);
+        USDT.transferFrom(msg.sender, commissionWallet, comm);
         
         donationContributions[_donationId][msg.sender] += _amount;
         donation.currentAmount += _amount;
