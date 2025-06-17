@@ -19,13 +19,19 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     
     address public commissionWallet;
     
+    // Prize types
+    enum PrizeType {
+        USDT_ONLY,      // Pure USDT prize
+        PHYSICAL_ITEM   // Physical item (house, car, etc.)
+    }
+    
     // Raffle structures
     struct Raffle {
         uint256 id;
         address creator;
         string title;
         string description;
-        uint256 prizeAmount;
+        uint256 prizeAmount;        // USDT backing amount
         uint256 ticketPrice;
         uint256 maxTickets;
         uint256 ticketsSold;
@@ -40,6 +46,10 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         bool creatorApproved;  // Creator approval for result
         bool platformApproved; // Platform approval for result
         bool payoutReleased;   // Whether payout has been released
+        PrizeType prizeType;   // Type of prize
+        string physicalPrizeDescription; // Description of physical item
+        uint256 claimDeadline; // Deadline for physical prize claim
+        bool prizeClaimed;     // Whether physical prize was claimed
     }
     
     // Donation structures
@@ -81,9 +91,13 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     uint256 private globalEntropySeed;
     
     // Events
-    event RaffleCreated(uint256 indexed raffleId, address indexed creator, uint256 prizeAmount, uint256 ticketPrice);
+    event RaffleCreated(uint256 indexed raffleId, address indexed creator, uint256 prizeAmount, uint256 ticketPrice, PrizeType prizeType);
     event TicketPurchased(uint256 indexed raffleId, address indexed buyer, uint256 quantity, uint256 totalCost);
     event RaffleEnded(uint256 indexed raffleId, address indexed winner, uint256 prizeAmount);
+    event RaffleApproval(uint256 indexed raffleId, address indexed approver, bool approved);
+    event PayoutReleased(uint256 indexed raffleId, address indexed winner, uint256 amount);
+    event PhysicalPrizeClaimed(uint256 indexed raffleId, address indexed winner, bool claimed);
+    event PhysicalPrizeExpired(uint256 indexed raffleId, address indexed winner, uint256 winnerAmount, uint256 commissionAmount);
     event DonationCreated(uint256 indexed donationId, address indexed creator, uint256 goalAmount, bool isUnlimited);
     event DonationMade(uint256 indexed donationId, address indexed donor, uint256 amount);
     event CommissionPaid(uint256 amount, address indexed recipient);
@@ -123,7 +137,9 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         uint256 _prizeAmount,
         uint256 _ticketPrice,
         uint256 _maxTickets,
-        uint256 _duration
+        uint256 _duration,
+        PrizeType _prizeType,
+        string memory _physicalPrizeDescription
     ) external nonReentrant whenNotPaused {
         require(_prizeAmount > 0, "Prize amount must be positive");
         require(_ticketPrice >= 1 * 10**18, "Minimum ticket price is 1 USDT"); // 1 USDT minimum
@@ -137,6 +153,8 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         require(USDT.transferFrom(msg.sender, address(this), _prizeAmount), "Prize transfer failed");
         
         uint256 raffleId = raffleCounter++;
+        uint256 claimDeadline = (_prizeType == PrizeType.PHYSICAL_ITEM) ? 
+            block.timestamp + _duration + 30 days : 0; // 30 days after raffle ends to claim physical prize
         
         raffles[raffleId] = Raffle({
             id: raffleId,
@@ -154,10 +172,17 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             totalAmount: 0,
             commissionCollected: 0,
             randomSeed: keccak256(abi.encodePacked(block.timestamp, block.chainid, block.gaslimit, msg.sender, raffleId)),
-            seedCommitTime: block.timestamp
+            seedCommitTime: block.timestamp,
+            creatorApproved: false,
+            platformApproved: false,
+            payoutReleased: false,
+            prizeType: _prizeType,
+            physicalPrizeDescription: _physicalPrizeDescription,
+            claimDeadline: claimDeadline,
+            prizeClaimed: false
         });
         
-        emit RaffleCreated(raffleId, msg.sender, _prizeAmount, _ticketPrice);
+        emit RaffleCreated(raffleId, msg.sender, _prizeAmount, _ticketPrice, _prizeType);
     }
     
     function buyTickets(uint256 _raffleId, uint256 _quantity) external nonReentrant onlyValidRaffle(_raffleId) {
@@ -310,14 +335,75 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
                 }
             }
             
-            // Transfer prize to winner
-            require(USDT.transfer(raffle.winner, raffle.prizeAmount), "Prize transfer failed");
             emit RaffleEnded(_raffleId, raffle.winner, raffle.prizeAmount);
+            
+            // Handle payout based on prize type
+            if (raffle.prizeType == PrizeType.USDT_ONLY) {
+                // Direct USDT transfer
+                require(USDT.transfer(raffle.winner, raffle.prizeAmount), "Prize transfer failed");
+                raffle.payoutReleased = true;
+                emit PayoutReleased(_raffleId, raffle.winner, raffle.prizeAmount);
+            }
+            // For physical prizes, wait for claim confirmation
         } else {
             // No tickets sold, return prize to creator
             require(USDT.transfer(raffle.creator, raffle.prizeAmount), "Prize return failed");
             emit RaffleEnded(_raffleId, address(0), 0);
         }
+    }
+    
+    // Physical Prize Management Functions
+    function claimPhysicalPrize(uint256 _raffleId, bool _claimed) external {
+        require(_raffleId < raffleCounter, "Invalid raffle ID");
+        Raffle storage raffle = raffles[_raffleId];
+        require(raffle.isCompleted, "Raffle not completed");
+        require(raffle.prizeType == PrizeType.PHYSICAL_ITEM, "Not a physical prize");
+        require(msg.sender == raffle.winner, "Only winner can claim");
+        require(block.timestamp <= raffle.claimDeadline, "Claim deadline passed");
+        require(!raffle.payoutReleased, "Payout already released");
+        
+        raffle.prizeClaimed = _claimed;
+        
+        if (_claimed) {
+            // Winner claims physical prize, creator gets the USDT
+            require(USDT.transfer(raffle.creator, raffle.prizeAmount), "Creator payout failed");
+            raffle.payoutReleased = true;
+            emit PhysicalPrizeClaimed(_raffleId, raffle.winner, true);
+            emit PayoutReleased(_raffleId, raffle.creator, raffle.prizeAmount);
+        } else {
+            // Winner rejects physical prize, gets 60% of USDT
+            uint256 winnerAmount = (raffle.prizeAmount * 60) / 100;
+            uint256 commissionAmount = raffle.prizeAmount - winnerAmount;
+            
+            require(USDT.transfer(raffle.winner, winnerAmount), "Winner payout failed");
+            require(USDT.transfer(commissionWallet, commissionAmount), "Commission payout failed");
+            
+            raffle.payoutReleased = true;
+            emit PhysicalPrizeClaimed(_raffleId, raffle.winner, false);
+            emit PayoutReleased(_raffleId, raffle.winner, winnerAmount);
+            emit CommissionPaid(commissionAmount, commissionWallet);
+        }
+    }
+    
+    function expirePhysicalPrize(uint256 _raffleId) external {
+        require(_raffleId < raffleCounter, "Invalid raffle ID");
+        Raffle storage raffle = raffles[_raffleId];
+        require(raffle.isCompleted, "Raffle not completed");
+        require(raffle.prizeType == PrizeType.PHYSICAL_ITEM, "Not a physical prize");
+        require(block.timestamp > raffle.claimDeadline, "Claim period still active");
+        require(!raffle.payoutReleased, "Payout already released");
+        
+        // Deadline passed without claim, winner gets 60% of USDT
+        uint256 winnerAmount = (raffle.prizeAmount * 60) / 100;
+        uint256 commissionAmount = raffle.prizeAmount - winnerAmount;
+        
+        require(USDT.transfer(raffle.winner, winnerAmount), "Winner payout failed");
+        require(USDT.transfer(commissionWallet, commissionAmount), "Commission payout failed");
+        
+        raffle.payoutReleased = true;
+        emit PhysicalPrizeExpired(_raffleId, raffle.winner, winnerAmount, commissionAmount);
+        emit PayoutReleased(_raffleId, raffle.winner, winnerAmount);
+        emit CommissionPaid(commissionAmount, commissionWallet);
     }
     
     // Donation Functions
