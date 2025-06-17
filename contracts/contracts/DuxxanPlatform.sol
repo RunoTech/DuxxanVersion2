@@ -150,7 +150,7 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
             "Raffle not ready");
         require(msg.sender == raffle.creator || msg.sender == owner(), "Not authorized");
         
-        raffle.flags = (raffle.flags & uint8(~1)) | 2; // clear isActive, set isCompleted
+        raffle.flags = (raffle.flags & 0xFE) | 2; // clear isActive(bit 0), set isCompleted(bit 1)
         
         if (raffle.ticketsSold > 0) {
             raffle.winner = msg.sender; // Simplified
@@ -166,9 +166,9 @@ contract DuxxanPlatformSimple is ReentrancyGuard, Ownable {
         require(raffle.flags & 16 == 0, "Payout released");
         
         if (msg.sender == raffle.creator) {
-            raffle.flags = _approve ? (raffle.flags | 4) : (raffle.flags & uint8(~4)); // creatorApproved
+            raffle.flags = _approve ? (raffle.flags | 4) : (raffle.flags & 0xFB); // creatorApproved(bit 2)
         } else if (msg.sender == owner()) {
-            raffle.flags = _approve ? (raffle.flags | 8) : (raffle.flags & uint8(~8)); // platformApproved
+            raffle.flags = _approve ? (raffle.flags | 8) : (raffle.flags & 0xF7); // platformApproved(bit 3)
         } else {
             revert("Not authorized");
         }

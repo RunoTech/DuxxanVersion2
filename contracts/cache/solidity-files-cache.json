@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/runner/workspace/contracts/contracts/DuxxanPlatform.sol": {
-      "lastModificationDate": 1750200072937,
-      "contentHash": "2ac1f6767c9f92a2b722f090cf84af73",
+      "lastModificationDate": 1750200526939,
+      "contentHash": "54ed194a46c6c92672e944d5f3fc2a06",
       "sourceName": "contracts/DuxxanPlatform.sol",
       "solcConfig": {
         "version": "0.8.20",
