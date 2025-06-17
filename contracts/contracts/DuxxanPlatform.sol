@@ -105,7 +105,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     event DonationMade(uint256 indexed donationId, address indexed donor, uint256 amount);
     event CommissionPaid(uint256 amount, address indexed recipient);
     
-    constructor(address _usdtToken, address _commissionWallet) {
+    constructor(address _usdtToken, address _commissionWallet) Ownable(msg.sender) {
         USDT = IERC20(_usdtToken);
         commissionWallet = _commissionWallet;
         deployWallet = msg.sender; // Store deploy wallet
