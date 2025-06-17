@@ -20,6 +20,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { CalendarIcon, InfoIcon, AlertTriangleIcon } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 const createDonationSchema = insertDonationSchema.extend({
   endDate: z.string().optional(),
@@ -89,8 +90,8 @@ export default function CreateDonation() {
   const canCreateUnlimited = isOrganization && userData?.organizationVerified;
 
   // Calculate commission rate and startup fee based on contract
-  const commissionRate = 2; // Contract: DONATION_COMMISSION_RATE = 2%
-  const startupFee = 25; // Contract: DONATION_CREATION_FEE = 25 USDT for all donations
+  const commissionRate = CONTRACT_FEES.DONATION_COMMISSION_RATE;
+  const startupFee = CONTRACT_FEES.DONATION_CREATION_FEE;
 
   const createDonationMutation = useMutation({
     mutationFn: async (data: CreateDonationForm) => {
@@ -525,13 +526,13 @@ export default function CreateDonation() {
                 <CardContent className="space-y-3">
                   <div className="text-sm text-gray-600">
                     <p className="mb-2">
-                      <strong>Oluşturma Ücreti:</strong> 25 USDT (iade edilmez)
+                      <strong>Oluşturma Ücreti:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT (iade edilmez)
                     </p>
                     <p className="mb-2">
-                      <strong>Komisyon Oranı:</strong> %2 (her bağıştan düşülür)
+                      <strong>Komisyon Oranı:</strong> %{CONTRACT_FEES.DONATION_COMMISSION_RATE} (her bağıştan düşülür)
                     </p>
                     <p>
-                      <strong>Sınırsız Bağışlar:</strong> 25 USDT başlangıç ücreti
+                      <strong>Tüm Bağışlar:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT başlangıç ücreti
                     </p>
                   </div>
                   {startupFee > 0 && (

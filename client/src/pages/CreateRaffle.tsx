@@ -18,6 +18,7 @@ import { insertRaffleSchema } from '@shared/schema';
 import { Link, useLocation } from 'wouter';
 import { Upload, X, ImageIcon, AlertTriangle } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 const createRaffleSchema = insertRaffleSchema.extend({
   endDate: z.string().min(1, 'End date is required'),
@@ -219,19 +220,19 @@ export default function CreateRaffle() {
                       <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
                         <div className="flex justify-between">
                           <span>• Oluşturma Ücreti:</span>
-                          <span className="font-medium">25 USDT</span>
+                          <span className="font-medium">{CONTRACT_FEES.RAFFLE_CREATION_FEE} USDT</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Toplam Komisyon:</span>
-                          <span className="font-medium">%10</span>
+                          <span className="font-medium">%{CONTRACT_FEES.RAFFLE_COMMISSION_RATE}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Platform Payı:</span>
-                          <span className="font-medium">%5</span>
+                          <span className="font-medium">%{CONTRACT_FEES.PLATFORM_SHARE / 10}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Oluşturan Payı (Size):</span>
-                          <span className="font-medium text-green-600 dark:text-green-400">%5</span>
+                          <span className="font-medium text-green-600 dark:text-green-400">%{CONTRACT_FEES.CREATOR_SHARE / 10}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Para Birimi:</span>

@@ -10,6 +10,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { Link } from 'wouter';
 import { Building2, Users, Heart, Clock, Shield, Star, Globe } from 'lucide-react';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 interface DonationCardProps {
   donation: {
@@ -94,7 +95,7 @@ export function DonationCard({ donation }: DonationCardProps) {
     // Contract: All donations have 2% commission rate
     return (
       <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
-        %2 Komisyon
+        %{CONTRACT_FEES.DONATION_COMMISSION_RATE} Komisyon
       </Badge>
     );
   };
