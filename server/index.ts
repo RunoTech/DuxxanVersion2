@@ -121,6 +121,54 @@ app.post('/api/raffles/:id/approve-creator', async (req: any, res) => {
   }
 });
 
+// Health check route for testing
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    port: 5000,
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Simple HTML test route
+app.get('/test', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>DUXXAN Platform</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .status { color: green; }
+        .error { color: red; }
+      </style>
+    </head>
+    <body>
+      <h1>DUXXAN Platform Test</h1>
+      <div id="status">Testing connection...</div>
+      <div id="api-status">API Status: <span id="api-result">Loading...</span></div>
+      
+      <script>
+        // Test API connection
+        fetch('/api/stats')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('api-result').innerHTML = '<span class="status">Connected ✓</span>';
+            document.getElementById('status').innerHTML = '<span class="status">All systems operational</span>';
+            console.log('API Data:', data);
+          })
+          .catch(err => {
+            document.getElementById('api-result').innerHTML = '<span class="error">Failed ✗</span>';
+            document.getElementById('status').innerHTML = '<span class="error">Connection failed</span>';
+            console.error('API Error:', err);
+          });
+      </script>
+    </body>
+    </html>
+  `);
+});
+
 // Chat routes BEFORE any middleware
 app.get('/api/raffles/:id/chat', async (req: any, res) => {
   try {
@@ -232,6 +280,105 @@ app.use('/api', apiRoutes);
 
     res.status(status).json({ message });
     throw err;
+  });
+
+  // Add fallback route for React app before Vite setup
+  app.get('/', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>DUXXAN Platform</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              min-height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .container {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+              text-align: center;
+              max-width: 500px;
+              width: 90%;
+            }
+            .logo { font-size: 2.5rem; font-weight: bold; color: #667eea; margin-bottom: 1rem; }
+            .status { color: #059669; margin: 1rem 0; }
+            .loading { animation: pulse 2s infinite; }
+            @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+            .button {
+              background: #667eea;
+              color: white;
+              padding: 0.75rem 1.5rem;
+              border: none;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              margin: 0.5rem;
+              text-decoration: none;
+              display: inline-block;
+            }
+            .api-status { margin-top: 1rem; padding: 1rem; background: #f3f4f6; border-radius: 0.5rem; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="logo">DUXXAN</div>
+            <div class="loading">Platform Yükleniyor...</div>
+            <div class="status" id="status">Bağlantı kontrol ediliyor...</div>
+            
+            <div class="api-status">
+              <div>API Durumu: <span id="api-result">Test ediliyor...</span></div>
+              <div>WebSocket: <span id="ws-result">Bağlanıyor...</span></div>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+              <a href="/test" class="button">Test Sayfası</a>
+              <a href="/health" class="button">Sistem Durumu</a>
+            </div>
+            
+            <script>
+              // API test
+              fetch('/api/stats')
+                .then(res => res.json())
+                .then(data => {
+                  document.getElementById('api-result').innerHTML = '✅ Çalışıyor';
+                  document.getElementById('status').innerHTML = 'API bağlantısı başarılı';
+                  console.log('API Data:', data);
+                })
+                .catch(err => {
+                  document.getElementById('api-result').innerHTML = '❌ Hata';
+                  console.error('API Error:', err);
+                });
+              
+              // WebSocket test
+              const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+              const ws = new WebSocket(wsProtocol + '//' + location.host);
+              
+              ws.onopen = () => {
+                document.getElementById('ws-result').innerHTML = '✅ Bağlı';
+              };
+              
+              ws.onerror = () => {
+                document.getElementById('ws-result').innerHTML = '❌ Bağlantı hatası';
+              };
+              
+              // Auto refresh every 10 seconds to check for updates
+              setTimeout(() => {
+                window.location.reload();
+              }, 10000);
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
   });
 
   // importantly only setup vite in development and after
