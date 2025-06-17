@@ -25,6 +25,9 @@ import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
 import CountryProfile from "@/pages/CountryProfile";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import Support from "@/pages/Support";
 
 import NotFound from "@/pages/not-found";
 
@@ -79,6 +82,9 @@ function Router() {
         <Route path="/country/:countryCode" component={CountryProfile} />
         <Route path="/create-raffle" component={CreateRaffle} />
         <Route path="/create-donation" component={CreateDonation} />
+        <Route path="/terms" component={Terms} />
+        <Route path="/privacy" component={Privacy} />
+        <Route path="/support" component={Support} />
         <Route component={NotFound} />
       </Switch>
     </>
@@ -139,16 +145,16 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ThemeProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
           <TranslationProvider>
             <AppContent />
             <Toaster />
           </TranslationProvider>
-        </ThemeProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
