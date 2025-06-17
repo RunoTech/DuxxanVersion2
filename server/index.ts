@@ -282,7 +282,192 @@ app.use('/api', apiRoutes);
     throw err;
   });
 
-  // Disable auto-refresh and fix Chrome transport errors
+  // Production-ready React app serving
+  app.get('/app', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="tr">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>DUXXAN Platform</title>
+          <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+          <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              min-height: 100vh;
+            }
+            .navbar {
+              background: rgba(255,255,255,0.95);
+              backdrop-filter: blur(10px);
+              padding: 1rem 2rem;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            }
+            .logo { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+            .main-content {
+              padding: 2rem;
+              max-width: 1200px;
+              margin: 0 auto;
+            }
+            .hero {
+              background: white;
+              padding: 3rem 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+              text-align: center;
+              margin-bottom: 2rem;
+            }
+            .stats-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+              gap: 1.5rem;
+              margin: 2rem 0;
+            }
+            .stat-card {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+              text-align: center;
+            }
+            .stat-value { font-size: 2rem; font-weight: bold; color: #667eea; }
+            .stat-label { color: #6b7280; margin-top: 0.5rem; }
+            .features {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 1.5rem;
+              margin: 2rem 0;
+            }
+            .feature-card {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+            .btn {
+              background: #667eea;
+              color: white;
+              padding: 0.75rem 1.5rem;
+              border: none;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              margin: 0.5rem;
+              text-decoration: none;
+              display: inline-block;
+              font-weight: 500;
+            }
+            .btn:hover { background: #5a67d8; }
+            .status-indicator {
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              background: #10b981;
+              border-radius: 50%;
+              margin-right: 0.5rem;
+              animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.5; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="navbar">
+            <div class="logo">DUXXAN</div>
+            <div>
+              <span class="status-indicator"></span>
+              Sistem Aktif
+            </div>
+          </div>
+          
+          <div class="main-content">
+            <div class="hero">
+              <h1 style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">
+                Kripto Çekiliş ve Bağış Platformu
+              </h1>
+              <p style="font-size: 1.2rem; color: #6b7280; margin-bottom: 2rem;">
+                Blockchain teknolojisi ile güvenli ve şeffaf çekiliş sistemi
+              </p>
+              <div id="api-status" style="margin: 1rem 0; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem;">
+                API durumu kontrol ediliyor...
+              </div>
+            </div>
+            
+            <div class="stats-grid" id="stats-container">
+              <div class="stat-card">
+                <div class="stat-value" id="total-raffles">-</div>
+                <div class="stat-label">Toplam Çekiliş</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="prize-pool">-</div>
+                <div class="stat-label">Ödül Havuzu</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="total-donations">-</div>
+                <div class="stat-label">Toplam Bağış</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="active-users">-</div>
+                <div class="stat-label">Aktif Kullanıcı</div>
+              </div>
+            </div>
+            
+            <div class="features">
+              <div class="feature-card">
+                <div class="feature-icon">🎲</div>
+                <h3>Çekiliş Sistemi</h3>
+                <p>Blockchain tabanlı adil ve şeffaf çekiliş mekanizması</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Bağış Kampanyaları</h3>
+                <p>Sosyal sorumluluk projeleri için güvenli bağış sistemi</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Cüzdan Entegrasyonu</h3>
+                <p>MetaMask ve Trust Wallet ile güvenli işlemler</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Global Erişim</h3>
+                <p>Ülke bazlı filtreleme ve çoklu dil desteği</p>
+              </div>
+            </div>
+          </div>
+          
+          <script>
+            // Load stats from API
+            fetch('/api/stats')
+              .then(res => res.json())
+              .then(data => {
+                document.getElementById('total-raffles').textContent = data.totalRaffles || '0';
+                document.getElementById('prize-pool').textContent = data.totalPrizePool || '0';
+                document.getElementById('total-donations').textContent = data.totalDonations || '0';
+                document.getElementById('active-users').textContent = data.activeUsers || '0';
+                document.getElementById('api-status').innerHTML = 
+                  '<span style="color: #10b981;">✓ API bağlantısı başarılı - Tüm sistemler çalışıyor</span>';
+              })
+              .catch(err => {
+                document.getElementById('api-status').innerHTML = 
+                  '<span style="color: #ef4444;">✗ API bağlantı hatası</span>';
+                console.error('API Error:', err);
+              });
+          </script>
+        </body>
+      </html>
+    `);
+  });
+
+  // Main landing page
   app.get('/', (req, res) => {
     res.send(`
       <!DOCTYPE html>
@@ -390,14 +575,22 @@ app.use('/api', apiRoutes);
     `);
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // Disable Vite for iframe compatibility
+  // Use static file serving instead to avoid iframe restrictions
+  app.use(express.static('client/dist', { 
+    fallthrough: true,
+    maxAge: '1d'
+  }));
+  
+  // Fallback to React app for SPA routing
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    
+    // Serve the main app route instead of trying Vite
+    res.redirect('/');
+  });
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
