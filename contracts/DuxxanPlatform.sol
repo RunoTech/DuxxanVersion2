@@ -37,6 +37,9 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         uint256 commissionCollected;
         bytes32 randomSeed; // For enhanced randomness
         uint256 seedCommitTime; // Timestamp when seed was committed
+        bool creatorApproved;  // Creator approval for result
+        bool platformApproved; // Platform approval for result
+        bool payoutReleased;   // Whether payout has been released
     }
     
     // Donation structures
