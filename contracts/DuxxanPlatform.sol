@@ -90,7 +90,8 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         commissionWallet = _commissionWallet;
         globalEntropySeed = uint256(keccak256(abi.encodePacked(
             block.timestamp,
-            block.difficulty,
+            block.chainid,
+            block.gaslimit,
             msg.sender,
             _usdtToken,
             _commissionWallet
@@ -122,7 +123,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
         uint256 _duration
     ) external nonReentrant whenNotPaused {
         require(_prizeAmount > 0, "Prize amount must be positive");
-        require(_ticketPrice > 0, "Ticket price must be positive");
+        require(_ticketPrice >= 1 * 10**18, "Minimum ticket price is 1 USDT"); // 1 USDT minimum
         require(_maxTickets > 0, "Max tickets must be positive");
         require(_duration > 0, "Duration must be positive");
         
@@ -149,7 +150,7 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             winner: address(0),
             totalAmount: 0,
             commissionCollected: 0,
-            randomSeed: keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender, _raffleId)),
+            randomSeed: keccak256(abi.encodePacked(block.timestamp, block.chainid, block.gaslimit, msg.sender, raffleId)),
             seedCommitTime: block.timestamp
         });
         
@@ -243,11 +244,13 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
                 raffle.totalAmount
             ));
             
-            // Layer 3: Block-based entropy with historical data
+            // Layer 3: Block-based entropy with BSC-optimized data
             bytes32 blockEntropy = keccak256(abi.encodePacked(
                 blockhash(block.number - 1),
                 blockhash(block.number - 2),
-                block.difficulty,
+                block.chainid,        // BSC chain ID: 56
+                block.gaslimit,       // Block gas limit
+                block.coinbase,       // BSC validator address
                 block.timestamp,
                 gasleft()
             ));
@@ -267,11 +270,13 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
                 historicalEntropy = keccak256(abi.encodePacked(historicalEntropy, history[i]));
             }
             
-            // Layer 6: Global entropy evolution
+            // Layer 6: Global entropy evolution with BSC validator system
             bytes32 globalEntropy = keccak256(abi.encodePacked(
                 globalEntropySeed,
                 raffleCounter,
-                donationCounter
+                donationCounter,
+                block.number % 21,    // BSC 21 validator rotation cycle
+                block.coinbase        // Current BSC validator
             ));
             
             // Combine all entropy layers with multiple hash rounds
@@ -352,19 +357,19 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
     }
     
     function donate(uint256 _donationId, uint256 _amount) external nonReentrant onlyValidDonation(_donationId) {
-        require(_amount > 0, "Amount must be positive");
+        require(_amount >= 10 * 10**18, "Minimum donation is 10 USDT"); // 10 USDT minimum
         
         Donation storage donation = donations[_donationId];
         uint256 commission = (_amount * DONATION_COMMISSION_RATE) / 100;
         uint256 netAmount = _amount - commission;
         
-        // Transfer donation
+        // Transfer full amount from donor (including commission)
         require(USDT.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
         
         // Send commission to platform
         require(USDT.transfer(commissionWallet, commission), "Commission transfer failed");
         
-        // Send net amount to donation creator
+        // Send net amount directly to donation creator (instant transfer)
         require(USDT.transfer(donation.creator, netAmount), "Donation transfer failed");
         
         // Update donation state
@@ -372,11 +377,12 @@ contract DuxxanPlatform is ReentrancyGuard, Ownable, Pausable {
             donationDonors[_donationId].push(msg.sender);
         }
         
-        donationContributions[_donationId][msg.sender] += _amount;
-        donation.currentAmount += _amount;
+        // Track the net amount that goes to the campaign
+        donationContributions[_donationId][msg.sender] += netAmount;
+        donation.currentAmount += netAmount; // Only count net amount towards goal
         donation.commissionCollected += commission;
         
-        emit DonationMade(_donationId, msg.sender, _amount);
+        emit DonationMade(_donationId, msg.sender, netAmount); // Emit net amount
         emit CommissionPaid(commission, commissionWallet);
     }
     
