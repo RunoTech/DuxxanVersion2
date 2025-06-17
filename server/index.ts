@@ -23,6 +23,11 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Test endpoint to verify server accessibility
+app.get('/test', (req, res) => {
+  res.status(200).send('<h1>Server Test Page</h1><p>Server is accessible</p>');
+});
+
 // Apply security middleware first
 app.use(cors(corsOptions));
 app.use(securityHeaders);
