@@ -829,9 +829,7 @@ app.use('/api', apiRoutes);
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>DUXXAN - React App</title>
-          <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-          <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-          <script src="https://unpkg.com/@tanstack/react-query@5/build/umd/index.production.js"></script>
+
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
@@ -921,188 +919,195 @@ app.use('/api', apiRoutes);
           <div id="root"></div>
           
           <script>
-            const { useState, useEffect } = React;
-            const { createRoot } = ReactDOM;
-            
-            // Simple router
-            function useRouter() {
-              const [path, setPath] = useState(window.location.hash.slice(1) || '/');
+            // Simple state management without React
+            function createSimpleApp() {
+              let currentPage = window.location.hash.slice(1) || '/';
+              let appData = { stats: null };
               
-              useEffect(() => {
-                const handleHashChange = () => setPath(window.location.hash.slice(1) || '/');
-                window.addEventListener('hashchange', handleHashChange);
-                return () => window.removeEventListener('hashchange', handleHashChange);
-              }, []);
+              function render() {
+                const root = document.getElementById('root');
+                root.innerHTML = getPageHTML(currentPage);
+                attachEventListeners();
+              }
               
-              return { path, navigate: (newPath) => window.location.hash = newPath };
-            }
-            
-            // Components
-            function Navbar({ currentPath, navigate }) {
-              return React.createElement('nav', { className: 'navbar' },
-                React.createElement('div', { className: 'logo' }, 'DUXXAN'),
-                React.createElement('div', { className: 'nav-links' },
-                  React.createElement('a', {
-                    className: 'nav-link' + (currentPath === '/' ? ' active' : ''),
-                    href: '#/',
-                    onClick: () => navigate('/')
-                  }, 'Ana Sayfa'),
-                  React.createElement('a', {
-                    className: 'nav-link' + (currentPath === '/raffles' ? ' active' : ''),
-                    href: '#/raffles',
-                    onClick: () => navigate('/raffles')
-                  }, 'Çekilişler'),
-                  React.createElement('a', {
-                    className: 'nav-link' + (currentPath === '/donations' ? ' active' : ''),
-                    href: '#/donations',
-                    onClick: () => navigate('/donations')
-                  }, 'Bağışlar'),
-                  React.createElement('a', {
-                    className: 'nav-link' + (currentPath === '/community' ? ' active' : ''),
-                    href: '#/community',
-                    onClick: () => navigate('/community')
-                  }, 'Topluluk')
-                )
-              );
-            }
-            
-            function HomePage() {
-              const [stats, setStats] = useState(null);
+              function navigate(path) {
+                currentPage = path;
+                window.location.hash = path;
+                render();
+              }
               
-              useEffect(() => {
+              function getPageHTML(path) {
+                const navbar = \`
+                  <nav class="navbar">
+                    <div class="logo">DUXXAN</div>
+                    <div class="nav-links">
+                      <a href="#/" class="nav-link \${path === '/' ? 'active' : ''}" data-path="/">Ana Sayfa</a>
+                      <a href="#/raffles" class="nav-link \${path === '/raffles' ? 'active' : ''}" data-path="/raffles">Çekilişler</a>
+                      <a href="#/donations" class="nav-link \${path === '/donations' ? 'active' : ''}" data-path="/donations">Bağışlar</a>
+                      <a href="#/community" class="nav-link \${path === '/community' ? 'active' : ''}" data-path="/community">Topluluk</a>
+                    </div>
+                  </nav>
+                \`;
+                
+                let content = '';
+                if (path === '/') {
+                  content = getHomePageHTML();
+                } else if (path === '/raffles') {
+                  content = getRafflesPageHTML();
+                } else if (path === '/donations') {
+                  content = getDonationsPageHTML();
+                } else if (path === '/community') {
+                  content = getCommunityPageHTML();
+                } else {
+                  content = '<div class="main-content"><h1>404 - Sayfa Bulunamadı</h1></div>';
+                }
+                
+                return \`<div class="app-container">\${navbar}\${content}</div>\`;
+              }
+              
+              function getHomePageHTML() {
+                const statsHTML = appData.stats ? \`
+                  <div class="stats-grid">
+                    <div class="stat-card">
+                      <div class="stat-value">\${appData.stats.totalRaffles}</div>
+                      <div class="stat-label">Toplam Çekiliş</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-value">\${appData.stats.totalPrizePool}</div>
+                      <div class="stat-label">Ödül Havuzu (BNB)</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-value">\${appData.stats.totalDonations}</div>
+                      <div class="stat-label">Toplam Bağış</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-value">\${appData.stats.activeUsers}</div>
+                      <div class="stat-label">Aktif Kullanıcı</div>
+                    </div>
+                  </div>
+                \` : '<div class="loading">İstatistikler yükleniyor...</div>';
+                
+                return \`
+                  <div class="main-content">
+                    <div class="page-header">
+                      <h1 style="color: #667eea; margin-bottom: 1rem;">DUXXAN Platform</h1>
+                      <p style="color: #6b7280; font-size: 1.1rem;">Blockchain tabanlı çekiliş ve bağış platformu</p>
+                    </div>
+                    \${statsHTML}
+                    <div class="grid">
+                      <div class="card">
+                        <h3 class="card-title">🎲 Çekiliş Sistemi</h3>
+                        <p>Blockchain tabanlı adil ve şeffaf çekiliş mekanizması</p>
+                        <a href="#/raffles" class="btn" data-path="/raffles">Çekilişleri Gör</a>
+                      </div>
+                      <div class="card">
+                        <h3 class="card-title">💰 Bağış Kampanyaları</h3>
+                        <p>Sosyal sorumluluk projeleri için güvenli bağış sistemi</p>
+                        <a href="#/donations" class="btn btn-success" data-path="/donations">Bağış Yap</a>
+                      </div>
+                      <div class="card">
+                        <h3 class="card-title">🔐 Cüzdan Entegrasyonu</h3>
+                        <p>MetaMask ve Trust Wallet ile güvenli işlemler</p>
+                        <button class="btn" onclick="alert('Cüzdan bağlantısı yakında...')">Cüzdan Bağla</button>
+                      </div>
+                      <div class="card">
+                        <h3 class="card-title">👥 Topluluk</h3>
+                        <p>Kanallar, sohbet ve topluluk etkinlikleri</p>
+                        <a href="#/community" class="btn" data-path="/community">Topluluğa Katıl</a>
+                      </div>
+                    </div>
+                  </div>
+                \`;
+              }
+              
+              function getRafflesPageHTML() {
+                return \`
+                  <div class="main-content">
+                    <div class="page-header">
+                      <h1>🎲 Çekilişler</h1>
+                      <p>Aktif çekilişlere katılın ve ödül kazanın</p>
+                    </div>
+                    <div class="grid">
+                      <div class="card">
+                        <h3 class="card-title" style="color: #667eea;">Mega Crypto Çekiliş</h3>
+                        <p>Ödül: 25.0 BNB</p>
+                        <p>Katılımcı: 150 kişi</p>
+                        <p>Durum: Aktif</p>
+                        <button class="btn" onclick="alert('Çekiliş katılımı yakında...')">Katıl</button>
+                      </div>
+                    </div>
+                  </div>
+                \`;
+              }
+              
+              function getDonationsPageHTML() {
+                return \`
+                  <div class="main-content">
+                    <div class="page-header">
+                      <h1>💰 Bağış Kampanyaları</h1>
+                      <p>İyilik için bağış yapın</p>
+                    </div>
+                    <div class="grid">
+                      <div class="card">
+                        <h3 class="card-title" style="color: #10b981;">Eğitim Desteği</h3>
+                        <p>Dezavantajlı çocuklar için eğitim materyali</p>
+                        <p>Hedef: 10 BNB</p>
+                        <button class="btn btn-success" onclick="alert('Bağış sistemi yakında...')">Bağış Yap</button>
+                      </div>
+                    </div>
+                  </div>
+                \`;
+              }
+              
+              function getCommunityPageHTML() {
+                return \`
+                  <div class="main-content">
+                    <div class="page-header">
+                      <h1>👥 Topluluk</h1>
+                      <p>Topluluk kanalları ve etkinlikler</p>
+                    </div>
+                    <div class="card">
+                      <h3 class="card-title">Genel Sohbet</h3>
+                      <p>Topluluk üyeleri ile sohbet edin</p>
+                      <button class="btn" onclick="alert('Sohbet sistemi yakında...')">Sohbete Katıl</button>
+                    </div>
+                  </div>
+                \`;
+              }
+              
+              function attachEventListeners() {
+                // Navigation links
+                document.querySelectorAll('[data-path]').forEach(link => {
+                  link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const path = link.getAttribute('data-path');
+                    navigate(path);
+                  });
+                });
+              }
+              
+              function loadStats() {
                 fetch('/api/stats')
                   .then(res => res.json())
-                  .then(setStats)
+                  .then(data => {
+                    appData.stats = data;
+                    if (currentPage === '/') render(); // Re-render home page if active
+                  })
                   .catch(console.error);
-              }, []);
+              }
               
-              return React.createElement('div', { className: 'main-content' },
-                React.createElement('div', { className: 'page-header' },
-                  React.createElement('h1', { style: { color: '#667eea', marginBottom: '1rem' } }, 'DUXXAN Platform'),
-                  React.createElement('p', { style: { color: '#6b7280', fontSize: '1.1rem' } }, 'Blockchain tabanlı çekiliş ve bağış platformu')
-                ),
-                
-                stats ? React.createElement('div', { className: 'stats-grid' },
-                  React.createElement('div', { className: 'stat-card' },
-                    React.createElement('div', { className: 'stat-value' }, stats.totalRaffles),
-                    React.createElement('div', { className: 'stat-label' }, 'Toplam Çekiliş')
-                  ),
-                  React.createElement('div', { className: 'stat-card' },
-                    React.createElement('div', { className: 'stat-value' }, stats.totalPrizePool),
-                    React.createElement('div', { className: 'stat-label' }, 'Ödül Havuzu (BNB)')
-                  ),
-                  React.createElement('div', { className: 'stat-card' },
-                    React.createElement('div', { className: 'stat-value' }, stats.totalDonations),
-                    React.createElement('div', { className: 'stat-label' }, 'Toplam Bağış')
-                  ),
-                  React.createElement('div', { className: 'stat-card' },
-                    React.createElement('div', { className: 'stat-value' }, stats.activeUsers),
-                    React.createElement('div', { className: 'stat-label' }, 'Aktif Kullanıcı')
-                  )
-                ) : React.createElement('div', { className: 'loading' }, 'İstatistikler yükleniyor...'),
-                
-                React.createElement('div', { className: 'grid' },
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title' }, '🎲 Çekiliş Sistemi'),
-                    React.createElement('p', null, 'Blockchain tabanlı adil ve şeffaf çekiliş mekanizması'),
-                    React.createElement('a', { href: '#/raffles', className: 'btn' }, 'Çekilişleri Gör')
-                  ),
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title' }, '💰 Bağış Kampanyaları'),
-                    React.createElement('p', null, 'Sosyal sorumluluk projeleri için güvenli bağış sistemi'),
-                    React.createElement('a', { href: '#/donations', className: 'btn btn-success' }, 'Bağış Yap')
-                  ),
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title' }, '🔐 Cüzdan Entegrasyonu'),
-                    React.createElement('p', null, 'MetaMask ve Trust Wallet ile güvenli işlemler'),
-                    React.createElement('button', { className: 'btn', onClick: () => alert('Cüzdan bağlantısı yakında...') }, 'Cüzdan Bağla')
-                  ),
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title' }, '👥 Topluluk'),
-                    React.createElement('p', null, 'Kanallar, sohbet ve topluluk etkinlikleri'),
-                    React.createElement('a', { href: '#/community', className: 'btn' }, 'Topluluğa Katıl')
-                  )
-                )
-              );
-            }
-            
-            function RafflesPage() {
-              const [raffles, setRaffles] = useState([]);
+              // Initialize
+              window.addEventListener('hashchange', () => {
+                currentPage = window.location.hash.slice(1) || '/';
+                render();
+              });
               
-              useEffect(() => {
-                fetch('/api/raffles/active')
-                  .then(res => res.json())
-                  .then(data => setRaffles(data.raffles || []))
-                  .catch(console.error);
-              }, []);
-              
-              return React.createElement('div', { className: 'main-content' },
-                React.createElement('div', { className: 'page-header' },
-                  React.createElement('h1', null, '🎲 Çekilişler'),
-                  React.createElement('p', null, 'Aktif çekilişlere katılın ve ödül kazanın')
-                ),
-                React.createElement('div', { className: 'grid' },
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title', style: { color: '#667eea' } }, 'Mega Crypto Çekiliş'),
-                    React.createElement('p', null, 'Ödül: 25.0 BNB'),
-                    React.createElement('p', null, 'Katılımcı: 150 kişi'),
-                    React.createElement('p', null, 'Durum: Aktif'),
-                    React.createElement('button', { className: 'btn', onClick: () => alert('Çekiliş katılımı yakında...') }, 'Katıl')
-                  )
-                )
-              );
+              loadStats();
+              render();
             }
             
-            function DonationsPage() {
-              return React.createElement('div', { className: 'main-content' },
-                React.createElement('div', { className: 'page-header' },
-                  React.createElement('h1', null, '💰 Bağış Kampanyaları'),
-                  React.createElement('p', null, 'İyilik için bağış yapın')
-                ),
-                React.createElement('div', { className: 'grid' },
-                  React.createElement('div', { className: 'card' },
-                    React.createElement('h3', { className: 'card-title', style: { color: '#10b981' } }, 'Eğitim Desteği'),
-                    React.createElement('p', null, 'Dezavantajlı çocuklar için eğitim materyali'),
-                    React.createElement('p', null, 'Hedef: 10 BNB'),
-                    React.createElement('button', { className: 'btn btn-success', onClick: () => alert('Bağış sistemi yakında...') }, 'Bağış Yap')
-                  )
-                )
-              );
-            }
-            
-            function CommunityPage() {
-              return React.createElement('div', { className: 'main-content' },
-                React.createElement('div', { className: 'page-header' },
-                  React.createElement('h1', null, '👥 Topluluk'),
-                  React.createElement('p', null, 'Topluluk kanalları ve etkinlikler')
-                ),
-                React.createElement('div', { className: 'card' },
-                  React.createElement('h3', { className: 'card-title' }, 'Genel Sohbet'),
-                  React.createElement('p', null, 'Topluluk üyeleri ile sohbet edin'),
-                  React.createElement('button', { className: 'btn', onClick: () => alert('Sohbet sistemi yakında...') }, 'Sohbete Katıl')
-                )
-              );
-            }
-            
-            // Main App Component
-            function App() {
-              const { path, navigate } = useRouter();
-              
-              return React.createElement('div', { className: 'app-container' },
-                React.createElement(Navbar, { currentPath: path, navigate }),
-                path === '/' ? React.createElement(HomePage) :
-                path === '/raffles' ? React.createElement(RafflesPage) :
-                path === '/donations' ? React.createElement(DonationsPage) :
-                path === '/community' ? React.createElement(CommunityPage) :
-                React.createElement('div', { className: 'main-content' },
-                  React.createElement('h1', null, '404 - Sayfa Bulunamadı')
-                )
-              );
-            }
-            
-            // Render App
-            const root = createRoot(document.getElementById('root'));
-            root.render(React.createElement(App));
+            // Start the app
+            createSimpleApp();
           </script>
         </body>
       </html>
