@@ -254,17 +254,13 @@ export default function Community() {
     },
     onSuccess: (_, { channelId, action }) => {
       if (action === 'subscribe') {
-        setSubscribedChannels(prev => new Set([...prev, channelId]));
+        setSubscribedChannels(prev => [...prev, channelId]);
         toast({
           title: "Başarılı",
           description: "Kanala abone oldunuz",
         });
       } else {
-        setSubscribedChannels(prev => {
-          const newSet = new Set([...prev]);
-          newSet.delete(channelId);
-          return newSet;
-        });
+        setSubscribedChannels(prev => prev.filter(id => id !== channelId));
         toast({
           title: "Başarılı",
           description: "Kanal aboneliğiniz iptal edildi",
