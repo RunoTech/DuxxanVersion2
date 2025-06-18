@@ -68,6 +68,33 @@ export class BlockchainService {
 
   // Raffle operations
   async createRaffle(
+    prizeAmount: string,
+    walletAddress: string
+  ): Promise<{ success: boolean; transactionHash?: string; error?: string }> {
+    try {
+      const { signer } = this.getConnection();
+      const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
+      
+      // First approve USDT for the creation fee (25 USDT)
+      await this.approveUSDT(this.DUXXAN_CONTRACT, '25');
+      
+      // Simple payment transaction for raffle creation fee
+      const tx = await duxxanContract.payRaffleCreationFee();
+      await tx.wait();
+      
+      return {
+        success: true,
+        transactionHash: tx.hash
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || 'Blockchain transaction failed'
+      };
+    }
+  }
+
+  async createRaffleOnContract(
     title: string,
     description: string,
     prizeAmount: string,

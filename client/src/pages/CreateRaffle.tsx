@@ -78,22 +78,29 @@ export default function CreateRaffle() {
 
   const createRaffleMutation = useMutation({
     mutationFn: async (data: CreateRaffleForm) => {
-      // Development mode - skip blockchain transaction
-      console.log('Development mode: Skipping blockchain transaction');
-      
-      // Add mock transaction hash for development
-      const mockTransactionHash = `0xdev${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
+      // Step 1: Process blockchain payment first
+      const paymentResult = await blockchainService.createRaffle(
+        data.prizeValue.toString(),
+        address!
+      );
 
-      // Convert endDate string to Date object and include country restrictions
-      const raffleData: any = {
-        ...data,
+      if (!paymentResult.success) {
+        throw new Error(paymentResult.error || 'Payment failed');
+      }
+
+      // Step 2: Create raffle with transaction hash
+      const raffleData = {
+        title: data.title,
+        description: data.description,
+        categoryId: data.categoryId,
+        maxTickets: data.maxTickets,
         endDate: new Date(data.endDate),
         prizeValue: data.prizeValue.toString(),
         ticketPrice: data.ticketPrice.toString(),
         countryRestriction: countryRestrictions.restriction,
         allowedCountries: countryRestrictions.allowedCountries ? JSON.stringify(countryRestrictions.allowedCountries) : null,
         excludedCountries: countryRestrictions.excludedCountries ? JSON.stringify(countryRestrictions.excludedCountries) : null,
-        transactionHash: mockTransactionHash,
+        transactionHash: paymentResult.transactionHash,
       };
 
       // Create raffle in database
