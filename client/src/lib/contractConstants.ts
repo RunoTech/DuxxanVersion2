@@ -34,8 +34,8 @@ export const calculateRaffleCommission = (totalAmount: number) => {
 
 export const calculateDonationCommission = (amount: number) => {
   const commission = (amount * CONTRACT_FEES.DONATION_COMMISSION_RATE) / 100;
-  const platformShare = (commission * CONTRACT_FEES.PLATFORM_SHARE) / 100;
-  const creatorShare = (commission * CONTRACT_FEES.CREATOR_SHARE) / 100;
+  const platformShare = commission; // 100% to platform for donations
+  const creatorShare = 0; // 0% to creator for donations
   
   return {
     totalCommission: commission,

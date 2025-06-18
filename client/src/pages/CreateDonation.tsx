@@ -529,7 +529,7 @@ export default function CreateDonation() {
                       <strong>Oluşturma Ücreti:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT (iade edilmez)
                     </p>
                     <p className="mb-2">
-                      <strong>Komisyon Oranı:</strong> %{CONTRACT_FEES.DONATION_COMMISSION_RATE} (her bağıştan düşülür)
+                      <strong>Komisyon Oranı:</strong> %{CONTRACT_FEES.DONATION_COMMISSION_RATE} (platform'a gider)
                     </p>
                     <p>
                       <strong>Tüm Bağışlar:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT başlangıç ücreti
