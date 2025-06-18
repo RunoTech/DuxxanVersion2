@@ -85,8 +85,8 @@ export const raffles = pgTable("raffles", {
   categoryId: integer("category_id").references(() => categories.id).notNull(),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description").notNull(),
-  prizeValue: decimal("prize_value", { precision: 10, scale: 6 }).notNull(),
-  ticketPrice: decimal("ticket_price", { precision: 10, scale: 6 }).notNull(),
+  prizeValue: decimal("prize_value", { precision: 15, scale: 6 }).notNull(),
+  ticketPrice: decimal("ticket_price", { precision: 15, scale: 6 }).notNull(),
   maxTickets: integer("max_tickets").notNull(),
   ticketsSold: integer("tickets_sold").default(0),
   endDate: timestamp("end_date").notNull(),
@@ -115,17 +115,17 @@ export const donations = pgTable("donations", {
   creatorId: integer("creator_id").references(() => users.id).notNull(),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description").notNull(),
-  goalAmount: decimal("goal_amount", { precision: 10, scale: 6 }).notNull(),
-  currentAmount: decimal("current_amount", { precision: 10, scale: 6 }).default("0"),
+  goalAmount: decimal("goal_amount", { precision: 15, scale: 6 }).notNull(),
+  currentAmount: decimal("current_amount", { precision: 15, scale: 6 }).default("0"),
   donorCount: integer("donor_count").default(0),
   endDate: timestamp("end_date"), // Now nullable for unlimited donations
   isActive: boolean("is_active").default(true),
   // New donation system fields
   isUnlimited: boolean("is_unlimited").default(false),
   commissionRate: decimal("commission_rate", { precision: 5, scale: 2 }).default("10.00"), // 10% for individual, 2% for organizations
-  startupFee: decimal("startup_fee", { precision: 10, scale: 6 }).default("0"), // 100 USDT for unlimited
+  startupFee: decimal("startup_fee", { precision: 15, scale: 6 }).default("0"), // 100 USDT for unlimited
   startupFeePaid: boolean("startup_fee_paid").default(false),
-  totalCommissionCollected: decimal("total_commission_collected", { precision: 10, scale: 6 }).default("0"),
+  totalCommissionCollected: decimal("total_commission_collected", { precision: 15, scale: 6 }).default("0"),
   category: varchar("category", { length: 50 }).default("general"), // health, education, disaster, etc.
   country: varchar("country", { length: 3 }), // For flag display
   // Country filtering fields
@@ -139,9 +139,9 @@ export const donationContributions = pgTable("donation_contributions", {
   id: serial("id").primaryKey(),
   donationId: integer("donation_id").references(() => donations.id).notNull(),
   userId: integer("user_id").references(() => users.id).notNull(),
-  amount: decimal("amount", { precision: 10, scale: 6 }).notNull(),
-  commissionAmount: decimal("commission_amount", { precision: 10, scale: 6 }).default("0"),
-  netAmount: decimal("net_amount", { precision: 10, scale: 6 }).default("0"), // amount - commission
+  amount: decimal("amount", { precision: 15, scale: 6 }).notNull(),
+  commissionAmount: decimal("commission_amount", { precision: 15, scale: 6 }).default("0"),
+  netAmount: decimal("net_amount", { precision: 15, scale: 6 }).default("0"), // amount - commission
   donorCountry: varchar("donor_country", { length: 3 }), // For live chart display
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -199,8 +199,8 @@ export const upcomingRaffles = pgTable("upcoming_raffles", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description").notNull(),
-  prizeValue: decimal("prize_value", { precision: 10, scale: 6 }).notNull(),
-  ticketPrice: decimal("ticket_price", { precision: 10, scale: 6 }).notNull(),
+  prizeValue: decimal("prize_value", { precision: 15, scale: 6 }).notNull(),
+  ticketPrice: decimal("ticket_price", { precision: 15, scale: 6 }).notNull(),
   maxTickets: integer("max_tickets").notNull(),
   startDate: timestamp("start_date").notNull(),
   categoryId: integer("category_id").references(() => categories.id).notNull(),
