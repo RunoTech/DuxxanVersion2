@@ -43,6 +43,7 @@ class RedisService {
       this.client = {
         get: async () => null,
         set: async () => 'OK',
+        setex: async () => 'OK',
         del: async () => 1,
         exists: async () => 0,
         hset: async () => 1,
