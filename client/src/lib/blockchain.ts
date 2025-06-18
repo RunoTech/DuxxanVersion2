@@ -75,11 +75,23 @@ export class BlockchainService {
       const { signer } = this.getConnection();
       const duxxanContract = new ethers.Contract(this.DUXXAN_CONTRACT, DUXXAN_CONTRACT_ABI, signer);
       
-      // First approve USDT for the creation fee (25 USDT)
-      await this.approveUSDT(this.DUXXAN_CONTRACT, '25');
+      // For PHYSICAL_ITEM raffles, only pay creation fee (25 USDT)
+      // For USDT_ONLY raffles, need creation fee + prize amount (restricted to authorized wallets)
+      const creationFee = '25';
+      await this.approveUSDT(this.DUXXAN_CONTRACT, creationFee);
       
-      // Simple payment transaction for raffle creation fee
-      const tx = await duxxanContract.payRaffleCreationFee();
+      // Create a simple physical item raffle with minimal parameters
+      // This allows any user to create raffles without restrictions
+      const tx = await duxxanContract.createRaffle(
+        "User Created Raffle", // title (will be updated in database)
+        "Created via platform", // description (will be updated in database) 
+        ethers.parseUnits(prizeAmount, 18), // prize amount
+        ethers.parseUnits("1", 18), // ticket price (will be updated in database)
+        100, // max tickets (will be updated in database)
+        30 * 24 * 60 * 60, // 30 days duration
+        1 // PrizeType.PHYSICAL_ITEM (no USDT restriction)
+      );
+      
       await tx.wait();
       
       return {
@@ -87,6 +99,7 @@ export class BlockchainService {
         transactionHash: tx.hash
       };
     } catch (error: any) {
+      console.error('Blockchain transaction error:', error);
       return {
         success: false,
         error: error.message || 'Blockchain transaction failed'
