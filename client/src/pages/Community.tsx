@@ -740,7 +740,20 @@ export default function Community() {
                         <FormItem>
                           <FormLabel className="text-white">Kategori</FormLabel>
                           <FormControl>
-                            <CategorySelect field={field} categories={categories} />
+                            <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                              <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                                <SelectValue placeholder="Kategori seçin" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories
+                                  .filter(cat => cat.id !== 'all')
+                                  .map((category: any) => (
+                                    <SelectItem key={category.id} value={category.id.toString()}>
+                                      {category.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

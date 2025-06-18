@@ -285,7 +285,6 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-}
 
 /* Enhanced Input Field Styling for Better Readability */
 input[type="number"], 
