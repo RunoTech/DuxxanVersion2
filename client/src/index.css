@@ -220,6 +220,140 @@ html, body {
   table-layout: fixed;
 }
 
+/* Enhanced Input Field Styling for Better Readability */
+input[type="number"], 
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+textarea {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  border: 2px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  padding: 0.875rem 1rem !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  font-weight: 600 !important;
+  font-family: 'Rubik', sans-serif !important;
+  transition: all 0.2s ease !important;
+}
+
+input[type="number"]:focus, 
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  background-color: #fffbeb !important;
+}
+
+/* Dark mode inputs */
+.dark input[type="number"], 
+.dark input[type="text"], 
+.dark input[type="email"], 
+.dark input[type="password"],
+.dark textarea {
+  color: #f9fafb !important;
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark input[type="number"]:focus, 
+.dark input[type="text"]:focus, 
+.dark input[type="email"]:focus, 
+.dark input[type="password"]:focus,
+.dark textarea:focus {
+  border-color: #f59e0b !important;
+  background-color: #374151 !important;
+}
+
+/* Special styling for number inputs */
+input[type="number"] {
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+}
+
+/* Enhanced Input Field Styling for Better Readability */
+input[type="number"], 
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+textarea {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  border: 2px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  padding: 0.875rem 1rem !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  font-weight: 600 !important;
+  font-family: 'Rubik', sans-serif !important;
+  transition: all 0.2s ease !important;
+}
+
+input[type="number"]:focus, 
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  background-color: #fffbeb !important;
+}
+
+/* Dark mode inputs */
+.dark input[type="number"], 
+.dark input[type="text"], 
+.dark input[type="email"], 
+.dark input[type="password"],
+.dark textarea {
+  color: #f9fafb !important;
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark input[type="number"]:focus, 
+.dark input[type="text"]:focus, 
+.dark input[type="email"]:focus, 
+.dark input[type="password"]:focus,
+.dark textarea:focus {
+  border-color: #f59e0b !important;
+  background-color: #374151 !important;
+}
+
+/* Special styling for number inputs */
+input[type="number"] {
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+}
+
 /* Form Element Constraints */
 .duxxan-grid input,
 .duxxan-grid textarea,

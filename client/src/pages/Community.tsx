@@ -151,11 +151,15 @@ export default function Community() {
   // Fetch categories from database
   const { data: categoriesData } = useQuery({
     queryKey: ['/api/categories'],
+    staleTime: 5 * 60 * 1000,
   });
 
   const categories = [
     { id: 'all', name: 'Tüm Kategoriler' },
-    ...(((categoriesData as any)?.data || []) as Array<{id: number; name: string; slug: string}>)
+    ...(Array.isArray(categoriesData) ? categoriesData : []).map((cat: any) => ({
+      id: cat.id.toString(),
+      name: cat.name
+    }))
   ];
 
   // Filtered channels based on search, category, and country
