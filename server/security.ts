@@ -21,12 +21,29 @@ export const corsOptions = {
     ].filter(Boolean);
     
     // For development, allow localhost with any port
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    if (process.env.NODE_ENV === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
       return callback(null, true);
     }
     
-    // Allow Replit domain variations
-    if (origin.includes('.replit.') || origin.includes('replit.dev')) {
+    // Allow specific production domains only
+    const productionDomains = [
+      'duxxan.com',
+      'www.duxxan.com',
+      'app.duxxan.com',
+      process.env.PRODUCTION_DOMAIN
+    ].filter(Boolean);
+    
+    // Check if origin matches production domains
+    const isProductionDomain = productionDomains.some(domain => 
+      origin === `https://${domain}` || origin === `http://${domain}`
+    );
+    
+    if (isProductionDomain) {
+      return callback(null, true);
+    }
+    
+    // Allow Replit domains only in development
+    if (process.env.NODE_ENV === 'development' && (origin.includes('.replit.') || origin.includes('replit.dev'))) {
       return callback(null, true);
     }
     
