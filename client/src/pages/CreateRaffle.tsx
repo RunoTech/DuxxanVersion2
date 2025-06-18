@@ -19,6 +19,7 @@ import { Link, useLocation } from 'wouter';
 import { Upload, X, ImageIcon, AlertTriangle } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
 import { CONTRACT_FEES } from '@/lib/contractConstants';
+import { USDTRequirement } from '@/components/USDTRequirement';
 
 const createRaffleSchema = insertRaffleSchema.extend({
   endDate: z.string().min(1, 'End date is required'),
@@ -199,6 +200,9 @@ export default function CreateRaffle() {
             <span className="text-yellow-600 dark:text-yellow-500 font-semibold"> Oluşturma ücreti: 25 USDT</span>
           </p>
         </div>
+
+        {/* USDT Requirement Warning */}
+        <USDTRequirement />
 
         <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
           <CardHeader>

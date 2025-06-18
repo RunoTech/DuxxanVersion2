@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { CalendarIcon, InfoIcon, AlertTriangleIcon } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
 import { CONTRACT_FEES } from '@/lib/contractConstants';
+import { USDTRequirement } from '@/components/USDTRequirement';
 
 const createDonationSchema = insertDonationSchema.extend({
   endDate: z.string().optional(),
