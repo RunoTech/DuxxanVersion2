@@ -227,7 +227,7 @@ export default function Home() {
             {/* Main Value Proposition */}
             <div className="max-w-4xl mx-auto mb-12">
               <p className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-8 leading-relaxed">
-                Türkiye'nin ilk <span className="text-yellow-600 dark:text-yellow-400 font-bold">blockchain tabanlı</span> 
+                Dünya'nın en güvenli <span className="text-yellow-600 dark:text-yellow-400 font-bold">blockchain tabanlı</span> 
                 <br className="hidden md:block" />
                 bağış ve çekiliş platformu
               </p>
@@ -309,13 +309,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <Badge className="mb-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 text-lg font-bold">
-              🔥 CANLI VERİLER
+              📊 PLATFORM VERİLERİ
             </Badge>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-              Platform Başarı Hikayesi
+              DUXXAN Ağı Büyüyor
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Binlerce kullanıcımızın güveniyle büyüyen, blockchain tabanlı şeffaf ekosistem
+              Küresel kullanıcıların güveniyle büyüyen, blockchain tabanlı şeffaf ekosistem
             </p>
           </div>
           
@@ -351,8 +351,8 @@ export default function Home() {
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-green-400 font-bold">CANLI</span>
               </div>
-              <h3 className="text-white font-bold text-xl mb-2">Aktif Bağışlar</h3>
-              <p className="text-gray-300">{Array.isArray(activeDonations) ? activeDonations.length : 0} kampanya şu anda bağış kabul ediyor</p>
+              <h3 className="text-white font-bold text-xl mb-2">Canlı Bağışlar</h3>
+              <p className="text-gray-300">{Array.isArray(activeDonations) ? activeDonations.length : 0} kampanya bağış kabul ediyor</p>
             </div>
             
             <div className="bg-purple-500/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-400/30">
@@ -360,8 +360,8 @@ export default function Home() {
                 <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
                 <span className="text-purple-400 font-bold">AKTIF</span>
               </div>
-              <h3 className="text-white font-bold text-xl mb-2">Devam Eden Çekilişler</h3>
-              <p className="text-gray-300">{Array.isArray(activeRaffles) ? activeRaffles.length : 0} çekiliş için bilet satın alabilirsiniz</p>
+              <h3 className="text-white font-bold text-xl mb-2">Aktif Çekilişler</h3>
+              <p className="text-gray-300">{Array.isArray(activeRaffles) ? activeRaffles.length : 0} çekiliş bilet satışında</p>
             </div>
             
             <div className="bg-yellow-500/20 backdrop-blur-lg rounded-2xl p-6 border border-yellow-400/30">
@@ -382,11 +382,11 @@ export default function Home() {
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-3 rounded-full font-bold text-lg mb-8 shadow-lg">
               <Star className="w-5 h-5" />
-              DUXXAN'IN FARKI
+              BLOCKCHAIN AVANTAJLARI
               <Star className="w-5 h-5" />
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-8">
-              Neden Bizi Seçmelisiniz?
+              Güvenli ve Şeffaf Sistem
             </h2>
             <p className="text-2xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto font-medium">
               Geleneksel platformlardan farklı olarak, blockchain teknolojisini kullanarak 
@@ -466,10 +466,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <Badge className="mb-8 bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-8 py-3 text-lg font-bold shadow-lg">
-              ⚡ 3 DAKİKADA BAŞLAYIN
+              ⚡ KOLAY KULLANIM
             </Badge>
             <h2 className="text-4xl md:text-6xl font-black text-white mb-8">
-              Nasıl Çalışır?
+              3 Adımda Başlayın
             </h2>
             <p className="text-2xl text-gray-300 max-w-4xl mx-auto font-medium">
               Blockchain teknolojisini kullanmak hiç bu kadar kolay olmamıştı. 
@@ -590,13 +590,13 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="mb-12">
             <Badge className="mb-8 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-10 py-4 text-xl font-black shadow-2xl">
-              🚀 HEMEN BAŞLAYIN
+              🚀 BLOCKCHAIN DEVRİMİ
             </Badge>
             <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
-              DUXXAN'a Katılın!
+              Güvenli Geleceğe Katılın
             </h2>
             <p className="text-2xl md:text-3xl text-gray-200 mb-8 font-medium max-w-4xl mx-auto leading-relaxed">
-              Türkiye'nin en güvenli blockchain platformunda 
+              Dünya'nın en güvenli blockchain platformunda 
               <span className="text-yellow-400 font-bold"> binlerce kişi</span> ile birlikte
               <br className="hidden md:block" /> 
               şeffaf işlemler yapın
