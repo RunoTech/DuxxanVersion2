@@ -93,7 +93,7 @@ export default function Community() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
-  const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2]));
+  const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -130,16 +130,20 @@ export default function Community() {
     },
   });
 
-  // Fetch channels from database
+  // Fetch channels from database with stable connection
   const { data: channelsData, isLoading: channelsLoading } = useQuery({
     queryKey: ['/api/channels'],
+    refetchInterval: false, // Prevent connection issues
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
   });
 
   const channels = (channelsData as any)?.data || [];
 
-  // Fetch upcoming raffles from database
+  // Fetch upcoming raffles from database with stable connection
   const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
     queryKey: ['/api/upcoming-raffles'],
+    refetchInterval: false, // Prevent connection issues
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
   });
 
   const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
