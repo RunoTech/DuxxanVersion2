@@ -287,7 +287,7 @@ export default function Community() {
       return;
     }
 
-    const action = subscribedChannels.has(channelId) ? 'unsubscribe' : 'subscribe';
+    const action = subscribedChannels.includes(channelId) ? 'unsubscribe' : 'subscribe';
     subscribeMutation.mutate({ channelId, action });
   };
 
@@ -424,8 +424,8 @@ export default function Community() {
           </div>
           <Button
             size="sm"
-            variant={subscribedChannels.has(channel.id) ? "secondary" : "outline"}
-            className={subscribedChannels.has(channel.id) 
+            variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
+            className={subscribedChannels.includes(channel.id) 
               ? "bg-yellow-500 text-black hover:bg-yellow-600" 
               : "border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
             }
@@ -434,7 +434,7 @@ export default function Community() {
               handleSubscribe(channel.id);
             }}
           >
-            {subscribedChannels.has(channel.id) ? (
+            {subscribedChannels.includes(channel.id) ? (
               <>
                 <CheckCircle className="h-4 w-4 mr-1" />
                 Abone
