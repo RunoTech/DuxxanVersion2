@@ -3,6 +3,7 @@ import { storage } from '../storage';
 import { Raffle, InsertRaffle } from '@shared/schema';
 import { redis } from '../../lib/redis';
 import { firebase } from '../../lib/firebase';
+import { ethers } from 'ethers';
 
 export class RaffleService extends BaseService {
   async getRaffles(limit?: number, offset?: number): Promise<any[]> {
@@ -53,7 +54,7 @@ export class RaffleService extends BaseService {
     }
   }
 
-  async createRaffle(raffleData: InsertRaffle & { creatorId: number }): Promise<Raffle> {
+  async createRaffle(raffleData: InsertRaffle & { creatorId: number; transactionHash?: string }): Promise<Raffle> {
     try {
       this.validateRequired(raffleData.title, 'Title');
       this.validateRequired(raffleData.description, 'Description');
@@ -74,6 +75,7 @@ export class RaffleService extends BaseService {
         creatorId: raffleData.creatorId,
         title: raffle.title,
         prizeValue: raffle.prizeValue,
+        transactionHash: raffleData.transactionHash,
         timestamp: new Date()
       });
       

@@ -102,16 +102,16 @@ export default function CreateRaffle() {
     },
     onSuccess: (raffle) => {
       toast({
-        title: 'Raffle Created!',
-        description: 'Your raffle has been successfully created and is now live.',
+        title: 'Çekiliş Oluşturuldu!',
+        description: 'Çekilişiniz başarıyla oluşturuldu ve yayına alındı. 25 USDT ödeme onaylandı.',
       });
       queryClient.invalidateQueries({ queryKey: ['/api/raffles'] });
       navigate('/raffles');
     },
     onError: (error: any) => {
       toast({
-        title: 'Creation Failed',
-        description: error.message || 'Failed to create raffle',
+        title: 'Oluşturma Başarısız',
+        description: error.message || 'Çekiliş oluşturulamadı. Lütfen 25 USDT ödemenizi kontrol edin.',
         variant: 'destructive',
       });
     },
@@ -528,7 +528,7 @@ export default function CreateRaffle() {
                     disabled={isSubmitting || !isConnected}
                     className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 font-semibold"
                   >
-                    {isSubmitting ? 'Çekiliş Oluşturuluyor...' : 'Çekiliş Oluştur (25 USDT)'}
+{isSubmitting ? 'Ödeme İşleniyor...' : 'Çekiliş Oluştur (25 USDT Öde)'}
                   </Button>
                 </div>
               </form>

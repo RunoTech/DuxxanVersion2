@@ -98,6 +98,8 @@ export const raffles = pgTable("raffles", {
   countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
   allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
   excludedCountries: text("excluded_countries"), // JSON array of ISO country codes
+  // Blockchain payment verification
+  transactionHash: varchar("transaction_hash", { length: 66 }), // Ethereum transaction hash
   createdAt: timestamp("created_at").defaultNow(),
 });
 
