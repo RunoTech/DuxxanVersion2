@@ -30,9 +30,11 @@ export default function Raffles() {
   });
 
   // Fetch raffles
-  const { data: raffles = [], isLoading } = useQuery({
+  const { data: rafflesResponse, isLoading } = useQuery({
     queryKey: ['/api/raffles'],
   });
+
+  const raffles = (rafflesResponse as any)?.data || [];
 
   // Filter and sort raffles
   const filteredRaffles = (Array.isArray(raffles) ? raffles : [])
