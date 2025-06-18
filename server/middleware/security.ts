@@ -111,12 +111,19 @@ export const progressiveSlowdown = slowDown({
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'", "*.replit.dev", "*.replit.app"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "*.replit.dev", "*.replit.app"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "*.replit.dev", "*.replit.app"],
-      imgSrc: ["'self'", "data:", "https:", "*.replit.dev", "*.replit.app"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "*.replit.dev", "*.replit.app"],
-      connectSrc: ["'self'", "wss:", "ws:", "*.replit.dev", "*.replit.app", "wss://*.replit.dev", "ws://*.replit.dev"]
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", "wss:", "ws:"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"], // Allow opening in new tabs
+      scriptSrcAttr: ["'none'"],
+      upgradeInsecureRequests: []
     }
   },
   hsts: {
@@ -130,7 +137,7 @@ export const securityHeaders = helmet({
 export const securityMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Add security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN'); // Allow same-origin frames
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   
