@@ -605,7 +605,24 @@ export default function Community() {
                                 Kategori
                               </FormLabel>
                               <FormControl>
-                                <CategorySelect field={field} categories={categories} />
+                                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    <SelectValue placeholder="Kategori seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                                    {categories
+                                      .filter(cat => cat.id !== 'all')
+                                      .map((category: any) => (
+                                        <SelectItem 
+                                          key={category.id} 
+                                          value={category.id.toString()}
+                                          className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                          {category.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -851,7 +868,20 @@ export default function Community() {
                             <FormItem>
                               <FormLabel className="text-white">Kategori</FormLabel>
                               <FormControl>
-                                <CategorySelect field={field} categories={categories} />
+                                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                  <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                                    <SelectValue placeholder="Kategori seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {categories
+                                      .filter(cat => cat.id !== 'all')
+                                      .map((category: any) => (
+                                        <SelectItem key={category.id} value={category.id.toString()}>
+                                          {category.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
