@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 
 export default function Profile() {
-  const { user, updateUser, isConnected, address } = useWallet();
+  const { user, isConnected, address } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,11 +51,13 @@ export default function Profile() {
   });
 
   // Fetch user's raffle participations
-  const { data: participations = [], isLoading: participationsLoading } = useQuery({
+  const { data: participationsData, isLoading: participationsLoading } = useQuery({
     queryKey: ['/api/users/me/participations'],
     enabled: isConnected && !!user?.id,
     staleTime: 60 * 1000,
   });
+
+  const participations = Array.isArray(participationsData) ? participationsData : [];
 
   // Fetch user's created raffles
   const { data: createdRafflesResponse, isLoading: createdRafflesLoading } = useQuery({
@@ -72,9 +74,7 @@ export default function Profile() {
       const formData = new FormData();
       formData.append('photo', file);
       
-      const response = await apiRequest('POST', '/api/users/me/photo', formData, {
-        'Content-Type': undefined, // Let browser set content type for FormData
-      });
+      const response = await apiRequest('POST', '/api/users/me/photo', formData);
       return response.json();
     },
     onSuccess: (data) => {
@@ -110,21 +110,30 @@ export default function Profile() {
     );
   }
 
-  const handleSave = async () => {
-    try {
-      await updateUser(formData);
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await apiRequest('PUT', '/api/users/me', data);
+      return response.json();
+    },
+    onSuccess: () => {
       setIsEditing(false);
       toast({
         title: "Başarılı",
         description: "Profiliniz güncellendi",
       });
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ['/api/users/me'] });
+    },
+    onError: () => {
       toast({
         title: "Hata",
         description: "Profil güncellenirken bir hata oluştu",
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  const handleSave = () => {
+    updateProfileMutation.mutate(formData);
   };
 
   const handleCancel = () => {
