@@ -481,10 +481,11 @@ export default function Community() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
+              style={{ color: '#9ca3af' }}
             >
               {categories.map((category: any) => (
-                <option key={category.id} value={category.id}>
+                <option key={category.id} value={category.id} style={{ color: '#9ca3af' }}>
                   {category.name}
                 </option>
               ))}
@@ -494,11 +495,12 @@ export default function Community() {
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
+              style={{ color: '#9ca3af' }}
             >
-              <option value="all">Tüm Ülkeler</option>
+              <option value="all" style={{ color: '#9ca3af' }}>Tüm Ülkeler</option>
               {countries.map((country) => (
-                <option key={country.value} value={country.value}>
+                <option key={country.value} value={country.value} style={{ color: '#9ca3af' }}>
                   {country.label}
                 </option>
               ))}
