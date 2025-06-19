@@ -114,6 +114,8 @@ export function useWallet() {
       setTimeout(() => {
         console.log('Force updating connection state');
         setConnection({ ...newConnection });
+        // Force re-render of components
+        setTimeout(() => setConnection({ ...newConnection }), 200);
       }, 100);
 
       return newConnection;
@@ -230,7 +232,7 @@ export function useWallet() {
   const address = connection?.address;
   const chainId = connection?.chainId;
 
-  console.log('useWallet state:', { isConnected, hasConnection: !!connection, address });
+  // console.log('useWallet state:', { isConnected, hasConnection: !!connection, address });
 
   return {
     connection,

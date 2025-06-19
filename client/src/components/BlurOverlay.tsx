@@ -4,7 +4,7 @@ import { useWallet } from '@/hooks/useWallet';
 export function BlurOverlay() {
   const { isConnected, isConnecting, connectWallet, connection } = useWallet();
 
-  console.log('BlurOverlay render:', { isConnected, isConnecting, hasConnection: !!connection });
+  // console.log('BlurOverlay render:', { isConnected, isConnecting, hasConnection: !!connection });
 
   if (isConnected || connection) {
     return null;
