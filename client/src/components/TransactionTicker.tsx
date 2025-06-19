@@ -17,27 +17,19 @@ const transactionTypes = [
   { type: 'donation_made' as const, text: 'donate yaptı', minAmount: 1, maxAmount: 250 },
 ];
 
-// Generate 2000+ random wallet addresses
-const generateWallets = (): string[] => {
-  const wallets: string[] = [];
+// Generate random wallet addresses on demand for better performance
+const generateWallet = (): string => {
   const chars = '0123456789abcdef';
-  
-  for (let i = 0; i < 2500; i++) {
-    let wallet = '0x';
-    for (let j = 0; j < 40; j++) {
-      wallet += chars[Math.floor(Math.random() * chars.length)];
-    }
-    wallets.push(wallet);
+  let wallet = '0x';
+  for (let j = 0; j < 40; j++) {
+    wallet += chars[Math.floor(Math.random() * chars.length)];
   }
-  
-  return wallets;
+  return wallet;
 };
-
-const mockWallets = generateWallets();
 
 const generateMockTransaction = (): MockTransaction => {
   const randomType = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
-  const randomWallet = mockWallets[Math.floor(Math.random() * mockWallets.length)];
+  const randomWallet = generateWallet();
   
   let amount: number;
   if (randomType.type === 'raffle_created') {
@@ -75,22 +67,24 @@ export function TransactionTicker() {
   }
 
   useEffect(() => {
-    // Initialize with continuous flowing transactions
-    const initialTransactions = Array.from({ length: 100 }, () => generateMockTransaction());
+    if (!isConnected) return;
+    
+    // Initialize with fewer transactions for faster load
+    const initialTransactions = Array.from({ length: 30 }, () => generateMockTransaction());
     setTransactions(initialTransactions);
 
-    // Continuously add new transactions for seamless flow
+    // Reduced frequency for better performance
     const interval = setInterval(() => {
       setTransactions(prev => {
-        const newTransactions = Array.from({ length: 2 }, () => generateMockTransaction());
-        const updated = [...newTransactions, ...prev];
-        // Keep reasonable amount for performance
-        return updated.slice(0, 120);
+        const newTransaction = generateMockTransaction();
+        const updated = [newTransaction, ...prev];
+        // Keep smaller array for performance
+        return updated.slice(0, 60);
       });
-    }, 3000); // Her 3 saniyede 2 yeni işlem
+    }, 4000); // Her 4 saniyede 1 yeni işlem
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isConnected]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 text-white py-3 shadow-2xl border-t border-gray-600">
@@ -99,33 +93,14 @@ export function TransactionTicker() {
           className="inline-block"
           animate={{ x: ['100%', '-100%'] }}
           transition={{
-            duration: 120,
+            duration: 100,
             repeat: Infinity,
             ease: 'linear',
           }}
         >
-          <div className="inline-flex items-center space-x-16">
+          <div className="inline-flex items-center space-x-20">
             {transactions.map((tx, index) => (
-              <div key={`${tx.id}-${index}`} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-6">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                  <span className="font-mono text-gray-300 text-xs md:text-sm tracking-wider">
-                    {formatWallet(tx.wallet)}
-                  </span>
-                  <span className="text-gray-400 text-lg">→</span>
-                  <span className="font-bold text-green-400 text-sm md:text-base">
-                    ${tx.amount}
-                  </span>
-                  <span className="text-gray-400 text-xs">USDT</span>
-                  <span className="text-white text-xs md:text-sm font-medium">
-                    {getTransactionText(tx)}
-                  </span>
-                </div>
-              </div>
-            ))}
-            {/* Duplicate for seamless loop */}
-            {transactions.map((tx, index) => (
-              <div key={`${tx.id}-duplicate-${index}`} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-6">
+              <div key={tx.id} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-8">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
                   <span className="font-mono text-gray-300 text-xs md:text-sm tracking-wider">
