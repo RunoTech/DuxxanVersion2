@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RaffleCard } from '@/components/RaffleCard';
 import { WalletStatus } from '@/components/WalletStatus';
+import { AnimatedCard } from '@/components/ui/AnimatedCard';
+import { AnimatedList } from '@/components/ui/AnimatedList';
 import { Link } from 'wouter';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, Globe } from 'lucide-react';

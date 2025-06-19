@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
 import { WalletStatus } from '@/components/WalletStatus';
+import { AnimatedCard } from '@/components/ui/AnimatedCard';
+import { AnimatedList } from '@/components/ui/AnimatedList';
 import { Link } from 'wouter';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';

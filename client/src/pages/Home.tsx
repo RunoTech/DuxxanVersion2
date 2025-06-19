@@ -207,7 +207,7 @@ export default function Home() {
                 {heroSlides.map((slide, index) => (
                   <div
                     key={index}
-                    className={`absolute inset-0 transition-all duration-700 ${
+                    className={`absolute inset-0 transition-all duration-700 animate-fade-in-up ${
                       index === currentSlide 
                         ? 'opacity-100 translate-y-0 scale-100' 
                         : 'opacity-0 translate-y-8 scale-95'
