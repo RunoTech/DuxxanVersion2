@@ -20,13 +20,9 @@ export function startMemoryMonitoring() {
   setInterval(() => {
     const memory = getMemoryUsage();
     
-    // Log memory usage every 5 minutes
-    console.log(`Memory: RSS ${memory.rss}MB, Heap ${memory.heapUsed}/${memory.heapTotal}MB`);
-    
     // Force garbage collection if heap usage is high
-    if (memory.heapUsed > 500) {
-      console.log('High memory usage detected, forcing garbage collection');
+    if (memory.heapUsed > 200) {
       forceGarbageCollection();
     }
-  }, 5 * 60 * 1000); // 5 minutes
+  }, 2 * 60 * 1000); // 2 minutes - more frequent for stability
 }

@@ -61,17 +61,18 @@ export function TransactionTicker() {
   const { isConnected } = useWallet();
   const [transactions, setTransactions] = useState<MockTransaction[]>([]);
 
-  // Don't render if wallet is not connected
-  if (!isConnected) {
-    return null;
-  }
-
+  // Initialize transactions once
   useEffect(() => {
     if (!isConnected) return;
     
     // Initialize with fewer transactions for server stability
     const initialTransactions = Array.from({ length: 5 }, () => generateMockTransaction());
     setTransactions(initialTransactions);
+  }, [isConnected]);
+
+  // Separate effect for interval to maintain hook order
+  useEffect(() => {
+    if (!isConnected) return;
 
     // Much slower updates to reduce server restarts
     const interval = setInterval(() => {
@@ -81,10 +82,15 @@ export function TransactionTicker() {
         // Keep very small array for server stability
         return updated.slice(0, 10);
       });
-    }, 30000); // Her 30 saniyede 1 yeni işlem - server stability için
+    }, 60000); // Her 60 saniyede 1 yeni işlem - server stability için
 
     return () => clearInterval(interval);
   }, [isConnected]);
+
+  // Don't render if wallet is not connected
+  if (!isConnected) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 text-white py-3 shadow-2xl border-t border-gray-600">
