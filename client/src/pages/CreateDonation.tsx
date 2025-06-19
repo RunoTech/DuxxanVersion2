@@ -214,14 +214,14 @@ export default function CreateDonation() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-8">
+    <div className="min-h-screen bg-white dark:bg-[#1D2025] py-8 transition-colors duration-200">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Yeni Bağış Oluştur
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Toplumsal fayda için bağış kampanyası başlatın
             </p>
           </div>
@@ -229,9 +229,9 @@ export default function CreateDonation() {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Main Form */}
             <div className="lg:col-span-2">
-              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
+              <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl text-yellow-600">Bağış Detayları</CardTitle>
+                  <CardTitle className="text-xl text-yellow-600 dark:text-yellow-400">Bağış Detayları</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Form {...form}>
@@ -276,13 +276,13 @@ export default function CreateDonation() {
                         name="title"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 font-medium">
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                               Bağış Başlığı *
                             </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Bağışınız için açıklayıcı bir başlık"
-                                className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
+                                className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                 {...field}
                               />
                             </FormControl>
@@ -296,13 +296,13 @@ export default function CreateDonation() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 font-medium">
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                               Açıklama *
                             </FormLabel>
                             <FormControl>
                               <Textarea
                                 placeholder="Bağışınızın amacını ve detaylarını açıklayın..."
-                                className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 min-h-[120px]"
+                                className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 min-h-[120px]"
                                 {...field}
                               />
                             </FormControl>
@@ -340,18 +340,18 @@ export default function CreateDonation() {
                           name="category"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 font-medium">
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                                 Kategori *
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900">
+                                  <SelectTrigger className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent className="bg-white border-yellow-400">
+                                <SelectContent className="bg-white dark:bg-gray-800 border-yellow-400 dark:border-gray-600">
                                   {DONATION_CATEGORIES.map((category) => (
-                                    <SelectItem key={category.value} value={category.value}>
+                                    <SelectItem key={category.value} value={category.value} className="text-gray-900 dark:text-white">
                                       {category.label}
                                     </SelectItem>
                                   ))}
