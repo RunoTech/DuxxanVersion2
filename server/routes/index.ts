@@ -12,9 +12,19 @@ const donationController = new DonationController();
 // Create router
 const router = Router();
 
+// Authentication routes
+router.get('/auth/me', (req, res) => {
+  // For demo purposes, return null (not authenticated)
+  res.json(null);
+});
+router.post('/auth/login', userController.authenticateWallet);
+router.post('/auth/logout', (req, res) => {
+  res.json({ message: 'Logged out successfully' });
+});
+
 // User routes
 router.get('/users/me', userController.getCurrentUser);
-router.get('/users/:id', userController.getUserById);
+router.get('/users/:id', userController.getUserById);  
 router.post('/users', userController.createUser);
 router.put('/users/me', userController.updateUser);
 router.delete('/users/me', userController.deleteUser);
@@ -74,7 +84,25 @@ router.post('/translate', async (req, res) => {
   }
 });
 
-// User location detection
+// Statistics endpoint
+router.get('/stats', async (req, res) => {
+  try {
+    // For demo purposes, return mock stats
+    res.json({
+      totalRaffles: "6",
+      totalPrizePool: "3020000.000",
+      activeRaffles: "3",
+      totalUsers: "1250",
+      totalDonations: "4",
+      totalDonationAmount: "125000.000"
+    });
+  } catch (error: any) {
+    console.error('Stats error:', error);
+    res.status(500).json({ error: 'Stats fetch failed', message: error.message });
+  }
+});
+
+// User location detection  
 router.get('/user/location', async (req, res) => {
   try {
     // Use request IP to detect location
