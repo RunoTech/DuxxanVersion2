@@ -14,6 +14,8 @@ import {
 } from "./middleware/security";
 import { languageDetectionMiddleware, translationHeadersMiddleware } from "./middleware/translation";
 import apiRoutes from "./routes/index";
+import { startMemoryMonitoring } from "./utils/memory";
+import { startPeriodicCleanup, optimizeNodeOptions } from "./utils/cleanup";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
@@ -256,8 +258,30 @@ app.use('/api', apiRoutes);
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
-  server.listen(port, "0.0.0.0", () => {
+  const httpServer = server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
     log('DUXXAN server running with controller-based architecture');
+  });
+
+  // Start memory monitoring and cleanup for stability
+  optimizeNodeOptions();
+  startMemoryMonitoring();
+  startPeriodicCleanup();
+
+  // Graceful shutdown handling
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
   });
 })();
