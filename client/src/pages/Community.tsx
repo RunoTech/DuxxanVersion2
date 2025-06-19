@@ -380,7 +380,7 @@ export default function Community() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-lg text-white group-hover:text-yellow-400 transition-colors">
+              <CardTitle className="text-lg text-gray-900 dark:text-white group-hover:text-yellow-400 transition-colors">
                 {channel.name}
               </CardTitle>
               <p className="text-sm text-gray-400">@{channel.creator}</p>
