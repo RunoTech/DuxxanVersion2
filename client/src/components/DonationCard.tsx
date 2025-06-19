@@ -170,8 +170,8 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="bg-white dark:bg-duxxan-surface border-2 border-yellow-500 dark:border-yellow-500 hover:border-yellow-600 dark:hover:border-yellow-600 transition-all duration-300 cursor-pointer">
-        <CardContent className="p-6">
+      <Card className="responsive-card bg-white dark:bg-duxxan-surface border-2 border-yellow-500 dark:border-yellow-500 card-hover cursor-pointer">
+        <CardContent className="p-3 sm:p-4 md:p-6">
           {/* Header with badges */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">

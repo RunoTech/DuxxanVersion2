@@ -149,18 +149,18 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-3 sm:mb-4">
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Bilet Fiyatı</div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Bilet Fiyatı</div>
+            <div className="text-sm sm:text-lg font-bold text-white">
               {parseFloat(raffle.ticketPrice).toLocaleString()} USDT
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
             </div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-sm sm:text-lg font-bold text-white">
               {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
             </div>
           </div>
@@ -170,7 +170,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           <Button
             onClick={() => buyTickets(1)}
             disabled={!isConnected || daysLeft <= 0}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white w-full"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white w-full text-xs sm:text-sm"
           >
             Bilet Al
           </Button>
