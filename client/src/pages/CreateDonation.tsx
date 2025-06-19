@@ -54,7 +54,7 @@ const COUNTRIES = [
 
 export default function CreateDonation() {
   const [, navigate] = useLocation();
-  const { isConnected, user, getApiHeaders } = useWallet();
+  const { isConnected, user = {}, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryRestrictions, setCountryRestrictions] = useState<{
@@ -87,6 +87,7 @@ export default function CreateDonation() {
   });
 
   const isUnlimited = form.watch('isUnlimited');
+  const userData = user as any;
   const isOrganization = userData?.organizationType !== 'individual';
   const canCreateUnlimited = isOrganization && userData?.organizationVerified;
 
@@ -143,7 +144,9 @@ export default function CreateDonation() {
       }
 
       // Create donation via API
-      const response = await apiRequest('POST', '/api/donations', donationData, getApiHeaders());
+      const response = await apiRequest('POST', '/api/donations', donationData, {
+        headers: getApiHeaders?.() || {}
+      });
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Bağış oluşturulamadı');

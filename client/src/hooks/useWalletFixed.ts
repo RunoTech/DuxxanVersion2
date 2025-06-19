@@ -205,6 +205,16 @@ export function useWalletFixed() {
   const address = connection?.address;
   const chainId = connection?.chainId;
 
+  const getApiHeaders = () => {
+    if (!connection?.address) {
+      return {};
+    }
+    return {
+      'X-Wallet-Address': connection.address,
+      'X-Chain-Id': connection.chainId?.toString() || '56'
+    };
+  };
+
   return {
     connection,
     isConnected,
@@ -214,6 +224,7 @@ export function useWalletFixed() {
     user,
     connectWallet,
     disconnectWallet,
-    setUser
+    setUser,
+    getApiHeaders
   };
 }

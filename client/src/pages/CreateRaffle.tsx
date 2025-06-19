@@ -29,7 +29,7 @@ type CreateRaffleForm = z.infer<typeof createRaffleSchema>;
 
 export default function CreateRaffle() {
   const [, navigate] = useLocation();
-  const { isConnected, address, user, getApiHeaders } = useWallet();
+  const { isConnected, address, user = {}, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
