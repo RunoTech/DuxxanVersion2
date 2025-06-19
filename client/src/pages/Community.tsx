@@ -387,7 +387,7 @@ export default function Community() {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
+            <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500 px-3 py-1 text-xs whitespace-nowrap">
               {channel.categoryName || 'Genel'}
             </Badge>
             {channel.country && (
