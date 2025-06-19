@@ -110,9 +110,10 @@ export function useWallet() {
         description: `${newConnection.address.slice(0, 6)}...${newConnection.address.slice(-4)} adresine bağlandınız`,
       });
 
-      // Force re-render by triggering state change
+      // Force multiple state updates to ensure UI updates
       setTimeout(() => {
-        setConnection(newConnection);
+        console.log('Force updating connection state');
+        setConnection({ ...newConnection });
       }, 100);
 
       return newConnection;
@@ -228,6 +229,8 @@ export function useWallet() {
   const isConnected = !!connection;
   const address = connection?.address;
   const chainId = connection?.chainId;
+
+  console.log('useWallet state:', { isConnected, hasConnection: !!connection, address });
 
   return {
     connection,

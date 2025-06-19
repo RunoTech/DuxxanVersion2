@@ -92,10 +92,12 @@ function Router() {
 }
 
 function AppContent() {
-  const { isConnected } = useWallet();
+  const { isConnected, connection } = useWallet();
   
   // Initialize WebSocket connection for real-time updates
   useWebSocket();
+
+  console.log('AppContent render:', { isConnected, hasConnection: !!connection });
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#1D2025] text-gray-900 dark:text-white transition-colors duration-200 pb-12">
@@ -103,7 +105,7 @@ function AppContent() {
       <Router />
       <Footer />
       <TransactionTicker />
-      {!isConnected && <BlurOverlay />}
+      {(!isConnected && !connection) && <BlurOverlay />}
     </div>
   );
 }

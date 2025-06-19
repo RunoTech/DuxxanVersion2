@@ -2,9 +2,11 @@ import { Button } from '@/components/ui/button';
 import { useWallet } from '@/hooks/useWallet';
 
 export function BlurOverlay() {
-  const { isConnected, isConnecting, connectWallet } = useWallet();
+  const { isConnected, isConnecting, connectWallet, connection } = useWallet();
 
-  if (isConnected) {
+  console.log('BlurOverlay render:', { isConnected, isConnecting, hasConnection: !!connection });
+
+  if (isConnected || connection) {
     return null;
   }
 
