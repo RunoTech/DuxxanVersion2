@@ -11,7 +11,6 @@ import { TransactionTicker } from "@/components/TransactionTicker";
 import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
-import { AuthProvider } from "@/hooks/useAuth";
 
 // Lazy load pages for better performance
 import { lazy } from "react";
@@ -75,7 +74,8 @@ function Router() {
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div></div>}>
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/profile" component={ProfileNew} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/profile-new" component={ProfileNew} />
           <Route path="/community" component={Community} />
           <Route path="/community/:id" component={CommunityDetail} />
           <Route path="/raffles" component={Raffles} />
@@ -154,12 +154,10 @@ function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TranslationProvider>
-            <AppContent />
-            <Toaster />
-          </TranslationProvider>
-        </AuthProvider>
+        <TranslationProvider>
+          <AppContent />
+          <Toaster />
+        </TranslationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

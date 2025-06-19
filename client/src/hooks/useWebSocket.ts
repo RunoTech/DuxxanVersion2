@@ -11,9 +11,6 @@ export function useWebSocket() {
   const maxReconnectAttempts = 5;
 
   const connect = useCallback(() => {
-    // Temporarily disable WebSocket to prevent connection issues
-    return;
-    
     if (ws.current?.readyState === WebSocket.OPEN) {
       return;
     }
