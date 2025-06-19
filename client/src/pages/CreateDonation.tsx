@@ -87,9 +87,9 @@ export default function CreateDonation() {
   });
 
   const isUnlimited = form.watch('isUnlimited');
-  const userData = user as any;
-  const isOrganization = userData?.organizationType !== 'individual';
-  const canCreateUnlimited = isOrganization && userData?.organizationVerified;
+  const userDetails = user as any;
+  const isOrganization = userDetails?.organizationType !== 'individual';
+  const canCreateUnlimited = isOrganization && userDetails?.organizationVerified;
 
   // Calculate commission rate and startup fee based on contract
   const commissionRate = CONTRACT_FEES.DONATION_COMMISSION_RATE;
@@ -144,9 +144,7 @@ export default function CreateDonation() {
       }
 
       // Create donation via API
-      const response = await apiRequest('POST', '/api/donations', donationData, {
-        headers: getApiHeaders?.() || {}
-      });
+      const response = await apiRequest('POST', '/api/donations', donationData);
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Bağış oluşturulamadı');
@@ -479,8 +477,8 @@ export default function CreateDonation() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Doğrulama:</span>
-                    <Badge variant={userData?.organizationVerified ? "default" : "destructive"}>
-                      {userData?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
+                    <Badge variant={(userDetails as any)?.organizationVerified ? "default" : "destructive"}>
+                      {(userDetails as any)?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
