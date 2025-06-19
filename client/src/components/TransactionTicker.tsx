@@ -69,8 +69,8 @@ export function TransactionTicker() {
   useEffect(() => {
     if (!isConnected) return;
     
-    // Initialize with minimal transactions to reduce server load
-    const initialTransactions = Array.from({ length: 8 }, () => generateMockTransaction());
+    // Initialize with fewer transactions for server stability
+    const initialTransactions = Array.from({ length: 5 }, () => generateMockTransaction());
     setTransactions(initialTransactions);
 
     // Much slower updates to reduce server restarts
@@ -78,10 +78,10 @@ export function TransactionTicker() {
       setTransactions(prev => {
         const newTransaction = generateMockTransaction();
         const updated = [newTransaction, ...prev];
-        // Keep minimal array for performance
-        return updated.slice(0, 15);
+        // Keep very small array for server stability
+        return updated.slice(0, 10);
       });
-    }, 15000); // Her 15 saniyede 1 yeni işlem - server load azaltıldı
+    }, 30000); // Her 30 saniyede 1 yeni işlem - server stability için
 
     return () => clearInterval(interval);
   }, [isConnected]);

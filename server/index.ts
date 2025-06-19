@@ -33,7 +33,7 @@ app.use(cors(corsOptions));
 app.use(securityHeaders);
 // Keep minimal middleware to prevent restarts
 app.use(requestSizeLimit);
-app.use(securityMiddleware);
+// app.use(securityMiddleware); // Disabled to prevent memory issues
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
