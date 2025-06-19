@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Edit3, 
@@ -14,7 +15,12 @@ import {
   MapPin, 
   Star,
   Camera,
-  ExternalLink
+  ExternalLink,
+  Wallet,
+  Copy,
+  Check,
+  Smartphone,
+  Monitor
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -35,6 +41,8 @@ export default function Profile() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
+  const [copiedAddress, setCopiedAddress] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -138,6 +146,17 @@ export default function Profile() {
     }
   };
 
+  const copyAddress = () => {
+    const mockAddress = "0x1234567898123456789012345678901234567890";
+    navigator.clipboard.writeText(mockAddress);
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2000);
+    toast({
+      title: "Adres kopyalandı",
+      description: "Cüzdan adresi panoya kopyalandı."
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-800 flex items-center justify-center">
@@ -215,114 +234,209 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Dark Content Section */}
+        {/* Dark Content Section with Tabs */}
         <div className="bg-gray-900 p-6">
-          {/* Tab Navigation */}
-          <div className="flex gap-4 mb-8">
-            <Button 
-              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium px-6 py-2 rounded-lg"
-            >
-              <User className="h-4 w-4 mr-2" />
-              Profil Bilgileri
-            </Button>
-            <Button 
-              variant="ghost"
-              className="text-gray-400 hover:text-white hover:bg-gray-800 font-medium px-6 py-2 rounded-lg"
-            >
-              <Camera className="h-4 w-4 mr-2" />
-              Fotoğraflar
-            </Button>
-            <Button 
-              variant="ghost"
-              className="text-gray-400 hover:text-white hover:bg-gray-800 font-medium px-6 py-2 rounded-lg"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Cihazlar & Güvenlik
-            </Button>
-          </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Tab Navigation */}
+            <TabsList className="grid w-full grid-cols-2 bg-gray-800 rounded-lg p-1 mb-8">
+              <TabsTrigger 
+                value="profile" 
+                className="data-[state=active]:bg-yellow-500 data-[state=active]:text-gray-900 text-gray-400 font-medium rounded-md"
+              >
+                <User className="h-4 w-4 mr-2" />
+                Profil Bilgileri
+              </TabsTrigger>
+              <TabsTrigger 
+                value="security" 
+                className="data-[state=active]:bg-yellow-500 data-[state=active]:text-gray-900 text-gray-400 font-medium rounded-md"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Cihazlar & Güvenlik
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Kişisel Bilgiler Card */}
-            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-yellow-400 text-lg font-bold">
-                  Kişisel Bilgiler
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Ad Soyad</h4>
-                  <p className="text-white">{user?.name || 'Demo Kullanıcısı'}</p>
-                </div>
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">E-posta</h4>
-                  <p className="text-white">{user?.email || 'demo@example.com'}</p>
-                </div>
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Cinsiyet</h4>
-                  <p className="text-white">Belirtilmemiş</p>
-                </div>
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">İkametgah</h4>
-                  <p className="text-white">Belirtilmemiş</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Profile Info Tab */}
+            <TabsContent value="profile" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Kişisel Bilgiler Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      Kişisel Bilgiler
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Ad Soyad</h4>
+                      <p className="text-white">{user?.name || 'Demo Kullanıcısı'}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">E-posta</h4>
+                      <p className="text-white flex items-center gap-2">
+                        <span>📧</span>
+                        {user?.email || 'demo@example.com'}
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Cinsiyet</h4>
+                      <p className="text-white">Belirtilmemiş</p>
+                    </div>
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">İkametgah</h4>
+                      <p className="text-white">Belirtilmemiş</p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Konum Bilgileri Card */}
-            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-yellow-400 text-lg font-bold">
-                  Konum Bilgileri
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Şehir</h4>
-                  <p className="text-white">İstanbul</p>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Konum Bilgileri Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <MapPin className="h-5 w-5" />
+                      Konum Bilgileri
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Şehir</h4>
+                      <p className="text-white">İstanbul</p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Profesyonel Bilgiler Card */}
-            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-yellow-400 text-lg font-bold">
-                  Profesyonel Bilgiler
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Meslek</h4>
-                  <p className="text-white">Geliştirici</p>
-                </div>
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Biyografi</h4>
-                  <p className="text-white">Blockchain teknolojileri ve kripto para alanında uzman geliştirici.</p>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Profesyonel Bilgiler Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <Star className="h-5 w-5" />
+                      Profesyonel Bilgiler
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Meslek</h4>
+                      <p className="text-white">Geliştirici</p>
+                    </div>
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Biyografi</h4>
+                      <p className="text-white">Blockchain teknolojileri ve kripto para alanında uzman geliştirici.</p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Organizasyon Bilgileri Card */}
-            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-yellow-400 text-lg font-bold">
-                  Organizasyon Bilgileri
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Türü</h4>
-                  <p className="text-white">Bireysel</p>
-                </div>
-                <div>
-                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Adı</h4>
-                  <p className="text-white">Belirtilmemiş</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                {/* Organizasyon Bilgileri Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <ExternalLink className="h-5 w-5" />
+                      Organizasyon Bilgileri
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Türü</h4>
+                      <p className="text-white">Bireysel</p>
+                    </div>
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Adı</h4>
+                      <p className="text-white">Belirtilmemiş</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Security & Devices Tab */}
+            <TabsContent value="security" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Cüzdan Bilgileri Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <Wallet className="h-5 w-5" />
+                      Cüzdan Bilgileri
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="text-yellow-400 text-sm font-medium mb-2">Cüzdan Adresi</h4>
+                      <div className="bg-gray-700 p-3 rounded-lg flex items-center justify-between">
+                        <code className="text-white text-sm font-mono">
+                          0x1234567898123456789012345678901234567890
+                        </code>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={copyAddress}
+                          className="text-gray-400 hover:text-white p-1"
+                        >
+                          {copiedAddress ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-green-400 text-sm">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span>Cüzdan bağlantısı güvenli</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Giriş Yapılan Cihazlar Card */}
+                <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-yellow-400 text-lg font-bold flex items-center gap-2">
+                      <Monitor className="h-5 w-5" />
+                      Giriş Yapılan Cihazlar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Desktop Device */}
+                    <div className="bg-gray-700 p-4 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <div className="bg-gray-600 p-2 rounded">
+                          <span className="text-xs text-white bg-gray-500 px-2 py-1 rounded">desktop</span>
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="text-white font-medium">Chrome Tarayıcı</h5>
+                          <p className="text-gray-400 text-sm">Chrome 130.0</p>
+                          <p className="text-gray-400 text-sm">Windows 11</p>
+                          <p className="text-gray-400 text-xs flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            İstanbul, Türkiye
+                          </p>
+                          <p className="text-gray-500 text-xs">Son giriş: 17 Haziran 2025 16:46</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mobile Device */}
+                    <div className="bg-gray-700 p-4 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <div className="bg-gray-600 p-2 rounded">
+                          <span className="text-xs text-white bg-gray-500 px-2 py-1 rounded">mobile</span>
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="text-white font-medium">iPhone 15</h5>
+                          <p className="text-gray-400 text-sm">Safari Mobile</p>
+                          <p className="text-gray-400 text-sm">iOS 17.4</p>
+                          <p className="text-gray-400 text-xs flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            İstanbul, Türkiye
+                          </p>
+                          <p className="text-gray-500 text-xs">Son giriş: 17 Haziran 2025 14:43</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
         
         {/* Edit Form Modal */}
