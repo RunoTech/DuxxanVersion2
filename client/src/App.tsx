@@ -11,6 +11,7 @@ import { TransactionTicker } from "@/components/TransactionTicker";
 import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
+import { AuthProvider } from "@/hooks/useAuth";
 
 // Lazy load pages for better performance
 import { lazy } from "react";
@@ -153,10 +154,12 @@ function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <TranslationProvider>
-          <AppContent />
-          <Toaster />
-        </TranslationProvider>
+        <AuthProvider>
+          <TranslationProvider>
+            <AppContent />
+            <Toaster />
+          </TranslationProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
