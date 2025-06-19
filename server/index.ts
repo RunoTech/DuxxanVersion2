@@ -27,7 +27,7 @@ app.get('/health', (req, res) => {
 
 // Test endpoint to verify server accessibility
 app.get('/test', (req, res) => {
-  res.status(200).send('<h1>Server Test Page</h1><p>Server is accessible</p>');
+  res.status(200).send('<h1>DUXXAN Server Test</h1><p>Server is accessible and running properly</p><p>Time: ' + new Date().toISOString() + '</p>');
 });
 
 // Apply security middleware first
