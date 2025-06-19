@@ -23,6 +23,17 @@ export function BlurOverlay() {
   const handleTrustWalletConnect = async () => {
     try {
       console.log('Starting Trust Wallet connection...');
+      
+      // Check if Trust Wallet is available before attempting connection
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTrustWalletBrowser = userAgent.includes('trust');
+      const hasTrustWalletProvider = window.ethereum?.isTrust || (window as any).trustwallet;
+      
+      if (!isTrustWalletBrowser && !hasTrustWalletProvider) {
+        alert('Trust Wallet bulunamadı. Lütfen Trust Wallet uygulamasını yükleyin veya Trust Wallet tarayıcısını kullanın.');
+        return;
+      }
+      
       await connectWallet('trustwallet');
     } catch (error: any) {
       console.error('Trust Wallet connection failed:', error);

@@ -77,12 +77,13 @@ export class WalletManager {
         console.warn('Frame access restricted, wallet connection may fail');
       }
 
-      if (window.ethereum.isMetaMask) {
+      // Ensure we don't return Trust Wallet for MetaMask requests
+      if (window.ethereum.isMetaMask && !window.ethereum.isTrust) {
         return window.ethereum;
       }
       // Handle multiple wallet providers
       if (window.ethereum.providers) {
-        return window.ethereum.providers.find((provider: any) => provider.isMetaMask);
+        return window.ethereum.providers.find((provider: any) => provider.isMetaMask && !provider.isTrust);
       }
     }
     return null;
@@ -275,6 +276,9 @@ export class WalletManager {
     if (window.ethereum?.isTrust) {
       ethereum = window.ethereum;
       console.log('Using Trust Wallet via isTrust flag');
+    } else if ((window as any).trustwallet?.ethereum) {
+      ethereum = (window as any).trustwallet.ethereum;
+      console.log('Using Trust Wallet via trustwallet.ethereum');
     } else if ((window as any).trustwallet) {
       ethereum = (window as any).trustwallet;
       console.log('Using Trust Wallet via trustwallet global');
@@ -282,9 +286,8 @@ export class WalletManager {
       ethereum = window.ethereum;
       console.log('Using Trust Wallet via user agent detection');
     } else {
-      // Fallback to any ethereum provider but log warning
-      ethereum = window.ethereum;
-      console.warn('Trust Wallet not specifically detected, using default ethereum provider');
+      // Don't fallback to MetaMask for Trust Wallet connections
+      throw new Error('Trust Wallet not found. Please install Trust Wallet app or use Trust Wallet browser.');
     }
     if (!ethereum) {
       if (typeof window === 'undefined') {
