@@ -649,8 +649,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // SECURE ticket purchase with MANDATORY blockchain verification
-  app.post('/api/tickets', strictRateLimit, authenticateUser, async (req: any, res) => {
+  // Import payment protection middleware
+  const { validateRafflePayment, logUnpaidRaffleAttempt } = require('./middleware/payment-protection');
+
+  // SECURE ticket purchase with MANDATORY blockchain verification + payment protection
+  app.post('/api/tickets', 
+    strictRateLimit, 
+    authenticateUser, 
+    validateRafflePayment,  // CRITICAL: Block tickets for unpaid raffles
+    logUnpaidRaffleAttempt('ticket_purchase'),
+    async (req: any, res) => {
     try {
       const { transactionHash, ...ticketData } = req.body;
       
