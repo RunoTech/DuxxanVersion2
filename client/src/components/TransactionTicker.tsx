@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useWallet } from '@/hooks/useWallet';
 
 interface MockTransaction {
   id: string;
@@ -65,7 +66,13 @@ const getTransactionText = (transaction: MockTransaction): string => {
 };
 
 export function TransactionTicker() {
+  const { isConnected } = useWallet();
   const [transactions, setTransactions] = useState<MockTransaction[]>([]);
+
+  // Don't render if wallet is not connected
+  if (!isConnected) {
+    return null;
+  }
 
   useEffect(() => {
     // Initialize with continuous flowing transactions
