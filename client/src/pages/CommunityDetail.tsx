@@ -431,44 +431,8 @@ export default function CommunityDetail() {
         </div>
 
         {/* Action Bar */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          <Card className="flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    Topluluk Aktivitesi
-                  </h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      1.2k görüntüleme
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="h-4 w-4" />
-                      45 yorum
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-4 w-4" />
-                      234 beğeni
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="gap-2">
-                    <Heart className="h-4 w-4" />
-                    Beğen
-                  </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
-                    <Bookmark className="h-4 w-4" />
-                    Kaydet
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {isChannelCreator && (
+        {isChannelCreator && (
+          <div className="flex flex-col lg:flex-row gap-6 mb-8">
             <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-700">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -492,8 +456,8 @@ export default function CommunityDetail() {
                 </div>
               </CardContent>
             </Card>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Raffles Section */}
         <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
