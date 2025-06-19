@@ -124,7 +124,7 @@ export function TransactionTicker() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

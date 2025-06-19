@@ -4,6 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom animations to replace framer-motion */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
 /* DUXXAN Grid System - Exact Specifications: 12 Columns, 120px Margins, 24px Gutters */
 .duxxan-container {
   max-width: 1440px; /* Fixed max width for consistent layout */

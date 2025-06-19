@@ -1,5 +1,5 @@
 import { Switch, Route, useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,22 +12,24 @@ import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
 
-// Pages
+// Lazy load pages for better performance
+import { lazy } from "react";
 import Home from "@/pages/Home";
-import Profile from "@/pages/Profile";
-import ProfileNew from "@/pages/ProfileNew";
-import Community from "@/pages/Community";
-import CommunityDetail from "@/pages/CommunityDetail";
-import Raffles from "@/pages/Raffles";
-import RaffleDetail from "@/pages/RaffleDetail";
-import Donations from "@/pages/Donations";
-import DonationDetail from "@/pages/DonationDetail";
-import CreateRaffle from "@/pages/CreateRaffle";
-import CreateDonation from "@/pages/CreateDonation";
-import CountryProfile from "@/pages/CountryProfile";
-import Terms from "@/pages/Terms";
-import Privacy from "@/pages/Privacy";
-import Support from "@/pages/Support";
+
+const Profile = lazy(() => import("@/pages/Profile"));
+const ProfileNew = lazy(() => import("@/pages/ProfileNew"));
+const Community = lazy(() => import("@/pages/Community"));
+const CommunityDetail = lazy(() => import("@/pages/CommunityDetail"));
+const Raffles = lazy(() => import("@/pages/Raffles"));
+const RaffleDetail = lazy(() => import("@/pages/RaffleDetail"));
+const Donations = lazy(() => import("@/pages/Donations"));
+const DonationDetail = lazy(() => import("@/pages/DonationDetail"));
+const CreateRaffle = lazy(() => import("@/pages/CreateRaffle"));
+const CreateDonation = lazy(() => import("@/pages/CreateDonation"));
+const CountryProfile = lazy(() => import("@/pages/CountryProfile"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Support = lazy(() => import("@/pages/Support"));
 
 import NotFound from "@/pages/not-found";
 
