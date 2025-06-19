@@ -240,43 +240,20 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bağışlar</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={hourlyDonations}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
-                        <XAxis 
-                          dataKey="hour" 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#666', fontSize: 10 }}
-                          className="dark:fill-[#888]"
-                        />
-                        <YAxis 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#666', fontSize: 10 }}
-                          className="dark:fill-[#888]"
-                        />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#fff', 
-                            border: '2px solid #F59E0B',
-                            borderRadius: '8px',
-                            color: '#000',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
-                          formatter={(value) => [`${value} USDT`, 'Bağış']}
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="amount" 
-                          stroke="#10B981" 
-                          strokeWidth={2}
-                          dot={{ fill: '#10B981', strokeWidth: 2, r: 3 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+                  <LightweightChart
+                    type="line"
+                    data={{
+                      labels: hourlyDonations.map(d => d.hour),
+                      datasets: [{
+                        label: 'Saatlik Bağışlar (USDT)',
+                        data: hourlyDonations.map(d => d.amount),
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                      }]
+                    }}
+                    className="h-64"
+                  />
                 </CardContent>
               </Card>
 
@@ -286,41 +263,20 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağışçı Dağılımı</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={donorDistribution}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
-                        <XAxis 
-                          dataKey="range" 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#666', fontSize: 10 }}
-                          className="dark:fill-[#888]"
-                        />
-                        <YAxis 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#666', fontSize: 10 }}
-                          className="dark:fill-[#888]"
-                        />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#fff', 
-                            border: '2px solid #F59E0B',
-                            borderRadius: '8px',
-                            color: '#000',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                          }}
-                          formatter={(value) => [`${value} kişi`, 'Bağışçı']}
-                        />
-                        <Bar 
-                          dataKey="count" 
-                          fill="#F3BA2F"
-                          radius={[4, 4, 0, 0]}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
+                  <LightweightChart
+                    type="bar"
+                    data={{
+                      labels: donorDistribution.map(d => d.range),
+                      datasets: [{
+                        label: 'Bağışçı Sayısı',
+                        data: donorDistribution.map(d => d.count),
+                        backgroundColor: '#F3BA2F',
+                        borderColor: '#F59E0B',
+                        borderWidth: 1,
+                      }]
+                    }}
+                    className="h-64"
+                  />
                 </CardContent>
               </Card>
             </div>
