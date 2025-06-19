@@ -270,10 +270,14 @@ class FirebaseService {
   // Firestore methods
   async saveDocument(collection: string, docId: string, data: any): Promise<void> {
     try {
-      await this.db.collection(collection).doc(docId).set(data, { merge: true });
+      if (!this.checkInitialized()) {
+        console.log('Firebase not initialized, skipping document save');
+        return;
+      }
+      await this.db!.collection(collection).doc(docId).set(data, { merge: true });
     } catch (error) {
       console.error('Firestore save document failed:', error);
-      throw error;
+      // Don't throw error to avoid breaking the flow when Firebase is not configured
     }
   }
 
@@ -418,15 +422,22 @@ class FirebaseService {
   }
 
   async saveUserActivity(userId: number, activity: string, metadata: any): Promise<void> {
-    const activityData = {
-      userId,
-      activity,
-      metadata,
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      createdAt: new Date().toISOString()
-    };
+    try {
+      if (!this.checkInitialized()) {
+        return;
+      }
+      const activityData = {
+        userId,
+        activity,
+        metadata,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date().toISOString()
+      };
 
-    await this.saveDocument('user_activities', `${userId}_${Date.now()}`, activityData);
+      await this.saveDocument('user_activities', `${userId}_${Date.now()}`, activityData);
+    } catch (error) {
+      console.error('Failed to save user activity:', error);
+    }
   }
 
   async getAnalytics(startDate: Date, endDate: Date): Promise<any> {

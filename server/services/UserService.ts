@@ -49,7 +49,7 @@ export class UserService extends BaseService {
       // Check if user already exists
       const existingUser = await this.getUserByWallet(userData.walletAddress);
       if (existingUser) {
-        throw new Error('User with this wallet address already exists');
+        return existingUser; // Return existing user instead of throwing error
       }
       
       const user = await storage.createUser(userData);
@@ -57,15 +57,26 @@ export class UserService extends BaseService {
       // Cache the new user
       await redis.set(`user:${user.id}`, user, 300);
       
-      // Log user creation to Firebase
-      await firebase.saveUserActivity(user.id, 'user_created', {
-        walletAddress: user.walletAddress,
-        username: user.username,
-        timestamp: new Date()
-      });
+      // Log user creation to Firebase (safely)
+      try {
+        await firebase.saveUserActivity(user.id, 'user_created', {
+          walletAddress: user.walletAddress,
+          username: user.username,
+          timestamp: new Date()
+        });
+      } catch (firebaseError) {
+        console.log('Firebase logging failed, continuing without it');
+      }
       
       return user;
-    } catch (error) {
+    } catch (error: any) {
+      // Handle duplicate key constraint specifically
+      if (error.code === '23505' && error.constraint === 'users_wallet_address_unique') {
+        const existingUser = await this.getUserByWallet(userData.walletAddress);
+        if (existingUser) {
+          return existingUser;
+        }
+      }
       return this.handleError(error, 'Failed to create user');
     }
   }
