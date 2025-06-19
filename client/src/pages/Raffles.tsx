@@ -123,31 +123,31 @@ export default function Raffles() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-yellow-500 mb-2">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-yellow-500 mb-2 break-words">
                 {getActiveRafflesCount()}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-green-500 mb-2">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
                 ${getTotalPrizePool().toLocaleString()}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Toplam Ödül Havuzu</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplam Ödül Havuzu</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-orange-500 mb-2">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-orange-500 mb-2 break-words">
                 {Array.isArray(raffles) ? raffles.length : 0}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
             </CardContent>
           </Card>
         </div>

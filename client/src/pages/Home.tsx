@@ -93,6 +93,19 @@ export default function Home() {
     }
   ];
 
+  // Format large numbers for better display
+  const formatValue = (value: string | number) => {
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(num)) return "0";
+    
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`;
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
+    }
+    return num.toString();
+  };
+
   const platformStats = [
     {
       value: (stats as any)?.totalRaffles || "0",
@@ -101,13 +114,13 @@ export default function Home() {
       color: "text-purple-500"
     },
     {
-      value: `${(stats as any)?.totalPrizePool || "0"} USDT`,
+      value: `${formatValue((stats as any)?.totalPrizePool || "0")} USDT`,
       label: "Toplam Ödül Havuzu",
       icon: Coins,
       color: "text-green-500"
     },
     {
-      value: `${(stats as any)?.totalDonations || "0"} USDT`,
+      value: `${formatValue((stats as any)?.totalDonations || "0")} USDT`,
       label: "Toplam Bağış",
       icon: Heart,
       color: "text-red-500"
@@ -319,24 +332,24 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {platformStats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-300"></div>
                   <Card className="relative bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 rounded-2xl">
-                    <CardContent className="p-8">
-                      <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                        <IconComponent className="w-8 h-8 text-white" />
+                    <CardContent className="p-4 md:p-6 lg:p-8">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl">
+                        <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
                       </div>
-                      <div className="text-3xl md:text-4xl font-black text-white mb-2">
+                      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 break-words">
                         {stat.value}
                       </div>
-                      <div className="text-lg font-semibold text-gray-300">
+                      <div className="text-sm md:text-base lg:text-lg font-semibold text-gray-300 break-words">
                         {stat.label}
                       </div>
-                      <div className="mt-4 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                      <div className="mt-3 md:mt-4 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
                     </CardContent>
                   </Card>
                 </div>

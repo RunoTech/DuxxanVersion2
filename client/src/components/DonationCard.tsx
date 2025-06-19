@@ -213,9 +213,9 @@ export function DonationCard({ donation }: DonationCardProps) {
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">İlerleme</span>
-            <span className="text-sm font-bold text-white">
-              {parseFloat(donation.currentAmount).toLocaleString()} USDT / {parseFloat(donation.goalAmount).toLocaleString()} USDT
+            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">İlerleme</span>
+            <span className="text-xs sm:text-sm font-bold text-white break-words">
+              {parseFloat(donation.currentAmount).toLocaleString()} / {parseFloat(donation.goalAmount).toLocaleString()} USDT
             </span>
           </div>
           <Progress value={Math.min(progress, 100)} className="mb-2" />

@@ -237,19 +237,19 @@ export default function Donations() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-green-500 mb-2">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-orange-500 mb-2">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-sm md:text-xl font-bold text-orange-500 mb-2 break-words">
                 {getTotalRaised().toLocaleString()} USDT
               </div>
               <div className="text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
@@ -257,20 +257,20 @@ export default function Donations() {
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-yellow-500 mb-2">
-                {getTotalDonors().toLocaleString()}
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-blue-500 mb-2 break-words">
+                {getTotalDonors()}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
             </CardContent>
           </Card>
 
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {getAverageContribution().toFixed(0)} USDT
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-purple-500 mb-2 break-words">
+                {Array.isArray(donations) ? donations.length : 0}
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Ortalama Bağış</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
             </CardContent>
           </Card>
         </div>
