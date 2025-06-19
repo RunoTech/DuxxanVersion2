@@ -650,13 +650,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Import payment protection middleware
-  const { validateRafflePayment, logUnpaidRaffleAttempt } = require('./middleware/payment-protection');
+  const paymentProtection = await import('./middleware/payment-protection.js');
+  const { validateRafflePayment, logUnpaidRaffleAttempt } = paymentProtection;
 
-  // SECURE ticket purchase with MANDATORY blockchain verification + payment protection
+  // Import country verification middleware  
+  const countryVerification = await import('./middleware/country-verification.js');
+  const { verifyCountryEligibility, trackUserDevice } = countryVerification;
+
+  // SECURE ticket purchase with FULL verification stack
   app.post('/api/tickets', 
     strictRateLimit, 
     authenticateUser, 
-    validateRafflePayment,  // CRITICAL: Block tickets for unpaid raffles
+    trackUserDevice,           // Track user device and location
+    validateRafflePayment,     // CRITICAL: Block tickets for unpaid raffles
+    verifyCountryEligibility,  // CRITICAL: Check country restrictions
     logUnpaidRaffleAttempt('ticket_purchase'),
     async (req: any, res) => {
     try {
