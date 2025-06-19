@@ -13,6 +13,13 @@ export function BlurOverlay() {
   const handleMetaMaskConnect = async () => {
     try {
       console.log('Starting MetaMask connection...');
+      
+      // Check MetaMask availability
+      if (!window.ethereum?.isMetaMask || window.ethereum?.isTrust) {
+        alert('MetaMask bulunamadı. Lütfen MetaMask eklentisini yükleyin.');
+        return;
+      }
+      
       await connectWallet('metamask');
     } catch (error: any) {
       console.error('MetaMask connection failed:', error);
