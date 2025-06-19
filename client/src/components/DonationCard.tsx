@@ -224,19 +224,19 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6 text-center">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6 text-center">
           <div>
-            <div className="text-lg font-bold text-white">{donation.donorCount}</div>
+            <div className="text-sm sm:text-lg font-bold text-white">{donation.donorCount}</div>
             <div className="text-xs text-gray-600 dark:text-gray-400">Bağışçılar</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-sm sm:text-lg font-bold text-white">
               {daysLeft > 0 ? daysLeft : 0}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">Kalan Gün</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-sm sm:text-lg font-bold text-white">
               {avgDonation > 0 ? avgDonation.toFixed(0) : '0'} USDT
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">Ort. Bağış</div>
