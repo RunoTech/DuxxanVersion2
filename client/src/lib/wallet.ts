@@ -2,22 +2,8 @@ import { BrowserProvider, JsonRpcSigner } from 'ethers';
 
 declare global {
   interface Window {
-    ethereum?: {
-      isMetaMask?: boolean;
-      isTrust?: boolean;
-      request?: (args: { method: string; params?: any[] }) => Promise<any>;
-      on?: (event: string, callback: (...args: any[]) => void) => void;
-      removeListener?: (event: string, callback: (...args: any[]) => void) => void;
-    };
-    trustWallet?: {
-      ethereum?: {
-        isMetaMask?: boolean;
-        isTrust?: boolean;
-        request?: (args: { method: string; params?: any[] }) => Promise<any>;
-        on?: (event: string, callback: (...args: any[]) => void) => void;
-        removeListener?: (event: string, callback: (...args: any[]) => void) => void;
-      };
-    };
+    ethereum?: any;
+    trustWallet?: any;
   }
 }
 
@@ -282,7 +268,24 @@ export class WalletManager {
       console.warn('Frame context check failed, proceeding with caution');
     }
     
-    const ethereum = this.getTrustWalletProvider() || this.getMetaMaskProvider();
+    // Force Trust Wallet provider selection
+    let ethereum = null;
+    
+    // Try Trust Wallet specific providers first
+    if (window.ethereum?.isTrust) {
+      ethereum = window.ethereum;
+      console.log('Using Trust Wallet via isTrust flag');
+    } else if ((window as any).trustwallet) {
+      ethereum = (window as any).trustwallet;
+      console.log('Using Trust Wallet via trustwallet global');
+    } else if (navigator.userAgent.toLowerCase().includes('trust') && window.ethereum) {
+      ethereum = window.ethereum;
+      console.log('Using Trust Wallet via user agent detection');
+    } else {
+      // Fallback to any ethereum provider but log warning
+      ethereum = window.ethereum;
+      console.warn('Trust Wallet not specifically detected, using default ethereum provider');
+    }
     if (!ethereum) {
       if (typeof window === 'undefined') {
         throw new Error('Trust Wallet can only be used in a browser environment.');
