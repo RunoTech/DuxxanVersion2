@@ -226,29 +226,175 @@ export default function Profile() {
   const stats = getProfileStats();
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <WalletStatus />
+    <div className="min-h-screen bg-gray-800 transition-colors duration-200">
+      <div className="max-w-5xl mx-auto">
+        {/* Golden Header Section */}
+        <div className="relative bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 p-8 mb-0">
+          {/* Edit Button */}
+          <div className="absolute top-4 right-4">
+            <Button
+              onClick={() => setIsEditing(!isEditing)}
+              className="bg-black bg-opacity-20 hover:bg-opacity-30 text-white border border-white border-opacity-30 rounded-lg px-4 py-2 text-sm"
+            >
+              <Edit3 className="h-4 w-4 mr-2" />
+              Düzenle
+            </Button>
+          </div>
+
+          {/* Profile Content */}
+          <div className="flex items-center gap-6 mt-12">
+            {/* Profile Picture */}
+            <div className="relative group">
+              <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-3xl font-bold text-gray-800">
+                {(user?.name || user?.username || 'D')?.charAt(0)?.toUpperCase()}
+              </div>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+            </div>
+
+            {/* Profile Info */}
+            <div className="flex-1 text-white">
+              <h1 className="text-2xl font-bold mb-1">
+                @{user?.username || 'demo_user'}
+              </h1>
+              <p className="text-lg opacity-90 mb-3">
+                {user?.profession || 'Geliştirici'}
+              </p>
+              
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <Star className="h-5 w-5 fill-current text-yellow-300" />
+                  <span className="font-medium">4.5</span>
+                  <span className="text-sm opacity-75">(12 değerlendirme)</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-sm">Turkey</span>
+                  <Badge className="bg-yellow-400 text-gray-800 text-xs px-2 py-1 rounded">
+                    Turkey
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Hero Profile Section */}
-        <div className="relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-3xl p-8 mb-8 overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yIDItNCA0LTRoNGMwIDIgMiA0IDQgNHY0YzAgMi0yIDQtNCA0aC00Yy0yIDAtNC0yLTQtNHYtNHptMC0zMGMwLTIgMi00IDQtNGg0YzAgMiAyIDQgNCA0djRjMCAyLTIgNC00IDRoLTRjLTIgMC00LTItNC00VjR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
-          
-          <div className="relative z-10">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
-              {/* Profile Photo Section */}
-              <div className="relative group">
-                <div className="relative">
-                  <Avatar className="h-40 w-40 border-6 border-white shadow-2xl">
-                    <AvatarImage 
-                      src={user.profilePhoto || user.profileImage} 
-                      alt={user.name || user.username}
-                      className="object-cover"
-                    />
+        {/* Dark Content Section */}
+        <div className="bg-gray-900 p-6">
+          {/* Tab Navigation */}
+          <div className="flex gap-4 mb-8">
+            <Button 
+              className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium px-6 py-2 rounded-lg"
+            >
+              <User className="h-4 w-4 mr-2" />
+              Profil Bilgileri
+            </Button>
+            <Button 
+              variant="ghost"
+              className="text-gray-400 hover:text-white hover:bg-gray-800 font-medium px-6 py-2 rounded-lg"
+            >
+              <Camera className="h-4 w-4 mr-2" />
+              Fotoğraflar
+            </Button>
+            <Button 
+              variant="ghost"
+              className="text-gray-400 hover:text-white hover:bg-gray-800 font-medium px-6 py-2 rounded-lg"
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Cihazlar & Güvenlik
+            </Button>
+          </div>
+
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Kişisel Bilgiler Card */}
+            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-yellow-400 text-lg font-bold">
+                  Kişisel Bilgiler
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Ad Soyad</h4>
+                  <p className="text-white">{user?.name || 'Demo Kullanıcısı'}</p>
+                </div>
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">E-posta</h4>
+                  <p className="text-white">{user?.email || 'demo@example.com'}</p>
+                </div>
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Cinsiyet</h4>
+                  <p className="text-white">Belirtilmemiş</p>
+                </div>
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">İkametgah</h4>
+                  <p className="text-white">Belirtilmemiş</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Konum Bilgileri Card */}
+            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-yellow-400 text-lg font-bold">
+                  Konum Bilgileri
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Şehir</h4>
+                  <p className="text-white">İstanbul</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Profesyonel Bilgiler Card */}
+            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-yellow-400 text-lg font-bold">
+                  Profesyonel Bilgiler
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Meslek</h4>
+                  <p className="text-white">Geliştirici</p>
+                </div>
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Biyografi</h4>
+                  <p className="text-white">Blockchain teknolojileri ve kripto para alanında uzman geliştirici.</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Organizasyon Bilgileri Card */}
+            <Card className="bg-gray-800 border border-gray-700 rounded-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-yellow-400 text-lg font-bold">
+                  Organizasyon Bilgileri
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Türü</h4>
+                  <p className="text-white">Bireysel</p>
+                </div>
+                <div>
+                  <h4 className="text-yellow-400 text-sm font-medium mb-1">Organizasyon Adı</h4>
+                  <p className="text-white">Belirtilmemiş</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
                     <AvatarFallback className="text-4xl font-bold bg-white text-yellow-500">
                       {(user.name || user.username)?.charAt(0)?.toUpperCase()}
                     </AvatarFallback>
