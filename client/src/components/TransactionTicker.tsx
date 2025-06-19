@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+// Removed framer-motion to reduce bundle size
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 
 interface MockTransaction {
@@ -95,15 +95,7 @@ export function TransactionTicker() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 text-white py-3 shadow-2xl border-t border-gray-600">
       <div className="overflow-hidden whitespace-nowrap">
-        <motion.div
-          className="inline-block"
-          animate={{ x: ['100%', '-100%'] }}
-          transition={{
-            duration: 150,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        >
+        <div className="inline-block animate-scroll">
           <div className="inline-flex items-center space-x-20">
             {transactions.map((tx, index) => (
               <div key={tx.id} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-8">

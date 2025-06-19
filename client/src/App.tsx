@@ -71,24 +71,26 @@ function Router() {
   return (
     <>
       <ScrollToTop />
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/profile-new" component={ProfileNew} />
-        <Route path="/community" component={Community} />
-        <Route path="/community/:id" component={CommunityDetail} />
-        <Route path="/raffles" component={Raffles} />
-        <Route path="/raffles/:id" component={RaffleDetail} />
-        <Route path="/donations" component={Donations} />
-        <Route path="/donations/:id" component={DonationDetail} />
-        <Route path="/country/:countryCode" component={CountryProfile} />
-        <Route path="/create-raffle" component={CreateRaffle} />
-        <Route path="/create-donation" component={CreateDonation} />
-        <Route path="/terms" component={Terms} />
-        <Route path="/privacy" component={Privacy} />
-        <Route path="/support" component={Support} />
-        <Route component={NotFound} />
-      </Switch>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div></div>}>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/profile-new" component={ProfileNew} />
+          <Route path="/community" component={Community} />
+          <Route path="/community/:id" component={CommunityDetail} />
+          <Route path="/raffles" component={Raffles} />
+          <Route path="/raffles/:id" component={RaffleDetail} />
+          <Route path="/donations" component={Donations} />
+          <Route path="/donations/:id" component={DonationDetail} />
+          <Route path="/country/:countryCode" component={CountryProfile} />
+          <Route path="/create-raffle" component={CreateRaffle} />
+          <Route path="/create-donation" component={CreateDonation} />
+          <Route path="/terms" component={Terms} />
+          <Route path="/privacy" component={Privacy} />
+          <Route path="/support" component={Support} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </>
   );
 }
