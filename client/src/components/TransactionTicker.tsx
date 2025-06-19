@@ -11,9 +11,9 @@ interface MockTransaction {
 
 const transactionTypes = [
   { type: 'raffle_created' as const, text: 'çekiliş oluşturdu', amount: 25 },
-  { type: 'raffle_joined' as const, text: 'çekilişe katıldı', amount: 25 },
-  { type: 'ticket_bought' as const, text: 'bilet aldı', amount: 10 },
-  { type: 'donation_made' as const, text: 'donate yaptı', amount: 10 },
+  { type: 'raffle_joined' as const, text: 'çekilişe katıldı', minAmount: 1, maxAmount: 250 },
+  { type: 'ticket_bought' as const, text: 'bilet aldı', minAmount: 1, maxAmount: 250 },
+  { type: 'donation_made' as const, text: 'donate yaptı', minAmount: 1, maxAmount: 250 },
 ];
 
 // Generate 2000+ random wallet addresses
@@ -38,10 +38,18 @@ const generateMockTransaction = (): MockTransaction => {
   const randomType = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
   const randomWallet = mockWallets[Math.floor(Math.random() * mockWallets.length)];
   
+  let amount: number;
+  if (randomType.type === 'raffle_created') {
+    amount = 25; // Sabit çekiliş oluşturma ücreti
+  } else {
+    // Rastgele tutar 1-250 dolar arası
+    amount = Math.floor(Math.random() * 250) + 1;
+  }
+  
   return {
     id: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     wallet: randomWallet,
-    amount: randomType.amount,
+    amount: amount,
     type: randomType.type,
     timestamp: Date.now(),
   };
@@ -60,48 +68,49 @@ export function TransactionTicker() {
   const [transactions, setTransactions] = useState<MockTransaction[]>([]);
 
   useEffect(() => {
-    // Initialize with some transactions
-    const initialTransactions = Array.from({ length: 20 }, () => generateMockTransaction());
+    // Initialize with continuous flowing transactions
+    const initialTransactions = Array.from({ length: 100 }, () => generateMockTransaction());
     setTransactions(initialTransactions);
 
-    // Add new transaction every 2-4 seconds
+    // Continuously add new transactions for seamless flow
     const interval = setInterval(() => {
       setTransactions(prev => {
-        const newTransaction = generateMockTransaction();
-        const updated = [newTransaction, ...prev];
-        // Keep only last 50 transactions for performance
-        return updated.slice(0, 50);
+        const newTransactions = Array.from({ length: 3 }, () => generateMockTransaction());
+        const updated = [...newTransactions, ...prev];
+        // Keep reasonable amount for performance
+        return updated.slice(0, 150);
       });
-    }, Math.random() * 2000 + 2000); // 2-4 seconds
+    }, 1500); // Her 1.5 saniyede 3 yeni işlem
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 text-white py-2 shadow-lg border-t border-yellow-400">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 text-white py-3 shadow-2xl border-t border-gray-600">
       <div className="overflow-hidden whitespace-nowrap">
         <motion.div
           className="inline-block"
           animate={{ x: ['100%', '-100%'] }}
           transition={{
-            duration: 40,
+            duration: 60,
             repeat: Infinity,
             ease: 'linear',
           }}
         >
-          <div className="inline-flex items-center space-x-8">
+          <div className="inline-flex items-center space-x-12">
             {transactions.map((tx, index) => (
-              <div key={`${tx.id}-${index}`} className="inline-flex items-center space-x-2 text-sm md:text-base font-medium px-4">
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="font-mono text-yellow-100 text-xs md:text-sm">
+              <div key={`${tx.id}-${index}`} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                  <span className="font-mono text-gray-300 text-xs md:text-sm tracking-wider">
                     {formatWallet(tx.wallet)}
                   </span>
-                  <span className="text-white">→</span>
-                  <span className="font-bold text-yellow-100">
-                    {tx.amount} USDT
+                  <span className="text-gray-400 text-lg">→</span>
+                  <span className="font-bold text-green-400 text-sm md:text-base">
+                    ${tx.amount}
                   </span>
-                  <span className="text-white text-xs md:text-sm">
+                  <span className="text-gray-400 text-xs">USDT</span>
+                  <span className="text-white text-xs md:text-sm font-medium">
                     {getTransactionText(tx)}
                   </span>
                 </div>
@@ -109,17 +118,18 @@ export function TransactionTicker() {
             ))}
             {/* Duplicate for seamless loop */}
             {transactions.map((tx, index) => (
-              <div key={`${tx.id}-duplicate-${index}`} className="inline-flex items-center space-x-2 text-sm md:text-base font-medium px-4">
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="font-mono text-yellow-100 text-xs md:text-sm">
+              <div key={`${tx.id}-duplicate-${index}`} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                  <span className="font-mono text-gray-300 text-xs md:text-sm tracking-wider">
                     {formatWallet(tx.wallet)}
                   </span>
-                  <span className="text-white">→</span>
-                  <span className="font-bold text-yellow-100">
-                    {tx.amount} USDT
+                  <span className="text-gray-400 text-lg">→</span>
+                  <span className="font-bold text-green-400 text-sm md:text-base">
+                    ${tx.amount}
                   </span>
-                  <span className="text-white text-xs md:text-sm">
+                  <span className="text-gray-400 text-xs">USDT</span>
+                  <span className="text-white text-xs md:text-sm font-medium">
                     {getTransactionText(tx)}
                   </span>
                 </div>
@@ -128,7 +138,6 @@ export function TransactionTicker() {
           </div>
         </motion.div>
       </div>
-
     </div>
   );
 }
