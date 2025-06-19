@@ -3,6 +3,7 @@ import { storage } from '../storage';
 import { Raffle, InsertRaffle } from '@shared/schema';
 import { redis } from '../../lib/redis';
 import { firebase } from '../../lib/firebase';
+import { ethers } from 'ethers';
 
 export class RaffleService extends BaseService {
   async getRaffles(limit?: number, offset?: number): Promise<any[]> {
@@ -53,7 +54,73 @@ export class RaffleService extends BaseService {
     }
   }
 
-  async createRaffle(raffleData: InsertRaffle & { creatorId: number }): Promise<Raffle> {
+  async verifyRaffleCreationPayment(
+    transactionHash: string,
+    walletAddress: string,
+    prizeValue: string
+  ): Promise<boolean> {
+    try {
+      // BSC mainnet RPC
+      const provider = new ethers.JsonRpcProvider('https://bsc-dataseed1.binance.org/');
+      
+      // Get transaction receipt
+      const receipt = await provider.getTransactionReceipt(transactionHash);
+      if (!receipt) {
+        throw new Error('Transaction not found');
+      }
+
+      // Verify transaction success
+      if (receipt.status !== 1) {
+        throw new Error('Transaction failed');
+      }
+
+      // Contract address (deployed DuxxanPlatform)
+      const contractAddress = '0x7e1B19CE44AcCF69360A23cAdCBeA551B215Cade';
+      
+      // Verify transaction is to our contract
+      if (receipt.to?.toLowerCase() !== contractAddress.toLowerCase()) {
+        throw new Error('Transaction not sent to correct contract');
+      }
+
+      // Verify sender
+      const tx = await provider.getTransaction(transactionHash);
+      if (tx?.from.toLowerCase() !== walletAddress.toLowerCase()) {
+        throw new Error('Transaction not sent from user wallet');
+      }
+
+      // USDT contract address on BSC (USDT has 18 decimals on BSC)
+      const usdtAddress = '0x55d398326f99059fF775485246999027B3197955';
+      
+      // Verify USDT transfer of 25 tokens (with 18 decimals)
+      const expectedAmount = ethers.parseUnits('25', 18);
+      
+      // Check logs for USDT transfer event
+      const transferTopic = ethers.id('Transfer(address,address,uint256)');
+      const usdtTransferLog = receipt.logs.find(log => 
+        log.address.toLowerCase() === usdtAddress.toLowerCase() &&
+        log.topics[0] === transferTopic &&
+        log.topics[1] === ethers.zeroPadValue(walletAddress.toLowerCase(), 32) &&
+        log.topics[2] === ethers.zeroPadValue(contractAddress.toLowerCase(), 32)
+      );
+
+      if (!usdtTransferLog) {
+        throw new Error('USDT transfer not found in transaction');
+      }
+
+      // Verify amount (25 USDT)
+      const transferAmount = ethers.getBigInt(usdtTransferLog.data);
+      if (transferAmount < expectedAmount) {
+        throw new Error('Insufficient payment amount');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Payment verification failed:', error);
+      return false;
+    }
+  }
+
+  async createRaffle(raffleData: InsertRaffle & { creatorId: number; transactionHash?: string }): Promise<Raffle> {
     try {
       this.validateRequired(raffleData.title, 'Title');
       this.validateRequired(raffleData.description, 'Description');
@@ -74,6 +141,7 @@ export class RaffleService extends BaseService {
         creatorId: raffleData.creatorId,
         title: raffle.title,
         prizeValue: raffle.prizeValue,
+        transactionHash: raffleData.transactionHash,
         timestamp: new Date()
       });
       

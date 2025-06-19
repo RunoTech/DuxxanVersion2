@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
@@ -20,6 +20,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { CalendarIcon, InfoIcon, AlertTriangleIcon } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
+import { USDTRequirement } from '@/components/USDTRequirement';
 
 const createDonationSchema = insertDonationSchema.extend({
   endDate: z.string().optional(),
@@ -52,7 +54,7 @@ const COUNTRIES = [
 
 export default function CreateDonation() {
   const [, navigate] = useLocation();
-  const { isConnected, user, getApiHeaders } = useWallet();
+  const { isConnected, user = {}, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryRestrictions, setCountryRestrictions] = useState<{
@@ -85,12 +87,13 @@ export default function CreateDonation() {
   });
 
   const isUnlimited = form.watch('isUnlimited');
-  const isOrganization = userData?.organizationType !== 'individual';
-  const canCreateUnlimited = isOrganization && userData?.organizationVerified;
+  const userDetails = user as any;
+  const isOrganization = userDetails?.organizationType !== 'individual';
+  const canCreateUnlimited = isOrganization && userDetails?.organizationVerified;
 
-  // Calculate commission rate and startup fee
-  const commissionRate = isOrganization ? 2 : 10;
-  const startupFee = isUnlimited && isOrganization ? 100 : 0;
+  // Calculate commission rate and startup fee based on contract
+  const commissionRate = CONTRACT_FEES.DONATION_COMMISSION_RATE;
+  const startupFee = CONTRACT_FEES.DONATION_CREATION_FEE;
 
   const createDonationMutation = useMutation({
     mutationFn: async (data: CreateDonationForm) => {
@@ -141,7 +144,7 @@ export default function CreateDonation() {
       }
 
       // Create donation via API
-      const response = await apiRequest('POST', '/api/donations', donationData, getApiHeaders());
+      const response = await apiRequest('POST', '/api/donations', donationData);
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Bağış oluşturulamadı');
@@ -474,8 +477,8 @@ export default function CreateDonation() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Doğrulama:</span>
-                    <Badge variant={userData?.organizationVerified ? "default" : "destructive"}>
-                      {userData?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
+                    <Badge variant={(userDetails as any)?.organizationVerified ? "default" : "destructive"}>
+                      {(userDetails as any)?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
@@ -525,13 +528,13 @@ export default function CreateDonation() {
                 <CardContent className="space-y-3">
                   <div className="text-sm text-gray-600">
                     <p className="mb-2">
-                      <strong>Bireysel Hesaplar:</strong> %10 komisyon, maksimum 30 gün süre
+                      <strong>Oluşturma Ücreti:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT (iade edilmez)
                     </p>
                     <p className="mb-2">
-                      <strong>Organizasyonlar:</strong> %2 komisyon
+                      <strong>Komisyon Oranı:</strong> %{CONTRACT_FEES.DONATION_COMMISSION_RATE} (platform'a gider)
                     </p>
                     <p>
-                      <strong>Sınırsız Bağışlar:</strong> 100 USDT başlangıç ücreti (iade edilmez)
+                      <strong>Tüm Bağışlar:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT başlangıç ücreti
                     </p>
                   </div>
                   {startupFee > 0 && (

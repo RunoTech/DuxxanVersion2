@@ -14,6 +14,8 @@ import {
 } from "./middleware/security";
 import { languageDetectionMiddleware, translationHeadersMiddleware } from "./middleware/translation";
 import apiRoutes from "./routes/index";
+import { startMemoryMonitoring } from "./utils/memory";
+import { startPeriodicCleanup, optimizeNodeOptions } from "./utils/cleanup";
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy for accurate IP detection
@@ -25,16 +27,15 @@ app.get('/health', (req, res) => {
 
 // Test endpoint to verify server accessibility
 app.get('/test', (req, res) => {
-  res.status(200).send('<h1>Server Test Page</h1><p>Server is accessible</p>');
+  res.status(200).send('<h1>DUXXAN Server Test</h1><p>Server is accessible and running properly</p><p>Time: ' + new Date().toISOString() + '</p>');
 });
 
 // Apply security middleware first
 app.use(cors(corsOptions));
 app.use(securityHeaders);
-app.use(globalRateLimit);
+// Keep minimal middleware to prevent restarts
 app.use(requestSizeLimit);
-app.use(patternDetection);
-app.use(securityMiddleware);
+// app.use(securityMiddleware); // Disabled to prevent memory issues
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -257,8 +258,30 @@ app.use('/api', apiRoutes);
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = 5000;
-  server.listen(port, "0.0.0.0", () => {
+  const httpServer = server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
     log('DUXXAN server running with controller-based architecture');
+  });
+
+  // Start memory monitoring and cleanup for stability
+  optimizeNodeOptions();
+  startMemoryMonitoring();
+  startPeriodicCleanup();
+
+  // Graceful shutdown handling
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
   });
 })();

@@ -127,25 +127,40 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
           onValueChange={handleRestrictionChange}
           className="space-y-3"
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <RadioGroupItem value="all" id="all" />
-            <Label htmlFor="all" className="flex items-center gap-2">
-              <Globe className="h-4 w-4" />
-              All Countries Worldwide
+            <Label htmlFor="all" className="flex items-center gap-3 cursor-pointer flex-1">
+              <div className="bg-green-100 dark:bg-green-900 p-2 rounded-full">
+                <Globe className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 dark:text-white">Herkese Açık</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Tüm dünyadan katılım yapılabilir</div>
+              </div>
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <RadioGroupItem value="selected" id="selected" />
-            <Label htmlFor="selected" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Only Selected Countries
+            <Label htmlFor="selected" className="flex items-center gap-3 cursor-pointer flex-1">
+              <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+                <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 dark:text-white">Sadece Belirli Ülkeler</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Seçeceğiniz ülkelerden katılım</div>
+              </div>
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <RadioGroupItem value="exclude" id="exclude" />
-            <Label htmlFor="exclude" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Exclude Selected Countries
+            <Label htmlFor="exclude" className="flex items-center gap-3 cursor-pointer flex-1">
+              <div className="bg-red-100 dark:bg-red-900 p-2 rounded-full">
+                <MapPin className="h-4 w-4 text-red-600 dark:text-red-400" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 dark:text-white">Belirli Ülkeleri Hariç Tut</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Seçeceğiniz ülkeler katılamaz</div>
+              </div>
             </Label>
           </div>
         </RadioGroup>
@@ -153,9 +168,9 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
         {value.restriction !== "all" && (
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 text-gray-500" />
               <Input
-                placeholder="Search countries..."
+                placeholder="Ülke ara... (örn: Türkiye, Germany, France)"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="flex-1"
@@ -164,12 +179,12 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
 
             {selectedCountries.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-sm font-medium">
-                  {value.restriction === "selected" ? "Selected Countries" : "Excluded Countries"} ({selectedCountries.length})
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {value.restriction === "selected" ? "Seçilen Ülkeler" : "Hariç Tutulan Ülkeler"} ({selectedCountries.length})
                 </Label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 max-h-20 overflow-y-auto">
                   {selectedCountryNames.map((name) => (
-                    <Badge key={name} variant="secondary" className="text-xs">
+                    <Badge key={name} variant={value.restriction === "selected" ? "default" : "destructive"} className="text-xs">
                       {name}
                     </Badge>
                   ))}
@@ -226,26 +241,26 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
             </ScrollArea>
 
             {value.restriction === "selected" && selectedCountries.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Globe className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Select countries to restrict participation</p>
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Katılmasını istediğiniz ülkeleri seçin</p>
               </div>
             )}
 
             {value.restriction === "exclude" && selectedCountries.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Select countries to exclude from participation</p>
+                <p className="text-sm">Katılımını engellemek istediğiniz ülkeleri seçin</p>
               </div>
             )}
           </div>
         )}
 
         {value.restriction === "all" && (
-          <div className="text-center py-8 text-muted-foreground">
-            <Globe className="h-12 w-12 mx-auto mb-2 text-yellow-500" />
-            <p className="text-sm font-medium">Open to All Countries</p>
-            <p className="text-xs">Anyone worldwide can participate</p>
+          <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+            <Globe className="h-16 w-16 mx-auto mb-4 text-yellow-500" />
+            <p className="text-lg font-medium text-gray-900 dark:text-white">Tüm Dünyaya Açık</p>
+            <p className="text-sm">Herkes katılabilir, ülke kısıtlaması yok</p>
           </div>
         )}
       </CardContent>

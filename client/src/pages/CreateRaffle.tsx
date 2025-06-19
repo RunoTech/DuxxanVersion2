@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
@@ -18,6 +18,8 @@ import { insertRaffleSchema } from '@shared/schema';
 import { Link, useLocation } from 'wouter';
 import { Upload, X, ImageIcon, AlertTriangle } from 'lucide-react';
 import { CountrySelector } from '@/components/CountrySelector';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
+import { USDTRequirement } from '@/components/USDTRequirement';
 
 const createRaffleSchema = insertRaffleSchema.extend({
   endDate: z.string().min(1, 'End date is required'),
@@ -27,7 +29,7 @@ type CreateRaffleForm = z.infer<typeof createRaffleSchema>;
 
 export default function CreateRaffle() {
   const [, navigate] = useLocation();
-  const { isConnected, address, user, getApiHeaders } = useWallet();
+  const { isConnected, address, user = {}, getApiHeaders } = useWallet();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -76,22 +78,29 @@ export default function CreateRaffle() {
 
   const createRaffleMutation = useMutation({
     mutationFn: async (data: CreateRaffleForm) => {
-      // Development mode - skip blockchain transaction
-      console.log('Development mode: Skipping blockchain transaction');
-      
-      // Add mock transaction hash for development
-      const mockTransactionHash = `0xdev${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
+      // Step 1: Process blockchain payment first
+      const paymentResult = await blockchainService.createRaffle(
+        data.prizeValue.toString(),
+        address!
+      );
 
-      // Convert endDate string to Date object and include country restrictions
-      const raffleData: any = {
-        ...data,
+      if (!paymentResult.success) {
+        throw new Error(paymentResult.error || 'Payment failed');
+      }
+
+      // Step 2: Create raffle with transaction hash
+      const raffleData = {
+        title: data.title,
+        description: data.description,
+        categoryId: data.categoryId,
+        maxTickets: data.maxTickets,
         endDate: new Date(data.endDate),
         prizeValue: data.prizeValue.toString(),
         ticketPrice: data.ticketPrice.toString(),
         countryRestriction: countryRestrictions.restriction,
         allowedCountries: countryRestrictions.allowedCountries ? JSON.stringify(countryRestrictions.allowedCountries) : null,
         excludedCountries: countryRestrictions.excludedCountries ? JSON.stringify(countryRestrictions.excludedCountries) : null,
-        transactionHash: mockTransactionHash,
+        transactionHash: paymentResult.transactionHash,
       };
 
       // Create raffle in database
@@ -100,16 +109,16 @@ export default function CreateRaffle() {
     },
     onSuccess: (raffle) => {
       toast({
-        title: 'Raffle Created!',
-        description: 'Your raffle has been successfully created and is now live.',
+        title: 'Çekiliş Oluşturuldu!',
+        description: 'Çekilişiniz başarıyla oluşturuldu ve yayına alındı. 25 USDT ödeme onaylandı.',
       });
       queryClient.invalidateQueries({ queryKey: ['/api/raffles'] });
       navigate('/raffles');
     },
     onError: (error: any) => {
       toast({
-        title: 'Creation Failed',
-        description: error.message || 'Failed to create raffle',
+        title: 'Oluşturma Başarısız',
+        description: error.message || 'Çekiliş oluşturulamadı. Lütfen 25 USDT ödemenizi kontrol edin.',
         variant: 'destructive',
       });
     },
@@ -199,6 +208,9 @@ export default function CreateRaffle() {
           </p>
         </div>
 
+        {/* USDT Requirement Warning */}
+        <USDTRequirement />
+
         <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl text-gray-900 dark:text-white">Çekiliş Detayları</CardTitle>
@@ -218,24 +230,28 @@ export default function CreateRaffle() {
                       <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Komisyon ve Ücret Bilgileri</h3>
                       <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
                         <div className="flex justify-between">
-                          <span>• Platform Komisyonu:</span>
-                          <span className="font-medium">%5</span>
+                          <span>• Oluşturma Ücreti:</span>
+                          <span className="font-medium">{CONTRACT_FEES.RAFFLE_CREATION_FEE} USDT</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>• Oluşturan Komisyonu (Size):</span>
-                          <span className="font-medium text-green-600 dark:text-green-400">%5</span>
+                          <span>• Toplam Komisyon:</span>
+                          <span className="font-medium">%{CONTRACT_FEES.RAFFLE_COMMISSION_RATE}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Platform Payı:</span>
+                          <span className="font-medium">%{CONTRACT_FEES.PLATFORM_SHARE / 10}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>• Oluşturan Payı (Size):</span>
+                          <span className="font-medium text-green-600 dark:text-green-400">%{CONTRACT_FEES.CREATOR_SHARE / 10}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>• Para Birimi:</span>
                           <span className="font-medium">USDT (BNB Smart Chain)</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span>• Minimum Bilet Fiyatı:</span>
-                          <span className="font-medium">1 USDT</span>
-                        </div>
                       </div>
                       <p className="text-xs text-blue-700 dark:text-blue-300 mt-3 bg-blue-100 dark:bg-blue-800 p-2 rounded">
-                        💡 Pasif Gelir: Her çekilişinizden %5 komisyon kazanırsınız!
+                        Pasif Gelir: Her bilet satışından %5 komisyon kazanırsınız!
                       </p>
                     </div>
                   </div>
@@ -519,7 +535,7 @@ export default function CreateRaffle() {
                     disabled={isSubmitting || !isConnected}
                     className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 font-semibold"
                   >
-                    {isSubmitting ? 'Çekiliş Oluşturuluyor...' : 'Çekiliş Oluştur (25 USDT)'}
+{isSubmitting ? 'Ödeme İşleniyor...' : 'Çekiliş Oluştur (25 USDT Öde)'}
                   </Button>
                 </div>
               </form>

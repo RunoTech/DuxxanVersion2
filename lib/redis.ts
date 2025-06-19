@@ -39,10 +39,36 @@ class RedisService {
       this.publisher = new Redis(redisUrl, { ...config, enableOfflineQueue: false });
     } else {
       console.warn('REDIS_URL not provided, Redis features will be disabled');
-      // Create mock instances that always fail gracefully
-      this.client = {} as Redis;
-      this.subscriber = {} as Redis;
-      this.publisher = {} as Redis;
+      // Create mock instances with all required methods
+      this.client = {
+        get: async () => null,
+        set: async () => 'OK',
+        setex: async () => 'OK',
+        del: async () => 1,
+        exists: async () => 0,
+        hset: async () => 1,
+        hget: async () => null,
+        hgetall: async () => ({}),
+        hdel: async () => 1,
+        lpush: async () => 1,
+        rpush: async () => 1,
+        lpop: async () => null,
+        rpop: async () => null,
+        lrange: async () => [],
+        sadd: async () => 1,
+        srem: async () => 1,
+        smembers: async () => [],
+        sismember: async () => 0,
+        publish: async () => 0,
+        subscribe: async () => {},
+        unsubscribe: async () => {},
+        keys: async () => [],
+        flushall: async () => 'OK',
+        ping: async () => 'PONG',
+        quit: async () => 'OK'
+      } as any;
+      this.subscriber = this.client;
+      this.publisher = this.client;
     }
 
     this.setupEventHandlers();

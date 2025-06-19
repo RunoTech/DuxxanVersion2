@@ -46,17 +46,25 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
       const browserLanguage = navigator.language.split('-')[0].toLowerCase();
       const browserCountry = navigator.language.split('-')[1]?.toUpperCase() || 'TR';
       
-      // Try to get more accurate location from multiple sources
+      // Try to get more accurate location from our own API
       try {
-        const geoResponse = await fetch('https://ipapi.co/json/');
-        const geoData = await geoResponse.json();
-        if (geoData.country_code) {
-          const detectedCountry = geoData.country_code.toUpperCase();
-          const detectedLanguage = COUNTRY_LANGUAGE_MAP[detectedCountry] || browserLanguage;
-          
-          setUserCountry(detectedCountry);
-          setUserLanguage(detectedLanguage);
-          return;
+        const geoResponse = await fetch('/api/user/location', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+        
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          if (geoData.country_code) {
+            const detectedCountry = geoData.country_code.toUpperCase();
+            const detectedLanguage = COUNTRY_LANGUAGE_MAP[detectedCountry] || browserLanguage;
+            
+            setUserCountry(detectedCountry);
+            setUserLanguage(detectedLanguage);
+            return;
+          }
         }
       } catch (geoError) {
         console.warn('Geolocation service unavailable, using browser settings');

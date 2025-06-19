@@ -293,12 +293,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ deviceFingerprint: fingerprint });
   });
   
-  // Temporarily disabled aggressive protection to allow normal app functionality
-  // app.use(patternDetection);
-
-  // app.use(securityMiddleware);
-  // app.use(progressiveSlowdown);
-  // app.use(globalRateLimit); // Disabled for demo
+  // ACTIVATE ALL SECURITY MIDDLEWARE - NO COMPROMISES
+  app.use('/api/raffles', patternDetection);
+  app.use('/api/donations', patternDetection);
+  app.use('/api/tickets', patternDetection);
+  
+  app.use('/api', securityMiddleware);
+  app.use('/api', progressiveSlowdown);
+  app.use('/api', globalRateLimit); // ACTIVATED for production security
 
   // WebSocket server for real-time updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
@@ -511,25 +513,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/raffles', createRateLimit, getUser, async (req: any, res) => {
+  // SECURE raffle creation with MANDATORY blockchain verification
+  app.post('/api/raffles', createRateLimit, authenticateUser, async (req: any, res) => {
     try {
+      // MANDATORY: Verify 25 USDT payment to contract FIRST
+      const { transactionHash, ...raffleData } = req.body;
+      
+      if (!transactionHash || !transactionHash.match(/^0x[a-fA-F0-9]{64}$/)) {
+        return res.status(400).json({ 
+          success: false,
+          message: 'Valid transaction hash required. You must pay 25 USDT to create a raffle.' 
+        });
+      }
+
       // Check if user has created any donations (donation recipients cannot create raffles)
       const userDonations = await storage.getDonationsByCreator(req.user.id);
       if (userDonations.length > 0) {
         return res.status(403).json({ 
+          success: false,
           message: 'Bağış alan hesaplar çekiliş oluşturamaz. Çekiliş yapmak için ayrı bir hesap kullanın.' 
         });
       }
 
-      const raffleData = insertRaffleSchema.parse(req.body);
-      const raffle = await storage.createRaffle({ ...raffleData, creatorId: req.user.id });
+      // CRITICAL: Verify blockchain payment before creating raffle
+      const ethers = await import('ethers');
+      const provider = new ethers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+      
+      try {
+        const tx = await provider.getTransaction(transactionHash);
+        if (!tx || tx.to?.toLowerCase() !== '0x7e1b19ce44accf69360a23cadcbea551b215cade') {
+          return res.status(400).json({ 
+            success: false,
+            message: 'Invalid transaction. Payment must be sent to the DUXXAN contract.' 
+          });
+        }
+        
+        const receipt = await provider.getTransactionReceipt(transactionHash);
+        if (!receipt || receipt.status !== 1) {
+          return res.status(400).json({ 
+            success: false,
+            message: 'Transaction failed or not confirmed.' 
+          });
+        }
+
+        // Verify amount (25 USDT = 25 * 10^18)
+        const expectedAmount = ethers.parseUnits('25', 18);
+        if (tx.value < expectedAmount) {
+          return res.status(400).json({ 
+            success: false,
+            message: 'Insufficient payment. 25 USDT required to create a raffle.' 
+          });
+        }
+        
+      } catch (blockchainError) {
+        console.error('Blockchain verification failed:', blockchainError);
+        return res.status(400).json({ 
+          success: false,
+          message: 'Payment verification failed. Please ensure transaction is confirmed on BSC network.' 
+        });
+      }
+
+      const validatedData = insertRaffleSchema.parse(raffleData);
+      const raffle = await storage.createRaffle({ 
+        ...validatedData, 
+        creatorId: req.user.id,
+        transactionHash: transactionHash // Store proof of payment
+      });
       
       // Store raffle in Redis for real-time tracking
       const raffleKey = `duxxan:raffle:${raffle.id}:live_stats`;
       try {
         await redis.hset(raffleKey, 'raffleId', raffle.id.toString());
         await redis.hset(raffleKey, 'title', raffle.title);
-        await redis.hset(raffleKey, 'prizeAmount', raffle.prizeAmount || '0');
+        await redis.hset(raffleKey, 'prizeAmount', raffle.prizeValue || '0');
         await redis.hset(raffleKey, 'ticketPrice', raffle.ticketPrice || '0');
         await redis.hset(raffleKey, 'maxTickets', raffle.maxTickets?.toString() || '0');
         await redis.hset(raffleKey, 'totalTickets', '0');
@@ -546,7 +602,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         await firebase.saveRaffleEvent(raffle.id, 'raffle_created', {
           title: raffle.title,
-          prizeAmount: raffle.prizeAmount,
+          prizeAmount: raffle.prizeValue,
           creatorId: raffle.creatorId,
           categoryId: raffle.categoryId,
           createdAt: new Date().toISOString()
@@ -593,11 +649,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Ticket routes
-  app.post('/api/tickets', strictRateLimit, getUser, async (req: any, res) => {
+  // Import payment protection middleware
+  const paymentProtection = await import('./middleware/payment-protection.js');
+  const { validateRafflePayment, logUnpaidRaffleAttempt } = paymentProtection;
+
+  // Import country verification middleware  
+  const countryVerification = await import('./middleware/country-verification.js');
+  const { verifyCountryEligibility, trackUserDevice } = countryVerification;
+
+  // SECURE ticket purchase with FULL verification stack
+  app.post('/api/tickets', 
+    strictRateLimit, 
+    authenticateUser, 
+    trackUserDevice,           // Track user device and location
+    validateRafflePayment,     // CRITICAL: Block tickets for unpaid raffles
+    verifyCountryEligibility,  // CRITICAL: Check country restrictions
+    logUnpaidRaffleAttempt('ticket_purchase'),
+    async (req: any, res) => {
     try {
-      const ticketData = insertTicketSchema.parse(req.body);
-      const ticket = await storage.createTicket({ ...ticketData, userId: req.user.id });
+      const { transactionHash, ...ticketData } = req.body;
+      
+      // MANDATORY blockchain verification for ticket purchase
+      if (!transactionHash || !transactionHash.match(/^0x[a-fA-F0-9]{64}$/)) {
+        return res.status(400).json({ 
+          success: false,
+          message: 'Valid transaction hash required for ticket purchase.' 
+        });
+      }
+
+      // Verify payment amount matches ticket price
+      const raffle = await storage.getRaffleById(ticketData.raffleId);
+      if (!raffle) {
+        return res.status(404).json({ success: false, message: 'Raffle not found' });
+      }
+
+      const expectedAmount = (parseFloat(raffle.ticketPrice || '0') * ticketData.quantity).toString();
+      
+      // Import and verify blockchain payment
+      const ethers = await import('ethers');
+      const provider = new ethers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
+      
+      try {
+        const tx = await provider.getTransaction(transactionHash);
+        if (!tx || tx.to?.toLowerCase() !== '0x7e1b19ce44accf69360a23cadcbea551b215cade') {
+          return res.status(400).json({ 
+            success: false,
+            message: 'Invalid transaction. Payment must be sent to DUXXAN contract.' 
+          });
+        }
+        
+        const receipt = await provider.getTransactionReceipt(transactionHash);
+        if (!receipt || receipt.status !== 1) {
+          return res.status(400).json({ 
+            success: false,
+            message: 'Transaction failed or not confirmed.' 
+          });
+        }
+
+        const paidAmount = ethers.parseUnits(expectedAmount, 18);
+        if (tx.value < paidAmount) {
+          return res.status(400).json({ 
+            success: false,
+            message: `Insufficient payment. Expected ${expectedAmount} USDT.` 
+          });
+        }
+        
+      } catch (blockchainError) {
+        console.error('Ticket payment verification failed:', blockchainError);
+        return res.status(400).json({ 
+          success: false,
+          message: 'Payment verification failed.' 
+        });
+      }
+
+      const validatedData = insertTicketSchema.parse(ticketData);
+      const ticket = await storage.createTicket({ 
+        ...validatedData, 
+        userId: req.user.id
+      });
       
       // Update raffle stats in Redis
       const raffleKey = `duxxan:raffle:${ticket.raffleId}:live_stats`;

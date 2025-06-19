@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';
 
 export default function Donations() {
@@ -20,11 +20,14 @@ export default function Donations() {
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Fetch donations
-  const { data: donations = [], isLoading } = useQuery({
+  // Fetch donations with proper typing
+  const { data: donationsResponse, isLoading } = useQuery({
     queryKey: ['/api/donations'],
-    refetchInterval: isConnected ? 30000 : false, // Refresh every 30 seconds if connected
+    refetchInterval: false, // Disable automatic refresh to prevent connection issues
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
   });
+
+  const donations = (donationsResponse as any)?.data || [];
 
   // Organization types and countries
   const organizationTypes = [

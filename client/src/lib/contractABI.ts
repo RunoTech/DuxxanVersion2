@@ -10,19 +10,9 @@ export const DUXXAN_CONTRACT_ABI = [
   {
     "anonymous": false,
     "inputs": [
-      {"indexed": true, "internalType": "uint256", "name": "amount", "type": "uint256"},
-      {"indexed": true, "internalType": "address", "name": "recipient", "type": "address"}
-    ],
-    "name": "CommissionPaid",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
       {"indexed": true, "internalType": "uint256", "name": "donationId", "type": "uint256"},
       {"indexed": true, "internalType": "address", "name": "creator", "type": "address"},
-      {"indexed": false, "internalType": "uint256", "name": "goalAmount", "type": "uint256"},
-      {"indexed": false, "internalType": "bool", "name": "isUnlimited", "type": "bool"}
+      {"indexed": false, "internalType": "uint256", "name": "goalAmount", "type": "uint256"}
     ],
     "name": "DonationCreated",
     "type": "event"
@@ -49,9 +39,11 @@ export const DUXXAN_CONTRACT_ABI = [
   {
     "anonymous": false,
     "inputs": [
-      {"indexed": false, "internalType": "address", "name": "account", "type": "address"}
+      {"indexed": true, "internalType": "uint256", "name": "raffleId", "type": "uint256"},
+      {"indexed": true, "internalType": "address", "name": "winner", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256"}
     ],
-    "name": "Paused",
+    "name": "PayoutReleased",
     "type": "event"
   },
   {
@@ -60,7 +52,7 @@ export const DUXXAN_CONTRACT_ABI = [
       {"indexed": true, "internalType": "uint256", "name": "raffleId", "type": "uint256"},
       {"indexed": true, "internalType": "address", "name": "creator", "type": "address"},
       {"indexed": false, "internalType": "uint256", "name": "prizeAmount", "type": "uint256"},
-      {"indexed": false, "internalType": "uint256", "name": "ticketPrice", "type": "uint256"}
+      {"indexed": false, "internalType": "enum DuxxanPlatformSimple.PrizeType", "name": "prizeType", "type": "uint8"}
     ],
     "name": "RaffleCreated",
     "type": "event"
@@ -80,18 +72,9 @@ export const DUXXAN_CONTRACT_ABI = [
     "inputs": [
       {"indexed": true, "internalType": "uint256", "name": "raffleId", "type": "uint256"},
       {"indexed": true, "internalType": "address", "name": "buyer", "type": "address"},
-      {"indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256"},
-      {"indexed": false, "internalType": "uint256", "name": "totalCost", "type": "uint256"}
+      {"indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256"}
     ],
     "name": "TicketPurchased",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": false, "internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "Unpaused",
     "type": "event"
   },
   {
@@ -146,6 +129,16 @@ export const DUXXAN_CONTRACT_ABI = [
   {
     "inputs": [
       {"internalType": "uint256", "name": "_raffleId", "type": "uint256"},
+      {"internalType": "bool", "name": "_approve", "type": "bool"}
+    ],
+    "name": "approveRaffleResult",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "_raffleId", "type": "uint256"},
       {"internalType": "uint256", "name": "_quantity", "type": "uint256"}
     ],
     "name": "buyTickets",
@@ -166,7 +159,7 @@ export const DUXXAN_CONTRACT_ABI = [
       {"internalType": "string", "name": "_description", "type": "string"},
       {"internalType": "uint256", "name": "_goalAmount", "type": "uint256"},
       {"internalType": "uint256", "name": "_duration", "type": "uint256"},
-      {"internalType": "enum DuxxanPlatform.OrganizationType", "name": "_orgType", "type": "uint8"}
+      {"internalType": "bool", "name": "_isUnlimited", "type": "bool"}
     ],
     "name": "createDonation",
     "outputs": [],
@@ -180,7 +173,8 @@ export const DUXXAN_CONTRACT_ABI = [
       {"internalType": "uint256", "name": "_prizeAmount", "type": "uint256"},
       {"internalType": "uint256", "name": "_ticketPrice", "type": "uint256"},
       {"internalType": "uint256", "name": "_maxTickets", "type": "uint256"},
-      {"internalType": "uint256", "name": "_duration", "type": "uint256"}
+      {"internalType": "uint256", "name": "_duration", "type": "uint256"},
+      {"internalType": "uint8", "name": "_prizeType", "type": "uint8"}
     ],
     "name": "createRaffle",
     "outputs": [],
@@ -188,13 +182,10 @@ export const DUXXAN_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [
-      {"internalType": "uint256", "name": "_donationId", "type": "uint256"},
-      {"internalType": "uint256", "name": "_amount", "type": "uint256"}
-    ],
-    "name": "donate",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [],
+    "name": "deployWallet",
+    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -215,16 +206,6 @@ export const DUXXAN_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [
-      {"internalType": "uint256", "name": "", "type": "uint256"},
-      {"internalType": "uint256", "name": "", "type": "uint256"}
-    ],
-    "name": "donationDonors",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "name": "donations",
     "outputs": [
@@ -235,10 +216,7 @@ export const DUXXAN_CONTRACT_ABI = [
       {"internalType": "uint256", "name": "goalAmount", "type": "uint256"},
       {"internalType": "uint256", "name": "currentAmount", "type": "uint256"},
       {"internalType": "uint256", "name": "endTime", "type": "uint256"},
-      {"internalType": "bool", "name": "isActive", "type": "bool"},
-      {"internalType": "bool", "name": "isUnlimited", "type": "bool"},
-      {"internalType": "uint256", "name": "commissionCollected", "type": "uint256"},
-      {"internalType": "enum DuxxanPlatform.OrganizationType", "name": "orgType", "type": "uint8"}
+      {"internalType": "uint8", "name": "flags", "type": "uint8"}
     ],
     "stateMutability": "view",
     "type": "function"
@@ -261,106 +239,13 @@ export const DUXXAN_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getActiveDonationsCount",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getActiveRafflesCount",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "_donationId", "type": "uint256"}],
-    "name": "getDonation",
-    "outputs": [
-      {
-        "components": [
-          {"internalType": "uint256", "name": "id", "type": "uint256"},
-          {"internalType": "address", "name": "creator", "type": "address"},
-          {"internalType": "string", "name": "title", "type": "string"},
-          {"internalType": "string", "name": "description", "type": "string"},
-          {"internalType": "uint256", "name": "goalAmount", "type": "uint256"},
-          {"internalType": "uint256", "name": "currentAmount", "type": "uint256"},
-          {"internalType": "uint256", "name": "endTime", "type": "uint256"},
-          {"internalType": "bool", "name": "isActive", "type": "bool"},
-          {"internalType": "bool", "name": "isUnlimited", "type": "bool"},
-          {"internalType": "uint256", "name": "commissionCollected", "type": "uint256"},
-          {"internalType": "enum DuxxanPlatform.OrganizationType", "name": "orgType", "type": "uint8"}
-        ],
-        "internalType": "struct DuxxanPlatform.Donation",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "_donationId", "type": "uint256"}],
-    "name": "getDonationDonors",
-    "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "_raffleId", "type": "uint256"}],
-    "name": "getRaffle",
-    "outputs": [
-      {
-        "components": [
-          {"internalType": "uint256", "name": "id", "type": "uint256"},
-          {"internalType": "address", "name": "creator", "type": "address"},
-          {"internalType": "string", "name": "title", "type": "string"},
-          {"internalType": "string", "name": "description", "type": "string"},
-          {"internalType": "uint256", "name": "prizeAmount", "type": "uint256"},
-          {"internalType": "uint256", "name": "ticketPrice", "type": "uint256"},
-          {"internalType": "uint256", "name": "maxTickets", "type": "uint256"},
-          {"internalType": "uint256", "name": "ticketsSold", "type": "uint256"},
-          {"internalType": "uint256", "name": "endTime", "type": "uint256"},
-          {"internalType": "bool", "name": "isActive", "type": "bool"},
-          {"internalType": "bool", "name": "isCompleted", "type": "bool"},
-          {"internalType": "address", "name": "winner", "type": "address"},
-          {"internalType": "uint256", "name": "totalAmount", "type": "uint256"},
-          {"internalType": "uint256", "name": "commissionCollected", "type": "uint256"}
-        ],
-        "internalType": "struct DuxxanPlatform.Raffle",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "_raffleId", "type": "uint256"}],
-    "name": "getRaffleParticipants",
-    "outputs": [{"internalType": "address[]", "name": "", "type": "address[]"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {"internalType": "uint256", "name": "_donationId", "type": "uint256"},
-      {"internalType": "address", "name": "_user", "type": "address"}
+      {"internalType": "uint256", "name": "_amount", "type": "uint256"}
     ],
-    "name": "getUserDonations",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "uint256", "name": "_raffleId", "type": "uint256"},
-      {"internalType": "address", "name": "_user", "type": "address"}
-    ],
-    "name": "getUserTickets",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
+    "name": "makeDonation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -372,32 +257,8 @@ export const DUXXAN_CONTRACT_ABI = [
   },
   {
     "inputs": [],
-    "name": "pause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "raffleCounter",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "uint256", "name": "", "type": "uint256"},
-      {"internalType": "uint256", "name": "", "type": "uint256"}
-    ],
-    "name": "raffleParticipants",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
     "stateMutability": "view",
     "type": "function"
   },
@@ -424,11 +285,9 @@ export const DUXXAN_CONTRACT_ABI = [
       {"internalType": "uint256", "name": "maxTickets", "type": "uint256"},
       {"internalType": "uint256", "name": "ticketsSold", "type": "uint256"},
       {"internalType": "uint256", "name": "endTime", "type": "uint256"},
-      {"internalType": "bool", "name": "isActive", "type": "bool"},
-      {"internalType": "bool", "name": "isCompleted", "type": "bool"},
       {"internalType": "address", "name": "winner", "type": "address"},
-      {"internalType": "uint256", "name": "totalAmount", "type": "uint256"},
-      {"internalType": "uint256", "name": "commissionCollected", "type": "uint256"}
+      {"internalType": "uint8", "name": "prizeType", "type": "uint8"},
+      {"internalType": "uint8", "name": "flags", "type": "uint8"}
     ],
     "stateMutability": "view",
     "type": "function"
@@ -441,13 +300,6 @@ export const DUXXAN_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [{"internalType": "address", "name": "_newWallet", "type": "address"}],
-    "name": "setCommissionWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [{"internalType": "address", "name": "newOwner", "type": "address"}],
     "name": "transferOwnership",
     "outputs": [],
@@ -455,8 +307,8 @@ export const DUXXAN_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "unpause",
+    "inputs": [{"internalType": "address", "name": "_newWallet", "type": "address"}],
+    "name": "updateCommissionWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

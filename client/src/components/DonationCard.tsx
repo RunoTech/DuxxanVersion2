@@ -10,6 +10,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { Link } from 'wouter';
 import { Building2, Users, Heart, Clock, Shield, Star, Globe } from 'lucide-react';
+import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 interface DonationCardProps {
   donation: {
@@ -91,24 +92,12 @@ export function DonationCard({ donation }: DonationCardProps) {
   };
 
   const getCommissionBadge = () => {
-    const orgType = donation.creator?.organizationType || donation.organizationType;
-    const isVerified = donation.creator?.organizationVerified;
-    
-    if ((orgType === 'foundation' || orgType === 'association') && isVerified) {
-      return (
-        <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
-          %2 Komisyon
-        </Badge>
-      );
-    }
-    if (orgType === 'individual') {
-      return (
-        <Badge className="bg-orange-100 text-orange-800 border border-orange-200">
-          %10 Komisyon
-        </Badge>
-      );
-    }
-    return null;
+    // Contract: All donations have 2% commission rate
+    return (
+      <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-200">
+        %{CONTRACT_FEES.DONATION_COMMISSION_RATE} Komisyon
+      </Badge>
+    );
   };
 
   const getCountryFlag = () => {
@@ -147,7 +136,7 @@ export function DonationCard({ donation }: DonationCardProps) {
     setIsContributing(true);
     try {
       // First, handle blockchain transaction
-      const transactionHash = await blockchainService.donate(
+      const transactionHash = await blockchainService.makeDonation(
         donation.id,
         donationAmount
       );

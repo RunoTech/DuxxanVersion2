@@ -104,30 +104,14 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
     },
   });
 
-  // WebSocket real-time message updates
+  // Use centralized WebSocket connection instead of creating new ones
+  const { lastMessage } = useWebSocket();
+  
   useEffect(() => {
-    const handleWebSocketMessage = (event: MessageEvent) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'CHAT_MESSAGE' && data.data.raffleId === raffleId) {
-          queryClient.invalidateQueries({ queryKey: [`/api/raffles/${raffleId}/chat`] });
-        }
-      } catch (error) {
-        // Ignore invalid JSON
-      }
-    };
-
-    const ws = new WebSocket(
-      `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`
-    );
-    
-    ws.addEventListener('message', handleWebSocketMessage);
-    
-    return () => {
-      ws.removeEventListener('message', handleWebSocketMessage);
-      ws.close();
-    };
-  }, [raffleId, queryClient]);
+    if (lastMessage?.type === 'CHAT_MESSAGE' && lastMessage?.data?.raffleId === raffleId) {
+      queryClient.invalidateQueries({ queryKey: [`/api/raffles/${raffleId}/chat`] });
+    }
+  }, [lastMessage, raffleId, queryClient]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {

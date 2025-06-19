@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Wallet, AlertCircle, ExternalLink, Copy, Eye } from 'lucide-react';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { WalletConnectButton } from './WalletConnectButton';
 import { useToast } from '@/hooks/use-toast';
 

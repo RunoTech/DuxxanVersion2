@@ -77,12 +77,13 @@ export class WalletManager {
         console.warn('Frame access restricted, wallet connection may fail');
       }
 
-      if (window.ethereum.isMetaMask) {
+      // Ensure we don't return Trust Wallet for MetaMask requests
+      if (window.ethereum.isMetaMask && !window.ethereum.isTrust) {
         return window.ethereum;
       }
       // Handle multiple wallet providers
       if (window.ethereum.providers) {
-        return window.ethereum.providers.find((provider: any) => provider.isMetaMask);
+        return window.ethereum.providers.find((provider: any) => provider.isMetaMask && !provider.isTrust);
       }
     }
     return null;
@@ -91,9 +92,17 @@ export class WalletManager {
   private getTrustWalletProvider() {
     if (typeof window !== 'undefined') {
       // Try multiple ways Trust Wallet might be available
-      if (window.trustWallet) return window.trustWallet;
       if (window.ethereum?.isTrust) return window.ethereum;
+      if ((window as any).trustwallet?.ethereum) return (window as any).trustwallet.ethereum;
+      if ((window as any).TrustWallet) return (window as any).TrustWallet;
+      if (window.trustWallet) return window.trustWallet;
       if (window.ethereum?.isTrustWallet) return window.ethereum;
+      
+      // Check user agent as last resort
+      const userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes('trust') && window.ethereum) {
+        return window.ethereum;
+      }
     }
     return null;
   }
@@ -109,9 +118,10 @@ export class WalletManager {
     const trustwallet = typeof window !== 'undefined' && !!(window as any).trustwallet;  
     const TrustWallet = typeof window !== 'undefined' && !!(window as any).TrustWallet;
     const trust = typeof window !== 'undefined' && !!(window as any).trust;
+    const isTrustUserAgent = userAgent.includes('trust');
     
     const metamaskFound = isMetaMask || (hasEthereum && window.ethereum.providers?.some((p: any) => p.isMetaMask));
-    const trustwalletFound = trustWalletGlobal || trustwallet || TrustWallet || trust || 
+    const trustwalletFound = trustWalletGlobal || trustwallet || TrustWallet || trust || isTrustUserAgent ||
                            (hasEthereum && (window.ethereum.isTrust || window.ethereum.isTrustWallet));
 
     const availableGlobals = [];
@@ -204,13 +214,25 @@ export class WalletManager {
         address,
         provider,
         signer,
-        chainId
+        chainId: chainId.toString(),
+        walletType: 'metamask',
+        isConnected: true
       };
 
       this.connection = connection;
       this.setupEventListeners();
+      
+      // Store connection for persistence
+      localStorage.setItem('wallet_connection', JSON.stringify({
+        address,
+        walletType: 'metamask',
+        isConnected: true,
+        chainId: chainId.toString()
+      }));
+      
+      // Multiple notifications to ensure state update
       this.notifyListeners(true, address);
-
+      setTimeout(() => this.notifyListeners(true, address), 100);
       console.log('MetaMask connected successfully:', address);
       return connection;
     } catch (error: any) {
@@ -247,7 +269,26 @@ export class WalletManager {
       console.warn('Frame context check failed, proceeding with caution');
     }
     
-    const ethereum = this.getTrustWalletProvider() || this.getMetaMaskProvider();
+    // Force Trust Wallet provider selection
+    let ethereum = null;
+    
+    // Try Trust Wallet specific providers first
+    if (window.ethereum?.isTrust) {
+      ethereum = window.ethereum;
+      console.log('Using Trust Wallet via isTrust flag');
+    } else if ((window as any).trustwallet?.ethereum) {
+      ethereum = (window as any).trustwallet.ethereum;
+      console.log('Using Trust Wallet via trustwallet.ethereum');
+    } else if ((window as any).trustwallet) {
+      ethereum = (window as any).trustwallet;
+      console.log('Using Trust Wallet via trustwallet global');
+    } else if (navigator.userAgent.toLowerCase().includes('trust') && window.ethereum) {
+      ethereum = window.ethereum;
+      console.log('Using Trust Wallet via user agent detection');
+    } else {
+      // Don't fallback to MetaMask for Trust Wallet connections
+      throw new Error('Trust Wallet not found. Please install Trust Wallet app or use Trust Wallet browser.');
+    }
     if (!ethereum) {
       if (typeof window === 'undefined') {
         throw new Error('Trust Wallet can only be used in a browser environment.');
@@ -286,13 +327,25 @@ export class WalletManager {
         address,
         provider,
         signer,
-        chainId
+        chainId: chainId.toString(),
+        walletType: 'trustwallet',
+        isConnected: true
       };
 
       this.connection = connection;
       this.setupEventListeners();
+      
+      // Store connection for persistence
+      localStorage.setItem('wallet_connection', JSON.stringify({
+        address,
+        walletType: 'trustwallet',
+        isConnected: true,
+        chainId: chainId.toString()
+      }));
+      
+      // Multiple notifications to ensure state update
       this.notifyListeners(true, address);
-
+      setTimeout(() => this.notifyListeners(true, address), 100);
       console.log('Trust Wallet connected successfully:', address);
       return connection;
     } catch (error: any) {

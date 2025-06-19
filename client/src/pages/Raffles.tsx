@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RaffleCard } from '@/components/RaffleCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, Globe } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -30,9 +30,11 @@ export default function Raffles() {
   });
 
   // Fetch raffles
-  const { data: raffles = [], isLoading } = useQuery({
+  const { data: rafflesResponse, isLoading } = useQuery({
     queryKey: ['/api/raffles'],
   });
+
+  const raffles = (rafflesResponse as any)?.data || [];
 
   // Filter and sort raffles
   const filteredRaffles = (Array.isArray(raffles) ? raffles : [])

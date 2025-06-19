@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles } from 'lucide-react';
@@ -93,7 +93,7 @@ export default function Community() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
-  const [subscribedChannels, setSubscribedChannels] = useState<Set<number>>(new Set([2]));
+  const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -130,16 +130,20 @@ export default function Community() {
     },
   });
 
-  // Fetch channels from database
+  // Fetch channels from database with stable connection
   const { data: channelsData, isLoading: channelsLoading } = useQuery({
     queryKey: ['/api/channels'],
+    refetchInterval: false, // Prevent connection issues
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
   });
 
   const channels = (channelsData as any)?.data || [];
 
-  // Fetch upcoming raffles from database
+  // Fetch upcoming raffles from database with stable connection
   const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
     queryKey: ['/api/upcoming-raffles'],
+    refetchInterval: false, // Prevent connection issues
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
   });
 
   const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
@@ -147,11 +151,15 @@ export default function Community() {
   // Fetch categories from database
   const { data: categoriesData } = useQuery({
     queryKey: ['/api/categories'],
+    staleTime: 5 * 60 * 1000,
   });
 
   const categories = [
     { id: 'all', name: 'Tüm Kategoriler' },
-    ...(((categoriesData as any)?.data || []) as Array<{id: number; name: string; slug: string}>)
+    ...(Array.isArray(categoriesData) ? categoriesData : []).map((cat: any) => ({
+      id: cat.id.toString(),
+      name: cat.name
+    }))
   ];
 
   // Filtered channels based on search, category, and country
@@ -250,17 +258,13 @@ export default function Community() {
     },
     onSuccess: (_, { channelId, action }) => {
       if (action === 'subscribe') {
-        setSubscribedChannels(prev => new Set([...prev, channelId]));
+        setSubscribedChannels(prev => [...prev, channelId]);
         toast({
           title: "Başarılı",
           description: "Kanala abone oldunuz",
         });
       } else {
-        setSubscribedChannels(prev => {
-          const newSet = new Set([...prev]);
-          newSet.delete(channelId);
-          return newSet;
-        });
+        setSubscribedChannels(prev => prev.filter(id => id !== channelId));
         toast({
           title: "Başarılı",
           description: "Kanal aboneliğiniz iptal edildi",
@@ -287,7 +291,7 @@ export default function Community() {
       return;
     }
 
-    const action = subscribedChannels.has(channelId) ? 'unsubscribe' : 'subscribe';
+    const action = subscribedChannels.includes(channelId) ? 'unsubscribe' : 'subscribe';
     subscribeMutation.mutate({ channelId, action });
   };
 
@@ -424,8 +428,8 @@ export default function Community() {
           </div>
           <Button
             size="sm"
-            variant={subscribedChannels.has(channel.id) ? "secondary" : "outline"}
-            className={subscribedChannels.has(channel.id) 
+            variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
+            className={subscribedChannels.includes(channel.id) 
               ? "bg-yellow-500 text-black hover:bg-yellow-600" 
               : "border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
             }
@@ -434,7 +438,7 @@ export default function Community() {
               handleSubscribe(channel.id);
             }}
           >
-            {subscribedChannels.has(channel.id) ? (
+            {subscribedChannels.includes(channel.id) ? (
               <>
                 <CheckCircle className="h-4 w-4 mr-1" />
                 Abone
@@ -477,10 +481,11 @@ export default function Community() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
+              style={{ color: '#9ca3af' }}
             >
               {categories.map((category: any) => (
-                <option key={category.id} value={category.id}>
+                <option key={category.id} value={category.id} style={{ color: '#9ca3af' }}>
                   {category.name}
                 </option>
               ))}
@@ -490,11 +495,12 @@ export default function Community() {
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-black dark:text-white"
+              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
+              style={{ color: '#9ca3af' }}
             >
-              <option value="all">Tüm Ülkeler</option>
+              <option value="all" style={{ color: '#9ca3af' }}>Tüm Ülkeler</option>
               {countries.map((country) => (
-                <option key={country.value} value={country.value}>
+                <option key={country.value} value={country.value} style={{ color: '#9ca3af' }}>
                   {country.label}
                 </option>
               ))}
@@ -601,7 +607,24 @@ export default function Community() {
                                 Kategori
                               </FormLabel>
                               <FormControl>
-                                <CategorySelect field={field} categories={categories} />
+                                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    <SelectValue placeholder="Kategori seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                                    {categories
+                                      .filter(cat => cat.id !== 'all')
+                                      .map((category: any) => (
+                                        <SelectItem 
+                                          key={category.id} 
+                                          value={category.id.toString()}
+                                          className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                          {category.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -736,7 +759,20 @@ export default function Community() {
                         <FormItem>
                           <FormLabel className="text-white">Kategori</FormLabel>
                           <FormControl>
-                            <CategorySelect field={field} categories={categories} />
+                            <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                              <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                                <SelectValue placeholder="Kategori seçin" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories
+                                  .filter(cat => cat.id !== 'all')
+                                  .map((category: any) => (
+                                    <SelectItem key={category.id} value={category.id.toString()}>
+                                      {category.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -834,7 +870,20 @@ export default function Community() {
                             <FormItem>
                               <FormLabel className="text-white">Kategori</FormLabel>
                               <FormControl>
-                                <CategorySelect field={field} categories={categories} />
+                                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                  <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                                    <SelectValue placeholder="Kategori seçin" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {categories
+                                      .filter(cat => cat.id !== 'all')
+                                      .map((category: any) => (
+                                        <SelectItem key={category.id} value={category.id.toString()}>
+                                          {category.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>

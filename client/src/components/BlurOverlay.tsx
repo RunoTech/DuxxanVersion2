@@ -1,8 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 
 export function BlurOverlay() {
-  const { isConnected, isConnecting, connectWallet } = useWallet();
+  const { isConnected, isConnecting, connectWallet, connection } = useWallet();
+
+  // console.log('BlurOverlay render:', { isConnected, isConnecting, hasConnection: !!connection });
 
   if (isConnected) {
     return null;
@@ -11,6 +13,13 @@ export function BlurOverlay() {
   const handleMetaMaskConnect = async () => {
     try {
       console.log('Starting MetaMask connection...');
+      
+      // Check MetaMask availability
+      if (!window.ethereum?.isMetaMask || window.ethereum?.isTrust) {
+        alert('MetaMask bulunamadı. Lütfen MetaMask eklentisini yükleyin.');
+        return;
+      }
+      
       await connectWallet('metamask');
     } catch (error: any) {
       console.error('MetaMask connection failed:', error);
@@ -21,6 +30,17 @@ export function BlurOverlay() {
   const handleTrustWalletConnect = async () => {
     try {
       console.log('Starting Trust Wallet connection...');
+      
+      // Check if Trust Wallet is available before attempting connection
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTrustWalletBrowser = userAgent.includes('trust');
+      const hasTrustWalletProvider = window.ethereum?.isTrust || (window as any).trustwallet;
+      
+      if (!isTrustWalletBrowser && !hasTrustWalletProvider) {
+        alert('Trust Wallet bulunamadı. Lütfen Trust Wallet uygulamasını yükleyin veya Trust Wallet tarayıcısını kullanın.');
+        return;
+      }
+      
       await connectWallet('trustwallet');
     } catch (error: any) {
       console.error('Trust Wallet connection failed:', error);

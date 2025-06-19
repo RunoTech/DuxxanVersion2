@@ -25,8 +25,13 @@ export const corsOptions = {
       return callback(null, true);
     }
     
-    // Allow Replit domain variations
-    if (origin.includes('.replit.') || origin.includes('replit.dev')) {
+    // Allow all Replit domain variations
+    if (origin.includes('.replit.') || origin.includes('replit.dev') || origin.includes('replit.app')) {
+      return callback(null, true);
+    }
+    
+    // Allow any origin during development
+    if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
     
@@ -94,12 +99,13 @@ export const createRateLimit = rateLimit({
   }
 });
 
-// Progressive slowdown
+// Progressive slowdown - much more lenient to prevent server issues
 export const progressiveSlowdown = slowDown({
   windowMs: 15 * 60 * 1000,
-  delayAfter: 100,
-  delayMs: 500,
-  maxDelayMs: 20000
+  delayAfter: 500, // Increased threshold
+  delayMs: () => 100, // Fixed delay function
+  maxDelayMs: 5000, // Reduced max delay
+  validate: { delayMs: false } // Disable warning
 });
 
 // Security Headers
@@ -110,8 +116,15 @@ export const securityHeaders = helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "wss:", "ws:"]
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", "wss:", "ws:"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"], // Allow opening in new tabs
+      scriptSrcAttr: ["'none'"],
+      upgradeInsecureRequests: []
     }
   },
   hsts: {
@@ -125,7 +138,7 @@ export const securityHeaders = helmet({
 export const securityMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Add security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN'); // Allow same-origin frames
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   

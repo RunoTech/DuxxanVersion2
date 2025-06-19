@@ -40,9 +40,11 @@ export class RaffleController extends BaseController {
     this.sendSuccess(res, raffle, 'Raffle retrieved successfully');
   });
 
-  // Create new raffle
+  // Create new raffle - requires blockchain payment
   createRaffle = [
-    this.validateBody(insertRaffleSchema),
+    this.validateBody(insertRaffleSchema.extend({
+      transactionHash: z.string().min(66, 'Valid transaction hash required')
+    })),
     this.asyncHandler(async (req: Request, res: Response) => {
       // Check for wallet address in headers
       const walletAddress = req.headers['x-wallet-address'] as string;
@@ -59,11 +61,28 @@ export class RaffleController extends BaseController {
         return this.sendError(res, 'User not found', 404);
       }
 
-      const raffleData = { ...req.body, creatorId: user.id };
+      const { transactionHash, ...raffleData } = req.body;
 
       try {
-        const raffle = await this.raffleService.createRaffle(raffleData);
-        this.sendSuccess(res, raffle, 'Raffle created successfully', 201);
+        // Verify blockchain payment first
+        const verified = await this.raffleService.verifyRaffleCreationPayment(
+          transactionHash,
+          walletAddress,
+          raffleData.prizeValue
+        );
+
+        if (!verified) {
+          return this.sendError(res, 'Payment verification failed. Please ensure you paid the 25 USDT creation fee to the contract.', 400);
+        }
+
+        // Create raffle only after payment verification
+        const raffle = await this.raffleService.createRaffle({
+          ...raffleData,
+          creatorId: user.id,
+          transactionHash
+        });
+
+        this.sendSuccess(res, raffle, 'Raffle created successfully after payment verification', 201);
       } catch (error) {
         if (error instanceof Error) {
           return this.sendError(res, error.message, 400);

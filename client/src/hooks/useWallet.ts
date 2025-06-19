@@ -68,6 +68,7 @@ export function useWallet() {
 
     // Listen for connection changes
     const handleConnectionChange = (connected: boolean, address?: string) => {
+      console.log('Connection change:', connected, address);
       if (!connected) {
         setConnection(null);
         setUser(null);
@@ -79,7 +80,9 @@ export function useWallet() {
         const walletManager = WalletManager.getInstance();
         const currentConnection = walletManager.getConnection();
         if (currentConnection) {
-          setConnection(currentConnection);
+          console.log('Setting connection from listener:', currentConnection);
+          setConnection(null); // Clear first
+          setTimeout(() => setConnection(currentConnection), 10);
         }
       }
     };
@@ -96,15 +99,25 @@ export function useWallet() {
     try {
       const walletManager = WalletManager.getInstance();
       const newConnection = await walletManager.connectWallet(walletType);
+      
+      // Force state update immediately
       setConnection(newConnection);
 
       // Create or get user
       await createOrGetUser(newConnection.address);
 
       toast({
-        title: 'Wallet Connected',
-        description: `Connected to ${newConnection.address.slice(0, 6)}...${newConnection.address.slice(-4)}`,
+        title: 'Cüzdan Bağlandı',
+        description: `${newConnection.address.slice(0, 6)}...${newConnection.address.slice(-4)} adresine bağlandınız`,
       });
+
+      // Multiple state updates with different timing to ensure UI refresh
+      setTimeout(() => {
+        console.log('Force updating connection state');
+        setConnection(null);
+        setTimeout(() => setConnection(newConnection), 50);
+        setTimeout(() => setConnection({ ...newConnection }), 150);
+      }, 100);
 
       return newConnection;
     } catch (error: any) {
@@ -219,6 +232,8 @@ export function useWallet() {
   const isConnected = !!connection;
   const address = connection?.address;
   const chainId = connection?.chainId;
+
+  // console.log('useWallet state:', { isConnected, hasConnection: !!connection, address });
 
   return {
     connection,

@@ -19,9 +19,17 @@ export async function apiRequest(
   }
   
   // Add wallet address header if available
-  const walletAddress = localStorage.getItem('wallet_address');
-  if (walletAddress) {
-    headers["x-wallet-address"] = walletAddress;
+  const walletConnection = localStorage.getItem('wallet_connection');
+  if (walletConnection) {
+    try {
+      const connection = JSON.parse(walletConnection);
+      if (connection.address) {
+        headers["x-wallet-address"] = connection.address;
+        headers["x-chain-id"] = connection.chainId?.toString() || "56";
+      }
+    } catch (e) {
+      // Ignore invalid connection data
+    }
   }
 
   const res = await fetch(url, {

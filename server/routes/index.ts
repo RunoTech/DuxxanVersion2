@@ -74,4 +74,23 @@ router.post('/translate', async (req, res) => {
   }
 });
 
+// User location detection
+router.get('/user/location', async (req, res) => {
+  try {
+    // Use request IP to detect location
+    const userIP = req.ip || req.connection.remoteAddress || '127.0.0.1';
+    
+    // For demo purposes, return TR as default
+    // In production, you would use a geolocation service
+    res.json({
+      country_code: 'TR',
+      country_name: 'Turkey',
+      ip: userIP
+    });
+  } catch (error: any) {
+    console.error('Location detection error:', error);
+    res.status(500).json({ error: 'Location detection failed', message: error.message });
+  }
+});
+
 export default router;
