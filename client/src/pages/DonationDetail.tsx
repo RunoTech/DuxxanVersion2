@@ -24,7 +24,7 @@ import {
   DollarSign,
   Wallet
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
+import { LightweightChart } from '@/components/ui/lightweight-chart';
 
 export default function DonationDetail() {
   const { id } = useParams();
