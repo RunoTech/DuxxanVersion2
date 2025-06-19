@@ -220,7 +220,9 @@ export class WalletManager {
         chainId: chainId.toString()
       }));
       
+      // Multiple notifications to ensure state update
       this.notifyListeners(true, address);
+      setTimeout(() => this.notifyListeners(true, address), 100);
       console.log('MetaMask connected successfully:', address);
       return connection;
     } catch (error: any) {
@@ -312,7 +314,9 @@ export class WalletManager {
         chainId: chainId.toString()
       }));
       
+      // Multiple notifications to ensure state update
       this.notifyListeners(true, address);
+      setTimeout(() => this.notifyListeners(true, address), 100);
       console.log('Trust Wallet connected successfully:', address);
       return connection;
     } catch (error: any) {

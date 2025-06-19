@@ -80,8 +80,9 @@ export function useWallet() {
         const walletManager = WalletManager.getInstance();
         const currentConnection = walletManager.getConnection();
         if (currentConnection) {
-          console.log('Setting connection:', currentConnection);
-          setConnection(currentConnection);
+          console.log('Setting connection from listener:', currentConnection);
+          setConnection(null); // Clear first
+          setTimeout(() => setConnection(currentConnection), 10);
         }
       }
     };
@@ -110,12 +111,12 @@ export function useWallet() {
         description: `${newConnection.address.slice(0, 6)}...${newConnection.address.slice(-4)} adresine bağlandınız`,
       });
 
-      // Force multiple state updates to ensure UI updates
+      // Multiple state updates with different timing to ensure UI refresh
       setTimeout(() => {
         console.log('Force updating connection state');
-        setConnection({ ...newConnection });
-        // Force re-render of components
-        setTimeout(() => setConnection({ ...newConnection }), 200);
+        setConnection(null);
+        setTimeout(() => setConnection(newConnection), 50);
+        setTimeout(() => setConnection({ ...newConnection }), 150);
       }, 100);
 
       return newConnection;

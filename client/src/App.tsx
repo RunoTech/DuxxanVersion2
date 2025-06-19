@@ -105,7 +105,7 @@ function AppContent() {
       <Router />
       <Footer />
       <TransactionTicker />
-      {(!isConnected && !connection) && <BlurOverlay />}
+      {!isConnected && <BlurOverlay />}
     </div>
   );
 }

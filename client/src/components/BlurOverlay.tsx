@@ -6,7 +6,7 @@ export function BlurOverlay() {
 
   // console.log('BlurOverlay render:', { isConnected, isConnecting, hasConnection: !!connection });
 
-  if (isConnected || connection) {
+  if (isConnected) {
     return null;
   }
 
