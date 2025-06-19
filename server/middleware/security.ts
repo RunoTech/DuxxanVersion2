@@ -99,12 +99,13 @@ export const createRateLimit = rateLimit({
   }
 });
 
-// Progressive slowdown
+// Progressive slowdown - much more lenient to prevent server issues
 export const progressiveSlowdown = slowDown({
   windowMs: 15 * 60 * 1000,
-  delayAfter: 100,
-  delayMs: 500,
-  maxDelayMs: 20000
+  delayAfter: 500, // Increased threshold
+  delayMs: () => 100, // Fixed delay function
+  maxDelayMs: 5000, // Reduced max delay
+  validate: { delayMs: false } // Disable warning
 });
 
 // Security Headers

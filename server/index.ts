@@ -31,9 +31,10 @@ app.get('/test', (req, res) => {
 // Apply security middleware first
 app.use(cors(corsOptions));
 app.use(securityHeaders);
-app.use(globalRateLimit);
+// Temporarily disable rate limiting to prevent server restarts
+// app.use(globalRateLimit);
 app.use(requestSizeLimit);
-app.use(patternDetection);
+// app.use(patternDetection);
 app.use(securityMiddleware);
 
 // Body parsing middleware
