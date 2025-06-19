@@ -75,12 +75,12 @@ export function TransactionTicker() {
     // Continuously add new transactions for seamless flow
     const interval = setInterval(() => {
       setTransactions(prev => {
-        const newTransactions = Array.from({ length: 3 }, () => generateMockTransaction());
+        const newTransactions = Array.from({ length: 2 }, () => generateMockTransaction());
         const updated = [...newTransactions, ...prev];
         // Keep reasonable amount for performance
-        return updated.slice(0, 150);
+        return updated.slice(0, 120);
       });
-    }, 1500); // Her 1.5 saniyede 3 yeni işlem
+    }, 3000); // Her 3 saniyede 2 yeni işlem
 
     return () => clearInterval(interval);
   }, []);
@@ -92,12 +92,12 @@ export function TransactionTicker() {
           className="inline-block"
           animate={{ x: ['100%', '-100%'] }}
           transition={{
-            duration: 60,
+            duration: 120,
             repeat: Infinity,
             ease: 'linear',
           }}
         >
-          <div className="inline-flex items-center space-x-12">
+          <div className="inline-flex items-center space-x-16">
             {transactions.map((tx, index) => (
               <div key={`${tx.id}-${index}`} className="inline-flex items-center space-x-3 text-sm md:text-base font-medium px-6">
                 <div className="flex items-center space-x-2">
