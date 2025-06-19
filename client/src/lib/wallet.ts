@@ -204,13 +204,23 @@ export class WalletManager {
         address,
         provider,
         signer,
-        chainId
+        chainId: chainId.toString(),
+        walletType: 'metamask',
+        isConnected: true
       };
 
       this.connection = connection;
       this.setupEventListeners();
+      
+      // Store connection for persistence
+      localStorage.setItem('wallet_connection', JSON.stringify({
+        address,
+        walletType: 'metamask',
+        isConnected: true,
+        chainId: chainId.toString()
+      }));
+      
       this.notifyListeners(true, address);
-
       console.log('MetaMask connected successfully:', address);
       return connection;
     } catch (error: any) {
@@ -286,13 +296,23 @@ export class WalletManager {
         address,
         provider,
         signer,
-        chainId
+        chainId: chainId.toString(),
+        walletType: 'trustwallet',
+        isConnected: true
       };
 
       this.connection = connection;
       this.setupEventListeners();
+      
+      // Store connection for persistence
+      localStorage.setItem('wallet_connection', JSON.stringify({
+        address,
+        walletType: 'trustwallet',
+        isConnected: true,
+        chainId: chainId.toString()
+      }));
+      
       this.notifyListeners(true, address);
-
       console.log('Trust Wallet connected successfully:', address);
       return connection;
     } catch (error: any) {
