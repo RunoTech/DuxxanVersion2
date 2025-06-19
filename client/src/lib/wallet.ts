@@ -2,8 +2,22 @@ import { BrowserProvider, JsonRpcSigner } from 'ethers';
 
 declare global {
   interface Window {
-    ethereum?: any;
-    trustWallet?: any;
+    ethereum?: {
+      isMetaMask?: boolean;
+      isTrust?: boolean;
+      request?: (args: { method: string; params?: any[] }) => Promise<any>;
+      on?: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener?: (event: string, callback: (...args: any[]) => void) => void;
+    };
+    trustWallet?: {
+      ethereum?: {
+        isMetaMask?: boolean;
+        isTrust?: boolean;
+        request?: (args: { method: string; params?: any[] }) => Promise<any>;
+        on?: (event: string, callback: (...args: any[]) => void) => void;
+        removeListener?: (event: string, callback: (...args: any[]) => void) => void;
+      };
+    };
   }
 }
 
@@ -91,9 +105,17 @@ export class WalletManager {
   private getTrustWalletProvider() {
     if (typeof window !== 'undefined') {
       // Try multiple ways Trust Wallet might be available
-      if (window.trustWallet) return window.trustWallet;
       if (window.ethereum?.isTrust) return window.ethereum;
+      if ((window as any).trustwallet?.ethereum) return (window as any).trustwallet.ethereum;
+      if ((window as any).TrustWallet) return (window as any).TrustWallet;
+      if (window.trustWallet) return window.trustWallet;
       if (window.ethereum?.isTrustWallet) return window.ethereum;
+      
+      // Check user agent as last resort
+      const userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes('trust') && window.ethereum) {
+        return window.ethereum;
+      }
     }
     return null;
   }
@@ -109,9 +131,10 @@ export class WalletManager {
     const trustwallet = typeof window !== 'undefined' && !!(window as any).trustwallet;  
     const TrustWallet = typeof window !== 'undefined' && !!(window as any).TrustWallet;
     const trust = typeof window !== 'undefined' && !!(window as any).trust;
+    const isTrustUserAgent = userAgent.includes('trust');
     
     const metamaskFound = isMetaMask || (hasEthereum && window.ethereum.providers?.some((p: any) => p.isMetaMask));
-    const trustwalletFound = trustWalletGlobal || trustwallet || TrustWallet || trust || 
+    const trustwalletFound = trustWalletGlobal || trustwallet || TrustWallet || trust || isTrustUserAgent ||
                            (hasEthereum && (window.ethereum.isTrust || window.ethereum.isTrustWallet));
 
     const availableGlobals = [];

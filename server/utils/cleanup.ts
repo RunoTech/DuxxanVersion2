@@ -11,9 +11,7 @@ export function startPeriodicCleanup() {
       }
       
       // Clear any cached data that might accumulate
-      if (process.env.NODE_ENV === 'development') {
-        delete require.cache[require.resolve('../storage')];
-      }
+      // Note: require is not available in ES modules, skip cache clearing
     } catch (error) {
       console.error('Cleanup error:', error);
     }
