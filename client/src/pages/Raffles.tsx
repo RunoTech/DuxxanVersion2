@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RaffleCard } from '@/components/RaffleCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, Globe } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 

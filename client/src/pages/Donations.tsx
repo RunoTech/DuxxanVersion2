@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { DonationCard } from '@/components/DonationCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { Link } from 'wouter';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';
 
 export default function Donations() {

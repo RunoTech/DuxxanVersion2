@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useWallet } from '@/hooks/useWallet';
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 
 export function BlurOverlay() {
   const { isConnected, isConnecting, connectWallet, connection } = useWallet();
