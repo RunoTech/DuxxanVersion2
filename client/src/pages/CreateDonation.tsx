@@ -317,7 +317,7 @@ export default function CreateDonation() {
                           name="goalAmount"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 font-medium">
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                                 Hedef Miktar (USDT) *
                               </FormLabel>
                               <FormControl>
@@ -326,7 +326,7 @@ export default function CreateDonation() {
                                   step="0.000001"
                                   min="1"
                                   placeholder="1000"
-                                  className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
+                                  className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                   {...field}
                                 />
                               </FormControl>
@@ -368,18 +368,18 @@ export default function CreateDonation() {
                         name="country"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-yellow-700 font-medium">
+                            <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                               Ülke
                             </FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900">
+                                <SelectTrigger className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white">
                                   <SelectValue placeholder="Ülke seçin" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent className="bg-white border-yellow-400">
+                              <SelectContent className="bg-white dark:bg-gray-800 border-yellow-400 dark:border-gray-600">
                                 {COUNTRIES.map((country) => (
-                                  <SelectItem key={country.value} value={country.value}>
+                                  <SelectItem key={country.value} value={country.value} className="text-gray-900 dark:text-white">
                                     {country.label}
                                   </SelectItem>
                                 ))}
@@ -395,9 +395,9 @@ export default function CreateDonation() {
                         control={form.control}
                         name="isUnlimited"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-400 bg-white p-4">
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border-2 border-yellow-400 dark:border-yellow-500 bg-white dark:bg-gray-800 p-4">
                             <div className="space-y-0.5">
-                              <FormLabel className="text-base text-yellow-700 font-medium">
+                              <FormLabel className="text-base text-yellow-700 dark:text-yellow-400 font-medium">
                                 Sınırsız Bağış
                               </FormLabel>
                               <FormDescription>
@@ -424,13 +424,13 @@ export default function CreateDonation() {
                           name="endDate"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-yellow-700 font-medium">
+                              <FormLabel className="text-yellow-700 dark:text-yellow-400 font-medium">
                                 Bitiş Tarihi *
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   type="datetime-local"
-                                  className="bg-white border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900"
+                                  className="bg-white dark:bg-gray-700 border-2 border-yellow-400 focus:border-yellow-500 focus:ring-yellow-500 text-gray-900 dark:text-white"
                                   min={new Date().toISOString().slice(0, 16)}
                                   {...field}
                                 />
@@ -464,26 +464,26 @@ export default function CreateDonation() {
             {/* Info Sidebar */}
             <div className="space-y-4">
               {/* Account Info */}
-              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
+              <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-yellow-600">Hesap Bilgileri</CardTitle>
+                  <CardTitle className="text-lg text-yellow-600 dark:text-yellow-400">Hesap Bilgileri</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Hesap Türü:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Hesap Türü:</span>
                     <Badge variant={isOrganization ? "default" : "secondary"}>
                       {isOrganization ? "Organizasyon" : "Bireysel"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Doğrulama:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Doğrulama:</span>
                     <Badge variant={(userDetails as any)?.organizationVerified ? "default" : "destructive"}>
                       {(userDetails as any)?.organizationVerified ? "Doğrulanmış" : "Beklemede"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Komisyon Oranı:</span>
-                    <span className="text-sm font-semibold text-yellow-600">%{commissionRate}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Komisyon Oranı:</span>
+                    <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">%{commissionRate}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -497,15 +497,15 @@ export default function CreateDonation() {
               />
 
               {/* Important Notice */}
-              <Card className="bg-white border-2 border-red-400 shadow-lg">
+              <Card className="bg-white dark:bg-gray-800 border-2 border-red-400 dark:border-red-500 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-red-600 flex items-center">
+                  <CardTitle className="text-lg text-red-600 dark:text-red-400 flex items-center">
                     <AlertTriangleIcon className="w-5 h-5 mr-2" />
                     Önemli Bilgi
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-sm text-red-700">
+                  <div className="text-sm text-red-700 dark:text-red-300">
                     <p className="mb-2 font-semibold">
                       Bağış alan hesaplar çekiliş oluşturamaz
                     </p>
@@ -518,15 +518,15 @@ export default function CreateDonation() {
               </Card>
 
               {/* Fee Information */}
-              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
+              <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-yellow-600 flex items-center">
+                  <CardTitle className="text-lg text-yellow-600 dark:text-yellow-400 flex items-center">
                     <InfoIcon className="w-5 h-5 mr-2" />
                     Ücret Bilgileri
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     <p className="mb-2">
                       <strong>Oluşturma Ücreti:</strong> {CONTRACT_FEES.DONATION_CREATION_FEE} USDT (iade edilmez)
                     </p>
@@ -549,11 +549,11 @@ export default function CreateDonation() {
               </Card>
 
               {/* Guidelines */}
-              <Card className="bg-white border-2 border-yellow-400 shadow-lg">
+              <Card className="bg-white dark:bg-gray-800 border-2 border-yellow-400 dark:border-yellow-500 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-yellow-600">Bağış Kuralları</CardTitle>
+                  <CardTitle className="text-lg text-yellow-600 dark:text-yellow-400">Bağış Kuralları</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600 space-y-2">
+                <CardContent className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                   <p>• Tüm bağışlar USDT (BSC) ile gerçekleştirilir</p>
                   <p>• Bağış açıklamaları net ve şeffaf olmalıdır</p>
                   <p>• Yasadışı faaliyetler için bağış açılamaz</p>
