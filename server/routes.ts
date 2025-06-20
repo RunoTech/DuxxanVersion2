@@ -302,8 +302,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api', progressiveSlowdown);
   app.use('/api', globalRateLimit); // ACTIVATED for production security
 
-  // WebSocket server for real-time updates
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  // WebSocket server for real-time updates with proper cleanup
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws',
+    maxPayload: 1024 * 1024, // 1MB limit
+    perMessageDeflate: false // Disable compression to reduce CPU
+  });
   
   const clients = new Set<WebSocket>();
   
@@ -311,19 +316,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     clients.add(ws);
     console.log(`🔗 WebSocket connected. Total clients: ${clients.size}`);
     
+    // Set ping interval to keep connections alive
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.ping();
+      }
+    }, 30000); // 30 seconds
+    
     ws.on('close', () => {
       clients.delete(ws);
+      clearInterval(pingInterval);
       console.log(`🔌 WebSocket disconnected. Total clients: ${clients.size}`);
+    });
+    
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+      clients.delete(ws);
+      clearInterval(pingInterval);
     });
   });
 
   function broadcast(data: any) {
+    if (clients.size === 0) return;
+    
     const message = JSON.stringify(data);
+    const deadClients = new Set<WebSocket>();
+    
     clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+        try {
+          client.send(message);
+        } catch (error) {
+          console.error('Failed to send message to client:', error);
+          deadClients.add(client);
+        }
+      } else {
+        deadClients.add(client);
       }
     });
+    
+    // Clean up dead connections
+    deadClients.forEach(client => {
+      clients.delete(client);
+    }););
   }
 
   // JWT Authentication middleware with device verification

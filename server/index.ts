@@ -30,20 +30,22 @@ app.get('/test', (req, res) => {
   res.status(200).send('<h1>DUXXAN Server Test</h1><p>Server is accessible and running properly</p><p>Time: ' + new Date().toISOString() + '</p>');
 });
 
-// Apply security middleware first
+// Apply minimal middleware for stability
 app.use(cors(corsOptions));
 app.use(securityHeaders);
-// Keep minimal middleware to prevent restarts
 app.use(requestSizeLimit);
-// app.use(securityMiddleware); // Disabled to prevent memory issues
+// Disabled heavy middleware to prevent memory issues and restarts
+// app.use(securityMiddleware);
+// app.use(globalRateLimit);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
-// Apply sanitization and device fingerprinting
+// Apply only essential middleware for stability
 app.use(sanitizationMiddleware);
-app.use(deviceFingerprintMiddleware);
+// Disabled device fingerprinting to reduce memory usage
+// app.use(deviceFingerprintMiddleware);
 
 // Apply translation middleware
 app.use(languageDetectionMiddleware);

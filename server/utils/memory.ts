@@ -20,9 +20,15 @@ export function startMemoryMonitoring() {
   setInterval(() => {
     const memory = getMemoryUsage();
     
-    // Force garbage collection if heap usage is high
-    if (memory.heapUsed > 200) {
+    // More aggressive memory management for Replit
+    if (memory.heapUsed > 150) {
+      console.log(`High memory usage: ${memory.heapUsed}MB, triggering GC`);
       forceGarbageCollection();
     }
-  }, 2 * 60 * 1000); // 2 minutes - more frequent for stability
+    
+    // Log memory usage only when high to reduce console spam
+    if (memory.heapUsed > 100) {
+      console.log(`Memory usage: ${memory.heapUsed}MB heap, ${memory.rss}MB RSS`);
+    }
+  }, 30 * 1000); // 30 seconds for better monitoring
 }

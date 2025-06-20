@@ -83,6 +83,10 @@ export default function ProfileNew() {
   // Fetch user data
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['/api/users/me'],
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // Show demo profile if no user data for testing
@@ -106,12 +110,14 @@ export default function ProfileNew() {
     organizationName: undefined
   } as any;
 
-  // Fetch user devices with demo data
+  // Fetch user devices with demo data - only when needed
   const { data: rawDevices = [], isLoading: devicesLoading } = useQuery({
     queryKey: ['/api/users/me/devices'],
-    enabled: !!user,
+    enabled: !!user && activeTab === 'security',
     retry: false,
     refetchOnWindowFocus: false,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 15 * 60 * 1000, // 15 minutes
   });
 
   const devices = user ? (rawDevices as any[]) : [
@@ -137,23 +143,17 @@ export default function ProfileNew() {
     }
   ];
 
-  // Fetch user photos with demo data
+  // Fetch user photos with demo data - only when needed
   const { data: rawPhotos = [], isLoading: photosLoading } = useQuery({
     queryKey: ['/api/users/me/photos'],
-    enabled: !!user,
+    enabled: !!user && activeTab === 'profile',
     retry: false,
     refetchOnWindowFocus: false,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 15 * 60 * 1000, // 15 minutes
   });
 
   const photos = user ? (rawPhotos as any[]) : [];
-
-  // Fetch user raffle participations
-  const { data: participatedRaffles = [] } = useQuery({
-    queryKey: ['/api/users/me/raffles/participated'],
-    enabled: !!user,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
 
   // Demo data for raffle participations
   const demoParticipatedRaffles = [
@@ -187,14 +187,6 @@ export default function ProfileNew() {
     }
   ];
 
-  // Fetch won raffles
-  const { data: wonRaffles = [] } = useQuery({
-    queryKey: ['/api/users/me/raffles/won'],
-    enabled: !!user,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
   // Demo data for won raffles
   const demoWonRaffles = [
     {
@@ -209,6 +201,26 @@ export default function ProfileNew() {
       categoryId: 1
     }
   ];
+
+  // Fetch user raffle participations - only when needed
+  const { data: participatedRaffles = [] } = useQuery({
+    queryKey: ['/api/users/me/raffles/participated'],
+    enabled: !!user && activeTab === 'raffles',
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+
+  // Fetch won raffles - only when needed
+  const { data: wonRaffles = [] } = useQuery({
+    queryKey: ['/api/users/me/raffles/won'],
+    enabled: !!user && activeTab === 'won',
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
 
   const displayParticipatedRaffles = user ? participatedRaffles : demoParticipatedRaffles;
   const displayWonRaffles = user ? wonRaffles : demoWonRaffles;
