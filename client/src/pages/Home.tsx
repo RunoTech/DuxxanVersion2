@@ -186,18 +186,18 @@ export default function Home() {
             {/* Logo and Branding */}
             <div className="inline-flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                  <span className="text-2xl sm:text-3xl font-black text-white">D</span>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                  <span className="text-xl sm:text-2xl font-black text-white">D</span>
                 </div>
-                <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                 </div>
               </div>
               <div className="text-left">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent leading-none">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent leading-none">
                   DUXXAN
                 </h1>
-                <p className="text-xs sm:text-sm md:text-base font-medium text-gray-600 dark:text-gray-300 tracking-wider mt-1">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wider mt-1">
                   BLOCKCHAIN PLATFORM
                 </p>
               </div>

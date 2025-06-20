@@ -101,8 +101,8 @@ export default function Raffles() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Tüm Çekilişler</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Tüm Çekilişler</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Muhteşem ödülleri keşfedin ve heyecan verici çekilişlere katılın
             </p>
           </div>
@@ -116,8 +116,8 @@ export default function Raffles() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-xl md:text-2xl font-bold text-yellow-500 mb-2 break-words">
+            <CardContent className="p-3 md:p-4 text-center">
+              <div className="text-lg md:text-xl font-bold text-yellow-500 mb-2 break-words">
                 {getActiveRafflesCount()}
               </div>
               <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>

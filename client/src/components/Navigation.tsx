@@ -29,7 +29,7 @@ function NavigationComponent() {
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-700 last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-sm' : 'text-base'}`}
+          } ${mobile ? 'block py-2 text-base border-b border-gray-100 dark:border-gray-700 last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-xs' : 'text-sm'}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
@@ -78,7 +78,7 @@ function NavigationComponent() {
                     
                     <div className="flex items-center space-x-2">
                       <span className="text-xs text-green-600 dark:text-green-400 font-medium">BSC</span>
-                      <code className="text-sm font-mono text-green-800 dark:text-green-200 bg-green-100 dark:bg-green-800/50 px-2 py-0.5 rounded">
+                      <code className="text-xs font-mono text-green-800 dark:text-green-200 bg-green-100 dark:bg-green-800/50 px-1.5 py-0.5 rounded">
                         {address?.slice(0, 6)}...{address?.slice(-4)}
                       </code>
                     </div>

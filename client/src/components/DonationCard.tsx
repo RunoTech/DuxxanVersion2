@@ -64,7 +64,7 @@ export function DonationCard({ donation }: DonationCardProps) {
       );
     }
     return (
-      <Badge className="bg-blue-600 text-white px-3 py-1 text-xs font-bold rounded-full">
+      <Badge className="bg-blue-600 text-white px-2 py-0.5 text-xs font-bold rounded-full">
         Aktif
       </Badge>
     );
@@ -73,8 +73,8 @@ export function DonationCard({ donation }: DonationCardProps) {
   const getOrganizationBadge = () => {
     // Always show Bireysel badge for consistency
     return (
-      <Badge className="bg-purple-600 text-white px-2 py-1 text-xs font-medium rounded-md">
-        <Heart className="w-3 h-3 mr-1" />
+      <Badge className="bg-purple-600 text-white px-1.5 py-0.5 text-xs font-medium rounded-md">
+        <Heart className="w-2.5 h-2.5 mr-0.5" />
         Bireysel
       </Badge>
     );
@@ -82,8 +82,8 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   const getCommissionBadge = () => {
     return (
-      <Badge className="bg-yellow-600 text-white px-2 py-1 text-xs font-medium rounded-md">
-        <Star className="w-3 h-3 mr-1" />
+      <Badge className="bg-yellow-600 text-white px-1.5 py-0.5 text-xs font-medium rounded-md">
+        <Star className="w-2.5 h-2.5 mr-0.5" />
         %{CONTRACT_FEES.DONATION_COMMISSION_RATE} Komisyon
       </Badge>
     );
