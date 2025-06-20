@@ -678,8 +678,8 @@ export default function Donations() {
                         Tüm Ülkeler
                       </DialogTitle>
                     </DialogHeader>
-                    <div className="overflow-y-auto max-h-[60vh] pt-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <div className="overflow-y-auto max-h-[60vh] pt-4 pr-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mr-3">
                         {countries.slice(1).map((country) => (
                           <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
                             <div 
