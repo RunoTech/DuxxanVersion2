@@ -171,9 +171,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1D2025] transition-colors duration-200">
+    <div className="min-h-screen bg-background transition-colors duration-200">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-[#0F1419] dark:via-[#1A1B23] dark:to-[#2D1B69] py-24 overflow-hidden min-h-[90vh] flex items-center">
+        <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-background dark:via-background dark:to-background py-24 overflow-hidden min-h-[90vh] flex items-center">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-orange-400/10 to-red-400/10 animate-pulse"></div>
           <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
@@ -197,7 +197,7 @@ export default function Home() {
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent leading-none">
                   DUXXAN
                 </h1>
-                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wider mt-1">
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground tracking-wider mt-1">
                   BLOCKCHAIN PLATFORM
                 </p>
               </div>
@@ -205,7 +205,7 @@ export default function Home() {
 
             {/* Dynamic Features Showcase */}
             <div className="mb-6 sm:mb-8">
-              <div className="inline-flex items-center gap-1 sm:gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-full px-3 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 shadow-lg">
+              <div className="inline-flex items-center gap-1 sm:gap-2 bg-background/80 backdrop-blur-lg rounded-full px-3 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 shadow-lg border border-border">
                 {heroSlides.map((slide, index) => {
                   const IconComponent = slide.icon;
                   return (
@@ -233,10 +233,10 @@ export default function Home() {
                         : 'opacity-0'
                     }`}
                   >
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 px-2 leading-tight">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground mb-2 sm:mb-3 px-2 leading-tight">
                       {slide.title}
                     </h2>
-                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-600 dark:text-gray-400 font-medium px-4 leading-relaxed">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-muted-foreground font-medium px-4 leading-relaxed">
                       {slide.subtitle}
                     </p>
                   </div>
@@ -246,8 +246,8 @@ export default function Home() {
 
             {/* Main Value Proposition */}
             <div className="max-w-5xl mx-auto mb-8 sm:mb-12 px-4">
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed text-center">
-                Dünya'nın en güvenli <span className="text-yellow-600 dark:text-yellow-400 font-bold">blockchain tabanlı</span> 
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-foreground mb-6 sm:mb-8 leading-relaxed text-center">
+                Dünya'nın en güvenli <span className="text-primary font-bold">blockchain tabanlı</span> 
                 <br className="hidden xl:block" />
                 bağış ve çekiliş platformu
               </p>
