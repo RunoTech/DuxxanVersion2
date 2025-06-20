@@ -213,55 +213,109 @@ function NavigationComponent() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                <SheetHeader>
-                  <SheetTitle className="text-gray-900 dark:text-white">Menü</SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col space-y-4 mt-8">
-                  <div className="mobile-nav-links">
-                    <NavLinks mobile />
+              <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 p-0">
+                <div className="h-full flex flex-col">
+                  {/* Header */}
+                  <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <SheetTitle className="text-xl font-bold text-gray-900 dark:text-white">Menü</SheetTitle>
                   </div>
                   
-                  {/* Profile Section - Only for connected users */}
-                  {isConnected && address && (
-                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Profil</p>
-                        <div className="space-y-1">
-                          <Link href="/profile" onClick={() => setIsOpen(false)}>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 mobile-menu-item"
-                            >
-                              <User className="w-5 h-5 mr-3 text-blue-500" />
-                              Profilim
-                            </Button>
-                          </Link>
-                          <Link href="/mail" onClick={() => setIsOpen(false)}>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 mobile-menu-item"
-                            >
-                              <Mail className="w-5 h-5 mr-3 text-green-500" />
-                              Mesajlar
-                            </Button>
-                          </Link>
-                        </div>
+                  {/* Scrollable Content */}
+                  <div className="flex-1 overflow-y-auto">
+                    <div className="px-6 py-4 space-y-6">
+                      {/* Navigation Links */}
+                      <div className="space-y-1">
+                        <Link
+                          href="/"
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                            location === '/' 
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400' 
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          }`}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Home className="w-5 h-5" />
+                          Ana Sayfa
+                        </Link>
+                        <Link
+                          href="/raffles"
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                            location === '/raffles' 
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400' 
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          }`}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Trophy className="w-5 h-5" />
+                          Çekilişler
+                        </Link>
+                        <Link
+                          href="/donations"
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                            location === '/donations' 
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400' 
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          }`}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Heart className="w-5 h-5" />
+                          Bağışlar
+                        </Link>
+                        <Link
+                          href="/community"
+                          className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                            location === '/community' 
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400' 
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          }`}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Users className="w-5 h-5" />
+                          Topluluk
+                        </Link>
                       </div>
-                    </div>
-                  )}
                   
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    {isConnected ? (
-                      <div className="space-y-2">
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Bağlı Cüzdan: {address?.slice(0, 6)}...{address?.slice(-4)}
+                      {/* Profile Section - Only for connected users */}
+                      {isConnected && address && (
+                        <div className="space-y-3">
+                          <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">Profil</h3>
+                          <div className="space-y-1">
+                            <Link href="/profile" onClick={() => setIsOpen(false)}>
+                              <div className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                                <User className="w-5 h-5 text-blue-500" />
+                                Profilim
+                              </div>
+                            </Link>
+                            <Link href="/mail" onClick={() => setIsOpen(false)}>
+                              <div className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                                <Mail className="w-5 h-5 text-green-500" />
+                                Mesajlar
+                              </div>
+                            </Link>
+                          </div>
                         </div>
-                        <Button onClick={disconnectWallet} variant="outline" className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                          Cüzdan Bağlantısını Kes
-                        </Button>
-                      </div>
-                    ) : (
+                      )}
+                  
+                      {/* Wallet Section */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">Cüzdan</h3>
+                        {isConnected ? (
+                          <div className="space-y-3">
+                            <div className="px-3 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Bağlı Cüzdan</div>
+                              <div className="text-sm font-mono text-gray-900 dark:text-white">
+                                {address?.slice(0, 6)}...{address?.slice(-4)}
+                              </div>
+                            </div>
+                            <Button 
+                              onClick={disconnectWallet} 
+                              variant="outline" 
+                              className="w-full text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
+                            >
+                              Bağlantıyı Kes
+                            </Button>
+                          </div>
+                        ) : (
                       <Dialog open={isWalletDialogOpen} onOpenChange={(open) => {
                         if (open) {
                           // Trigger wallet detection when dialog opens
@@ -271,12 +325,12 @@ function NavigationComponent() {
                         }
                         setIsWalletDialogOpen(open);
                       }}>
-                        <DialogTrigger asChild>
-                          <Button className="w-full bg-duxxan-yellow hover:bg-duxxan-yellow/90 text-black">
-                            <Wallet className="mr-2 h-4 w-4" />
-                            Cüzdan Bağla
-                          </Button>
-                        </DialogTrigger>
+                          <DialogTrigger asChild>
+                            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white shadow-sm">
+                              <Wallet className="mr-2 h-4 w-4" />
+                              Cüzdan Bağla
+                            </Button>
+                          </DialogTrigger>
                         <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
                           <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-white">Cüzdan Seçin</DialogTitle>
@@ -326,40 +380,50 @@ function NavigationComponent() {
                           </div>
                         </DialogContent>
                       </Dialog>
-                    )}
-                  </div>
-                  
-                  {/* Theme Toggle in Mobile */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 px-3">Tema Seçimi</p>
-                      <div className="space-y-1">
-                        <Button
-                          onClick={() => {
-                            if (theme === 'dark') {
-                              toggleTheme();
-                            }
-                            setIsOpen(false);
-                          }}
-                          variant="ghost"
-                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'light' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
-                        >
-                          <Sun className="w-5 h-5 mr-3 text-yellow-500" />
-                          Açık Tema
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            if (theme === 'light') {
-                              toggleTheme();
-                            }
-                            setIsOpen(false);
-                          }}
-                          variant="ghost"
-                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'dark' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
-                        >
-                          <Moon className="w-5 h-5 mr-3 text-blue-400" />
-                          Koyu Tema
-                        </Button>
+                        )}
+                      </div>
+                      
+                      {/* Theme Toggle */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">Tema</h3>
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                          <div className="grid grid-cols-2 gap-1">
+                            <Button
+                              onClick={() => {
+                                if (theme === 'dark') {
+                                  toggleTheme();
+                                }
+                                setIsOpen(false);
+                              }}
+                              variant="ghost"
+                              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                                theme === 'light' 
+                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                              }`}
+                            >
+                              <Sun className="w-4 h-4" />
+                              Açık
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                if (theme === 'light') {
+                                  toggleTheme();
+                                }
+                                setIsOpen(false);
+                              }}
+                              variant="ghost"
+                              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                                theme === 'dark' 
+                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                              }`}
+                            >
+                              <Moon className="w-4 h-4" />
+                              Koyu
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
