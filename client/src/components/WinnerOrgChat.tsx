@@ -72,8 +72,8 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Check if chat is available (winner must be announced AND both parties approved)
-  const isChatAvailable = Boolean(raffle.winnerId && raffle.isApprovedByCreator && raffle.isApprovedByWinner);
+  // Check if chat is available (winner must be announced - no approval required)
+  const isChatAvailable = Boolean(raffle.winnerId);
   
   // Check if current user is authorized (either winner or organization creator)
   const isWinner = user?.id === raffle.winnerId;

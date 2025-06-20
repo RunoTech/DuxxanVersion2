@@ -113,6 +113,10 @@ export default function RaffleDetail() {
 
   // Type guard to ensure raffle has required properties
   const safeRaffle = raffle as any; // Temporary fix for demo
+  
+  // Ensure numeric values are properly converted
+  const numericTicketPrice = Number(safeRaffle.ticketPrice || 0);
+  const numericPrizeValue = Number(safeRaffle.prizeValue || 0);
 
   const progress = safeRaffle?.ticketsSold && safeRaffle?.maxTickets 
     ? (safeRaffle.ticketsSold / safeRaffle.maxTickets) * 100 
@@ -142,7 +146,7 @@ export default function RaffleDetail() {
               </span>
               <span className="flex items-center gap-1">
                 <Trophy className="w-4 h-4" />
-                {safeRaffle.prizeValue} USDT
+                {numericPrizeValue.toLocaleString('tr-TR')} USDT
               </span>
             </div>
           </div>
@@ -197,7 +201,7 @@ export default function RaffleDetail() {
                     <div className="text-sm text-duxxan-text-secondary">Doluluk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-duxxan-text">{safeRaffle.prizeValue || 0}</div>
+                    <div className="text-2xl font-bold text-duxxan-text">{numericPrizeValue.toLocaleString('tr-TR')}</div>
                     <div className="text-sm text-duxxan-text-secondary">USDT Ödül</div>
                   </div>
                   <div className="text-center">
@@ -240,7 +244,7 @@ export default function RaffleDetail() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-duxxan-text-secondary">Bilet Fiyatı:</span>
-                        <span className="text-duxxan-yellow">{safeRaffle.ticketPrice} USDT</span>
+                        <span className="text-duxxan-yellow">{numericTicketPrice.toFixed(2)} USDT</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-duxxan-text-secondary">Maksimum Bilet:</span>
@@ -300,7 +304,7 @@ export default function RaffleDetail() {
                 <div className="bg-gray-100 dark:bg-duxxan-dark p-3 rounded-lg">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600 dark:text-duxxan-yellow">Bilet Fiyatı:</span>
-                    <span className="text-gray-900 dark:text-duxxan-yellow">{safeRaffle.ticketPrice} USDT</span>
+                    <span className="text-gray-900 dark:text-duxxan-yellow">{numericTicketPrice.toFixed(2)} USDT</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600 dark:text-duxxan-yellow">Miktar:</span>
@@ -310,7 +314,7 @@ export default function RaffleDetail() {
                   <div className="flex justify-between font-semibold">
                     <span className="text-gray-900 dark:text-duxxan-yellow">Toplam:</span>
                     <span className="text-duxxan-yellow">
-                      {(Number(safeRaffle.ticketPrice) * ticketCount).toFixed(2)} USDT
+                      {(numericTicketPrice * ticketCount).toFixed(2)} USDT
                     </span>
                   </div>
                 </div>
@@ -459,7 +463,7 @@ export default function RaffleDetail() {
               </Card>
             )}
 
-            {/* Mutual Approval System */}
+            {/* Mutual Approval System - Always show if winner exists */}
             {safeRaffle && safeRaffle.winnerId && (
               <MutualApprovalSystem 
                 raffle={{
@@ -484,8 +488,8 @@ export default function RaffleDetail() {
               />
             )}
 
-            {/* Winner-Organization Private Chat */}
-            {safeRaffle && (
+            {/* Winner-Organization Private Chat - Always show if winner exists */}
+            {safeRaffle && safeRaffle.winnerId && (
               <WinnerOrgChat 
                 raffleId={parseInt(id!)} 
                 raffle={{
