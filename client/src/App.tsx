@@ -76,8 +76,8 @@ function Router() {
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div></div>}>
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/profile-new" component={ProfileNew} />
+          <Route path="/profile" component={ProfileNew} />
+          <Route path="/profile-old" component={Profile} />
           <Route path="/community" component={Community} />
           <Route path="/community/:id" component={CommunityDetail} />
           <Route path="/raffles" component={Raffles} />
