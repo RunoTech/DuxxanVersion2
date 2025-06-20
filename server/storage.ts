@@ -117,7 +117,14 @@ export interface IStorage {
   getUserRatings(userId: number): Promise<UserRating[]>;
   
   // Chat Messages
-  // Chat system removed
+  // Mail System
+  getMailMessages(walletAddress: string, category?: string): Promise<MailMessage[]>;
+  sendMailMessage(message: InsertMailMessage): Promise<MailMessage>;
+  markMailAsRead(messageId: number, walletAddress: string): Promise<boolean>;
+  markMailAsStarred(messageId: number, walletAddress: string, starred: boolean): Promise<boolean>;
+  getUnreadMailCount(walletAddress: string): Promise<number>;
+  sendSystemNotification(toWalletAddress: string, subject: string, content: string, raffleId?: number): Promise<MailMessage>;
+  sendCommunityMessage(fromWalletAddress: string, communityId: number, subject: string, content: string): Promise<number>;
   
   // Platform Stats
   getPlatformStats(): Promise<{

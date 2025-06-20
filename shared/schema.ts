@@ -162,7 +162,30 @@ export const userRatings = pgTable("user_ratings", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Chat system removed - using cleaner approach
+// DUXXAN Internal Mail System
+export const mailMessages = pgTable("mail_messages", {
+  id: serial("id").primaryKey(),
+  fromWalletAddress: varchar("from_wallet_address", { length: 42 }).notNull(),
+  toWalletAddress: varchar("to_wallet_address", { length: 42 }).notNull(),
+  subject: varchar("subject", { length: 200 }).notNull(),
+  content: text("content").notNull(),
+  category: varchar("category", { length: 20 }).notNull(), // system, user, community
+  isRead: boolean("is_read").default(false),
+  isStarred: boolean("is_starred").default(false),
+  raffleId: integer("raffle_id").references(() => raffles.id), // For raffle-related messages
+  communityId: integer("community_id").references(() => communities.id), // For community messages
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const mailAttachments = pgTable("mail_attachments", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => mailMessages.id).notNull(),
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+  fileUrl: text("file_url").notNull(),
+  fileSize: integer("file_size"),
+  mimeType: varchar("mime_type", { length: 100 }),
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
 export const follows = pgTable("follows", {
   id: serial("id").primaryKey(),
@@ -276,7 +299,9 @@ export const usersRelations = relations(users, ({ many }) => ({
   donationContributions: many(donationContributions),
   ratingsGiven: many(userRatings, { relationName: "ratings_rater" }),
   ratingsReceived: many(userRatings, { relationName: "ratings_rated" }),
-  // Chat system removed
+  // Mail system
+  sentMails: many(mailMessages, { relationName: "sent_mails" }),
+  receivedMails: many(mailMessages, { relationName: "received_mails" }),
   following: many(follows, { relationName: "follows_follower" }),
   followers: many(follows, { relationName: "follows_following" }),
   devices: many(userDevices),

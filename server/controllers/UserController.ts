@@ -160,6 +160,20 @@ export class UserController extends BaseController {
 
       console.log('User authenticated:', { id: user.id, username: user.username, walletAddress: user.walletAddress });
 
+      // Send welcome message for new users
+      if (!user.email) {
+        try {
+          const { storage } = await import('../storage');
+          await storage.sendSystemNotification(
+            user.walletAddress,
+            'DUXXAN\'a Hoş Geldiniz!',
+            `Merhaba ${user.username}!\n\nDUXXAN platformuna hoş geldiniz. Dahili mail sisteminiz aktif edilmiştir.\n\nMail adresiniz: ${user.walletAddress}@duxxan\n\nGüvenli ve şeffaf çekilişlerin tadını çıkarın!\n\n- DUXXAN Ekibi`
+          );
+        } catch (error) {
+          console.error('Failed to send welcome message:', error);
+        }
+      }
+
       this.sendSuccess(res, user, 'Authentication successful');
     })
   ];
