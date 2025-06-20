@@ -44,7 +44,10 @@ interface MailMessage {
 type MailCategory = 'all' | 'system' | 'user' | 'community' | 'starred';
 
 export default function Mail() {
-  const { user, isConnected } = useWallet();
+  const { user, isConnected, address } = useWallet();
+  
+  // Debug logging
+  console.log('Mail component state:', { user, isConnected, address });
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -58,7 +61,7 @@ export default function Mail() {
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
 
-  if (!isConnected || !user) {
+  if (!isConnected) {
     return (
       <div className="min-h-screen bg-white dark:bg-duxxan-dark flex items-center justify-center">
         <Card className="w-96">
@@ -211,7 +214,7 @@ export default function Mail() {
     return true;
   });
 
-  const userMailAddress = user.walletAddress ? `${user.walletAddress}@duxxan` : '';
+  const userMailAddress = address ? `${address}@duxxan` : '';
 
   return (
     <div className="min-h-screen bg-white dark:bg-duxxan-dark">

@@ -14,13 +14,16 @@ const sendMailSchema = z.object({
 export class MailController extends BaseController {
   // Get user's mailbox messages
   getMailbox = [
-    this.requireAuth(),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = (req as any).user;
+      // Get wallet address from session or header
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
       const { category } = req.query;
       
       const messages = await storage.getMailMessages(
-        user.walletAddress, 
+        walletAddress, 
         category as string
       );
       
@@ -30,10 +33,12 @@ export class MailController extends BaseController {
 
   // Send a new mail message
   sendMail = [
-    this.requireAuth(),
     this.validateBody(sendMailSchema),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = (req as any).user;
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
       const { toWalletAddress, subject, content, raffleId, communityId } = req.body;
 
       // Determine category based on context
@@ -41,7 +46,7 @@ export class MailController extends BaseController {
       if (communityId) category = 'community';
 
       const message = await storage.sendMailMessage({
-        fromWalletAddress: user.walletAddress,
+        fromWalletAddress: walletAddress,
         toWalletAddress,
         subject,
         content,
@@ -56,16 +61,18 @@ export class MailController extends BaseController {
 
   // Mark mail as read
   markAsRead = [
-    this.requireAuth(),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = (req as any).user;
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
       const messageId = parseInt(req.params.id);
 
       if (isNaN(messageId)) {
         return this.sendError(res, 'Invalid message ID', 400);
       }
 
-      const success = await storage.markMailAsRead(messageId, user.walletAddress);
+      const success = await storage.markMailAsRead(messageId, walletAddress);
       
       if (!success) {
         return this.sendError(res, 'Failed to mark as read', 400);
@@ -77,12 +84,14 @@ export class MailController extends BaseController {
 
   // Toggle mail star status
   toggleStar = [
-    this.requireAuth(),
     this.validateBody(z.object({
       starred: z.boolean()
     })),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = (req as any).user;
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
       const messageId = parseInt(req.params.id);
       const { starred } = req.body;
 
@@ -90,7 +99,7 @@ export class MailController extends BaseController {
         return this.sendError(res, 'Invalid message ID', 400);
       }
 
-      const success = await storage.markMailAsStarred(messageId, user.walletAddress, starred);
+      const success = await storage.markMailAsStarred(messageId, walletAddress, starred);
       
       if (!success) {
         return this.sendError(res, 'Failed to update star status', 400);
@@ -102,11 +111,13 @@ export class MailController extends BaseController {
 
   // Get unread mail count
   getUnreadCount = [
-    this.requireAuth(),
     this.asyncHandler(async (req: Request, res: Response) => {
-      const user = (req as any).user;
+      const walletAddress = req.headers['x-wallet-address'] as string;
+      if (!walletAddress) {
+        return this.sendError(res, 'Wallet address required', 401);
+      }
       
-      const count = await storage.getUnreadMailCount(user.walletAddress);
+      const count = await storage.getUnreadMailCount(walletAddress);
       
       this.sendSuccess(res, { count }, 'Unread count retrieved');
     })
