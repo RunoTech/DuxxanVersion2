@@ -130,28 +130,29 @@ export default function Community() {
     },
   });
 
-  // Fetch channels from database with stable connection
+  // Fetch channels from database with optimized caching
   const { data: channelsData, isLoading: channelsLoading } = useQuery({
     queryKey: ['/api/channels'],
-    refetchInterval: false, // Prevent connection issues
-    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    enabled: true
   });
 
   const channels = (channelsData as any)?.data || [];
 
-  // Fetch upcoming raffles from database with stable connection
+  // Fetch upcoming raffles from database with caching
   const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
     queryKey: ['/api/upcoming-raffles'],
-    refetchInterval: false, // Prevent connection issues
-    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
+    staleTime: 3 * 60 * 1000, // 3 minutes cache
+    enabled: true
   });
 
   const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
 
-  // Fetch categories from database
+  // Fetch categories from database with long caching
   const { data: categoriesData } = useQuery({
     queryKey: ['/api/categories'],
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 minutes cache
+    enabled: true
   });
 
   const categories = [

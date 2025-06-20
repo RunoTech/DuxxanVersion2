@@ -20,56 +20,39 @@ export default function Raffles() {
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  // Use static data to prevent slow loading
-  const categories = [
-    { id: 1, name: 'Elektronik' },
-    { id: 2, name: 'Ev & Yaşam' },
-    { id: 3, name: 'Spor & Outdoor' },
-    { id: 4, name: 'Moda & Aksesuar' }
-  ];
+  // Fetch categories with caching
+  const { data: categories = [] } = useQuery({
+    queryKey: ['/api/categories'],
+    staleTime: 10 * 60 * 1000, // 10 minutes cache
+    enabled: true
+  });
 
-  const countries = [
-    { code: 'TR', name: 'Türkiye' },
-    { code: 'US', name: 'Amerika' },
-    { code: 'DE', name: 'Almanya' },
-    { code: 'FR', name: 'Fransa' }
-  ];
+  // Fetch countries with caching
+  const { data: countries = [] } = useQuery({
+    queryKey: ['/api/countries'],
+    staleTime: 30 * 60 * 1000, // 30 minutes cache
+    enabled: true
+  });
 
-  // Use demo data to prevent slow loading  
-  const raffles = [
-    {
-      id: 1,
-      title: 'iPhone 15 Pro Max Çekilişi',
-      description: 'En yeni iPhone modelini kazanma şansı!',
-      prizeValue: '45000',
-      ticketPrice: '30',
-      maxTickets: 1500,
-      soldTickets: 892,
-      endDate: '2024-12-31T23:59:59Z',
-      isActive: true,
-      categoryId: 1,
-      creatorId: 1,
-      category: { id: 1, name: 'Elektronik' },
-      creator: { id: 1, username: 'TechGuru' }
+  // Fetch active raffles with filters
+  const { data: rafflesData, isLoading } = useQuery({
+    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, sortBy],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('search', searchTerm);
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (selectedCountry !== 'all') params.append('country', selectedCountry);
+      if (sortBy) params.append('sort', sortBy);
+      
+      const response = await apiRequest('GET', `/api/raffles/active?${params.toString()}`);
+      const result = await response.json();
+      return result.data || [];
     },
-    {
-      id: 2,
-      title: 'MacBook Pro M3 Çekilişi',
-      description: 'Profesyonel iş için güçlü laptop!',
-      prizeValue: '75000',
-      ticketPrice: '50',
-      maxTickets: 1000,
-      soldTickets: 567,
-      endDate: '2024-12-25T23:59:59Z',
-      isActive: true,
-      categoryId: 1,
-      creatorId: 2,
-      category: { id: 1, name: 'Elektronik' },
-      creator: { id: 2, username: 'AppleFan' }
-    }
-  ];
-  
-  const isLoading = false;
+    staleTime: 1 * 60 * 1000, // 1 minute cache
+    enabled: true
+  });
+
+  const raffles = rafflesData || [];
 
   // Filter and sort raffles
   const filteredRaffles = raffles.filter((raffle: any) => {

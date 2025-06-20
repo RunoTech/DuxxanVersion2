@@ -92,7 +92,7 @@ function Router() {
           <Route path="/mail" component={Mail} />
           <Route component={NotFound} />
         </Switch>
-      </Suspense>
+      </div>
     </>
   );
 }

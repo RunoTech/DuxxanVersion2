@@ -29,44 +29,28 @@ export default function Home() {
   const { isConnected } = useWallet();
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Use demo statistics for fast loading
-  const stats = {
-    totalRaffles: "6",
-    totalPrizePool: "3020000.000000",
-    totalDonations: "835000.000000",
-    activeUsers: "3"
-  };
-
-  // Use demo active raffles for fast loading
-  const activeRaffles = [
-    {
-      id: 1,
-      title: "iPhone 15 Pro Max Çekilişi",
-      prizeValue: "45000",
-      ticketPrice: "30",
-      maxTickets: 1500,
-      ticketsSold: 892,
-      endDate: "2024-12-31T23:59:59Z"
-    },
-    {
-      id: 2,
-      title: "MacBook Pro M3 Çekilişi", 
-      prizeValue: "75000",
-      ticketPrice: "50",
-      maxTickets: 1000,
-      ticketsSold: 567,
-      endDate: "2024-12-25T23:59:59Z"
-    }
-  ];
-
-  const { data: activeDonations } = useQuery({
-    queryKey: ['/api/donations/active'],
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    refetchInterval: false,
-    retry: false,
+  // Fetch platform statistics with optimized queries
+  const { data: stats } = useQuery({
+    queryKey: ['/api/stats'],
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    enabled: true
   });
+
+  const { data: activeRafflesData } = useQuery({
+    queryKey: ['/api/raffles/active'],
+    staleTime: 2 * 60 * 1000, // 2 minutes cache
+    enabled: true
+  });
+
+  const activeRaffles = (activeRafflesData as any)?.data || [];
+
+  const { data: activeDonationsData } = useQuery({
+    queryKey: ['/api/donations/active'],
+    staleTime: 2 * 60 * 1000, // 2 minutes cache
+    enabled: true
+  });
+
+  const activeDonations = (activeDonationsData as any)?.data || [];
 
   const heroSlides = [
     {

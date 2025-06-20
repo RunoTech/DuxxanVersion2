@@ -22,37 +22,14 @@ export default function Donations() {
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Use demo data to prevent slow loading
-  const donations = [
-    {
-      id: 1,
-      title: 'Deprem Mağdurları İçin Acil Yardım',
-      description: 'Deprem bölgesindeki ailelere acil gıda ve barınma desteği sağlıyoruz.',
-      goalAmount: '100000',
-      currentAmount: '67500',
-      donorCount: 234,
-      endDate: '2024-12-31T23:59:59Z',
-      isActive: true,
-      category: 'disaster',
-      country: 'TR',
-      creator: { id: 1, username: 'YardımVakfı', organizationType: 'foundation' }
-    },
-    {
-      id: 2,
-      title: 'Çocuk Eğitimi Destek Projesi',
-      description: 'Köy okullarına kırtasiye ve kitap desteği.',
-      goalAmount: '50000',
-      currentAmount: '32100',
-      donorCount: 156,
-      endDate: '2024-12-25T23:59:59Z',
-      isActive: true,
-      category: 'education',
-      country: 'TR',
-      creator: { id: 2, username: 'EğitimDerneği', organizationType: 'association' }
-    }
-  ];
-  
-  const isLoading = false;
+  // Fetch donations with proper typing and caching
+  const { data: donationsResponse, isLoading } = useQuery({
+    queryKey: ['/api/donations'],
+    staleTime: 2 * 60 * 1000, // 2 minutes cache
+    enabled: true
+  });
+
+  const donations = (donationsResponse as any)?.data || [];
 
   // Organization types and countries
   const organizationTypes = [
