@@ -307,28 +307,26 @@ function NavigationComponent() {
                       <div className="space-y-1">
                         <Button
                           onClick={() => {
-                            const root = document.documentElement;
-                            root.classList.remove('dark');
-                            localStorage.setItem('theme', 'light');
+                            if (theme === 'dark') {
+                              toggleTheme();
+                            }
                             setIsOpen(false);
-                            window.location.reload();
                           }}
                           variant="ghost"
-                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'light' ? 'bg-gray-100' : ''}`}
+                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'light' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
                         >
                           <Sun className="w-5 h-5 mr-3 text-yellow-500" />
                           Açık Tema
                         </Button>
                         <Button
                           onClick={() => {
-                            const root = document.documentElement;
-                            root.classList.add('dark');
-                            localStorage.setItem('theme', 'dark');
+                            if (theme === 'light') {
+                              toggleTheme();
+                            }
                             setIsOpen(false);
-                            window.location.reload();
                           }}
                           variant="ghost"
-                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'dark' ? 'dark:bg-gray-700' : ''}`}
+                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'dark' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
                         >
                           <Moon className="w-5 h-5 mr-3 text-blue-400" />
                           Koyu Tema
