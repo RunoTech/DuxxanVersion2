@@ -117,8 +117,7 @@ export interface IStorage {
   getUserRatings(userId: number): Promise<UserRating[]>;
   
   // Chat Messages
-  getChatMessages(raffleId: number): Promise<(ChatMessage & { sender: User; receiver: User })[]>;
-  createChatMessage(message: { raffleId: number; senderId: number; receiverId: number; message: string }): Promise<ChatMessage>;
+  // Chat system removed
   
   // Platform Stats
   getPlatformStats(): Promise<{

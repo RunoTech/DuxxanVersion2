@@ -276,8 +276,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   donationContributions: many(donationContributions),
   ratingsGiven: many(userRatings, { relationName: "ratings_rater" }),
   ratingsReceived: many(userRatings, { relationName: "ratings_rated" }),
-  sentMessages: many(chatMessages, { relationName: "messages_sender" }),
-  receivedMessages: many(chatMessages, { relationName: "messages_receiver" }),
+  // Chat system removed
   following: many(follows, { relationName: "follows_follower" }),
   followers: many(follows, { relationName: "follows_following" }),
   devices: many(userDevices),

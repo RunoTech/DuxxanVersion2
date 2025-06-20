@@ -1,7 +1,7 @@
 import { db } from './db';
 import { redis } from '../lib/redis';
 import { firebase } from '../lib/firebase';
-import { users, raffles, donations, tickets, donationContributions, chatMessages, userRatings, userDevices } from '@shared/schema';
+import { users, raffles, donations, tickets, donationContributions, userRatings, userDevices } from '@shared/schema';
 import { sql } from 'drizzle-orm';
 
 async function clearAllDemoData() {
@@ -13,7 +13,7 @@ async function clearAllDemoData() {
     
     // Delete in correct order due to foreign key constraints
     try {
-      await db.delete(chatMessages);
+      // Chat table removed
     } catch (e) { console.log('Chat messages cleared or not exist'); }
     
     try {
