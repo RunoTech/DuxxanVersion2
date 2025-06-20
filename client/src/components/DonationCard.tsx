@@ -159,13 +159,13 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="h-full bg-gray-900 border-2 border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden">
+      <Card className="h-full bg-white dark:bg-gray-900 border-2 border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden">
         <CardContent className="p-5 h-full flex flex-col">
           {/* Header with title and status */}
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
-              <h3 className="text-white font-bold text-lg leading-tight truncate">{donation.title}</h3>
+              <h3 className="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate">{donation.title}</h3>
             </div>
             <div className="ml-2 flex-shrink-0">
               {getStatusBadge()}
@@ -173,7 +173,7 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
 
           {/* Description */}
-          <p className="text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
             {donation.description}
           </p>
 
@@ -191,18 +191,18 @@ export function DonationCard({ donation }: DonationCardProps) {
           {/* Progress Section */}
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-400 text-sm">İlerleme</span>
-              <span className="text-white font-bold text-sm">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">İlerleme</span>
+              <span className="text-gray-900 dark:text-white font-bold text-sm">
                 {parseFloat(donation.currentAmount).toLocaleString()} / {parseFloat(donation.goalAmount).toLocaleString()} USDT
               </span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
               <div 
                 className="bg-yellow-500 h-2 rounded-full transition-all duration-300" 
                 style={{ width: `${Math.min(progress, 100)}%` }}
               ></div>
             </div>
-            <div className="text-center text-gray-400 text-xs">
+            <div className="text-center text-gray-500 dark:text-gray-400 text-xs">
               %{progress.toFixed(1)} fonlandı
             </div>
           </div>
@@ -210,20 +210,20 @@ export function DonationCard({ donation }: DonationCardProps) {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-5 text-center">
             <div>
-              <div className="text-2xl font-bold text-white">{donation.donorCount}</div>
-              <div className="text-gray-400 text-xs">Bağışçılar</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
+              <div className="text-gray-500 dark:text-gray-400 text-xs">Bağışçılar</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {daysLeft > 0 ? daysLeft : 0}
               </div>
-              <div className="text-gray-400 text-xs">Kalan Gün</div>
+              <div className="text-gray-500 dark:text-gray-400 text-xs">Kalan Gün</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
               </div>
-              <div className="text-gray-400 text-xs">Ort. Bağış</div>
+              <div className="text-gray-500 dark:text-gray-400 text-xs">Ort. Bağış</div>
             </div>
           </div>
 
@@ -238,7 +238,7 @@ export function DonationCard({ donation }: DonationCardProps) {
                     placeholder="Miktar (USDT)"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(e.target.value)}
-                    className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 rounded-lg text-xs px-2 py-2"
+                    className="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg text-xs px-2 py-2"
                     min="1"
                     step="1"
                   />
@@ -274,13 +274,13 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
 
           {/* Footer */}
-          <div className="mt-4 pt-4 border-t border-gray-700 flex items-center justify-between">
-            <div className="text-gray-400 text-sm truncate">
-              Oluşturan: <span className="text-white font-medium">{donation.creator.username}</span>
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <div className="text-gray-500 dark:text-gray-400 text-sm truncate">
+              Oluşturan: <span className="text-gray-900 dark:text-white font-medium">{donation.creator.username}</span>
             </div>
             <div className="flex items-center space-x-1 flex-shrink-0">
               <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <span className="text-white text-sm font-medium">{donation.creator.rating}</span>
+              <span className="text-gray-900 dark:text-white text-sm font-medium">{donation.creator.rating}</span>
             </div>
           </div>
       </CardContent>
