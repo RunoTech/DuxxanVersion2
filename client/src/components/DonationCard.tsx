@@ -159,21 +159,21 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="h-full bg-white dark:bg-gray-900 border-2 border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden">
-        <CardContent className="p-5 h-full flex flex-col">
+      <Card className="h-full bg-white dark:bg-gray-900 border-2 border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden min-h-[450px] sm:min-h-[500px]">
+        <CardContent className="p-3 sm:p-4 lg:p-5 h-full flex flex-col">
           {/* Header with title and status */}
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
-              <h3 className="text-gray-900 dark:text-white font-bold text-lg leading-tight truncate">{donation.title}</h3>
+          <div className="flex items-start justify-between mb-2 sm:mb-3">
+            <div className="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+              <h3 className="text-gray-900 dark:text-white font-bold text-base sm:text-lg leading-tight truncate">{donation.title}</h3>
             </div>
-            <div className="ml-2 flex-shrink-0">
+            <div className="ml-1 sm:ml-2 flex-shrink-0">
               {getStatusBadge()}
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-3 leading-relaxed">
             {donation.description}
           </p>
 
@@ -208,9 +208,9 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-5 text-center">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4 lg:mb-5 text-center">
             <div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
               <div className="text-gray-500 dark:text-gray-400 text-xs">Bağışçılar</div>
             </div>
             <div>

@@ -211,24 +211,24 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-duxxan-page py-4 sm:py-6 lg:py-8 transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
           <WalletStatus />
         </div>
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8">
+          <div className="w-full lg:w-auto">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl">
               Vakıflar, Dernekler ve Bireysel Bağışçılar İçin Blockchain Tabanlı Şeffaf Platform
             </p>
           </div>
-          <div className="flex gap-3 mt-4 md:mt-0">
-            <Link href="/create-donation">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
+          <div className="flex gap-2 sm:gap-3 mt-4 lg:mt-0 w-full lg:w-auto">
+            <Link href="/create-donation" className="w-full lg:w-auto">
+              <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 w-full lg:w-auto">
                 <Heart className="w-4 h-4 mr-2" />
                 Kampanya Başlat
               </Button>
@@ -237,13 +237,13 @@ export default function Donations() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-500 mb-2">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
@@ -413,13 +413,13 @@ export default function Donations() {
             
             {/* Donations Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-[500px] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                  <div key={i} className="h-[450px] sm:h-[500px] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
                 ))}
               </div>
             ) : filteredDonations.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {filteredDonations.map((donation: any) => (
                   <DonationCard key={donation.id} donation={donation} />
                 ))}

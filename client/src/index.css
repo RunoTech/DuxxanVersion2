@@ -174,9 +174,41 @@
   @apply w-full max-w-none;
 }
 
+/* Main layout responsive */
+.responsive-container {
+  @apply w-full max-w-7xl mx-auto;
+  padding-left: clamp(8px, 2vw, 32px);
+  padding-right: clamp(8px, 2vw, 32px);
+}
+
+.responsive-grid {
+  display: grid;
+  gap: clamp(12px, 2vw, 24px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
 @media (max-width: 640px) {
   .responsive-card {
-    @apply mx-2;
+    @apply mx-1;
+  }
+  
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
   }
 }
 
