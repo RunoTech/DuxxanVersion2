@@ -21,21 +21,21 @@ function NavigationComponent() {
     { href: '/community', label: 'Topluluk' },
   ];
 
-  const NavLinks = ({ mobile = false, compact = false }) => (
-    <>
+  const NavLinks = ({ mobile = false, compact = false, className = '' }) => (
+    <div className={className}>
       {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-2' : ''} ${compact ? 'text-sm' : ''}`}
+          } ${mobile ? 'block py-2' : 'inline-block mr-4 xl:mr-8'} ${compact ? 'text-sm mr-4' : ''}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
         </Link>
       ))}
-    </>
+    </div>
   );
 
   return (
@@ -47,13 +47,9 @@ function NavigationComponent() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex items-center space-x-8">
-            <NavLinks />
-          </div>
-          
-          {/* Tablet Navigation - Compact */}
-          <div className="hidden lg:flex xl:hidden items-center space-x-4">
-            <NavLinks compact />
+          <div className="hidden lg:flex items-center">
+            <NavLinks compact className="lg:block xl:hidden" />
+            <NavLinks className="hidden xl:block" />
           </div>
 
           <div className="flex items-center space-x-2 lg:space-x-4">
@@ -68,7 +64,7 @@ function NavigationComponent() {
             </Button>
 
             {/* Wallet Connection */}
-            <div className="hidden lg:block">
+            <div className="hidden md:block">
               {isConnected ? (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 rounded-xl px-4 py-2 shadow-sm">
                   <div className="flex items-center space-x-3">
