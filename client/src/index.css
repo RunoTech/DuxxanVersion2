@@ -441,7 +441,7 @@ button {
 }
 
 .animate-scroll {
-  animation: scroll 120s linear infinite;
+  animation: scroll 2000s linear infinite;
 }
 
 @media (max-width: 640px) {
