@@ -159,7 +159,7 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
         <CardHeader>
           <CardTitle className="text-gray-900 dark:text-duxxan-yellow flex items-center gap-2">
             <MessageCircle className="w-5 h-5" />
-            Özel Sohbet
+            Özel Sohbet - Debug
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -168,6 +168,17 @@ export function WinnerOrgChat({ raffleId, raffle }: WinnerOrgChatProps) {
             <p className="text-gray-600 dark:text-duxxan-text-secondary">
               {message}
             </p>
+            {raffle.winnerId && (
+              <div className="mt-4 space-y-2 text-sm text-left">
+                <p><strong>Kazanan:</strong> {raffle.winner?.username || 'TechMaster2024'}</p>
+                <p><strong>Organizasyon:</strong> {raffle.creator?.username || 'duxxan_admin'}</p>
+                <p><strong>Current User ID:</strong> {user?.id}</p>
+                <p><strong>Creator ID:</strong> {raffle.creatorId}</p>
+                <p><strong>Winner ID:</strong> {raffle.winnerId}</p>
+                <p><strong>Is Authorized:</strong> {isAuthorized ? 'Yes' : 'No'}</p>
+                <p><strong>Chat Available:</strong> {isChatAvailable ? 'Yes' : 'No'}</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

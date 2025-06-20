@@ -158,6 +158,8 @@ export class UserController extends BaseController {
       // Store user data in session-compatible format
       (req as any).user = user;
 
+      console.log('User authenticated:', { id: user.id, username: user.username, walletAddress: user.walletAddress });
+
       this.sendSuccess(res, user, 'Authentication successful');
     })
   ];

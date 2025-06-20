@@ -43,6 +43,29 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
 
   console.log('MutualApprovalSystem - User:', user?.id, 'Creator:', raffle.creatorId, 'Winner:', raffle.winnerId, 'isCreator:', isCreator, 'isWinner:', isWinner);
 
+  // Show debug info for now
+  if (!isCreator && !isWinner) {
+    return (
+      <Card className="bg-blue-50 dark:bg-duxxan-surface border-blue-200 dark:border-duxxan-border">
+        <CardHeader>
+          <CardTitle className="text-blue-800 dark:text-duxxan-yellow">Karşılıklı Onay Sistemi - Debug</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-sm space-y-2">
+            <p><strong>Current User ID:</strong> {user?.id}</p>
+            <p><strong>Creator ID:</strong> {raffle.creatorId}</p>
+            <p><strong>Winner ID:</strong> {raffle.winnerId}</p>
+            <p><strong>Is Creator:</strong> {isCreator ? 'Yes' : 'No'}</p>
+            <p><strong>Is Winner:</strong> {isWinner ? 'Yes' : 'No'}</p>
+            <p className="text-blue-600 dark:text-blue-400 mt-3">
+              Bu sistemi sadece çekiliş oluşturan veya kazanan kullanabilir.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const handleCreatorApproval = async () => {
     setIsApproving(true);
     try {
