@@ -187,10 +187,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="text-left">
-                <h1 className="text-3xl sm:text-5xl md:text-7xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent leading-none">
                   DUXXAN
                 </h1>
-                <p className="text-xs sm:text-sm md:text-base font-medium text-gray-600 dark:text-gray-300 tracking-wider">
+                <p className="text-xs sm:text-sm md:text-base font-medium text-gray-600 dark:text-gray-300 tracking-wider mt-1">
                   BLOCKCHAIN PLATFORM
                 </p>
               </div>
@@ -216,7 +216,7 @@ export default function Home() {
                 })}
               </div>
               
-              <div className="h-16 sm:h-20 lg:h-24 mb-6 sm:mb-8 relative">
+              <div className="h-14 sm:h-16 md:h-18 lg:h-20 xl:h-24 mb-6 sm:mb-8 relative">
                 {heroSlides.map((slide, index) => (
                   <div
                     key={index}
@@ -226,10 +226,10 @@ export default function Home() {
                         : 'opacity-0'
                     }`}
                   >
-                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 px-2">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 px-2 leading-tight">
                       {slide.title}
                     </h2>
-                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400 font-medium px-4">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-600 dark:text-gray-400 font-medium px-4 leading-relaxed">
                       {slide.subtitle}
                     </p>
                   </div>
@@ -238,10 +238,10 @@ export default function Home() {
             </div>
 
             {/* Main Value Proposition */}
-            <div className="max-w-4xl mx-auto mb-8 sm:mb-12 px-2">
-              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed">
+            <div className="max-w-5xl mx-auto mb-8 sm:mb-12 px-4">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed text-center">
                 Dünya'nın en güvenli <span className="text-yellow-600 dark:text-yellow-400 font-bold">blockchain tabanlı</span> 
-                <br className="hidden lg:block" />
+                <br className="hidden xl:block" />
                 bağış ve çekiliş platformu
               </p>
               

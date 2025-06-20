@@ -241,6 +241,19 @@
   }
 }
 
+/* Prevent text overflow at medium sizes */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+    line-height: 1.1 !important;
+  }
+  
+  .hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.5rem) !important;
+    line-height: 1.4 !important;
+  }
+}
+
 /* Animation for page transitions */
 .page-transition {
   animation: fadeInUp 0.5s ease-out;
