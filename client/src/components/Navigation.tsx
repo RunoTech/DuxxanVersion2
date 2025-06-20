@@ -29,7 +29,7 @@ function NavigationComponent() {
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-800 last:border-b-0' : ''} ${compact ? 'text-sm' : 'text-base'}`}
+          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-700 last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-sm' : 'text-base'}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
@@ -291,6 +291,43 @@ function NavigationComponent() {
                         </DialogContent>
                       </Dialog>
                     )}
+                  </div>
+                  
+                  {/* Theme Toggle in Mobile */}
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 px-3">Tema Seçimi</p>
+                      <div className="space-y-1">
+                        <Button
+                          onClick={() => {
+                            const root = document.documentElement;
+                            root.classList.remove('dark');
+                            localStorage.setItem('theme', 'light');
+                            setIsOpen(false);
+                            window.location.reload();
+                          }}
+                          variant="ghost"
+                          className={`w-full justify-start ${theme === 'light' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+                        >
+                          <Sun className="w-5 h-5 mr-3 text-yellow-500" />
+                          Açık Tema
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            const root = document.documentElement;
+                            root.classList.add('dark');
+                            localStorage.setItem('theme', 'dark');
+                            setIsOpen(false);
+                            window.location.reload();
+                          }}
+                          variant="ghost"
+                          className={`w-full justify-start ${theme === 'dark' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+                        >
+                          <Moon className="w-5 h-5 mr-3 text-blue-400" />
+                          Koyu Tema
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </SheetContent>

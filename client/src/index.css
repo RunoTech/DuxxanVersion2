@@ -241,6 +241,40 @@
   }
 }
 
+/* Mobile menu improvements for better readability */
+.mobile-menu-item {
+  transition: all 0.2s ease;
+}
+
+.dark .mobile-menu-item {
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.dark .mobile-menu-item:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Better button contrast in dark theme */
+.dark button {
+  color: #f1f5f9;
+}
+
+.dark button:hover {
+  background-color: #334155;
+}
+
+/* Theme button improvements */
+.dark .theme-button {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+.dark .theme-button:hover {
+  background-color: #334155;
+}
+
 /* Prevent text overflow at medium sizes */
 @media (min-width: 1024px) and (max-width: 1280px) {
   .hero-title {
