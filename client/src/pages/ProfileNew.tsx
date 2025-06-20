@@ -699,11 +699,52 @@ export default function ProfileNew() {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.organizationType === 'individual' ? 'Bireysel' : 'Kurumsal'}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-gray-800 dark:text-gray-200 font-medium">
+                          {displayUser?.organizationType === 'individual' ? 'Bireysel' : 'Kurumsal'}
+                        </p>
+                        {displayUser?.accountStatus === 'pending_approval' && (
+                          <Badge className="bg-yellow-500 text-white">Onay Bekliyor</Badge>
+                        )}
+                        {displayUser?.accountStatus === 'rejected' && (
+                          <Badge className="bg-red-500 text-white">Reddedildi</Badge>
+                        )}
+                      </div>
                     )}
                   </div>
+                  
+                  {/* Onay durumu bilgilendirmesi */}
+                  {displayUser?.accountStatus === 'pending_approval' && (
+                    <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                      <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-2">
+                        <strong>Kurumsal hesap başvurunuz inceleniyor</strong>
+                      </p>
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        Başvurunuz 24-48 saat içinde değerlendirilecektir. Onay sürecinde hesabınızın bazı özellikleri kısıtlanabilir.
+                      </p>
+                      {displayUser?.approvalDeadline && (
+                        <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
+                          Son değerlendirme tarihi: {new Date(displayUser.approvalDeadline).toLocaleString('tr-TR')}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  
+                  {displayUser?.accountStatus === 'rejected' && (
+                    <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <p className="text-sm text-red-800 dark:text-red-200 mb-2">
+                        <strong>Kurumsal hesap başvurunuz reddedildi</strong>
+                      </p>
+                      {displayUser?.rejectionReason && (
+                        <p className="text-xs text-red-700 dark:text-red-300">
+                          Red nedeni: {displayUser.rejectionReason}
+                        </p>
+                      )}
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                        Eksik bilgileri tamamlayarak tekrar başvurabilirsiniz.
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Kurumsal hesap alt seçenekleri */}
                   {isEditing && (formData.organizationType === 'foundation' || formData.organizationType === 'association' || formData.organizationType === 'company') && (
@@ -719,6 +760,9 @@ export default function ProfileNew() {
                           <SelectItem value="company">Resmi Kurum</SelectItem>
                         </SelectContent>
                       </Select>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        ⚠️ Kurumsal hesaba geçiş için 24-48 saat manuel onay süreci gereklidir.
+                      </p>
                     </div>
                   )}
                   

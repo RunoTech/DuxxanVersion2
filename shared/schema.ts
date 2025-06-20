@@ -32,6 +32,12 @@ export const users = pgTable("users", {
   verificationUrl: text("verification_url"),
   isVerified: boolean("is_verified").default(false),
   country: varchar("country", { length: 3 }), // ISO country code
+  accountStatus: varchar("account_status", { length: 20 }).default("active"), // active, pending_approval, rejected
+  accountSubmittedAt: timestamp("account_submitted_at"),
+  accountApprovedAt: timestamp("account_approved_at"),
+  accountRejectedAt: timestamp("account_rejected_at"),
+  approvalDeadline: timestamp("approval_deadline"),
+  rejectionReason: text("rejection_reason"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

@@ -76,12 +76,32 @@ export class UserController extends BaseController {
       const user = (req as any).user;
       const updates = req.body;
 
+      // Kurumsal hesap kontrolü
+      if (updates.organizationType && updates.organizationType !== 'individual') {
+        // Mevcut kullanıcının hesap türünü kontrol et
+        if (user.organizationType === 'individual') {
+          const now = new Date();
+          const approvalDeadline = new Date(now.getTime() + 48 * 60 * 60 * 1000); // 48 saat
+          
+          updates.accountStatus = 'pending_approval';
+          updates.accountSubmittedAt = now;
+          updates.approvalDeadline = approvalDeadline;
+          updates.accountApprovedAt = null;
+          updates.accountRejectedAt = null;
+          updates.rejectionReason = null;
+        }
+      }
+
       const updatedUser = await this.userService.updateUser(user.id, updates);
       if (!updatedUser) {
         return this.sendError(res, 'Failed to update user', 400);
       }
 
-      this.sendSuccess(res, updatedUser, 'User updated successfully');
+      const message = updates.accountStatus === 'pending_approval' 
+        ? 'Kurumsal hesap başvurunuz alındı. 24-48 saat içinde onaylanacaktır.'
+        : 'User updated successfully';
+
+      this.sendSuccess(res, updatedUser, message);
     })
   ];
 

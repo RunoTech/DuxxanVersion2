@@ -161,6 +161,51 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getPendingApprovals(): Promise<User[]> {
+    return await db.select()
+      .from(users)
+      .where(eq(users.accountStatus, 'pending_approval'))
+      .orderBy(users.accountSubmittedAt);
+  }
+
+  async approveAccount(walletAddress: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({
+        accountStatus: 'active',
+        accountApprovedAt: new Date(),
+        accountRejectedAt: null,
+        rejectionReason: null
+      })
+      .where(eq(users.walletAddress, walletAddress))
+      .returning();
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    return user;
+  }
+
+  async rejectAccount(walletAddress: string, reason: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({
+        accountStatus: 'rejected',
+        accountRejectedAt: new Date(),
+        rejectionReason: reason,
+        // Kurumsal hesap bilgilerini temizle
+        organizationType: 'individual',
+        organizationName: null
+      })
+      .where(eq(users.walletAddress, walletAddress))
+      .returning();
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    return user;
+  }
+
   async getUser(id: number): Promise<User | undefined> {
     return this.withErrorHandling(async () => {
       const [user] = await db.select().from(users).where(eq(users.id, id));
