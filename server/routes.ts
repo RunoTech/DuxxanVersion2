@@ -1194,5 +1194,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     controllerRoutes
   );
 
+  // Import mail controller routes
+  try {
+    const { MailController } = await import('./controllers/MailController');
+    const mailController = new MailController();
+    
+    // Mail System endpoints
+    app.get('/api/mail/inbox', mailController.getMailbox);
+    app.post('/api/mail/send', mailController.sendMail);
+    app.put('/api/mail/:id/read', mailController.markAsRead);
+    app.put('/api/mail/:id/star', mailController.toggleStar);
+    app.get('/api/mail/unread-count', mailController.getUnreadCount);
+    app.post('/api/mail/community', mailController.sendCommunityMessage);
+  } catch (error) {
+    console.error('Failed to load mail controller:', error);
+  }
+
   return httpServer;
 }

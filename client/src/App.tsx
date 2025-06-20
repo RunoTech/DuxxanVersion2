@@ -30,6 +30,9 @@ const CountryProfile = lazy(() => import("@/pages/CountryProfile"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Support = lazy(() => import("@/pages/Support"));
+const Channels = lazy(() => import("@/pages/Channels"));
+const ChannelDetail = lazy(() => import("@/pages/ChannelDetail"));
+const Mail = lazy(() => import("@/pages/Mail"));
 
 import NotFound from "@/pages/not-found";
 
@@ -88,6 +91,9 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
           <Route path="/support" component={Support} />
+          <Route path="/channels" component={Channels} />
+          <Route path="/channels/:id" component={ChannelDetail} />
+          <Route path="/mail" component={Mail} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

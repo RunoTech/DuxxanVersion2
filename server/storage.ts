@@ -43,7 +43,11 @@ import {
   type UpcomingRaffleInterest,
   type InsertUpcomingRaffleInterest,
   type Country,
-  type ChatMessage,
+  // ChatMessage removed
+  type MailMessage,
+  type InsertMailMessage,
+  type MailAttachment,
+  type InsertMailAttachment
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, sql, gt, lt } from "drizzle-orm";
@@ -487,10 +491,16 @@ export class DatabaseStorage implements IStorage {
         .orderBy(desc(mailMessages.createdAt));
 
       if (category && category !== 'all' && category !== 'starred') {
-        query = query.where(and(
-          eq(mailMessages.toWalletAddress, walletAddress),
-          eq(mailMessages.category, category)
-        ));
+        const baseQuery = db
+          .select()
+          .from(mailMessages)
+          .where(and(
+            eq(mailMessages.toWalletAddress, walletAddress),
+            eq(mailMessages.category, category)
+          ))
+          .orderBy(desc(mailMessages.createdAt));
+        
+        return await baseQuery;
       }
 
       const messages = await query;
@@ -691,7 +701,7 @@ export class DatabaseStorage implements IStorage {
         .insert(userDevices)
         .values({
           ...device,
-          deviceFingerprint: device.deviceFingerprint || 'unknown'
+          deviceFingerprint: 'auto-generated'
         })
         .returning();
       return newDevice;
