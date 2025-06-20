@@ -21,7 +21,7 @@ function NavigationComponent() {
     { href: '/community', label: 'Topluluk' },
   ];
 
-  const NavLinks = ({ mobile = false }) => (
+  const NavLinks = ({ mobile = false, compact = false }) => (
     <>
       {navItems.map((item) => (
         <Link
@@ -29,7 +29,7 @@ function NavigationComponent() {
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-2' : ''}`}
+          } ${mobile ? 'block py-2' : ''} ${compact ? 'text-sm' : ''}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
@@ -47,23 +47,28 @@ function NavigationComponent() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          <div className="hidden xl:flex items-center space-x-8">
             <NavLinks />
           </div>
+          
+          {/* Tablet Navigation - Compact */}
+          <div className="hidden lg:flex xl:hidden items-center space-x-4">
+            <NavLinks compact />
+          </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             {/* Theme Toggle */}
             <Button
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-8 w-8 lg:h-10 lg:w-10"
             >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {theme === 'dark' ? <Sun className="w-4 h-4 lg:w-5 lg:h-5" /> : <Moon className="w-4 h-4 lg:w-5 lg:h-5" />}
             </Button>
 
             {/* Wallet Connection */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               {isConnected ? (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 rounded-xl px-4 py-2 shadow-sm">
                   <div className="flex items-center space-x-3">
