@@ -28,7 +28,7 @@ function NavigationComponent() {
           key={item.href}
           href={item.href}
           className={`font-semibold transition-colors hover:text-primary ${
-            location === item.href ? 'text-foreground' : 'text-foreground/80'
+            location === item.href ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'
           } ${mobile ? 'block py-2 text-base border-b border-border last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-xs' : 'text-sm'}`}
           onClick={() => mobile && setIsOpen(false)}
         >
@@ -39,7 +39,7 @@ function NavigationComponent() {
   );
 
   return (
-    <nav className="bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/95 border-b border-gray-700/50 sticky top-0 z-50 shadow-sm/50">
+    <nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-white/95 dark:supports-[backdrop-filter]:bg-gray-900/95 border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50 shadow-sm/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <Link href="/" className="text-xl sm:text-2xl font-bold" style={{ color: '#FFC929' }}>
@@ -57,7 +57,7 @@ function NavigationComponent() {
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="hidden custom-md:flex text-muted-foreground hover:text-foreground h-10 w-10"
+              className="hidden custom-md:flex text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white h-10 w-10"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
