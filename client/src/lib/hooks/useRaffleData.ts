@@ -18,28 +18,39 @@ export function useRaffles(limit = 20) {
 
 export function useActiveRaffles() {
   return useQuery<(Raffle & { creator: User; category: Category })[]>({
-    queryKey: ['raffles', 'active'],
+    queryKey: ['/api/raffles/active'],
     queryFn: () => apiRequest('GET', '/api/raffles/active').then(res => res.json()),
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // Refetch every minute
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useRaffleDetail(id: number) {
   return useQuery<Raffle & { creator: User; category: Category }>({
-    queryKey: ['raffles', 'detail', id],
+    queryKey: ['/api/raffles/detail', id],
     queryFn: () => apiRequest('GET', `/api/raffles/${id}`).then(res => res.json()),
     enabled: !!id,
-    staleTime: 30 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useRaffleTickets(raffleId: number) {
   return useQuery<(Ticket & { user: User })[]>({
-    queryKey: ['raffles', raffleId, 'tickets'],
+    queryKey: ['/api/raffles/tickets', raffleId],
     queryFn: () => apiRequest('GET', `/api/raffles/${raffleId}/tickets`).then(res => res.json()),
     enabled: !!raffleId,
-    staleTime: 10 * 1000, // 10 seconds
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
@@ -71,10 +82,14 @@ export function usePurchaseTickets() {
 
 export function useUserRaffles(userId: number) {
   return useQuery({
-    queryKey: ['raffles', 'user', userId],
+    queryKey: ['/api/users/raffles', userId],
     queryFn: () => apiRequest('GET', `/api/users/${userId}/raffles`).then(res => res.json()),
     enabled: !!userId,
-    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 

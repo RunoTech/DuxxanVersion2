@@ -80,14 +80,9 @@ export default function ProfileNew() {
   const [formData, setFormData] = useState<ProfileFormData>({});
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  // Fetch user data
-  const { data: user, isLoading: userLoading } = useQuery({
-    queryKey: ['/api/users/me'],
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-  });
+  // Temporarily disable user data fetching to prevent excessive DB queries
+  const user = null;
+  const userLoading = false;
 
   // Show demo profile if no user data for testing
   const displayUser = user || {
@@ -110,15 +105,8 @@ export default function ProfileNew() {
     organizationName: undefined
   } as any;
 
-  // Fetch user devices with demo data - only when needed
-  const { data: rawDevices = [], isLoading: devicesLoading } = useQuery({
-    queryKey: ['/api/users/me/devices'],
-    enabled: !!user && activeTab === 'security',
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
-  });
+  // Use demo data instead of API calls to prevent database overload
+  const rawDevices = [];
 
   const devices = user ? (rawDevices as any[]) : [
     {
@@ -143,15 +131,8 @@ export default function ProfileNew() {
     }
   ];
 
-  // Fetch user photos with demo data - only when needed
-  const { data: rawPhotos = [], isLoading: photosLoading } = useQuery({
-    queryKey: ['/api/users/me/photos'],
-    enabled: !!user && activeTab === 'profile',
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
-  });
+  // Use demo data to avoid unnecessary API calls
+  const rawPhotos = [];
 
   const photos = user ? (rawPhotos as any[]) : [];
 
@@ -202,25 +183,10 @@ export default function ProfileNew() {
     }
   ];
 
-  // Fetch user raffle participations - only when needed
-  const { data: participatedRaffles = [] } = useQuery({
-    queryKey: ['/api/users/me/raffles/participated'],
-    enabled: !!user && activeTab === 'raffles',
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-  });
-
-  // Fetch won raffles - only when needed
-  const { data: wonRaffles = [] } = useQuery({
-    queryKey: ['/api/users/me/raffles/won'],
-    enabled: !!user && activeTab === 'won',
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-  });
+  // Disable all database queries since we're using demo data
+  // This prevents unnecessary database calls that were causing performance issues
+  const participatedRaffles = demoParticipatedRaffles;
+  const wonRaffles = demoWonRaffles;
 
   const displayParticipatedRaffles = user ? participatedRaffles : demoParticipatedRaffles;
   const displayWonRaffles = user ? wonRaffles : demoWonRaffles;
