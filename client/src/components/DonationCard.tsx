@@ -97,7 +97,12 @@ export function DonationCard({ donation }: DonationCardProps) {
         </Badge>
       );
     }
-    return null;
+    return (
+      <Badge className="bg-purple-600 text-white px-2 py-1 text-xs font-medium rounded-md">
+        <Heart className="w-3 h-3 mr-1" />
+        Bireysel
+      </Badge>
+    );
   };
 
   const getCommissionBadge = () => {
@@ -202,7 +207,7 @@ export function DonationCard({ donation }: DonationCardProps) {
             {getOrganizationBadge()}
             {getCommissionBadge()}
             {donation.category && (
-              <Badge className="bg-blue-600 text-white text-xs px-2 py-1">
+              <Badge className="bg-blue-600 text-white text-xs px-2 py-1 rounded-md">
                 {donation.category}
               </Badge>
             )}
