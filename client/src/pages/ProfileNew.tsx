@@ -1019,7 +1019,7 @@ export default function ProfileNew() {
 
           {/* Won Raffles Tab */}
           <TabsContent value="won" className="space-y-8">
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-yellow-600" />

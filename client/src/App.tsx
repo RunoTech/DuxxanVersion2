@@ -77,6 +77,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/profile" component={ProfileNew} />
+          <Route path="/profile-new" component={ProfileNew} />
           <Route path="/profile-old" component={Profile} />
           <Route path="/community" component={Community} />
           <Route path="/community/:id" component={CommunityDetail} />
@@ -90,7 +91,6 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
           <Route path="/support" component={Support} />
-          {/* Channels routes removed - focusing on mail system */}
           <Route path="/mail" component={Mail} />
           <Route component={NotFound} />
         </Switch>
