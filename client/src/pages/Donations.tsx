@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DonationCard } from '@/components/DonationCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { AnimatedCard } from '@/components/ui/AnimatedCard';
@@ -21,6 +22,7 @@ export default function Donations() {
   const [activeTab, setActiveTab] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showAllCountries, setShowAllCountries] = useState(false);
 
   // Fetch donations with optimized caching
   const { data: donationsResponse, isLoading } = useQuery({
@@ -659,16 +661,43 @@ export default function Donations() {
               
               {/* Show All Countries Button */}
               <div className="text-center">
-                <Button 
-                  variant="outline" 
-                  className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white"
-                  onClick={() => {
-                    // You can implement a modal or expand functionality here
-                  }}
-                >
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Tüm Ülkeleri Göster ({countries.length - 1})
-                </Button>
+                <Dialog open={showAllCountries} onOpenChange={setShowAllCountries}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white"
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Tüm Ülkeleri Göster ({countries.length - 1})
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2">
+                        <Globe className="w-5 h-5 text-yellow-500" />
+                        Tüm Ülkeler
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mt-4">
+                      {countries.slice(1).map((country) => (
+                        <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
+                          <div 
+                            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md"
+                            onClick={() => setShowAllCountries(false)}
+                          >
+                            <div className="text-lg mb-1">{country.label.split(' ')[0]}</div>
+                            <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 truncate">
+                              {country.label.split(' ').slice(1).join(' ')}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                              0 Kampanya
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
             
