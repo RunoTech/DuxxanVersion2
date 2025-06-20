@@ -115,10 +115,10 @@ export default function DonationDetail() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {donationData.title}
             </h1>
-            <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
+            <div className="flex items-center gap-4 text-gray-600 dark:text-gray-300">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {daysLeft} gün kaldı
@@ -134,10 +134,10 @@ export default function DonationDetail() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-duxxan-border dark:text-duxxan-text">
+            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
               <Share2 className="w-4 h-4" />
             </Button>
-            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-duxxan-border dark:text-duxxan-text">
+            <Button variant="outline" size="sm" className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
               <Heart className="w-4 h-4" />
             </Button>
           </div>
