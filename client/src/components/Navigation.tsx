@@ -39,7 +39,7 @@ function NavigationComponent() {
   );
 
   return (
-    <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border sticky top-0 z-50 shadow-sm/50">
+    <nav className="bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/50 border-b border-border sticky top-0 z-50 shadow-sm/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <Link href="/" className="text-xl sm:text-2xl font-bold" style={{ color: '#FFC929' }}>
