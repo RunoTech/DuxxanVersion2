@@ -7,7 +7,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { BlurOverlay } from "@/components/BlurOverlay";
-import { TransactionTicker } from "@/components/TransactionTicker";
+
 import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
@@ -108,7 +108,7 @@ function AppContent() {
       <Navigation />
       <Router />
       <Footer />
-      <TransactionTicker />
+
       {!isConnected && <BlurOverlay />}
     </div>
   );
