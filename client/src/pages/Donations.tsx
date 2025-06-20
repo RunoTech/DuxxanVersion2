@@ -638,23 +638,38 @@ export default function Donations() {
               </CardHeader>
             </Card>
             
-            {/* Countries Grid - Show all countries */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-              {countries.slice(1).map((country) => ( // Skip "Tüm Ülkeler" option
-                (<Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
-                  <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600 hover:border-yellow-400 transition-colors cursor-pointer group h-full">
-                    <CardContent className="p-4 text-center">
-                      <div className="text-2xl mb-2">{country.label.split(' ')[0]}</div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-yellow-600">
+            {/* Popular Countries - Compact Design */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-yellow-500" />
+                Popüler Ülkeler
+              </h3>
+              <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-6">
+                {countries.slice(1, 9).map((country) => ( // Show only first 8 countries
+                  <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md">
+                      <div className="text-lg mb-1">{country.label.split(' ')[0]}</div>
+                      <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 truncate">
                         {country.label.split(' ').slice(1).join(' ')}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        0 Kampanya
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>)
-              ))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              
+              {/* Show All Countries Button */}
+              <div className="text-center">
+                <Button 
+                  variant="outline" 
+                  className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white"
+                  onClick={() => {
+                    // You can implement a modal or expand functionality here
+                  }}
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Tüm Ülkeleri Göster ({countries.length - 1})
+                </Button>
+              </div>
             </div>
             
             {/* Countries Donations Grid */}
