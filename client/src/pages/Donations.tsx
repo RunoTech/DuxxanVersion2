@@ -312,9 +312,10 @@ export default function Donations() {
                 <TabsTrigger 
                   key={type.value} 
                   value={type.value}
-                  className="flex items-center gap-2 text-gray-300 hover:text-white data-[state=active]:text-black data-[state=active]:shadow-none border-0 rounded-none h-10"
+                  className="flex items-center gap-2 text-gray-300 hover:text-white data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10"
                   style={{
-                    backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent'
+                    backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent',
+                    borderRadius: activeTab === type.value ? '8px' : '0px'
                   }}
                 >
                   <IconComponent className="w-4 h-4" />
