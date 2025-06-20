@@ -84,7 +84,11 @@ export default function Mail() {
       return result.data.count;
     },
     enabled: isConnected,
-    refetchInterval: 30000 // Refresh every 30 seconds
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   // Send message mutation

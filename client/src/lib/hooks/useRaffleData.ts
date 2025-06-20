@@ -4,15 +4,18 @@ import type { Raffle, InsertRaffle, Ticket, User, Category } from '@shared/schem
 
 export function useRaffles(limit = 20) {
   return useInfiniteQuery({
-    queryKey: ['raffles', 'list'],
+    queryKey: ['/api/raffles/list'],
     queryFn: ({ pageParam = 0 }) => 
       apiRequest('GET', `/api/raffles?limit=${limit}&offset=${pageParam}`).then(res => res.json()),
     getNextPageParam: (lastPage: any[], allPages) => {
       return lastPage.length === limit ? allPages.length * limit : undefined;
     },
     initialPageParam: 0,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 

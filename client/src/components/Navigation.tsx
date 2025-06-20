@@ -19,7 +19,6 @@ function NavigationComponent() {
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
     { href: '/community', label: 'Topluluk' },
-    { href: '/mail', label: 'Mail' },
   ];
 
   const NavLinks = ({ mobile = false, compact = false, className = '' }) => (
@@ -191,15 +190,20 @@ function NavigationComponent() {
               )}
             </div>
 
-            {/* Profile Icon for connected users */}
+            {/* Profile and Mail Icons for connected users */}
             {isConnected && address && (
-              <Link href="/profile-new" className="hidden custom-md:block">
-                <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
-                </Button>
-              </Link>
+              <div className="hidden custom-md:flex items-center gap-2">
+                <Link href="/mail">
+                  <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
+                    <Mail className="w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link href="/profile-new">
+                  <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
+                    <User className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
             )}
 
             {/* Mobile Menu */}

@@ -4,15 +4,18 @@ import type { Donation, InsertDonation, DonationContribution, User } from '@shar
 
 export function useDonations(limit = 20) {
   return useInfiniteQuery({
-    queryKey: ['donations', 'list'],
+    queryKey: ['/api/donations/list'],
     queryFn: ({ pageParam = 0 }) => 
       apiRequest('GET', `/api/donations?limit=${limit}&offset=${pageParam}`).then(res => res.json()),
     getNextPageParam: (lastPage: any[], allPages) => {
       return lastPage.length === limit ? allPages.length * limit : undefined;
     },
     initialPageParam: 0,
-    staleTime: 2 * 60 * 1000,
-    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 

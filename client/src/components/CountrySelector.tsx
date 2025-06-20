@@ -49,6 +49,11 @@ export function CountrySelector({ value, onChange, label = "Country Restrictions
   const { data: countries = [], isLoading } = useQuery<Country[]>({
     queryKey: ["/api/countries"],
     queryFn: () => apiRequest("GET", "/api/countries").then(res => res.json()),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const filteredCountries = countries.filter(country =>

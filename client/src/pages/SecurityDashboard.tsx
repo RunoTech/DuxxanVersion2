@@ -33,8 +33,12 @@ export default function SecurityDashboard() {
 
   const { data: securityStatus } = useQuery({
     queryKey: ['/api/security/status'],
-    refetchInterval: 5000, // Update every 5 seconds
-    enabled: true
+    enabled: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   useEffect(() => {
