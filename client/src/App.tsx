@@ -12,7 +12,6 @@ import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
 
-// Lazy load pages for better performance
 // Import pages directly for faster loading
 import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
