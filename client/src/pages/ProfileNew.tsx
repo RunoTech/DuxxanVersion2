@@ -549,10 +549,10 @@ export default function ProfileNew() {
                     <Label htmlFor="gender">Cinsiyet</Label>
                     {isEditing ? (
                       <Select value={formData.gender || ''} onValueChange={(value) => setFormData({...formData, gender: value})}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectValue placeholder="Cinsiyet seçin" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectItem value="male">Erkek</SelectItem>
                           <SelectItem value="female">Kadın</SelectItem>
                           <SelectItem value="other">Diğer</SelectItem>
@@ -582,10 +582,10 @@ export default function ProfileNew() {
                     <Label htmlFor="country">Ülke</Label>
                     {isEditing ? (
                       <Select value={formData.country || ''} onValueChange={(value) => setFormData({...formData, country: value})}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectValue placeholder="Ülke seçin" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectItem value="TR">🇹🇷 Türkiye</SelectItem>
                           <SelectItem value="US">🇺🇸 Amerika Birleşik Devletleri</SelectItem>
                           <SelectItem value="DE">🇩🇪 Almanya</SelectItem>
@@ -683,10 +683,10 @@ export default function ProfileNew() {
                     <Label htmlFor="organizationType">Hesap Türü</Label>
                     {isEditing ? (
                       <Select value={formData.organizationType || 'individual'} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectValue placeholder="Hesap türü seçin" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectItem value="individual">Bireysel</SelectItem>
                           <SelectItem value="foundation">Vakıf</SelectItem>
                           <SelectItem value="association">Dernek</SelectItem>
