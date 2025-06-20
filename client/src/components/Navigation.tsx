@@ -393,7 +393,6 @@ function NavigationComponent() {
                                 if (theme === 'dark') {
                                   toggleTheme();
                                 }
-                                setIsOpen(false);
                               }}
                               variant="ghost"
                               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
@@ -410,7 +409,6 @@ function NavigationComponent() {
                                 if (theme === 'light') {
                                   toggleTheme();
                                 }
-                                setIsOpen(false);
                               }}
                               variant="ghost"
                               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
