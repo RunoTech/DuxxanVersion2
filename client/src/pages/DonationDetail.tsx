@@ -150,8 +150,8 @@ export default function DonationDetail() {
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-gray-900 dark:text-duxxan-text flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-duxxan-success" />
+                  <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-green-500 dark:text-green-400" />
                     Bağış İlerleme Analizi
                   </CardTitle>
                   <div className="flex gap-2">
@@ -199,7 +199,7 @@ export default function DonationDetail() {
               {/* Saatlik Bağışlar */}
               <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bağışlar</CardTitle>
+                  <CardTitle className="text-gray-900 dark:text-gray-100">Saatlik Bağışlar</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-48 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
@@ -215,7 +215,7 @@ export default function DonationDetail() {
               {/* Bağışçı Dağılımı */}
               <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağışçı Dağılımı</CardTitle>
+                  <CardTitle className="text-gray-900 dark:text-gray-100">Bağışçı Dağılımı</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-48 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
@@ -232,7 +232,7 @@ export default function DonationDetail() {
             {/* Açıklama */}
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağış Kampanyası Detayları</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-gray-100">Bağış Kampanyası Detayları</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -286,8 +286,8 @@ export default function DonationDetail() {
             {/* Bağış Yap */}
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-red-500 dark:text-duxxan-error" />
+                <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-red-500 dark:text-red-400" />
                   Bağış Yap
                 </CardTitle>
               </CardHeader>
