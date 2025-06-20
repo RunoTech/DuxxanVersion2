@@ -290,7 +290,7 @@ export default function DonationDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 dark:text-duxxan-text-secondary leading-relaxed mb-4">
-                  {(donation as any)?.description}
+                  {donationData.description}
                 </p>
                 <Separator className="my-4 bg-yellow-200 dark:bg-duxxan-border" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
