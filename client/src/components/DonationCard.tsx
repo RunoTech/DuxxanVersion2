@@ -241,7 +241,7 @@ export function DonationCard({ donation }: DonationCardProps) {
             </div>
             <div>
               <div className="text-2xl font-bold text-white">
-                {avgDonation > 0 ? avgDonation.toFixed(0) : '0'} USDT
+                {avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
               </div>
               <div className="text-gray-400 text-xs">Ort. Bağış</div>
             </div>
