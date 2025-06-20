@@ -161,15 +161,15 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     const statusCode = res.statusCode;
     
-    // Only log errors and very slow requests to reduce spam
-    if (statusCode >= 400 || duration > 3000) {
+    // Log all API requests for debugging, but only errors for others
+    if (path.startsWith('/api/') || statusCode >= 400 || duration > 3000) {
       let logLine = `${req.method} ${path} ${statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
+      if (capturedJsonResponse && statusCode >= 400) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
 
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+      if (logLine.length > 100) {
+        logLine = logLine.slice(0, 99) + "…";
       }
 
       log(logLine);
