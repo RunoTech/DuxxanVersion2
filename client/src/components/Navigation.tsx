@@ -42,8 +42,11 @@ function NavigationComponent() {
     <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
-          <Link href="/" className="text-xl sm:text-2xl font-bold text-primary">
-            DUXXAN
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">D</span>
+            </div>
+            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent">DUXXAN</span>
           </Link>
 
           {/* Desktop/Tablet Navigation */}
