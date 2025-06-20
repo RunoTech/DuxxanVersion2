@@ -208,14 +208,16 @@ function NavigationComponent() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-duxxan-surface border-duxxan-border">
+              <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
                 <SheetHeader>
-                  <SheetTitle>Menü</SheetTitle>
+                  <SheetTitle className="text-gray-900 dark:text-white">Menü</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-8">
-                  <NavLinks mobile />
+                  <div className="mobile-nav-links">
+                    <NavLinks mobile />
+                  </div>
                   
-                  <div className="pt-4 border-t border-duxxan-border">
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                     {isConnected ? (
                       <div className="space-y-2">
                         <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -243,7 +245,7 @@ function NavigationComponent() {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-md">
                           <DialogHeader>
-                            <DialogTitle>Cüzdan Seçin</DialogTitle>
+                            <DialogTitle className="text-gray-900 dark:text-white">Cüzdan Seçin</DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4 py-4">
                             <Button
@@ -263,7 +265,7 @@ function NavigationComponent() {
                               />
                               <div className="text-left">
                                 <div className="font-semibold">MetaMask</div>
-                                <div className="text-sm text-gray-500">En popüler cüzdan</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">En popüler cüzdan</div>
                               </div>
                             </Button>
                             
@@ -284,7 +286,7 @@ function NavigationComponent() {
                               />
                               <div className="text-left">
                                 <div className="font-semibold">Trust Wallet</div>
-                                <div className="text-sm text-gray-500">Mobil ve güvenli</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">Mobil ve güvenli</div>
                               </div>
                             </Button>
                           </div>
@@ -307,7 +309,7 @@ function NavigationComponent() {
                             window.location.reload();
                           }}
                           variant="ghost"
-                          className={`w-full justify-start ${theme === 'light' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'light' ? 'bg-gray-100' : ''}`}
                         >
                           <Sun className="w-5 h-5 mr-3 text-yellow-500" />
                           Açık Tema
@@ -321,7 +323,7 @@ function NavigationComponent() {
                             window.location.reload();
                           }}
                           variant="ghost"
-                          className={`w-full justify-start ${theme === 'dark' ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+                          className={`w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === 'dark' ? 'dark:bg-gray-700' : ''}`}
                         >
                           <Moon className="w-5 h-5 mr-3 text-blue-400" />
                           Koyu Tema

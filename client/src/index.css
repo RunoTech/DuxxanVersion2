@@ -246,17 +246,33 @@
   transition: all 0.2s ease;
 }
 
-.dark .mobile-menu-item {
+/* Light theme mobile menu */
+.mobile-nav-links a {
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+}
+
+.mobile-nav-links a:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Dark theme mobile menu */
+.dark .mobile-nav-links a {
   color: #f1f5f9 !important;
   border-color: #475569 !important;
 }
 
-.dark .mobile-menu-item:hover {
+.dark .mobile-nav-links a:hover {
   background-color: #334155 !important;
   color: #ffffff !important;
 }
 
-/* Better button contrast in dark theme */
+/* Better button contrast in both themes */
+button {
+  color: inherit;
+}
+
 .dark button {
   color: #f1f5f9;
 }
@@ -266,6 +282,11 @@
 }
 
 /* Theme button improvements */
+.theme-button {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+
 .dark .theme-button {
   background-color: #1e293b;
   border-color: #475569;
