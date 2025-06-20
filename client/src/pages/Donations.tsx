@@ -212,7 +212,7 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-4 sm:py-6 lg:py-8 transition-colors duration-200">
+    <div className="min-h-screen bg-background py-4 sm:py-6 lg:py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
@@ -222,14 +222,14 @@ export default function Donations() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8">
           <div className="w-full lg:w-auto">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">DUXXAN Bağış Platformu</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
               Vakıflar, Dernekler ve Bireysel Bağışçılar İçin Blockchain Tabanlı Şeffaf Platform
             </p>
           </div>
           <div className="flex gap-2 sm:gap-3 mt-4 lg:mt-0 w-full lg:w-auto">
             <Link href="/create-donation" className="w-full lg:w-auto">
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 w-full lg:w-auto">
+              <Button className="w-full lg:w-auto">
                 <Heart className="w-4 h-4 mr-2" />
                 Kampanya Başlat
               </Button>
@@ -239,49 +239,49 @@ export default function Donations() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-500 mb-1">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-green-500 mb-1">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
+              <div className="text-sm text-muted-foreground">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="text-base sm:text-lg lg:text-xl font-bold text-orange-500 mb-2">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-xl font-bold text-orange-500 mb-1">
                 {getTotalRaised().toLocaleString()} USDT
               </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
+              <div className="text-sm text-muted-foreground">Toplanan Miktar</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-500 mb-2">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-blue-500 mb-1">
                 {getTotalDonors()}
               </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
+              <div className="text-sm text-muted-foreground">Toplam Bağışçı</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-500 mb-2">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-purple-500 mb-1">
                 {Array.isArray(donations) ? donations.length : 0}
               </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
+              <div className="text-sm text-muted-foreground">Tüm Kampanyalar</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Market Cap Display */}
-        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
+        <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-foreground">
                   <TrendingUp className="w-5 h-5 text-green-500" />
                   Bağış Pazar Değeri
                 </h3>
@@ -290,13 +290,13 @@ export default function Donations() {
                 </div>
                 <div className="flex items-center space-x-4 text-sm">
                   <span className="text-green-500">↗ Canlı Güncellemeler</span>
-                  <span className="text-gray-600 dark:text-gray-400">Blockchain Doğrulanmış</span>
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-muted-foreground">Blockchain Doğrulanmış</span>
+                  <span className="text-muted-foreground">
                     {donations.length} Toplam Kampanya
                   </span>
                 </div>
               </div>
-              <div className="hidden md:block w-32 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+              <div className="hidden md:block w-32 h-16 bg-muted rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-8 h-8 text-green-500" />
               </div>
             </div>
@@ -305,14 +305,14 @@ export default function Donations() {
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <TabsList className="grid w-full grid-cols-5">
             {organizationTypes.map((type) => {
               const IconComponent = type.icon;
               return (
                 <TabsTrigger 
                   key={type.value} 
                   value={type.value}
-                  className="flex items-center gap-2 data-[state=active]:bg-yellow-500 data-[state=active]:text-white"
+                  className="flex items-center gap-2"
                 >
                   <IconComponent className="w-4 h-4" />
                   <span className="hidden md:inline">{type.label}</span>
@@ -322,81 +322,96 @@ export default function Donations() {
           </TabsList>
 
           {/* Enhanced Filters */}
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <Card className="bg-card border border-border mt-6">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-foreground">
                 <Filter className="w-5 h-5" />
                 Gelişmiş Filtreler ve Arama
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {/* Search */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              {/* First Row - Search takes full width */}
+              <div className="mb-4">
+                <div className="relative max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     placeholder="Kampanya ara..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-white dark:bg-gray-700 border-yellow-200 focus:border-yellow-500 text-gray-900 dark:text-white pl-10"
+                    className="pl-10 h-10"
                   />
                 </div>
+              </div>
 
+              {/* Second Row - 4 equal columns for filters */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Country Filter */}
-                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="bg-white dark:bg-gray-700 border-yellow-200 focus:border-yellow-500 text-gray-900 dark:text-white">
-                    <SelectValue placeholder="Ülke Seç" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                    {countries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        {country.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Tüm Ülkeler</label>
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Ülke Seç" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country.value} value={country.value}>
+                          {country.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Category Filter */}
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="bg-white dark:bg-gray-700 border-yellow-200 focus:border-yellow-500 text-gray-900 dark:text-white">
-                    <SelectValue placeholder="Kategori Seç" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                    {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Tüm Kategoriler</label>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Kategori Seç" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.value} value={category.value}>
+                          {category.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Sort By */}
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="bg-white dark:bg-gray-700 border-yellow-200 focus:border-yellow-500 text-gray-900 dark:text-white">
-                    <SelectValue placeholder="Sırala" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                    <SelectItem value="newest">En Yeni</SelectItem>
-                    <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
-                    <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
-                    <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
-                    <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">En Yeni</label>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Sırala" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">En Yeni</SelectItem>
+                      <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
+                      <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
+                      <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
+                      <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Clear Filters */}
-                <Button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSortBy('newest');
-                    setSelectedCountry('all');
-                    setSelectedCategory('all');
-                    setActiveTab('all');
-                  }}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500"
-                >
-                  Tümünü Temizle
-                </Button>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-transparent">Action</label>
+                  <Button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSortBy('newest');
+                      setSelectedCountry('all');
+                      setSelectedCategory('all');
+                      setActiveTab('all');
+                    }}
+                    className="w-full h-10"
+                  >
+                    Tümünü Temizle
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
