@@ -956,7 +956,254 @@ export default function ProfileNew() {
             </div>
           </TabsContent>
 
+          {/* Raffle Participation History Tab */}
+          <TabsContent value="raffles" className="space-y-8">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                  <Gift className="h-5 w-5 text-purple-600" />
+                  Katıldığım Çekilişler
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {displayParticipatedRaffles.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Gift className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                      Henüz çekilişe katılmadınız
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-500">
+                      İlk çekilişinize katılın ve kazanma şansınızı yakalayın!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {displayParticipatedRaffles.map((participation: any) => (
+                      <div
+                        key={participation.id}
+                        className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                        onClick={() => window.open(`/raffles/${participation.raffle.id}`, '_blank')}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                {participation.raffle.title}
+                              </h3>
+                              <ExternalLink className="w-4 h-4 text-blue-500" />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <Trophy className="h-4 w-4 text-yellow-500" />
+                                <span>{participation.quantity} bilet</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <DollarSign className="h-4 w-4 text-green-500" />
+                                <span>${participation.totalAmount} USDT</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <Gift className="h-4 w-4 text-purple-500" />
+                                <span>${participation.raffle.prizeValue} ödül</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <Calendar className="h-4 w-4 text-blue-500" />
+                                <span>{new Date(participation.createdAt).toLocaleDateString('tr-TR')}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="ml-4">
+                            {participation.raffle.isActive ? (
+                              <Badge className="bg-green-500 text-white">Aktif</Badge>
+                            ) : (
+                              <Badge variant="outline" className="border-gray-400 text-gray-600">Sona Erdi</Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <span>Çekiliş bitiş tarihi: {new Date(participation.raffle.endDate).toLocaleDateString('tr-TR')}</span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              Katılım: {formatDate(participation.createdAt)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
+          {/* Won Raffles Tab */}
+          <TabsContent value="won" className="space-y-8">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-600" />
+                  Kazandığım Çekilişler
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {displayWonRaffles.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Trophy className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                      Henüz çekiliş kazanmadınız
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-500">
+                      Çekilişlere katılmaya devam edin, kazanma şansınız her zaman var!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {displayWonRaffles.map((wonRaffle: any) => {
+                      const isApprovalExpired = new Date() > new Date(wonRaffle.approvalDeadline);
+                      const needsApproval = !wonRaffle.isApprovedByWinner && !isApprovalExpired;
+                      
+                      return (
+                        <div
+                          key={wonRaffle.id}
+                          className={`border rounded-xl p-6 transition-all duration-300 ${
+                            needsApproval 
+                              ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-700' 
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                  {wonRaffle.title}
+                                </h3>
+                                <Trophy className="w-5 h-5 text-yellow-500" />
+                              </div>
+                              
+                              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                <div className="flex items-center gap-1">
+                                  <DollarSign className="w-4 h-4 text-green-500" />
+                                  <span className="font-semibold">${wonRaffle.prizeValue} USDT Ödül</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="w-4 h-4 text-blue-500" />
+                                  <span>Kazanıldı: {new Date(wonRaffle.winnerSelectedAt).toLocaleDateString('tr-TR')}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Approval Status */}
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {/* Creator Approval */}
+                              <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                                <div className={`w-3 h-3 rounded-full ${
+                                  wonRaffle.isApprovedByCreator ? 'bg-green-500' : 'bg-gray-300'
+                                }`} />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                    Çekiliş Sahibi Onayı
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {wonRaffle.isApprovedByCreator ? 'Onaylandı' : 'Onay bekleniyor'}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Winner Approval */}
+                              <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                                <div className={`w-3 h-3 rounded-full ${
+                                  wonRaffle.isApprovedByWinner ? 'bg-green-500' : 
+                                  isApprovalExpired ? 'bg-red-500' : 'bg-yellow-500'
+                                }`} />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                    Kazanan Onayı (Sizin)
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {wonRaffle.isApprovedByWinner ? 'Onaylandı' : 
+                                     isApprovalExpired ? 'Süre doldu' : 'Onay bekleniyor'}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Approval Action */}
+                            {needsApproval && (
+                              <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-lg p-4">
+                                <div className="flex items-start gap-3">
+                                  <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-semibold text-yellow-800 dark:text-yellow-300 mb-2">
+                                      Onay Gerekli - {formatTimeRemaining(wonRaffle.approvalDeadline)}
+                                    </h4>
+                                    <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-4">
+                                      Bu çekilişi kazandınız! Ödülünüzü almak için 6 gün içinde onaylamanız gerekmektedir. 
+                                      Son onay tarihi: {new Date(wonRaffle.approvalDeadline).toLocaleDateString('tr-TR')}
+                                    </p>
+                                    <Button
+                                      onClick={() => approveRaffleMutation.mutate(wonRaffle.id)}
+                                      disabled={approveRaffleMutation.isPending}
+                                      className="bg-green-600 hover:bg-green-700 text-white"
+                                    >
+                                      {approveRaffleMutation.isPending ? (
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                      ) : (
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                      )}
+                                      Çekilişi Onayla
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Approved Status */}
+                            {wonRaffle.isApprovedByWinner && wonRaffle.isApprovedByCreator && (
+                              <div className="bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg p-4">
+                                <div className="flex items-center gap-3">
+                                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                  <div>
+                                    <h4 className="font-semibold text-green-800 dark:text-green-300">
+                                      Çekiliş Tamamlandı
+                                    </h4>
+                                    <p className="text-sm text-green-700 dark:text-green-400">
+                                      Ödülünüz onaylandı ve hesabınıza aktarıldı.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Expired Status */}
+                            {isApprovalExpired && !wonRaffle.isApprovedByWinner && (
+                              <div className="bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg p-4">
+                                <div className="flex items-center gap-3">
+                                  <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                                  <div>
+                                    <h4 className="font-semibold text-red-800 dark:text-red-300">
+                                      Onay Süresi Doldu
+                                    </h4>
+                                    <p className="text-sm text-red-700 dark:text-red-400">
+                                      Maalesef 6 günlük onay süreniz doldu. Ödül geri çekilişe alınmıştır.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Security & Devices Tab */}
           <TabsContent value="security" className="space-y-8">
