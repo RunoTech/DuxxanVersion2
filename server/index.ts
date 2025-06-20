@@ -229,4 +229,25 @@ app.use('/api', apiRoutes);
       process.exit(0);
     });
   });
+
+  // Handle unhandled promise rejections to prevent crashes
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
+
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
+  });
 })();
+
+export default app;

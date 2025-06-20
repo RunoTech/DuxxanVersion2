@@ -358,7 +358,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Clean up dead connections
     deadClients.forEach(client => {
       clients.delete(client);
-    }););
+    });
   }
 
   // JWT Authentication middleware with device verification
