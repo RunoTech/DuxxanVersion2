@@ -71,32 +71,7 @@ export function DonationCard({ donation }: DonationCardProps) {
   };
 
   const getOrganizationBadge = () => {
-    const orgType = donation.creator?.organizationType || donation.organizationType;
-    
-    if (orgType === 'foundation') {
-      return (
-        <Badge className="bg-blue-600 text-white px-2 py-1 text-xs font-medium rounded-md">
-          <Building2 className="w-3 h-3 mr-1" />
-          Vakıf
-        </Badge>
-      );
-    }
-    if (orgType === 'association') {
-      return (
-        <Badge className="bg-green-600 text-white px-2 py-1 text-xs font-medium rounded-md">
-          <Users className="w-3 h-3 mr-1" />
-          Dernek
-        </Badge>
-      );
-    }
-    if (orgType === 'individual') {
-      return (
-        <Badge className="bg-purple-600 text-white px-2 py-1 text-xs font-medium rounded-md">
-          <Heart className="w-3 h-3 mr-1" />
-          Bireysel
-        </Badge>
-      );
-    }
+    // Always show Bireysel badge for consistency
     return (
       <Badge className="bg-purple-600 text-white px-2 py-1 text-xs font-medium rounded-md">
         <Heart className="w-3 h-3 mr-1" />
@@ -203,11 +178,11 @@ export function DonationCard({ donation }: DonationCardProps) {
           </p>
 
           {/* Badges */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4 min-h-[32px]">
             {getOrganizationBadge()}
             {getCommissionBadge()}
             {donation.category && (
-              <Badge className="bg-blue-600 text-white text-xs px-2 py-1 rounded-md">
+              <Badge className="bg-blue-600 text-white text-xs px-2 py-1 rounded-md font-medium">
                 {donation.category}
               </Badge>
             )}
