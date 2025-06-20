@@ -9,19 +9,7 @@ export function startPeriodicCleanup() {
         global.gc();
       }
       
-      // Clear Node.js cache periodically to prevent memory leaks
-      const moduleCache = require.cache;
-      const cacheSize = Object.keys(moduleCache).length;
-      
-      if (cacheSize > 1000) {
-        console.log(`Large module cache detected (${cacheSize} modules), clearing non-essential modules`);
-        // Only clear non-essential cached modules
-        Object.keys(moduleCache).forEach(key => {
-          if (key.includes('node_modules') && !key.includes('express') && !key.includes('drizzle')) {
-            delete moduleCache[key];
-          }
-        });
-      }
+      // Skip module cache cleanup in ESM environment to prevent errors
     } catch (error) {
       console.error('Cleanup error:', error);
     }

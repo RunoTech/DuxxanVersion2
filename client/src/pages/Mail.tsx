@@ -444,9 +444,12 @@ export default function Mail() {
 
         {/* Gmail-style Compose Dialog */}
         <Dialog open={isComposing} onOpenChange={setIsComposing}>
-          <DialogContent className="sm:max-w-[700px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-2xl">
+          <DialogContent className="sm:max-w-[700px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-2xl" aria-describedby="compose-mail-description">
             <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
               <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Yeni Mail</DialogTitle>
+              <div id="compose-mail-description" className="text-sm text-gray-500 dark:text-gray-400">
+                Yeni bir mail mesajı oluşturun
+              </div>
             </DialogHeader>
             
             <div className="space-y-6 pt-4">
