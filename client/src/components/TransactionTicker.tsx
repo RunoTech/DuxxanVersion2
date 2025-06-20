@@ -61,28 +61,22 @@ export function TransactionTicker() {
   const { isConnected } = useWallet();
   const [transactions, setTransactions] = useState<MockTransaction[]>([]);
 
-  // Initialize transactions once
   useEffect(() => {
     if (!isConnected) return;
     
-    // Initialize with fewer transactions for server stability
-    const initialTransactions = Array.from({ length: 5 }, () => generateMockTransaction());
+    // Generate initial 2500 transactions
+    const initialTransactions = Array.from({ length: 2500 }, () => generateMockTransaction());
     setTransactions(initialTransactions);
-  }, [isConnected]);
-
-  // Separate effect for interval to maintain hook order
-  useEffect(() => {
-    if (!isConnected) return;
-
-    // Much slower updates to reduce server restarts
+    
+    // Add 10 new transactions every 3 seconds
     const interval = setInterval(() => {
       setTransactions(prev => {
-        const newTransaction = generateMockTransaction();
-        const updated = [newTransaction, ...prev];
-        // Keep very small array for server stability
-        return updated.slice(0, 10);
+        const newTransactions = Array.from({ length: 10 }, () => generateMockTransaction());
+        const updated = [...newTransactions, ...prev];
+        // Keep only last 2500 transactions
+        return updated.slice(0, 2500);
       });
-    }, 60000); // Her 60 saniyede 1 yeni işlem - server stability için
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [isConnected]);
