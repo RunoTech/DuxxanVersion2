@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
-  Mail,
+  Mail as MailIcon,
   Send, 
   Star,
   Clock,
@@ -63,7 +63,7 @@ export default function Mail() {
       <div className="min-h-screen bg-white dark:bg-duxxan-dark flex items-center justify-center">
         <Card className="w-96">
           <CardContent className="text-center py-8">
-            <Mail className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
+            <MailIcon className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-duxxan-text mb-2">DUXXAN Mail</h2>
             <p className="text-duxxan-text-secondary mb-4">
               Cüzdanınızı bağlayın ve dahili mail sisteminize erişin
@@ -188,7 +188,7 @@ export default function Mail() {
     switch (category) {
       case 'system': return <System className="w-4 h-4" />;
       case 'community': return <Users className="w-4 h-4" />;
-      default: return <Mail className="w-4 h-4" />;
+      default: return <MailIcon className="w-4 h-4" />;
     }
   };
 
@@ -244,9 +244,9 @@ export default function Mail() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {[
-                  { id: 'all', label: 'Tümü', icon: <Mail className="w-4 h-4" /> },
+                  { id: 'all', label: 'Tümü', icon: <MailIcon className="w-4 h-4" /> },
                   { id: 'system', label: 'Sistem', icon: <System className="w-4 h-4" /> },
-                  { id: 'user', label: 'Kullanıcılar', icon: <Mail className="w-4 h-4" /> },
+                  { id: 'user', label: 'Kullanıcılar', icon: <MailIcon className="w-4 h-4" /> },
                   { id: 'community', label: 'Topluluk', icon: <Users className="w-4 h-4" /> },
                   { id: 'starred', label: 'Yıldızlı', icon: <Star className="w-4 h-4" /> },
                 ].map((category) => (
@@ -433,7 +433,7 @@ export default function Mail() {
               <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
                 <CardContent className="flex items-center justify-center h-96">
                   <div className="text-center">
-                    <Mail className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
+                    <MailIcon className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-duxxan-text mb-2">
                       Mesaj Seçin
                     </h3>

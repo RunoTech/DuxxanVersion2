@@ -228,7 +228,7 @@ export class DatabaseStorage implements IStorage {
   async deleteUser(id: number): Promise<boolean> {
     return this.withErrorHandling(async () => {
       const result = await db.delete(users).where(eq(users.id, id));
-      return result.rowCount > 0;
+      return (result.rowCount || 0) > 0;
     }, 'deleteUser');
   }
 

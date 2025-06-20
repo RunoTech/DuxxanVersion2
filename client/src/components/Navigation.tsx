@@ -19,6 +19,7 @@ function NavigationComponent() {
     { href: '/raffles', label: 'Çekilişler' },
     { href: '/donations', label: 'Bağışlar' },
     { href: '/community', label: 'Topluluk' },
+    { href: '/mail', label: 'Mail' },
   ];
 
   const NavLinks = ({ mobile = false, compact = false, className = '' }) => (
