@@ -30,26 +30,24 @@ app.get('/test', (req, res) => {
   res.status(200).send('<h1>DUXXAN Server Test</h1><p>Server is accessible and running properly</p><p>Time: ' + new Date().toISOString() + '</p>');
 });
 
-// Apply minimal middleware for stability
+// Apply minimal middleware for stability and performance
 app.use(cors(corsOptions));
 app.use(securityHeaders);
-app.use(requestSizeLimit);
-// Disabled heavy middleware to prevent memory issues and restarts
+app.use(express.json({ limit: '1mb' })); // Reduced limit
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
+// Disabled all heavy middleware for performance
+// app.use(requestSizeLimit);
 // app.use(securityMiddleware);
 // app.use(globalRateLimit);
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: '10mb' }));
-
-// Apply only essential middleware for stability
-app.use(sanitizationMiddleware);
+// Apply only essential middleware for stability - minimal overhead
+// app.use(sanitizationMiddleware); // Disabled for performance
 // Disabled device fingerprinting to reduce memory usage
 // app.use(deviceFingerprintMiddleware);
 
-// Apply translation middleware
-app.use(languageDetectionMiddleware);
-app.use(translationHeadersMiddleware);
+// Disabled translation middleware for performance
+// app.use(languageDetectionMiddleware);
+// app.use(translationHeadersMiddleware);
 
 app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
   try {

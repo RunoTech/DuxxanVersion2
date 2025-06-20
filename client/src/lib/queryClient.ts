@@ -51,7 +51,7 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     const res = await fetch(queryKey[0] as string, {
       credentials: "include",
-      signal: AbortSignal.timeout(8000), // 8 second timeout
+      signal: AbortSignal.timeout(3000), // 3 second timeout for faster response
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
@@ -68,16 +68,16 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn({ on401: "throw" }),
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchOnMount: true,
+      refetchOnMount: false, // Disable automatic refetch on mount
       refetchInterval: false,
-      retry: 2, // Two retries on failure
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 2 * 60 * 1000, // 2 minutes default cache
-      gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
+      retry: 1, // Reduce retries
+      retryDelay: 500, // Faster retry
+      staleTime: 10 * 60 * 1000, // 10 minutes cache - keep data longer
+      gcTime: 30 * 60 * 1000, // 30 minutes garbage collection
     },
     mutations: {
-      retry: 1,
-      retryDelay: 1000,
+      retry: 0, // No retries for mutations
+      retryDelay: 0,
     },
   },
 });
