@@ -380,7 +380,7 @@ export default function ProfileNew() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Modern Header Section */}
         <div className="relative mb-8">
-          <Card className="overflow-hidden border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+          <Card className="overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
             <div className="relative h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-800">
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               <div className="absolute top-4 right-4">
@@ -486,7 +486,7 @@ export default function ProfileNew() {
 
         {/* Modern Tabs Section */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-0 shadow-lg rounded-xl p-1">
+          <TabsList className="grid w-full grid-cols-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-1">
             <TabsTrigger value="profile" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
               <User className="h-4 w-4 mr-2" />
               Profil Bilgileri
@@ -501,7 +501,7 @@ export default function ProfileNew() {
           <TabsContent value="profile" className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Personal Information */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <User className="h-5 w-5 text-blue-600" />
@@ -570,7 +570,7 @@ export default function ProfileNew() {
               </Card>
 
               {/* Location Information */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-green-600" />
@@ -625,7 +625,7 @@ export default function ProfileNew() {
               </Card>
 
               {/* Professional Information */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <Briefcase className="h-5 w-5 text-purple-600" />
@@ -670,21 +670,21 @@ export default function ProfileNew() {
                 </CardContent>
               </Card>
 
-              {/* Organization Information */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              {/* Account Information */}
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <Building className="h-5 w-5 text-orange-600" />
-                    Organizasyon Bilgileri
+                    Hesap Bilgileri
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="organizationType">Organizasyon Türü</Label>
+                    <Label htmlFor="organizationType">Hesap Türü</Label>
                     {isEditing ? (
                       <Select value={formData.organizationType || 'individual'} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Organizasyon türü seçin" />
+                          <SelectValue placeholder="Hesap türü seçin" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="individual">Bireysel</SelectItem>
@@ -703,22 +703,26 @@ export default function ProfileNew() {
                     )}
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="organizationName">Organizasyon Adı</Label>
-                    {isEditing ? (
-                      <Input
-                        id="organizationName"
-                        value={formData.organizationName || ''}
-                        onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
-                        placeholder="Organizasyon adı"
-                        className="border-gray-200 dark:border-gray-700"
-                      />
-                    ) : (
-                      <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.organizationName || 'Belirtilmemiş'}
-                      </p>
-                    )}
-                  </div>
+                  {/* Organizasyon adı sadece kurumsal hesaplarda göster */}
+                  {(formData.organizationType === 'foundation' || formData.organizationType === 'association' || formData.organizationType === 'company' || 
+                    (!isEditing && displayUser?.organizationType !== 'individual')) && (
+                    <div className="space-y-2">
+                      <Label htmlFor="organizationName">Organizasyon Adı</Label>
+                      {isEditing ? (
+                        <Input
+                          id="organizationName"
+                          value={formData.organizationName || ''}
+                          onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
+                          placeholder="Organizasyon adı"
+                          className="border-gray-200 dark:border-gray-700"
+                        />
+                      ) : (
+                        <p className="text-gray-800 dark:text-gray-200 font-medium">
+                          {displayUser?.organizationName || 'Belirtilmemiş'}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -730,7 +734,7 @@ export default function ProfileNew() {
           <TabsContent value="security" className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Wallet Information */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <Shield className="h-5 w-5 text-green-600" />
@@ -757,7 +761,7 @@ export default function ProfileNew() {
               </Card>
 
               {/* Login Devices */}
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
                     <Monitor className="h-5 w-5 text-blue-600" />
