@@ -258,7 +258,7 @@ export default function CountryProfile() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               {/* Top Foundations */}
               <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <CardHeader>
@@ -331,13 +331,13 @@ export default function CountryProfile() {
             </Card>
             
             {donationsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
                 ))}
               </div>
             ) : donations && donations.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {donations.map((donation: any) => (
                   <DonationCard key={donation.id} donation={donation} />
                 ))}
@@ -374,13 +374,13 @@ export default function CountryProfile() {
             </Card>
             
             {rafflesLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
                 ))}
               </div>
             ) : raffles && raffles.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {raffles.map((raffle: any) => (
                   <RaffleCard key={raffle.id} raffle={raffle} />
                 ))}
