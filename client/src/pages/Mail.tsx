@@ -18,7 +18,7 @@ import {
   Star,
   Clock,
   Users,
-  System,
+  Settings,
   Plus,
   Search,
   ArrowLeft,
@@ -186,7 +186,7 @@ export default function Mail() {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'system': return <System className="w-4 h-4" />;
+      case 'system': return <Settings className="w-4 h-4" />;
       case 'community': return <Users className="w-4 h-4" />;
       default: return <MailIcon className="w-4 h-4" />;
     }
@@ -245,7 +245,7 @@ export default function Mail() {
               <CardContent className="space-y-2">
                 {[
                   { id: 'all', label: 'Tümü', icon: <MailIcon className="w-4 h-4" /> },
-                  { id: 'system', label: 'Sistem', icon: <System className="w-4 h-4" /> },
+                  { id: 'system', label: 'Sistem', icon: <Settings className="w-4 h-4" /> },
                   { id: 'user', label: 'Kullanıcılar', icon: <MailIcon className="w-4 h-4" /> },
                   { id: 'community', label: 'Topluluk', icon: <Users className="w-4 h-4" /> },
                   { id: 'starred', label: 'Yıldızlı', icon: <Star className="w-4 h-4" /> },
