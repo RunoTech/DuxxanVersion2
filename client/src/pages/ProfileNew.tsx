@@ -388,7 +388,7 @@ export default function ProfileNew() {
                   <Button
                     onClick={() => setIsEditing(true)}
                     size="sm"
-                    className="bg-white/90 hover:bg-white text-gray-700 border-0 shadow-sm"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white border-0 shadow-sm"
                   >
                     <Edit3 className="h-4 w-4 mr-2" />
                     Düzenle
@@ -410,7 +410,7 @@ export default function ProfileNew() {
                     <Button
                       onClick={handleCancel}
                       size="sm"
-                      className="bg-white/90 hover:bg-white text-gray-700 border-0"
+                      className="bg-gray-500 hover:bg-gray-600 text-white border-0"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -680,40 +680,70 @@ export default function ProfileNew() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="organizationType">Hesap Türü</Label>
+                    <Label htmlFor="accountType">Hesap Türü</Label>
                     {isEditing ? (
-                      <Select value={formData.organizationType || 'individual'} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
+                      <Select value={formData.organizationType === 'foundation' || formData.organizationType === 'association' || formData.organizationType === 'company' ? 'corporate' : 'individual'} 
+                              onValueChange={(value) => {
+                                if (value === 'individual') {
+                                  setFormData({...formData, organizationType: 'individual', organizationName: ''});
+                                } else {
+                                  setFormData({...formData, organizationType: 'foundation'});
+                                }
+                              }}>
                         <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectValue placeholder="Hesap türü seçin" />
                         </SelectTrigger>
                         <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                           <SelectItem value="individual">Bireysel</SelectItem>
-                          <SelectItem value="foundation">Vakıf</SelectItem>
-                          <SelectItem value="association">Dernek</SelectItem>
-                          <SelectItem value="company">Şirket</SelectItem>
+                          <SelectItem value="corporate">Kurumsal</SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
-                        {displayUser?.organizationType === 'individual' ? 'Bireysel' :
-                         displayUser?.organizationType === 'foundation' ? 'Vakıf' :
-                         displayUser?.organizationType === 'association' ? 'Dernek' :
-                         displayUser?.organizationType === 'company' ? 'Şirket' : 'Belirtilmemiş'}
+                        {displayUser?.organizationType === 'individual' ? 'Bireysel' : 'Kurumsal'}
                       </p>
                     )}
                   </div>
+                  
+                  {/* Kurumsal hesap alt seçenekleri */}
+                  {isEditing && (formData.organizationType === 'foundation' || formData.organizationType === 'association' || formData.organizationType === 'company') && (
+                    <div className="space-y-2">
+                      <Label htmlFor="organizationType">Kurum Türü</Label>
+                      <Select value={formData.organizationType || 'foundation'} onValueChange={(value) => setFormData({...formData, organizationType: value})}>
+                        <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                          <SelectValue placeholder="Kurum türü seçin" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                          <SelectItem value="foundation">Vakıf</SelectItem>
+                          <SelectItem value="association">Dernek</SelectItem>
+                          <SelectItem value="company">Resmi Kurum</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {!isEditing && displayUser?.organizationType !== 'individual' && (
+                    <div className="space-y-2">
+                      <Label>Kurum Türü</Label>
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
+                        {displayUser?.organizationType === 'foundation' ? 'Vakıf' :
+                         displayUser?.organizationType === 'association' ? 'Dernek' :
+                         displayUser?.organizationType === 'company' ? 'Resmi Kurum' : 'Belirtilmemiş'}
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Organizasyon adı sadece kurumsal hesaplarda göster */}
                   {(formData.organizationType === 'foundation' || formData.organizationType === 'association' || formData.organizationType === 'company' || 
                     (!isEditing && displayUser?.organizationType !== 'individual')) && (
                     <div className="space-y-2">
-                      <Label htmlFor="organizationName">Organizasyon Adı</Label>
+                      <Label htmlFor="organizationName">Kurum Adı</Label>
                       {isEditing ? (
                         <Input
                           id="organizationName"
                           value={formData.organizationName || ''}
                           onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
-                          placeholder="Organizasyon adı"
+                          placeholder="Kurum adı"
                           className="border-gray-200 dark:border-gray-700"
                         />
                       ) : (
@@ -721,6 +751,34 @@ export default function ProfileNew() {
                           {displayUser?.organizationName || 'Belirtilmemiş'}
                         </p>
                       )}
+                    </div>
+                  )}
+                  
+                  {/* Kaydet butonu */}
+                  {isEditing && (
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex gap-3">
+                        <Button
+                          onClick={handleSave}
+                          disabled={updateProfileMutation.isPending}
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white flex-1"
+                        >
+                          {updateProfileMutation.isPending ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          ) : (
+                            <Save className="h-4 w-4 mr-2" />
+                          )}
+                          Kaydet
+                        </Button>
+                        <Button
+                          onClick={handleCancel}
+                          variant="outline"
+                          className="border-gray-300 dark:border-gray-600"
+                        >
+                          <X className="h-4 w-4 mr-2" />
+                          İptal
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </CardContent>
