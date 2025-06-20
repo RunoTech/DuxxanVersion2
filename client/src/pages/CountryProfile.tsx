@@ -170,12 +170,12 @@ export default function CountryProfile() {
         </Card>
 
         {/* Statistics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <BarChart3 className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalCampaigns}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Kampanya</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalCampaigns}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplam Kampanya</div>
             </CardContent>
           </Card>
           
@@ -275,9 +275,9 @@ export default function CountryProfile() {
                       { name: 'Çevre Vakfı', campaigns: 4, donations: '22,180 USDT', rating: 4.7 },
                     ].map((foundation, i) => (
                       <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{foundation.name}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{foundation.campaigns} kampanya • {foundation.donations}</div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-gray-900 dark:text-white truncate">{foundation.name}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400 truncate">{foundation.campaigns} kampanya • {foundation.donations}</div>
                         </div>
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-current" />
@@ -306,9 +306,9 @@ export default function CountryProfile() {
                     ].map((activity, i) => (
                       <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                         <div className={`w-2 h-2 rounded-full ${activity.type === 'donation' ? 'bg-green-500' : 'bg-purple-500'}`} />
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-900 dark:text-white">{activity.title}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{activity.org} • {activity.time}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 dark:text-white truncate">{activity.title}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400 truncate">{activity.org} • {activity.time}</div>
                         </div>
                       </div>
                     ))}
@@ -406,7 +406,7 @@ export default function CountryProfile() {
 
           {/* Organizations Tab */}
           <TabsContent value="organizations" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               {/* Foundations */}
               <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <CardHeader>
@@ -426,9 +426,9 @@ export default function CountryProfile() {
                       'Spor Vakfı'
                     ].map((foundation, i) => (
                       <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Shield className="w-5 h-5 text-green-500" />
-                          <span className="font-medium text-gray-900 dark:text-white">{foundation}</span>
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <Shield className="w-5 h-5 text-green-500 flex-shrink-0" />
+                          <span className="font-medium text-gray-900 dark:text-white truncate">{foundation}</span>
                         </div>
                         <Badge className="bg-green-100 text-green-800">Doğrulanmış</Badge>
                       </div>
@@ -456,9 +456,9 @@ export default function CountryProfile() {
                       'Yaşlılar Derneği'
                     ].map((association, i) => (
                       <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Shield className="w-5 h-5 text-green-500" />
-                          <span className="font-medium text-gray-900 dark:text-white">{association}</span>
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <Shield className="w-5 h-5 text-green-500 flex-shrink-0" />
+                          <span className="font-medium text-gray-900 dark:text-white truncate">{association}</span>
                         </div>
                         <Badge className="bg-green-100 text-green-800">Doğrulanmış</Badge>
                       </div>
