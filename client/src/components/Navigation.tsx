@@ -223,7 +223,7 @@ function NavigationComponent() {
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                           Bağlı Cüzdan: {address?.slice(0, 6)}...{address?.slice(-4)}
                         </div>
-                        <Button onClick={disconnectWallet} variant="outline" className="w-full">
+                        <Button onClick={disconnectWallet} variant="outline" className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
                           Cüzdan Bağlantısını Kes
                         </Button>
                       </div>
@@ -243,7 +243,7 @@ function NavigationComponent() {
                             Cüzdan Bağla
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
+                        <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700">
                           <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-white">Cüzdan Seçin</DialogTitle>
                           </DialogHeader>
@@ -255,7 +255,7 @@ function NavigationComponent() {
                                 setIsOpen(false);
                               }}
                               disabled={isConnecting}
-                              className="w-full h-16 justify-start space-x-4"
+                              className="w-full h-16 justify-start space-x-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                               variant="outline"
                             >
                               <img 
@@ -276,7 +276,7 @@ function NavigationComponent() {
                                 setIsOpen(false);
                               }}
                               disabled={isConnecting}
-                              className="w-full h-16 justify-start space-x-4"
+                              className="w-full h-16 justify-start space-x-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                               variant="outline"
                             >
                               <img 
