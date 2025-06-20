@@ -45,9 +45,6 @@ type MailCategory = 'all' | 'system' | 'user' | 'community' | 'starred';
 
 export default function Mail() {
   const { user, isConnected, address } = useWallet();
-  
-  // Debug logging
-  console.log('Mail component state:', { user, isConnected, address });
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -61,26 +58,10 @@ export default function Mail() {
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
 
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-duxxan-dark flex items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="text-center py-8">
-            <MailIcon className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-duxxan-text mb-2">DUXXAN Mail</h2>
-            <p className="text-duxxan-text-secondary mb-4">
-              Cüzdanınızı bağlayın ve dahili mail sisteminize erişin
-            </p>
-            <Button className="bg-duxxan-yellow text-duxxan-dark">
-              Cüzdan Bağla
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Debug logging
+  console.log('Mail component state:', { user, isConnected, address });
 
-  // Fetch messages
+  // Fetch messages - always call hooks
   const { data: messages = [], isLoading } = useQuery<MailMessage[]>({
     queryKey: ['/api/mail/inbox', activeCategory === 'all' ? undefined : activeCategory],
     queryFn: async () => {
@@ -154,6 +135,26 @@ export default function Mail() {
       queryClient.invalidateQueries({ queryKey: ['/api/mail/inbox'] });
     }
   });
+
+  // Early return for unauthenticated users
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-duxxan-dark flex items-center justify-center">
+        <Card className="w-96">
+          <CardContent className="text-center py-8">
+            <MailIcon className="w-16 h-16 text-duxxan-yellow mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-duxxan-text mb-2">DUXXAN Mail</h2>
+            <p className="text-duxxan-text-secondary mb-4">
+              Cüzdanınızı bağlayın ve dahili mail sisteminize erişin
+            </p>
+            <Button className="bg-duxxan-yellow text-duxxan-dark">
+              Cüzdan Bağla
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleSendMessage = () => {
     if (!toAddress.trim() || !subject.trim() || !content.trim()) {

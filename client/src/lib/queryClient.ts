@@ -24,7 +24,7 @@ export async function apiRequest(
     try {
       const connection = JSON.parse(walletConnection);
       if (connection.address) {
-        headers["x-wallet-address"] = connection.address;
+        headers["X-Wallet-Address"] = connection.address;
         headers["x-chain-id"] = connection.chainId?.toString() || "56";
       }
     } catch (e) {
