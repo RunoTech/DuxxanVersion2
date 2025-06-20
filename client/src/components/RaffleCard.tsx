@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
+      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-white dark:bg-gray-800 rounded-2xl overflow-hidden h-[580px] flex flex-col">
         <div className="h-52 relative overflow-hidden">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
@@ -123,7 +123,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
       
-      <CardContent className="p-6">
+      <CardContent className="p-6 flex-1 flex flex-col">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
@@ -132,7 +132,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
         
-        <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed flex-1 line-clamp-3">
           {raffle.description}
         </p>
 
@@ -149,7 +149,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-4 mt-auto">
           <div>
             <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Bilet Fiyatı</div>
             <div className="text-lg font-bold text-gray-900 dark:text-white">
@@ -166,15 +166,16 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
 
-        <Button
-          onClick={() => buyTickets(1)}
-          disabled={!isConnected || daysLeft <= 0}
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl text-base mb-4"
-        >
-          Bilet Al
-        </Button>
+        <div className="mt-auto space-y-4">
+          <Button
+            onClick={() => buyTickets(1)}
+            disabled={!isConnected || daysLeft <= 0}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl text-base"
+          >
+            Bilet Al
+          </Button>
 
-        <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600 dark:text-gray-400">
             Ödül Değeri: <span className="text-gray-900 dark:text-white font-bold">
               {parseFloat(raffle.prizeValue).toLocaleString()} USDT
@@ -192,6 +193,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           >
             <Share2 className="h-5 w-5" />
           </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
