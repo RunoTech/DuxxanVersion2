@@ -254,6 +254,19 @@
   }
 }
 
+/* Navigation spacing adjustments */
+@media (min-width: 1280px) {
+  .custom-md\:flex {
+    gap: 2rem !important;
+  }
+}
+
+@media (min-width: 977px) and (max-width: 1279px) {
+  .custom-md\:flex {
+    gap: 1rem !important;
+  }
+}
+
 /* Animation for page transitions */
 .page-transition {
   animation: fadeInUp 0.5s ease-out;

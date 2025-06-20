@@ -22,20 +22,20 @@ function NavigationComponent() {
   ];
 
   const NavLinks = ({ mobile = false, compact = false, className = '' }) => (
-    <div className={className}>
+    <>
       {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-800 last:border-b-0' : 'inline-block mr-4 xl:mr-8'} ${compact ? 'text-sm mr-4' : ''}`}
+          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-800 last:border-b-0' : ''} ${compact ? 'text-sm' : 'text-base'}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
         </Link>
       ))}
-    </div>
+    </>
   );
 
   return (
@@ -47,9 +47,8 @@ function NavigationComponent() {
           </Link>
 
           {/* Desktop/Tablet Navigation */}
-          <div className="hidden custom-md:flex items-center">
-            <NavLinks compact className="custom-md:block xl:hidden" />
-            <NavLinks className="hidden xl:block" />
+          <div className="hidden custom-md:flex items-center space-x-4 xl:space-x-8">
+            <NavLinks compact />
           </div>
 
           <div className="flex items-center space-x-2 lg:space-x-4">
