@@ -117,55 +117,63 @@ export default function CountryProfile() {
       <div className="container mx-auto px-4 py-8">
         {/* Country Header */}
         <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="text-6xl">{country.flag}</div>
-                <div>
-                  <CardTitle className="text-3xl text-gray-900 dark:text-white flex items-center gap-3">
-                    {country.name}
-                    <Badge className="bg-blue-100 text-blue-800">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {country.code}
-                    </Badge>
-                    <a
-                      href={`https://tr.wikipedia.org/wiki/${encodeURIComponent(country.name)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center gap-1"
-                      title="Wikipedia'da görüntüle"
-                    >
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.624 5.367 11.99 11.988 11.99s11.99-5.366 11.99-11.99C24.007 5.367 18.641.001 12.017.001zM8.232 10.855c0-.639.516-1.156 1.156-1.156.639 0 1.156.517 1.156 1.156 0 .639-.517 1.156-1.156 1.156-.64 0-1.156-.517-1.156-1.156zm7.524 0c0-.639.516-1.156 1.155-1.156.64 0 1.156.517 1.156 1.156 0 .639-.516 1.156-1.156 1.156-.639 0-1.155-.517-1.155-1.156zm-3.762 5.803c-2.189 0-3.975-1.786-3.975-3.975s1.786-3.975 3.975-3.975 3.975 1.786 3.975 3.975-1.786 3.975-3.975 3.975z"/>
-                      </svg>
-                      Wiki
-                    </a>
-                  </CardTitle>
-                  <div className="flex items-center gap-4 mt-2 text-gray-600 dark:text-gray-400">
-                    <span>👥 {country.population}</span>
-                    <span>💰 {country.currency}</span>
-                    <span>🗣️ {country.language}</span>
+          <CardHeader className="p-4 sm:p-6">
+            <div className="flex flex-col gap-4">
+              {/* Header content */}
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                  <div className="text-4xl sm:text-6xl flex-shrink-0">{country.flag}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h1 className="text-2xl sm:text-3xl text-gray-900 dark:text-white font-bold">
+                          {country.name}
+                        </h1>
+                        <Badge className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                          <MapPin className="w-3 h-3 mr-1" />
+                          {country.code}
+                        </Badge>
+                        <a
+                          href={`https://tr.wikipedia.org/wiki/${encodeURIComponent(country.name)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-md text-xs font-medium transition-colors flex items-center gap-1"
+                          title="Wikipedia'da görüntüle"
+                        >
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.624 5.367 11.99 11.988 11.99s11.99-5.366 11.99-11.99C24.007 5.367 18.641.001 12.017.001zM8.232 10.855c0-.639.516-1.156 1.156-1.156.639 0 1.156.517 1.156 1.156 0 .639-.517 1.156-1.156 1.156-.64 0-1.156-.517-1.156-1.156zm7.524 0c0-.639.516-1.156 1.155-1.156.64 0 1.156.517 1.156 1.156 0 .639-.516 1.156-1.156 1.156-.639 0-1.155-.517-1.155-1.156zm-3.762 5.803c-2.189 0-3.975-1.786-3.975-3.975s1.786-3.975 3.975-3.975 3.975 1.786 3.975 3.975-1.786 3.975-3.975 3.975z"/>
+                          </svg>
+                          Wiki
+                        </a>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                        <span>👥 {country.population}</span>
+                        <span>💰 {country.currency}</span>
+                        <span>🗣️ {country.language}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
+                  <Link href="/create-donation" className="w-full sm:w-auto">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white w-full sm:w-auto text-sm px-3 py-2">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Kampanya Başlat
+                    </Button>
+                  </Link>
+                  <Link href="/create-raffle" className="w-full sm:w-auto">
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white w-full sm:w-auto text-sm px-3 py-2">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Çekiliş Oluştur
+                    </Button>
+                  </Link>
+                </div>
               </div>
-              <div className="flex gap-3">
-                <Link href="/create-donation">
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
-                    <Heart className="w-4 h-4 mr-2" />
-                    Kampanya Başlat
-                  </Button>
-                </Link>
-                <Link href="/create-raffle">
-                  <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Çekiliş Oluştur
-                  </Button>
-                </Link>
-              </div>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm sm:text-base">
+                {country.description}
+              </p>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
-              {country.description}
-            </p>
           </CardHeader>
         </Card>
 
