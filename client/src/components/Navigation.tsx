@@ -222,6 +222,35 @@ function NavigationComponent() {
                     <NavLinks mobile />
                   </div>
                   
+                  {/* Profile Section - Only for connected users */}
+                  {isConnected && address && (
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Profil</p>
+                        <div className="space-y-1">
+                          <Link href="/profile" onClick={() => setIsOpen(false)}>
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 mobile-menu-item"
+                            >
+                              <User className="w-5 h-5 mr-3 text-blue-500" />
+                              Profilim
+                            </Button>
+                          </Link>
+                          <Link href="/mail" onClick={() => setIsOpen(false)}>
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 mobile-menu-item"
+                            >
+                              <Mail className="w-5 h-5 mr-3 text-green-500" />
+                              Mesajlar
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                     {isConnected ? (
                       <div className="space-y-2">
