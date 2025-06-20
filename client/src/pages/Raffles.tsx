@@ -78,13 +78,7 @@ export default function Raffles() {
     const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory;
     
     return matchesSearch && matchesCategory;
-            matchesCountry = true;
-          }
-        }
-      }
-      
-      return matchesSearch && matchesCategory && matchesCountry;
-    })
+  })
     .sort((a: any, b: any) => {
       switch (sortBy) {
         case 'newest':
@@ -104,13 +98,11 @@ export default function Raffles() {
 
   const getActiveRafflesCount = () => {
     const now = new Date();
-    const rafflesArray = Array.isArray(raffles) ? raffles : [];
-    return rafflesArray.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
+    return raffles.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
   };
 
   const getTotalPrizePool = () => {
-    const rafflesArray = Array.isArray(raffles) ? raffles : [];
-    return rafflesArray
+    return raffles
       .filter((raffle: any) => raffle.isActive)
       .reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0);
   };
@@ -253,7 +245,7 @@ export default function Raffles() {
         {/* Results Info */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-duxxan-text-secondary">
-            Showing {filteredRaffles.length} of {Array.isArray(raffles) ? raffles.length : 0} raffles
+            Showing {filteredRaffles.length} of {raffles.length} raffles
           </p>
           {searchTerm && (
             <p className="text-sm text-duxxan-text-secondary">
@@ -316,7 +308,7 @@ export default function Raffles() {
         )}
 
         {/* Load More Button (if needed for pagination) */}
-        {filteredRaffles.length > 0 && filteredRaffles.length < (Array.isArray(raffles) ? raffles.length : 0) && (
+        {filteredRaffles.length > 0 && filteredRaffles.length < raffles.length && (
           <div className="text-center mt-12">
             <Button variant="outline" className="duxxan-button-secondary">
               Load More Raffles
