@@ -368,27 +368,27 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
+      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-yellow-400 dark:hover:border-yellow-500 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+      <CardHeader className="pb-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-4">
             <Avatar className="h-14 w-14 ring-2 ring-white/50 shadow-lg">
               <AvatarImage src={`/api/placeholder/48/48`} />
-              <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg">
+              <AvatarFallback className="bg-gradient-to-br from-yellow-500 to-orange-600 text-white font-bold text-lg">
                 {channel.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
                 {channel.name}
               </CardTitle>
               <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">@{channel.creator}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2 flex-wrap">
-            <Badge className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-0 px-3 py-1 text-xs font-semibold rounded-full">
+            <Badge className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300 border-0 px-3 py-1 text-xs font-semibold rounded-full">
               {channel.categoryName || 'Genel'}
             </Badge>
             {channel.country && (
@@ -400,7 +400,7 @@ export default function Community() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-full"
+                className="h-8 w-8 p-0 text-gray-400 hover:text-yellow-600 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleEditChannel(channel);
@@ -419,14 +419,14 @@ export default function Community() {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                <Users className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+              <div className="p-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
+                <Users className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
               </div>
               <span className="font-medium">{channel.subscriberCount}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                <Trophy className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
+              <div className="p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                <Trophy className="h-3 w-3 text-orange-600 dark:text-orange-400" />
               </div>
               <span className="font-medium">{channel.totalPrizes || 0} USDT</span>
             </div>
@@ -435,8 +435,8 @@ export default function Community() {
             size="sm"
             variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
             className={subscribedChannels.includes(channel.id) 
-              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-0 shadow-md rounded-full px-4" 
-              : "border-indigo-300 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-600 dark:text-indigo-400 dark:hover:bg-indigo-900/20 rounded-full px-4"
+              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-0 shadow-md rounded-full px-4 font-semibold" 
+              : "border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-500 dark:text-yellow-400 dark:hover:bg-yellow-900/20 rounded-full px-4 font-semibold"
             }
             onClick={(e) => {
               e.stopPropagation();
@@ -464,9 +464,9 @@ export default function Community() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800">
-        <div className="absolute inset-0 bg-black/10 backdrop-blur-3xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+      <div className="relative overflow-hidden bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600 dark:from-yellow-600 dark:via-orange-700 dark:to-yellow-800">
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
@@ -486,7 +486,7 @@ export default function Community() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Button className="bg-white text-orange-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <Plus className="h-5 w-5 mr-2" />
                     Kanal Oluştur
                   </Button>
@@ -514,12 +514,12 @@ export default function Community() {
             <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-indigo-500 transition-colors" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-yellow-500 transition-colors" />
                   <Input
                     placeholder="Kanal ara..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all"
                   />
                 </div>
                 
@@ -528,7 +528,7 @@ export default function Community() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all appearance-none"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all appearance-none"
                   >
                     {categories.map((category: any) => (
                       <option key={category.id} value={category.id}>
@@ -543,7 +543,7 @@ export default function Community() {
                   <select
                     value={selectedCountry}
                     onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all appearance-none"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all appearance-none"
                   >
                     <option value="all">Tüm Ülkeler</option>
                     {countries.map((country) => (
@@ -560,19 +560,19 @@ export default function Community() {
 
         {/* Modern Navigation Tabs */}
         <div className="mb-8">
-          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+          <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
             <div className="flex">
               <button
                 onClick={() => setActiveTab('channels')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'channels'
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transform scale-[1.02]'
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg transform scale-[1.02]'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Users className="h-5 w-5" />
                 Kanallar
-                <Badge className={`${activeTab === 'channels' ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300'} font-bold`}>
+                <Badge className={`${activeTab === 'channels' ? 'bg-white/20 text-white' : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300'} font-bold`}>
                   {filteredChannels.length}
                 </Badge>
               </button>
@@ -580,13 +580,13 @@ export default function Community() {
                 onClick={() => setActiveTab('upcoming')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'upcoming'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg transform scale-[1.02]'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg transform scale-[1.02]'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Calendar className="h-5 w-5" />
                 Gelecek Çekilişler
-                <Badge className={`${activeTab === 'upcoming' ? 'bg-white/20 text-white' : 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300'} font-bold`}>
+                <Badge className={`${activeTab === 'upcoming' ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300'} font-bold`}>
                   {upcomingRaffles.length}
                 </Badge>
               </button>
