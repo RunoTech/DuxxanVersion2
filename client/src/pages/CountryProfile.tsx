@@ -182,7 +182,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalCampaigns}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.totalCampaigns}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplam Kampanya</div>
             </CardContent>
           </Card>
@@ -190,7 +190,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalDonations}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.totalDonations}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">USDT Bağış</div>
             </CardContent>
           </Card>
@@ -198,7 +198,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <Award className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalRaffles}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.totalRaffles}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Aktif Çekiliş</div>
             </CardContent>
           </Card>
@@ -206,7 +206,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeFoundations}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.activeFoundations}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Vakıf</div>
             </CardContent>
           </Card>
@@ -214,7 +214,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeAssociations}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.activeAssociations}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dernek</div>
             </CardContent>
           </Card>
@@ -222,7 +222,7 @@ export default function CountryProfile() {
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
             <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
               <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 mx-auto mb-2" />
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.individuals}</div>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white break-all">{country.stats.individuals}</div>
               <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Bireysel</div>
             </CardContent>
           </Card>
