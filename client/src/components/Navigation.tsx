@@ -29,7 +29,7 @@ function NavigationComponent() {
           href={item.href}
           className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
             location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-2' : 'inline-block mr-4 xl:mr-8'} ${compact ? 'text-sm mr-4' : ''}`}
+          } ${mobile ? 'block py-3 text-lg border-b border-gray-100 dark:border-gray-800 last:border-b-0' : 'inline-block mr-4 xl:mr-8'} ${compact ? 'text-sm mr-4' : ''}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
@@ -46,24 +46,24 @@ function NavigationComponent() {
             DUXXAN
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center">
-            <NavLinks compact className="lg:block xl:hidden" />
+          {/* Desktop/Tablet Navigation */}
+          <div className="hidden md:flex items-center">
+            <NavLinks compact className="md:block xl:hidden" />
             <NavLinks className="hidden xl:block" />
           </div>
 
           <div className="flex items-center space-x-2 lg:space-x-4">
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Desktop Only */}
             <Button
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-8 w-8 lg:h-10 lg:w-10"
+              className="hidden md:flex text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-10 w-10"
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4 lg:w-5 lg:h-5" /> : <Moon className="w-4 h-4 lg:w-5 lg:h-5" />}
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
 
-            {/* Wallet Connection */}
+            {/* Wallet Connection - Desktop/Tablet Only */}
             <div className="hidden md:block">
               {isConnected ? (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 rounded-xl px-4 py-2 shadow-sm">
