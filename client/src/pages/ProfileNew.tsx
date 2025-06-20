@@ -27,7 +27,14 @@ import {
   Clock,
   AlertTriangle,
   Briefcase,
-  Building
+  Building,
+  Gift,
+  Trophy,
+  Calendar,
+  DollarSign,
+  CheckCircle,
+  AlertCircle,
+  ExternalLink
 } from 'lucide-react';
 
 
@@ -139,6 +146,72 @@ export default function ProfileNew() {
   });
 
   const photos = user ? (rawPhotos as any[]) : [];
+
+  // Fetch user raffle participations
+  const { data: participatedRaffles = [] } = useQuery({
+    queryKey: ['/api/users/me/raffles/participated'],
+    enabled: !!user,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  // Demo data for raffle participations
+  const demoParticipatedRaffles = [
+    {
+      id: 1,
+      raffle: {
+        id: 1,
+        title: "iPhone 15 Pro Max Çekilişi",
+        prizeValue: "45000",
+        endDate: "2024-12-31T23:59:59Z",
+        isActive: true,
+        categoryId: 1
+      },
+      quantity: 3,
+      totalAmount: "90.00",
+      createdAt: "2024-12-15T10:30:00Z"
+    },
+    {
+      id: 2,
+      raffle: {
+        id: 2,
+        title: "MacBook Pro M3 Çekilişi",
+        prizeValue: "75000",
+        endDate: "2024-12-25T23:59:59Z",
+        isActive: true,
+        categoryId: 1
+      },
+      quantity: 5,
+      totalAmount: "250.00",
+      createdAt: "2024-12-10T14:15:00Z"
+    }
+  ];
+
+  // Fetch won raffles
+  const { data: wonRaffles = [] } = useQuery({
+    queryKey: ['/api/users/me/raffles/won'],
+    enabled: !!user,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  // Demo data for won raffles
+  const demoWonRaffles = [
+    {
+      id: 3,
+      title: "Samsung Galaxy S24 Ultra Çekilişi",
+      prizeValue: "35000",
+      winnerSelectedAt: "2024-12-18T12:00:00Z",
+      approvalDeadline: "2024-12-24T12:00:00Z",
+      isApprovedByWinner: false,
+      isApprovedByCreator: true,
+      endDate: "2024-12-18T00:00:00Z",
+      categoryId: 1
+    }
+  ];
+
+  const displayParticipatedRaffles = user ? participatedRaffles : demoParticipatedRaffles;
+  const displayWonRaffles = user ? wonRaffles : demoWonRaffles;
 
   // Initialize form data when user data loads
   useEffect(() => {
@@ -281,6 +354,37 @@ export default function ProfileNew() {
     },
   });
 
+  // Approve raffle win mutation
+  const approveRaffleMutation = useMutation({
+    mutationFn: async (raffleId: number) => {
+      if (!user) {
+        toast({
+          title: "Demo Modu",
+          description: "Demo modunda çekiliş onaylanamaz.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const response = await apiRequest('POST', `/api/raffles/${raffleId}/approve-win`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/users/me/raffles/won'] });
+      toast({
+        title: "Çekiliş Onaylandı",
+        description: "Çekiliş kazancınız başarıyla onaylandı.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Onay Hatası",
+        description: error.message || "Çekiliş onaylanırken hata oluştu.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSave = () => {
     updateProfileMutation.mutate(formData);
   };
@@ -365,6 +469,20 @@ export default function ProfileNew() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const formatTimeRemaining = (deadlineString: string) => {
+    const deadline = new Date(deadlineString);
+    const now = new Date();
+    const diff = deadline.getTime() - now.getTime();
+    
+    if (diff <= 0) return "Süre doldu";
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (days > 0) return `${days} gün ${hours} saat kaldı`;
+    return `${hours} saat kaldı`;
   };
 
   if (userLoading) {
@@ -486,10 +604,18 @@ export default function ProfileNew() {
 
         {/* Modern Tabs Section */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-1">
+          <TabsList className="grid w-full grid-cols-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-1">
             <TabsTrigger value="profile" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
               <User className="h-4 w-4 mr-2" />
               Profil Bilgileri
+            </TabsTrigger>
+            <TabsTrigger value="raffles" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
+              <Gift className="h-4 w-4 mr-2" />
+              Çekiliş Geçmişi
+            </TabsTrigger>
+            <TabsTrigger value="won" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
+              <Trophy className="h-4 w-4 mr-2" />
+              Kazandığım Çekilişler
             </TabsTrigger>
             <TabsTrigger value="security" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
               <Shield className="h-4 w-4 mr-2" />

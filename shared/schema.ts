@@ -100,6 +100,8 @@ export const raffles = pgTable("raffles", {
   winnerId: integer("winner_id").references(() => users.id),
   isApprovedByCreator: boolean("is_approved_by_creator").default(false),
   isApprovedByWinner: boolean("is_approved_by_winner").default(false),
+  winnerSelectedAt: timestamp("winner_selected_at"),
+  approvalDeadline: timestamp("approval_deadline"), // 6 days from winner selection
   // Country filtering fields
   countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
   allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
