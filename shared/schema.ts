@@ -173,7 +173,7 @@ export const mailMessages = pgTable("mail_messages", {
   isRead: boolean("is_read").default(false),
   isStarred: boolean("is_starred").default(false),
   raffleId: integer("raffle_id").references(() => raffles.id), // For raffle-related messages
-  communityId: integer("community_id").references(() => communities.id), // For community messages
+  communityId: integer("community_id"), // For community messages
   createdAt: timestamp("created_at").defaultNow(),
 });
 

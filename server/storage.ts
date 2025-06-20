@@ -7,6 +7,8 @@ import {
   userRatings,
   categories,
   countries,
+  mailMessages,
+  mailAttachments,
 
   follows,
   userDevices,
@@ -616,10 +618,7 @@ export class DatabaseStorage implements IStorage {
     return this.withErrorHandling(async () => {
       const [newDevice] = await db
         .insert(userDevices)
-        .values({
-          ...device,
-          deviceFingerprint: device.deviceFingerprint || 'unknown'
-        })
+        .values(device)
         .returning();
       return newDevice;
     }, 'createUserDevice');
