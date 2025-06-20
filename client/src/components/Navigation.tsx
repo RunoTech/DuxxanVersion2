@@ -198,7 +198,7 @@ function NavigationComponent() {
                     <Mail className="w-5 h-5" />
                   </Button>
                 </Link>
-                <Link href="/profile-new">
+                <Link href="/profile">
                   <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
                     <User className="w-5 h-5" />
                   </Button>

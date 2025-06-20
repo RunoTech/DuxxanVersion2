@@ -13,25 +13,23 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { TranslationProvider } from "@/hooks/useTranslation";
 
 // Lazy load pages for better performance
-import { lazy } from "react";
+// Import pages directly for faster loading
 import Home from "@/pages/Home";
-
-const Profile = lazy(() => import("@/pages/Profile"));
-const ProfileNew = lazy(() => import("@/pages/ProfileNew"));
-const Community = lazy(() => import("@/pages/Community"));
-const CommunityDetail = lazy(() => import("@/pages/CommunityDetail"));
-const Raffles = lazy(() => import("@/pages/Raffles"));
-const RaffleDetail = lazy(() => import("@/pages/RaffleDetail"));
-const Donations = lazy(() => import("@/pages/Donations"));
-const DonationDetail = lazy(() => import("@/pages/DonationDetail"));
-const CreateRaffle = lazy(() => import("@/pages/CreateRaffle"));
-const CreateDonation = lazy(() => import("@/pages/CreateDonation"));
-const CountryProfile = lazy(() => import("@/pages/CountryProfile"));
-const Terms = lazy(() => import("@/pages/Terms"));
-const Privacy = lazy(() => import("@/pages/Privacy"));
-const Support = lazy(() => import("@/pages/Support"));
-// Channels pages removed - focusing on mail system
-const Mail = lazy(() => import("@/pages/Mail"));
+import Profile from "@/pages/Profile";
+import ProfileNew from "@/pages/ProfileNew";
+import Community from "@/pages/Community";
+import CommunityDetail from "@/pages/CommunityDetail";
+import Raffles from "@/pages/Raffles";
+import RaffleDetail from "@/pages/RaffleDetail";
+import Donations from "@/pages/Donations";
+import DonationDetail from "@/pages/DonationDetail";
+import CreateRaffle from "@/pages/CreateRaffle";
+import CreateDonation from "@/pages/CreateDonation";
+import CountryProfile from "@/pages/CountryProfile";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import Support from "@/pages/Support";
+import Mail from "@/pages/Mail";
 
 import NotFound from "@/pages/not-found";
 
@@ -73,7 +71,7 @@ function Router() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div></div>}>
+      <div>
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/profile" component={ProfileNew} />
