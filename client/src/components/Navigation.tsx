@@ -47,8 +47,8 @@ function NavigationComponent() {
           </Link>
 
           {/* Desktop/Tablet Navigation */}
-          <div className="hidden md:flex items-center">
-            <NavLinks compact className="md:block xl:hidden" />
+          <div className="hidden custom-md:flex items-center">
+            <NavLinks compact className="custom-md:block xl:hidden" />
             <NavLinks className="hidden xl:block" />
           </div>
 
@@ -58,13 +58,13 @@ function NavigationComponent() {
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="hidden md:flex text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-10 w-10"
+              className="hidden custom-md:flex text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-10 w-10"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
 
             {/* Wallet Connection - Desktop/Tablet Only */}
-            <div className="hidden md:block">
+            <div className="hidden custom-md:block">
               {isConnected ? (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 rounded-xl px-4 py-2 shadow-sm">
                   <div className="flex items-center space-x-3">
@@ -193,7 +193,7 @@ function NavigationComponent() {
 
             {/* Profile Icon for connected users */}
             {isConnected && address && (
-              <Link href="/profile-new" className="hidden md:block">
+              <Link href="/profile-new" className="hidden custom-md:block">
                 <Button variant="ghost" size="icon" className="text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -204,7 +204,7 @@ function NavigationComponent() {
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild className="md:hidden">
+              <SheetTrigger asChild className="custom-md:hidden">
                 <Button variant="ghost" size="icon">
                   <Menu className="h-6 w-6" />
                 </Button>

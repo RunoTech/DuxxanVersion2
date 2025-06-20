@@ -212,6 +212,35 @@
   }
 }
 
+/* Custom breakpoint for navigation at 977px */
+@media (min-width: 977px) {
+  .custom-md\:flex {
+    display: flex !important;
+  }
+  
+  .custom-md\:hidden {
+    display: none !important;
+  }
+  
+  .custom-md\:block {
+    display: block !important;
+  }
+}
+
+@media (max-width: 976px) {
+  .custom-md\:flex {
+    display: none !important;
+  }
+  
+  .custom-md\:hidden {
+    display: block !important;
+  }
+  
+  .custom-md\:block {
+    display: none !important;
+  }
+}
+
 /* Animation for page transitions */
 .page-transition {
   animation: fadeInUp 0.5s ease-out;
