@@ -238,18 +238,18 @@ export default function Home() {
             </div>
 
             {/* Main Value Proposition */}
-            <div className="max-w-4xl mx-auto mb-12">
-              <p className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-8 leading-relaxed">
+            <div className="max-w-4xl mx-auto mb-8 sm:mb-12 px-2">
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed">
                 Dünya'nın en güvenli <span className="text-yellow-600 dark:text-yellow-400 font-bold">blockchain tabanlı</span> 
-                <br className="hidden md:block" />
+                <br className="hidden lg:block" />
                 bağış ve çekiliş platformu
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50">
-                  <Shield className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">%100 Güvenli</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Smart contract koruması</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-4 sm:p-6 border border-gray-200/50 dark:border-gray-700/50">
+                  <Shield className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-green-500 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">%100 Güvenli</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Smart contract koruması</p>
                 </div>
                 <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50">
                   <Globe className="w-12 h-12 text-blue-500 mx-auto mb-4" />
@@ -267,26 +267,26 @@ export default function Home() {
             {/* Call to Action */}
             <div className="space-y-6">
               {!isConnected ? (
-                <div className="text-center">
+                <div className="text-center px-4">
                   <WalletConnectButton 
                     size="lg" 
-                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-600 hover:via-orange-600 hover:to-red-600 text-white px-12 py-6 text-xl font-bold shadow-2xl transform hover:scale-105 transition-all duration-300" 
+                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-600 hover:via-orange-600 hover:to-red-600 text-white px-8 sm:px-12 py-4 sm:py-6 text-lg sm:text-xl font-bold shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto" 
                   />
-                  <p className="text-lg text-gray-600 dark:text-gray-400 mt-4 font-medium">
-                    🚀 Cüzdanınızı bağlayın ve hemen başlayın
+                  <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-4 font-medium">
+                    Cüzdanınızı bağlayın ve hemen başlayın
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                  <Link href="/donations">
-                    <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-6 text-xl font-bold shadow-xl transform hover:scale-105 transition-all duration-300">
-                      <Heart className="mr-3 h-6 w-6" />
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
+                  <Link href="/donations" className="w-full sm:w-auto">
+                    <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 sm:px-10 py-4 sm:py-6 text-lg sm:text-xl font-bold shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
+                      <Heart className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                       Bağış Kampanyaları
                     </Button>
                   </Link>
-                  <Link href="/raffles">
-                    <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-10 py-6 text-xl font-bold shadow-xl transform hover:scale-105 transition-all duration-300">
-                      <Gift className="mr-3 h-6 w-6" />
+                  <Link href="/raffles" className="w-full sm:w-auto">
+                    <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 sm:px-10 py-4 sm:py-6 text-lg sm:text-xl font-bold shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
+                      <Gift className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                       Çekiliş Dünyası
                     </Button>
                   </Link>
@@ -294,10 +294,10 @@ export default function Home() {
               )}
               
               {/* Trust Indicators */}
-              <div className="flex flex-wrap justify-center items-center gap-8 mt-12 pt-12 border-t border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <Shield className="w-5 h-5 text-green-500" />
-                  <span className="font-medium">BSC Blockchain</span>
+              <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-12 pt-8 sm:pt-12 border-t border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex items-center gap-1 sm:gap-2 text-gray-600 dark:text-gray-400">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+                  <span className="font-medium text-sm sm:text-base">BSC Blockchain</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <CheckCircle className="w-5 h-5 text-blue-500" />

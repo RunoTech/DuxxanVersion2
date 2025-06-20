@@ -248,29 +248,29 @@ export default function Donations() {
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-sm md:text-xl font-bold text-orange-500 mb-2 break-words">
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <div className="text-base sm:text-lg lg:text-xl font-bold text-orange-500 mb-2">
                 {getTotalRaised().toLocaleString()} USDT
               </div>
-              <div className="text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-lg md:text-2xl font-bold text-blue-500 mb-2 break-words">
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-500 mb-2">
                 {getTotalDonors()}
               </div>
-              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
             </CardContent>
           </Card>
 
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-lg md:text-2xl font-bold text-purple-500 mb-2 break-words">
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-500 mb-2">
                 {Array.isArray(donations) ? donations.length : 0}
               </div>
-              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
             </CardContent>
           </Card>
         </div>
