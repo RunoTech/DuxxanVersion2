@@ -368,31 +368,31 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="bg-duxxan-card border-duxxan-border hover:border-yellow-500 transition-all duration-200 cursor-pointer group"
+      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
         <div className="flex justify-between items-start">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-12 w-12">
+          <div className="flex items-center space-x-4">
+            <Avatar className="h-14 w-14 ring-2 ring-white/50 shadow-lg">
               <AvatarImage src={`/api/placeholder/48/48`} />
-              <AvatarFallback className="bg-yellow-500 text-black font-bold">
+              <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg">
                 {channel.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-lg text-gray-900 dark:text-white group-hover:text-yellow-400 transition-colors">
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                 {channel.name}
               </CardTitle>
-              <p className="text-sm text-gray-400">@{channel.creator}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">@{channel.creator}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500 px-3 py-1 text-xs whitespace-nowrap">
+          <div className="flex items-center space-x-2 flex-wrap">
+            <Badge className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border-0 px-3 py-1 text-xs font-semibold rounded-full">
               {channel.categoryName || 'Genel'}
             </Badge>
             {channel.country && (
-              <Badge variant="outline" className="text-gray-300 border-gray-600">
+              <Badge variant="outline" className="text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 rounded-full">
                 {countries.find(c => c.value === channel.country)?.label || channel.country}
               </Badge>
             )}
@@ -400,7 +400,7 @@ export default function Community() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0 text-gray-400 hover:text-yellow-400"
+                className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleEditChannel(channel);
@@ -412,27 +412,31 @@ export default function Community() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+      <CardContent className="pt-0 p-6">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2 leading-relaxed">
           {channel.description}
         </p>
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4 text-sm text-gray-400">
-            <div className="flex items-center space-x-1">
-              <Users className="h-4 w-4" />
-              <span>{channel.subscriberCount}</span>
+          <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center space-x-2">
+              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                <Users className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+              </div>
+              <span className="font-medium">{channel.subscriberCount}</span>
             </div>
-            <div className="flex items-center space-x-1">
-              <Trophy className="h-4 w-4" />
-              <span>{channel.totalPrizes || 0} USDT</span>
+            <div className="flex items-center space-x-2">
+              <div className="p-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
+                <Trophy className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
+              </div>
+              <span className="font-medium">{channel.totalPrizes || 0} USDT</span>
             </div>
           </div>
           <Button
             size="sm"
             variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
             className={subscribedChannels.includes(channel.id) 
-              ? "bg-yellow-500 text-black hover:bg-yellow-600" 
-              : "border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
+              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-0 shadow-md rounded-full px-4" 
+              : "border-indigo-300 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-600 dark:text-indigo-400 dark:hover:bg-indigo-900/20 rounded-full px-4"
             }
             onClick={(e) => {
               e.stopPropagation();
@@ -458,89 +462,147 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-duxxan-darker text-black dark:text-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-black dark:text-white">Topluluk Merkezi</h1>
-          <p className="text-gray-600 dark:text-gray-400">Kanalları keşfedin, çekilişleri takip edin ve topluluğa katılın</p>
-        </div>
-
-        {/* Search and Filter */}
-        <div className="mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Kanal ara..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-gray-100 dark:bg-duxxan-card border-gray-300 dark:border-duxxan-border text-black dark:text-white"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Filter className="text-gray-400 dark:text-gray-400 h-4 w-4" />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
-              style={{ color: '#9ca3af' }}
-            >
-              {categories.map((category: any) => (
-                <option key={category.id} value={category.id} style={{ color: '#9ca3af' }}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800">
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-3 mb-6">
+              <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black text-white">
+                DUXXAN Topluluk
+              </h1>
+            </div>
             
-            <Globe className="text-gray-400 dark:text-gray-400 h-4 w-4" />
-            <select
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
-              className="bg-gray-100 dark:bg-duxxan-card border border-gray-300 dark:border-duxxan-border rounded-md px-3 py-2 text-gray-600 dark:text-gray-300"
-              style={{ color: '#9ca3af' }}
-            >
-              <option value="all" style={{ color: '#9ca3af' }}>Tüm Ülkeler</option>
-              {countries.map((country) => (
-                <option key={country.value} value={country.value} style={{ color: '#9ca3af' }}>
-                  {country.label}
-                </option>
-              ))}
-            </select>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+              Kanallar oluşturun, gelecek çekilişleri duyurun ve küresel topluluğa katılın
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+                <DialogTrigger asChild>
+                  <Button className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                    <Plus className="h-5 w-5 mr-2" />
+                    Kanal Oluştur
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+              
+              <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-3 rounded-xl">
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Çekiliş Duyuru
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-1 bg-duxxan-card rounded-lg p-1 mb-6">
-          <Button
-            variant={activeTab === 'channels' ? 'default' : 'ghost'}
-            className={`flex-1 ${activeTab === 'channels' ? 'bg-yellow-500 text-black' : 'text-gray-400 hover:text-white'}`}
-            onClick={() => setActiveTab('channels')}
-          >
-            <Users className="h-4 w-4 mr-2" />
-            Kanallar
-          </Button>
-          <Button
-            variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
-            className={`flex-1 ${activeTab === 'upcoming' ? 'bg-yellow-500 text-black' : 'text-gray-400 hover:text-white'}`}
-            onClick={() => setActiveTab('upcoming')}
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            Gelecek Çekilişler
-          </Button>
+      <div className="container mx-auto px-4 py-8">
+
+        {/* Modern Filters */}
+        {activeTab === 'channels' && (
+          <div className="mb-8">
+            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="relative group">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-indigo-500 transition-colors" />
+                  <Input
+                    placeholder="Kanal ara..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  />
+                </div>
+                
+                <div className="relative">
+                  <Tag className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all appearance-none"
+                  >
+                    {categories.map((category: any) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="relative">
+                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <select
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all appearance-none"
+                  >
+                    <option value="all">Tüm Ülkeler</option>
+                    {countries.map((country) => (
+                      <option key={country.value} value={country.value}>
+                        {country.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modern Navigation Tabs */}
+        <div className="mb-8">
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+            <div className="flex">
+              <button
+                onClick={() => setActiveTab('channels')}
+                className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'channels'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transform scale-[1.02]'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              >
+                <Users className="h-5 w-5" />
+                Kanallar
+                <Badge className={`${activeTab === 'channels' ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300'} font-bold`}>
+                  {filteredChannels.length}
+                </Badge>
+              </button>
+              <button
+                onClick={() => setActiveTab('upcoming')}
+                className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'upcoming'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg transform scale-[1.02]'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              >
+                <Calendar className="h-5 w-5" />
+                Gelecek Çekilişler
+                <Badge className={`${activeTab === 'upcoming' ? 'bg-white/20 text-white' : 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300'} font-bold`}>
+                  {upcomingRaffles.length}
+                </Badge>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Content */}
         {activeTab === 'channels' && (
           <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Topluluk Kanalları</h2>
-              <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-black font-semibold shadow-lg">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Kanal Oluştur
-                  </Button>
-                </DialogTrigger>
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Topluluk Kanalları</h2>
+                <p className="text-gray-600 dark:text-gray-400">Kanalları keşfedin ve favori topluluklarınıza katılın</p>
+              </div>
+            </div>
                 <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                   <DialogHeader className="text-center pb-4">
                     <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
