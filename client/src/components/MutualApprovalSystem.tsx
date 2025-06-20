@@ -41,6 +41,8 @@ export function MutualApprovalSystem({ raffle, onApprovalUpdate }: MutualApprova
   const isCreator = user?.id === raffle.creatorId;
   const isWinner = user?.id === raffle.winnerId;
 
+  console.log('MutualApprovalSystem - User:', user?.id, 'Creator:', raffle.creatorId, 'Winner:', raffle.winnerId, 'isCreator:', isCreator, 'isWinner:', isWinner);
+
   const handleCreatorApproval = async () => {
     setIsApproving(true);
     try {

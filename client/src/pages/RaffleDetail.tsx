@@ -421,25 +421,30 @@ export default function RaffleDetail() {
                   </p>
                   <div className="space-y-2">
                     <Button 
-                      onClick={() => {
-                        // Create demo user as winner
-                        const demoUser = { id: 999, username: 'demo_winner' };
-                        apiRequest('POST', `/api/raffles/${id}/assign-winner`, { winnerId: demoUser.id })
-                          .then(() => {
-                            queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
-                            toast({
-                              title: 'Demo kazanan atandı!',
-                              description: 'Chat sistemi artık aktif. Demo kullanıcı: demo_winner',
-                            });
-                          })
-                          .catch((error) => {
-                            console.error('Winner assignment error:', error);
-                            toast({
-                              title: 'Hata',
-                              description: `Kazanan atanamadı: ${error.message || 'Bilinmeyen hata'}`,
-                              variant: 'destructive',
-                            });
+                      onClick={async () => {
+                        try {
+                          console.log('Assigning winner to raffle:', id);
+                          const response = await apiRequest('POST', `/api/raffles/${id}/assign-winner`, { winnerId: 999 });
+                          const result = await response.json();
+                          
+                          console.log('Winner assignment response:', result);
+                          
+                          // Force refetch
+                          await queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+                          await queryClient.refetchQueries({ queryKey: [`/api/raffles/${id}`] });
+                          
+                          toast({
+                            title: 'Demo kazanan atandı!',
+                            description: 'Chat sistemi ve onay sistemi artık aktif.',
                           });
+                        } catch (error) {
+                          console.error('Winner assignment error:', error);
+                          toast({
+                            title: 'Hata',
+                            description: `Kazanan atanamadı: ${error.message || 'Bilinmeyen hata'}`,
+                            variant: 'destructive',
+                          });
+                        }
                       }}
                       className="bg-yellow-600 hover:bg-yellow-700 text-white w-full"
                     >

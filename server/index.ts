@@ -68,7 +68,14 @@ app.post('/api/raffles/:id/assign-winner', async (req: any, res) => {
     const updatedRaffle = await storage.updateRaffle(raffleId, { winnerId: 1 });
     console.log(`Winner assigned: Raffle ${raffleId}, Winner ID: 1 (TechMaster2024)`);
 
-    res.json({ message: 'Winner assigned successfully', raffle: updatedRaffle });
+    // Get the full raffle with creator and winner data
+    const raffleWithDetails = await storage.getRaffleById(raffleId);
+
+    res.json({ 
+      success: true,
+      message: 'Winner assigned successfully', 
+      data: raffleWithDetails 
+    });
   } catch (error: any) {
     console.error('Winner assignment error:', error);
     res.status(500).json({ message: 'Failed to assign winner', error: error.message });
