@@ -252,32 +252,32 @@ export function DonationCard({ donation }: DonationCardProps) {
             {daysLeft > 0 && progress < 100 ? (
               <>
                 {/* Amount Input and Donate Button */}
-                <div className="flex gap-2 w-full">
+                <div className="donation-input-responsive">
                   <Input
                     type="number"
-                    placeholder="Miktar girin (USDT)"
+                    placeholder="Miktar (USDT)"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(e.target.value)}
-                    className="flex-1 bg-gray-800 border-gray-600 text-white placeholder-gray-400 rounded-lg text-sm px-3 py-2 min-w-0"
+                    className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 rounded-lg text-xs px-2 py-2"
                     min="1"
                     step="1"
                   />
                   <Button
                     onClick={contribute}
                     disabled={!isConnected || isContributing || !donationAmount}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-4 py-2 rounded-lg text-sm whitespace-nowrap flex-shrink-0"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-3 py-2 rounded-lg text-xs"
                   >
                     Bağış Yap
                   </Button>
                 </div>
 
                 {/* Quick Amount Buttons */}
-                <div className="grid grid-cols-4 gap-1 w-full">
+                <div className="donation-quick-grid">
                   {[10, 25, 50, 100].map((amount) => (
                     <Button
                       key={amount}
                       onClick={() => quickDonate(amount)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold text-xs py-2 px-1 rounded-md min-w-0 flex-1"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-md"
                     >
                       {amount} USDT
                     </Button>
