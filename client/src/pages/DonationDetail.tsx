@@ -92,7 +92,9 @@ export default function DonationDetail() {
     );
   }
 
-  if (!donation) {
+  const donationData = donation?.data;
+  
+  if (!donationData) {
     return (
       <div className="min-h-screen bg-duxxan-dark flex items-center justify-center">
         <div className="text-center">
@@ -103,8 +105,8 @@ export default function DonationDetail() {
     );
   }
 
-  const progress = (Number(donation.currentAmount) / Number(donation.goalAmount)) * 100;
-  const timeLeft = new Date(donation.endDate).getTime() - new Date().getTime();
+  const progress = (Number(donationData.currentAmount) / Number(donationData.goalAmount)) * 100;
+  const timeLeft = new Date(donationData.endDate).getTime() - new Date().getTime();
   const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
 
   return (
@@ -114,7 +116,7 @@ export default function DonationDetail() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-duxxan-text mb-2">
-              {donation.title}
+              {donationData.title}
             </h1>
             <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
               <span className="flex items-center gap-1">
@@ -123,11 +125,11 @@ export default function DonationDetail() {
               </span>
               <span className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                {donation.donorCount} bağışçı
+                {donationData.donorCount} bağışçı
               </span>
               <span className="flex items-center gap-1">
                 <Target className="w-4 h-4" />
-                {donation.goalAmount} USDT hedef
+                {donationData.goalAmount} USDT hedef
               </span>
             </div>
           </div>
@@ -157,7 +159,7 @@ export default function DonationDetail() {
                       Aktif
                     </Badge>
                     <Badge variant="outline" className="border-yellow-400 text-yellow-600 dark:border-duxxan-success dark:text-duxxan-success">
-                      7g: +{(donation as any)?.currentAmount} USDT
+                      7g: +{donationData.currentAmount} USDT
                     </Badge>
                   </div>
                 </div>
@@ -214,7 +216,7 @@ export default function DonationDetail() {
                 {/* İstatistikler */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-yellow-200 dark:border-duxxan-border">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 dark:text-duxxan-success">{(donation as any)?.currentAmount}</div>
+                    <div className="text-2xl font-bold text-green-600 dark:text-duxxan-success">{donationData.currentAmount}</div>
                     <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Toplanan</div>
                   </div>
                   <div className="text-center">
@@ -222,7 +224,7 @@ export default function DonationDetail() {
                     <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Hedef</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-duxxan-text">{(donation as any)?.donorCount}</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-duxxan-text">{donationData.donorCount}</div>
                     <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Bağışçı</div>
                   </div>
                   <div className="text-center">
@@ -297,16 +299,16 @@ export default function DonationDetail() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600 dark:text-duxxan-text-secondary">Hedef Tutar:</span>
-                        <span className="text-green-600 dark:text-duxxan-success">{(donation as any)?.goalAmount} USDT</span>
+                        <span className="text-green-600 dark:text-duxxan-success">{donationData.goalAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600 dark:text-duxxan-text-secondary">Toplanan:</span>
-                        <span className="text-gray-900 dark:text-duxxan-text">{(donation as any)?.currentAmount} USDT</span>
+                        <span className="text-gray-900 dark:text-duxxan-text">{donationData.currentAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600 dark:text-duxxan-text-secondary">Bitiş Tarihi:</span>
                         <span className="text-gray-900 dark:text-duxxan-text">
-                          {new Date((donation as any)?.endDate).toLocaleDateString('tr-TR')}
+                          {new Date(donationData.endDate).toLocaleDateString('tr-TR')}
                         </span>
                       </div>
                     </div>
@@ -415,12 +417,12 @@ export default function DonationDetail() {
                   <Progress value={progress} className="h-3" />
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-duxxan-text-secondary">
-                      {(donation as any)?.currentAmount} / {(donation as any)?.goalAmount} USDT
+                      {donationData.currentAmount} / {donationData.goalAmount} USDT
                     </span>
                     <span className="text-yellow-600 dark:text-duxxan-success">%{progress.toFixed(1)}</span>
                   </div>
                   <div className="text-center text-sm text-gray-600 dark:text-duxxan-text-secondary">
-                    Hedefe {(Number((donation as any)?.goalAmount) - Number((donation as any)?.currentAmount)).toFixed(2)} USDT kaldı
+                    Hedefe {(Number(donationData.goalAmount) - Number(donationData.currentAmount)).toFixed(2)} USDT kaldı
                   </div>
                 </div>
               </CardContent>
@@ -434,19 +436,19 @@ export default function DonationDetail() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12">
-                    <AvatarImage src={(donation as any)?.creator?.profileImage} />
+                    <AvatarImage src={donationData.creator?.profileImage} />
                     <AvatarFallback className="bg-yellow-500 dark:bg-duxxan-success text-white">
-                      {(donation as any)?.creator?.username?.charAt(0)}
+                      {donationData.creator?.username?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900 dark:text-duxxan-text">
-                      {(donation as any)?.creator?.username}
+                      {donationData.creator?.username}
                     </h4>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 text-yellow-500 dark:text-duxxan-yellow fill-current" />
                       <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">
-                        {(donation as any)?.creator?.rating} ({(donation as any)?.creator?.ratingCount} değerlendirme)
+                        {donationData.creator?.rating} ({donationData.creator?.ratingCount} değerlendirme)
                       </span>
                     </div>
                   </div>
