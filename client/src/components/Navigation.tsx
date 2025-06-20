@@ -27,9 +27,9 @@ function NavigationComponent() {
         <Link
           key={item.href}
           href={item.href}
-          className={`font-semibold transition-colors hover:text-gray-600 dark:hover:text-gray-300 ${
-            location === item.href ? 'text-gray-900 dark:text-white' : 'text-black dark:text-white'
-          } ${mobile ? 'block py-2 text-base border-b border-gray-100 dark:border-gray-700 last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-xs' : 'text-sm'}`}
+          className={`font-semibold transition-colors hover:text-primary ${
+            location === item.href ? 'text-foreground' : 'text-foreground/80'
+          } ${mobile ? 'block py-2 text-base border-b border-border last:border-b-0 mobile-menu-item' : ''} ${compact ? 'text-xs' : 'text-sm'}`}
           onClick={() => mobile && setIsOpen(false)}
         >
           {item.label}
@@ -39,10 +39,10 @@ function NavigationComponent() {
   );
 
   return (
-    <nav className="bg-white dark:bg-duxxan-surface border-b border-gray-200 dark:border-duxxan-border sticky top-0 z-50 backdrop-blur-sm bg-white/95 dark:bg-duxxan-surface/95">
+    <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
-          <Link href="/" className="text-xl sm:text-2xl font-bold text-duxxan-yellow">
+          <Link href="/" className="text-xl sm:text-2xl font-bold text-primary">
             DUXXAN
           </Link>
 
@@ -57,7 +57,7 @@ function NavigationComponent() {
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="hidden custom-md:flex text-gray-600 dark:text-duxxan-text-secondary hover:text-gray-900 dark:hover:text-white h-10 w-10"
+              className="hidden custom-md:flex text-muted-foreground hover:text-foreground h-10 w-10"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
