@@ -646,12 +646,12 @@ export default function Donations() {
                 <Globe className="w-5 h-5 text-yellow-500" />
                 Popüler Ülkeler
               </h3>
-              <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 mb-6">
                 {countries.slice(1, 9).map((country) => ( // Show only first 8 countries
                   <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md">
-                      <div className="text-lg mb-1">{country.label.split(' ')[0]}</div>
-                      <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 truncate">
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-2 sm:p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md min-h-[60px] flex flex-col justify-center">
+                      <div className="text-base sm:text-lg mb-1">{country.label.split(' ')[0]}</div>
+                      <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 line-clamp-2 leading-tight">
                         {country.label.split(' ').slice(1).join(' ')}
                       </div>
                     </div>
@@ -679,18 +679,18 @@ export default function Donations() {
                       </DialogTitle>
                     </DialogHeader>
                     <div className="overflow-y-auto max-h-[60vh] pt-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
                         {countries.slice(1).map((country) => (
                           <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
                             <div 
-                              className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                              className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-2 sm:p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-600 min-h-[80px] flex flex-col justify-center"
                               onClick={() => setShowAllCountries(false)}
                             >
-                              <div className="text-lg mb-1 text-gray-900 dark:text-white">{country.label.split(' ')[0]}</div>
-                              <div className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 truncate">
+                              <div className="text-base sm:text-lg mb-1 text-gray-900 dark:text-white">{country.label.split(' ')[0]}</div>
+                              <div className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 line-clamp-2 leading-tight mb-1">
                                 {country.label.split(' ').slice(1).join(' ')}
                               </div>
-                              <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                              <div className="text-xs text-gray-600 dark:text-gray-300">
                                 0 Kampanya
                               </div>
                             </div>
