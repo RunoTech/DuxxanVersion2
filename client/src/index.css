@@ -251,6 +251,46 @@
   overflow: hidden;
 }
 
+/* Responsive button fixes */
+.donation-quick-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.donation-quick-buttons > button {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .donation-quick-buttons > button {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.2rem;
+  }
+}
+
+/* Input and button flex container */
+.donation-input-container {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.donation-input-container > input {
+  flex: 1;
+  min-width: 0;
+}
+
+.donation-input-container > button {
+  flex-shrink: 0;
+}
+
 /* Loading state */
 .loading-shimmer {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
