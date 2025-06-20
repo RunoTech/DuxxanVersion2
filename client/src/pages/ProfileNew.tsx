@@ -17,19 +17,17 @@ import {
   Edit3, 
   Save, 
   X, 
-  Camera, 
   Shield,
   Star,
   MapPin,
-  Upload,
-  Trash2,
   Smartphone,
   Monitor,
   Tablet,
   Globe,
-  Calendar,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  Briefcase,
+  Building
 } from 'lucide-react';
 
 
@@ -768,20 +766,22 @@ export default function ProfileNew() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {devices.map((device: any) => (
-                    <div key={device.id} className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div key={device.id} className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-0">
                       <div className="flex-shrink-0 mt-1">
-                        {getDeviceIcon(device.deviceType)}
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                          {getDeviceIcon(device.deviceType)}
+                        </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-gray-800 dark:text-gray-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-semibold text-gray-900 dark:text-white">
                             {device.deviceName || device.deviceType}
                           </h4>
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="outline" className="text-xs border-gray-300 dark:border-gray-600">
                             {device.deviceType}
                           </Badge>
                         </div>
-                        <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                        <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
                           <div className="flex items-center gap-1">
                             <Globe className="h-3 w-3" />
                             <span>{device.browser}</span>
