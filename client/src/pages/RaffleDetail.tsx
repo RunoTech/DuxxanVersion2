@@ -27,7 +27,6 @@ import {
   Calendar,
   DollarSign
 } from 'lucide-react';
-import { WinnerOrgChat } from '@/components/WinnerOrgChat';
 import { MutualApprovalSystem } from '@/components/MutualApprovalSystem';
 
 export default function RaffleDetail() {
@@ -488,28 +487,7 @@ export default function RaffleDetail() {
               />
             )}
 
-            {/* Winner-Organization Private Chat - Always show if winner exists */}
-            {safeRaffle && safeRaffle.winnerId && (
-              <WinnerOrgChat 
-                raffleId={parseInt(id!)} 
-                raffle={{
-                  id: safeRaffle.id || 0,
-                  title: safeRaffle.title || '',
-                  winnerId: safeRaffle.winnerId,
-                  creatorId: safeRaffle.creatorId || 0,
-                  isApprovedByCreator: safeRaffle.isApprovedByCreator || false,
-                  isApprovedByWinner: safeRaffle.isApprovedByWinner || false,
-                  creator: {
-                    username: safeRaffle.creator?.username || '',
-                    organizationType: safeRaffle.creator?.organizationType,
-                    organizationVerified: safeRaffle.creator?.organizationVerified
-                  },
-                  winner: safeRaffle.winner ? {
-                    username: safeRaffle.winner.username
-                  } : undefined
-                }}
-              />
-            )}
+
           </div>
         </div>
       </div>

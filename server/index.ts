@@ -139,71 +139,7 @@ app.post('/api/raffles/:id/approve-creator', async (req: any, res) => {
   }
 });
 
-// Chat routes BEFORE any middleware
-app.get('/api/raffles/:id/chat', async (req: any, res) => {
-  try {
-    const raffleId = parseInt(req.params.id);
-    const { storage } = await import('./storage');
-    
-    const raffle = await storage.getRaffleById(raffleId);
-    
-    if (!raffle) {
-      return res.status(404).json({ message: 'Raffle not found' });
-    }
-
-    if (!raffle.winnerId) {
-      return res.status(400).json({ message: 'Chat not available until winner is announced' });
-    }
-
-    const messages = await storage.getChatMessages(raffleId);
-    res.json(messages);
-  } catch (error: any) {
-    console.error('Chat fetch error:', error);
-    res.status(500).json({ message: 'Failed to fetch chat messages', error: error.message });
-  }
-});
-
-app.post('/api/raffles/:id/chat', async (req: any, res) => {
-  try {
-    const raffleId = parseInt(req.params.id);
-    const { message } = req.body;
-    const { storage } = await import('./storage');
-
-    if (!message || typeof message !== 'string' || message.trim().length === 0) {
-      return res.status(400).json({ message: 'Message is required' });
-    }
-
-    if (message.length > 1000) {
-      return res.status(400).json({ message: 'Message too long (max 1000 characters)' });
-    }
-
-    const raffle = await storage.getRaffleById(raffleId);
-    
-    if (!raffle) {
-      return res.status(404).json({ message: 'Raffle not found' });
-    }
-
-    if (!raffle.winnerId) {
-      return res.status(400).json({ message: 'Chat not available until winner is announced' });
-    }
-
-    const senderId = 1; // Demo winner (TechMaster2024)
-    const receiverId = raffle.creatorId;
-
-    const chatMessage = await storage.createChatMessage({
-      raffleId,
-      senderId,
-      receiverId,
-      message: message.trim()
-    });
-
-    console.log('Chat message sent:', chatMessage);
-    res.status(201).json(chatMessage);
-  } catch (error) {
-    console.error('Chat message error:', error);
-    res.status(500).json({ message: 'Failed to send message' });
-  }
-});
+// Chat system removed
 
 // Remove duplicate middleware - already defined above
 

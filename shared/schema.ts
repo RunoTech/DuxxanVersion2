@@ -162,14 +162,7 @@ export const userRatings = pgTable("user_ratings", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const chatMessages = pgTable("chat_messages", {
-  id: serial("id").primaryKey(),
-  raffleId: integer("raffle_id").references(() => raffles.id).notNull(),
-  senderId: integer("sender_id").references(() => users.id).notNull(),
-  receiverId: integer("receiver_id").references(() => users.id).notNull(),
-  message: text("message").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// Chat system removed - using cleaner approach
 
 export const follows = pgTable("follows", {
   id: serial("id").primaryKey(),
@@ -332,7 +325,7 @@ export const rafflesRelations = relations(raffles, ({ one, many }) => ({
     references: [categories.id],
   }),
   tickets: many(tickets),
-  chatMessages: many(chatMessages),
+
 }));
 
 export const donationsRelations = relations(donations, ({ one, many }) => ({

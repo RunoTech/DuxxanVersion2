@@ -7,7 +7,7 @@ import {
   userRatings,
   categories,
   countries,
-  chatMessages,
+
   follows,
   userDevices,
   userPhotos,
