@@ -226,24 +226,24 @@ export default function Profile() {
   const stats = getProfileStats();
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-duxxan-page py-6 transition-colors duration-200">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <WalletStatus />
         </div>
 
         {/* Hero Profile Section */}
-        <div className="relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-3xl p-8 mb-8 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-2xl p-6 mb-6 overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yIDItNCA0LTRoNGMwIDIgMiA0IDQgNHY0YzAgMi0yIDQtNCA0aC00Yy0yIDAtNC0yLTQtNHYtNHptMC0zMGMwLTIgMi00IDQtNGg0YzAgMiAyIDQgNCA0djRjMCAyLTIgNC00IDRoLTRjLTIgMC00LTItNC00VjR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
           
           <div className="relative z-10">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
               {/* Profile Photo Section */}
               <div className="relative group">
                 <div className="relative">
-                  <Avatar className="h-40 w-40 border-6 border-white shadow-2xl">
+                  <Avatar className="h-32 w-32 border-4 border-white shadow-2xl">
                     <AvatarImage 
                       src={user.profilePhoto || user.profileImage} 
                       alt={user.name || user.username}

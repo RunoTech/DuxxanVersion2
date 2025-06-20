@@ -221,8 +221,8 @@ export default function Donations() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8">
           <div className="w-full lg:w-auto">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
               Vakıflar, Dernekler ve Bireysel Bağışçılar İçin Blockchain Tabanlı Şeffaf Platform
             </p>
           </div>
@@ -239,11 +239,11 @@ export default function Donations() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-500 mb-2">
+            <CardContent className="p-2 sm:p-3 lg:p-4 text-center">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-500 mb-1">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
