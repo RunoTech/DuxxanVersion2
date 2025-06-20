@@ -213,11 +213,11 @@ function NavigationComponent() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 p-0">
+              <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 p-0 transition-colors duration-300">
                 <div className="h-full flex flex-col">
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <SheetTitle className="text-xl font-bold text-gray-900 dark:text-white">Menü</SheetTitle>
+                  <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                    <SheetTitle className="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Menü</SheetTitle>
                   </div>
                   
                   {/* Scrollable Content */}
@@ -386,8 +386,8 @@ function NavigationComponent() {
                       {/* Theme Toggle */}
                       <div className="space-y-3">
                         <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">Tema</h3>
-                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                          <div className="grid grid-cols-2 gap-1">
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 transition-colors duration-300">
+                          <div className="grid grid-cols-2 gap-1 relative">
                             <Button
                               onClick={() => {
                                 if (theme === 'dark') {
@@ -395,13 +395,13 @@ function NavigationComponent() {
                                 }
                               }}
                               variant="ghost"
-                              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 relative z-10 ${
                                 theme === 'light' 
-                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' 
-                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md scale-[1.02]' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                               }`}
                             >
-                              <Sun className="w-4 h-4" />
+                              <Sun className={`w-4 h-4 transition-all duration-300 ${theme === 'light' ? 'text-yellow-500 scale-110' : ''}`} />
                               Açık
                             </Button>
                             <Button
@@ -411,13 +411,13 @@ function NavigationComponent() {
                                 }
                               }}
                               variant="ghost"
-                              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 relative z-10 ${
                                 theme === 'dark' 
-                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' 
-                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md scale-[1.02]' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                               }`}
                             >
-                              <Moon className="w-4 h-4" />
+                              <Moon className={`w-4 h-4 transition-all duration-300 ${theme === 'dark' ? 'text-blue-400 scale-110' : ''}`} />
                               Koyu
                             </Button>
                           </div>
