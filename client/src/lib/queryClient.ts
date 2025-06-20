@@ -68,7 +68,7 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn({ on401: "throw" }),
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchOnMount: false, // Disable automatic refetch on mount
+      refetchOnMount: true, // Enable automatic refetch on mount
       refetchInterval: false,
       retry: 1, // Reduce retries
       retryDelay: 500, // Faster retry

@@ -22,11 +22,12 @@ export default function Donations() {
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Fetch donations with proper typing and caching
+  // Fetch donations with optimized caching
   const { data: donationsResponse, isLoading } = useQuery({
     queryKey: ['/api/donations'],
-    staleTime: 2 * 60 * 1000, // 2 minutes cache
-    enabled: true
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    enabled: true,
+    retry: 0 // No retries for faster loading
   });
 
   const donations = (donationsResponse as any)?.data || [];
