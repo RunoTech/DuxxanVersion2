@@ -330,9 +330,10 @@ export default function Donations() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* First Row - Search takes full width */}
-              <div className="mb-4">
-                <div className="relative max-w-md">
+              {/* Single Row - All filters in one line */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {/* Search */}
+                <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     placeholder="Kampanya ara..."
@@ -341,77 +342,62 @@ export default function Donations() {
                     className="pl-10 h-10"
                   />
                 </div>
-              </div>
 
-              {/* Second Row - 4 equal columns for filters */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Country Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Tüm Ülkeler</label>
-                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="h-10">
-                      <SelectValue placeholder="Ülke Seç" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country.value} value={country.value}>
-                          {country.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="🌍 Tüm Ülkeler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem key={country.value} value={country.value}>
+                        {country.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
                 {/* Category Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Tüm Kategoriler</label>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="h-10">
-                      <SelectValue placeholder="Kategori Seç" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="📁 Tüm Kategoriler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
                 {/* Sort By */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">En Yeni</label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="h-10">
-                      <SelectValue placeholder="Sırala" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="newest">En Yeni</SelectItem>
-                      <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
-                      <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
-                      <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
-                      <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="🔄 En Yeni" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">En Yeni</SelectItem>
+                    <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
+                    <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
+                    <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
+                    <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
+                  </SelectContent>
+                </Select>
 
                 {/* Clear Filters */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-transparent">Action</label>
-                  <Button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSortBy('newest');
-                      setSelectedCountry('all');
-                      setSelectedCategory('all');
-                      setActiveTab('all');
-                    }}
-                    className="w-full h-10"
-                  >
-                    Tümünü Temizle
-                  </Button>
-                </div>
+                <Button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSortBy('newest');
+                    setSelectedCountry('all');
+                    setSelectedCategory('all');
+                    setActiveTab('all');
+                  }}
+                  className="h-10"
+                >
+                  Tümünü Temizle
+                </Button>
               </div>
             </CardContent>
           </Card>
