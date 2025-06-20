@@ -648,14 +648,20 @@ export default function Donations() {
               </h3>
               <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-6">
                 {countries.slice(1, 9).map((country) => ( // Show only first 8 countries
-                  <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md">
-                      <div className="text-lg mb-1">{country.label.split(' ')[0]}</div>
-                      <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 truncate">
-                        {country.label.split(' ').slice(1).join(' ')}
-                      </div>
+                  <div key={country.value} 
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md"
+                    onClick={() => {
+                      // For now, just show an alert with the selected country
+                      alert(`Selected country: ${country.label} (${country.value})`);
+                      // TODO: Implement proper country filtering
+                      setSelectedCountry(country.value);
+                    }}
+                  >
+                    <div className="text-lg mb-1">{country.label.split(' ')[0]}</div>
+                    <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 truncate">
+                      {country.label.split(' ').slice(1).join(' ')}
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
               
@@ -681,20 +687,24 @@ export default function Donations() {
                     <div className="overflow-y-auto max-h-[60vh] pt-4 pr-3">
                       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mr-3">
                         {countries.slice(1).map((country) => (
-                          <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
-                            <div 
-                              className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-600"
-                              onClick={() => setShowAllCountries(false)}
-                            >
-                              <div className="text-lg mb-1 text-gray-900 dark:text-white">{country.label.split(' ')[0]}</div>
-                              <div className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 truncate">
-                                {country.label.split(' ').slice(1).join(' ')}
-                              </div>
-                              <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                                0 Kampanya
-                              </div>
+                          <div 
+                            key={country.value}
+                            className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                            onClick={() => {
+                              setSelectedCountry(country.value);
+                              setShowAllCountries(false);
+                              // Show confirmation of selection
+                              console.log(`Selected country: ${country.label} (${country.value})`);
+                            }}
+                          >
+                            <div className="text-lg mb-1 text-gray-900 dark:text-white">{country.label.split(' ')[0]}</div>
+                            <div className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 truncate">
+                              {country.label.split(' ').slice(1).join(' ')}
                             </div>
-                          </Link>
+                            <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                              0 Kampanya
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
