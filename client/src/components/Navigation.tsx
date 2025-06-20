@@ -40,7 +40,7 @@ function NavigationComponent() {
 
   return (
     <nav className="bg-white dark:bg-duxxan-surface border-b border-gray-200 dark:border-duxxan-border sticky top-0 z-50 backdrop-blur-sm bg-white/95 dark:bg-duxxan-surface/95">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <Link href="/" className="text-xl sm:text-2xl font-bold text-duxxan-yellow">
             DUXXAN

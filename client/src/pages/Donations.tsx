@@ -212,7 +212,7 @@ export default function Donations() {
 
   return (
     <div className="min-h-screen bg-duxxan-page py-4 sm:py-6 lg:py-8 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
           <WalletStatus />
