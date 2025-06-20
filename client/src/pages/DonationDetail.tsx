@@ -165,52 +165,12 @@ export default function DonationDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={progressData}>
-                      <defs>
-                        <linearGradient id="donationGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" className="dark:stroke-[#2A2A2A]" />
-                      <XAxis 
-                        dataKey="day" 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: '#666', fontSize: 12 }}
-                        className="dark:fill-[#888]"
-                      />
-                      <YAxis 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: '#666', fontSize: 12 }}
-                        className="dark:fill-[#888]"
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: '2px solid #F59E0B',
-                          borderRadius: '8px',
-                          color: '#000',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                        }}
-
-                        formatter={(value, name) => [
-                          `${value} ${name === 'amount' ? 'USDT' : 'kişi'}`,
-                          name === 'amount' ? 'Toplam Bağış' : 'Bağışçı Sayısı'
-                        ]}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="amount"
-                        stroke="#10B981"
-                        strokeWidth={2}
-                        fill="url(#donationGradient)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                <div className="h-80 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/10 dark:to-blue-900/10 rounded-lg">
+                  <div className="text-center">
+                    <TrendingUp className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Bağış Analizi</h3>
+                    <p className="text-gray-600 dark:text-gray-400">Son 7 günde toplam {donationData.currentAmount} USDT bağış toplandı</p>
+                  </div>
                 </div>
                 
                 {/* İstatistikler */}
@@ -242,20 +202,13 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bağışlar</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <LightweightChart
-                    type="line"
-                    data={{
-                      labels: hourlyDonations.map(d => d.hour),
-                      datasets: [{
-                        label: 'Saatlik Bağışlar (USDT)',
-                        data: hourlyDonations.map(d => d.amount),
-                        borderColor: '#10B981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderWidth: 2,
-                      }]
-                    }}
-                    className="h-64"
-                  />
+                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 rounded-lg">
+                    <div className="text-center">
+                      <Clock className="w-12 h-12 text-blue-500 mx-auto mb-3" />
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Saatlik Analiz</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">En yoğun bağış saatleri: 18:00-20:00</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -265,20 +218,13 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağışçı Dağılımı</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <LightweightChart
-                    type="bar"
-                    data={{
-                      labels: donorDistribution.map(d => d.range),
-                      datasets: [{
-                        label: 'Bağışçı Sayısı',
-                        data: donorDistribution.map(d => d.count),
-                        backgroundColor: '#F3BA2F',
-                        borderColor: '#F59E0B',
-                        borderWidth: 1,
-                      }]
-                    }}
-                    className="h-64"
-                  />
+                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/10 dark:to-orange-900/10 rounded-lg">
+                    <div className="text-center">
+                      <Users className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Bağışçı Analizi</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Toplam {donationData.donorCount} bağışçı katıldı</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
