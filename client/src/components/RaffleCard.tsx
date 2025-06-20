@@ -123,44 +123,44 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
       
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{raffle.title}</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-white">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
-            <span className="text-yellow-500 text-sm">★</span>
-            <span className="text-sm text-gray-600 dark:text-gray-400">{raffle.creator.rating}</span>
+            <span className="text-yellow-500 text-xs">★</span>
+            <span className="text-xs text-gray-600 dark:text-gray-400">{raffle.creator.rating}</span>
           </div>
         </div>
         
-        <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 mb-3 text-xs line-clamp-2">
           {raffle.description}
         </p>
 
-        <div className="bg-yellow-50 dark:bg-gray-700 rounded-lg p-4 mb-4 border border-yellow-200 dark:border-gray-600">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Satılan Biletler</span>
-            <span className="text-sm font-bold text-white">
+        <div className="bg-yellow-50 dark:bg-gray-700 rounded-lg p-3 mb-3 border border-yellow-200 dark:border-gray-600">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-xs text-gray-600 dark:text-gray-400">Satılan Biletler</span>
+            <span className="text-xs font-bold text-white">
               {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
             </span>
           </div>
-          <Progress value={progress} className="mb-2" />
+          <Progress value={progress} className="mb-1 h-1.5" />
           <div className="text-xs text-gray-600 dark:text-gray-400">
             {progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse tükendi!'}
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <div className="flex justify-between items-center mb-2">
           <div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Bilet Fiyatı</div>
-            <div className="text-sm sm:text-lg font-bold text-white">
+            <div className="text-xs text-gray-600 dark:text-gray-400">Bilet Fiyatı</div>
+            <div className="text-sm font-bold text-white">
               {parseFloat(raffle.ticketPrice).toLocaleString()} USDT
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-gray-600 dark:text-gray-400">
               {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
             </div>
-            <div className="text-sm sm:text-lg font-bold text-white">
+            <div className="text-sm font-bold text-white">
               {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
             </div>
           </div>
@@ -170,7 +170,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           <Button
             onClick={() => buyTickets(1)}
             disabled={!isConnected || daysLeft <= 0}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white w-full text-xs sm:text-sm"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white w-full text-xs h-8"
           >
             Bilet Al
           </Button>
