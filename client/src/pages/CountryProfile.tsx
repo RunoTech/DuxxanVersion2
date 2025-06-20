@@ -180,76 +180,79 @@ export default function CountryProfile() {
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <DollarSign className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalDonations}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">USDT Bağış</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalDonations}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">USDT Bağış</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <Award className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalRaffles}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Aktif Çekiliş</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <Award className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.totalRaffles}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Aktif Çekiliş</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <Building2 className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeFoundations}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Vakıf</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeFoundations}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Vakıf</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <Users className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeAssociations}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Dernek</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.activeAssociations}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dernek</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-600">
-            <CardContent className="p-6 text-center">
-              <Heart className="w-8 h-8 text-red-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{country.stats.individuals}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Bireysel</div>
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 mx-auto mb-2" />
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{country.stats.individuals}</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Bireysel</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <TabsTrigger 
               value="overview"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white text-xs sm:text-sm"
             >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Genel Bakış
+              <BarChart3 className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Genel Bakış</span>
+              <span className="sm:hidden">Genel</span>
             </TabsTrigger>
             <TabsTrigger 
               value="donations"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white text-xs sm:text-sm"
             >
-              <Heart className="w-4 h-4 mr-2" />
-              Bağış Kampanyaları
+              <Heart className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Bağış Kampanyaları</span>
+              <span className="sm:hidden">Bağış</span>
             </TabsTrigger>
             <TabsTrigger 
               value="raffles"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white text-xs sm:text-sm"
             >
-              <Award className="w-4 h-4 mr-2" />
+              <Award className="w-4 h-4 mr-1 sm:mr-2" />
               Çekilişler
             </TabsTrigger>
             <TabsTrigger 
               value="organizations"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white text-xs sm:text-sm"
             >
-              <Building2 className="w-4 h-4 mr-2" />
-              Organizasyonlar
+              <Building2 className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Organizasyonlar</span>
+              <span className="sm:hidden">Org.</span>
             </TabsTrigger>
           </TabsList>
 
