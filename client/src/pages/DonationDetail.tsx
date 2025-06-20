@@ -165,31 +165,31 @@ export default function DonationDetail() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/10 dark:to-blue-900/10 rounded-lg">
+                <div className="h-80 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-700">
                   <div className="text-center">
-                    <TrendingUp className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Bağış Analizi</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Son 7 günde toplam {donationData.currentAmount} USDT bağış toplandı</p>
+                    <TrendingUp className="w-16 h-16 text-green-500 dark:text-green-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Bağış Analizi</h3>
+                    <p className="text-gray-600 dark:text-gray-300">Son 7 günde toplam {donationData.currentAmount} USDT bağış toplandı</p>
                   </div>
                 </div>
                 
                 {/* İstatistikler */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-yellow-200 dark:border-duxxan-border">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-yellow-200 dark:border-gray-600">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 dark:text-duxxan-success">{donationData.currentAmount}</div>
-                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Toplanan</div>
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">{donationData.currentAmount}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Toplanan</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-600 dark:text-duxxan-warning">%{progress.toFixed(1)}</div>
-                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Hedef</div>
+                    <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">%{progress.toFixed(1)}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Hedef</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-duxxan-text">{donationData.donorCount}</div>
-                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Bağışçı</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{donationData.donorCount}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Bağışçı</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-600 dark:text-duxxan-yellow">{daysLeft}</div>
-                    <div className="text-sm text-gray-600 dark:text-duxxan-text-secondary">Gün Kaldı</div>
+                    <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{daysLeft}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Gün Kaldı</div>
                   </div>
                 </div>
               </CardContent>
@@ -202,11 +202,11 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Saatlik Bağışlar</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 rounded-lg">
+                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
                     <div className="text-center">
-                      <Clock className="w-12 h-12 text-blue-500 mx-auto mb-3" />
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Saatlik Analiz</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">En yoğun bağış saatleri: 18:00-20:00</p>
+                      <Clock className="w-12 h-12 text-blue-500 dark:text-blue-400 mx-auto mb-3" />
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Saatlik Analiz</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">En yoğun bağış saatleri: 18:00-20:00</p>
                     </div>
                   </div>
                 </CardContent>
@@ -218,11 +218,11 @@ export default function DonationDetail() {
                   <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağışçı Dağılımı</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/10 dark:to-orange-900/10 rounded-lg">
+                  <div className="h-48 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
                     <div className="text-center">
-                      <Users className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Bağışçı Analizi</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Toplam {donationData.donorCount} bağışçı katıldı</p>
+                      <Users className="w-12 h-12 text-yellow-500 dark:text-yellow-400 mx-auto mb-3" />
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Bağışçı Analizi</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">Toplam {donationData.donorCount} bağışçı katıldı</p>
                     </div>
                   </div>
                 </CardContent>
@@ -235,42 +235,42 @@ export default function DonationDetail() {
                 <CardTitle className="text-gray-900 dark:text-duxxan-text">Bağış Kampanyası Detayları</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-duxxan-text-secondary leading-relaxed mb-4">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                   {donationData.description}
                 </p>
-                <Separator className="my-4 bg-yellow-200 dark:bg-duxxan-border" />
+                <Separator className="my-4 bg-yellow-200 dark:bg-gray-600" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text mb-2">Kampanya Bilgileri</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Kampanya Bilgileri</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Hedef Tutar:</span>
-                        <span className="text-green-600 dark:text-duxxan-success">{donationData.goalAmount} USDT</span>
+                        <span className="text-gray-600 dark:text-gray-300">Hedef Tutar:</span>
+                        <span className="text-green-600 dark:text-green-400">{donationData.goalAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Toplanan:</span>
-                        <span className="text-gray-900 dark:text-duxxan-text">{donationData.currentAmount} USDT</span>
+                        <span className="text-gray-600 dark:text-gray-300">Toplanan:</span>
+                        <span className="text-gray-900 dark:text-gray-100">{donationData.currentAmount} USDT</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-duxxan-text-secondary">Bitiş Tarihi:</span>
-                        <span className="text-gray-900 dark:text-duxxan-text">
+                        <span className="text-gray-600 dark:text-gray-300">Bitiş Tarihi:</span>
+                        <span className="text-gray-900 dark:text-gray-100">
                           {new Date(donationData.endDate).toLocaleDateString('tr-TR')}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text mb-2">Güvenlik & Şeffaflık</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Güvenlik & Şeffaflık</h4>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
                         <Shield className="w-4 h-4" />
                         Blockchain Destekli
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
                         <Shield className="w-4 h-4" />
                         Şeffaf Harcama
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-duxxan-success">
+                      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
                         <Shield className="w-4 h-4" />
                         Doğrudan Transfer
                       </div>
@@ -293,7 +293,7 @@ export default function DonationDetail() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="amount" className="text-gray-900 dark:text-duxxan-text">Bağış Tutarı (USDT)</Label>
+                  <Label htmlFor="amount" className="text-gray-900 dark:text-gray-100">Bağış Tutarı (USDT)</Label>
                   <Input
                     id="amount"
                     type="number"
@@ -301,7 +301,7 @@ export default function DonationDetail() {
                     step="0.01"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(Number(e.target.value))}
-                    className="bg-white dark:bg-duxxan-dark border-yellow-300 dark:border-duxxan-border text-gray-900 dark:text-duxxan-text"
+                    className="bg-white dark:bg-gray-800 border-yellow-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                   />
                 </div>
 
@@ -313,40 +313,40 @@ export default function DonationDetail() {
                       variant="outline"
                       size="sm"
                       onClick={() => setDonationAmount(amount)}
-                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-duxxan-border dark:text-duxxan-text dark:hover:bg-duxxan-yellow dark:hover:text-duxxan-dark"
+                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-gray-600 dark:text-gray-100 dark:hover:bg-yellow-500 dark:hover:text-gray-900"
                     >
                       {amount}
                     </Button>
                   ))}
                 </div>
                 
-                <div className="bg-white dark:bg-duxxan-dark p-3 rounded-lg border border-yellow-300 dark:border-duxxan-border">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-yellow-300 dark:border-gray-600">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600 dark:text-duxxan-text-secondary">Bağış Tutarı:</span>
-                    <span className="text-gray-900 dark:text-duxxan-text">{donationAmount} USDT</span>
+                    <span className="text-gray-600 dark:text-gray-300">Bağış Tutarı:</span>
+                    <span className="text-gray-900 dark:text-gray-100">{donationAmount} USDT</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600 dark:text-duxxan-text-secondary">Platform Ücreti:</span>
-                    <span className="text-gray-900 dark:text-duxxan-text">Ücretsiz</span>
+                    <span className="text-gray-600 dark:text-gray-300">Platform Ücreti:</span>
+                    <span className="text-gray-900 dark:text-gray-100">Ücretsiz</span>
                   </div>
-                  <Separator className="my-2 bg-yellow-200 dark:bg-duxxan-border" />
+                  <Separator className="my-2 bg-yellow-200 dark:bg-gray-600" />
                   <div className="flex justify-between font-semibold">
-                    <span className="text-gray-900 dark:text-duxxan-text">Toplam:</span>
-                    <span className="text-yellow-600 dark:text-duxxan-success">
+                    <span className="text-gray-900 dark:text-gray-100">Toplam:</span>
+                    <span className="text-yellow-600 dark:text-green-400">
                       {donationAmount.toFixed(2)} USDT
                     </span>
                   </div>
                 </div>
 
                 <Button 
-                  className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-duxxan-success dark:text-white dark:hover:bg-duxxan-success/90"
+                  className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
                   disabled={!isConnected}
                 >
                   {isConnected ? 'Bağış Yap' : 'Cüzdan Bağlayın'}
                 </Button>
 
                 {!isConnected && (
-                  <p className="text-xs text-gray-600 dark:text-duxxan-text-secondary text-center">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 text-center">
                     Bağış yapmak için cüzdanınızı bağlamanız gerekmektedir.
                   </p>
                 )}
@@ -356,18 +356,18 @@ export default function DonationDetail() {
             {/* İlerleme */}
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Kampanya İlerlemesi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-gray-100">Kampanya İlerlemesi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <Progress value={progress} className="h-3" />
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-duxxan-text-secondary">
+                    <span className="text-gray-600 dark:text-gray-300">
                       {donationData.currentAmount} / {donationData.goalAmount} USDT
                     </span>
-                    <span className="text-yellow-600 dark:text-duxxan-success">%{progress.toFixed(1)}</span>
+                    <span className="text-yellow-600 dark:text-green-400">%{progress.toFixed(1)}</span>
                   </div>
-                  <div className="text-center text-sm text-gray-600 dark:text-duxxan-text-secondary">
+                  <div className="text-center text-sm text-gray-600 dark:text-gray-300">
                     Hedefe {(Number(donationData.goalAmount) - Number(donationData.currentAmount)).toFixed(2)} USDT kaldı
                   </div>
                 </div>
@@ -377,23 +377,23 @@ export default function DonationDetail() {
             {/* Kampanya Sahibi */}
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Kampanya Sahibi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-gray-100">Kampanya Sahibi</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12">
                     <AvatarImage src={donationData.creator?.profileImage} />
-                    <AvatarFallback className="bg-yellow-500 dark:bg-duxxan-success text-white">
+                    <AvatarFallback className="bg-yellow-500 dark:bg-green-600 text-white">
                       {donationData.creator?.username?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 dark:text-duxxan-text">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">
                       {donationData.creator?.username}
                     </h4>
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-500 dark:text-duxxan-yellow fill-current" />
-                      <span className="text-sm text-gray-600 dark:text-duxxan-text-secondary">
+                      <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 fill-current" />
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
                         {donationData.creator?.rating} ({donationData.creator?.ratingCount} değerlendirme)
                       </span>
                     </div>
@@ -401,7 +401,7 @@ export default function DonationDetail() {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full mt-3 border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-duxxan-border dark:text-duxxan-text"
+                  className="w-full mt-3 border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   İletişime Geç
@@ -412,7 +412,7 @@ export default function DonationDetail() {
             {/* Son Bağışçılar */}
             <Card className="bg-white dark:bg-duxxan-surface border-yellow-300 dark:border-duxxan-border">
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-duxxan-text">Son Bağışçılar</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-gray-100">Son Bağışçılar</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -420,13 +420,13 @@ export default function DonationDetail() {
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-yellow-100 dark:bg-duxxan-border text-gray-700 dark:text-duxxan-text text-xs">
+                          <AvatarFallback className="bg-yellow-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs">
                             B{i}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-gray-900 dark:text-duxxan-text">donor_{i}...xyz</span>
+                        <span className="text-sm text-gray-900 dark:text-gray-100">donor_{i}...xyz</span>
                       </div>
-                      <span className="text-xs text-yellow-600 dark:text-duxxan-success font-semibold">
+                      <span className="text-xs text-yellow-600 dark:text-green-400 font-semibold">
                         {(Math.random() * 100 + 10).toFixed(2)} USDT
                       </span>
                     </div>
