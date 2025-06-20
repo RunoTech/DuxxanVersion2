@@ -104,7 +104,7 @@ function AppContent() {
   // console.log('AppContent render:', { isConnected, hasConnection: !!connection });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1D2025] text-gray-900 dark:text-white transition-colors duration-200 pb-12">
+    <div className="min-h-screen bg-white dark:bg-[#1D2025] text-gray-900 dark:text-white transition-colors duration-200 pb-12 overflow-x-hidden">
       <Navigation />
       <Router />
       <Footer />

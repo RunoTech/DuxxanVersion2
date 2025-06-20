@@ -177,28 +177,28 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
             {/* Logo and Branding */}
-            <div className="inline-flex items-center gap-4 mb-8">
+            <div className="inline-flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative">
-                <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                  <span className="text-3xl font-black text-white">D</span>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                  <span className="text-2xl sm:text-3xl font-black text-white">D</span>
                 </div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
+                <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                 </div>
               </div>
               <div className="text-left">
-                <h1 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                <h1 className="text-3xl sm:text-5xl md:text-7xl font-black bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
                   DUXXAN
                 </h1>
-                <p className="text-sm md:text-base font-medium text-gray-600 dark:text-gray-300 tracking-wider">
+                <p className="text-xs sm:text-sm md:text-base font-medium text-gray-600 dark:text-gray-300 tracking-wider">
                   BLOCKCHAIN PLATFORM
                 </p>
               </div>
             </div>
 
             {/* Dynamic Features Showcase */}
-            <div className="mb-8">
-              <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-full px-6 py-3 mb-6 shadow-lg">
+            <div className="mb-6 sm:mb-8">
+              <div className="inline-flex items-center gap-1 sm:gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-full px-3 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 shadow-lg">
                 {heroSlides.map((slide, index) => {
                   const IconComponent = slide.icon;
                   return (
@@ -210,13 +210,13 @@ export default function Home() {
                           : 'text-gray-400 scale-75 opacity-40'
                       }`}
                     >
-                      <IconComponent className="w-8 h-8" />
+                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8" />
                     </div>
                   );
                 })}
               </div>
               
-              <div className="h-24 mb-8 relative">
+              <div className="h-16 sm:h-20 lg:h-24 mb-6 sm:mb-8 relative">
                 {heroSlides.map((slide, index) => (
                   <div
                     key={index}
@@ -226,10 +226,10 @@ export default function Home() {
                         : 'opacity-0'
                     }`}
                   >
-                    <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 px-2">
                       {slide.title}
                     </h2>
-                    <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 font-medium">
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400 font-medium px-4">
                       {slide.subtitle}
                     </p>
                   </div>
