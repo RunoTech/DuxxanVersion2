@@ -307,14 +307,14 @@ export default function Donations() {
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-800 border-0 p-1 h-12">
+          <TabsList className="grid w-full grid-cols-5 bg-gray-800 dark:bg-gray-800 border-0 p-1 h-12">
             {organizationTypes.map((type) => {
               const IconComponent = type.icon;
               return (
                 <TabsTrigger 
                   key={type.value} 
                   value={type.value}
-                  className="flex items-center gap-2 text-gray-300 hover:text-white data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10"
+                  className="flex items-center gap-2 text-gray-300 dark:text-gray-300 hover:text-white dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10"
                   style={{
                     backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent',
                     borderRadius: activeTab === type.value ? '8px' : '0px'
