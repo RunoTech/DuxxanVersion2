@@ -305,17 +305,17 @@ export default function Donations() {
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-5 bg-gray-800 border-0 p-1 h-12">
             {organizationTypes.map((type) => {
               const IconComponent = type.icon;
               return (
                 <TabsTrigger 
                   key={type.value} 
                   value={type.value}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-gray-300 hover:text-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none border-0 rounded-none h-10"
                 >
                   <IconComponent className="w-4 h-4" />
-                  <span className="hidden md:inline">{type.label}</span>
+                  <span className="hidden md:inline text-sm font-medium">{type.label}</span>
                 </TabsTrigger>
               );
             })}
