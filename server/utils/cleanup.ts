@@ -1,19 +1,20 @@
 // Cleanup utilities for server stability
 
 export function startPeriodicCleanup() {
-  // More frequent cleanup for Replit stability
+  // Less frequent cleanup to reduce resource usage
   setInterval(() => {
     try {
-      // Force garbage collection if available
-      if (global.gc) {
+      // Force garbage collection only when needed
+      const memUsage = process.memoryUsage();
+      const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
+      
+      if (heapUsedMB > 180 && global.gc) {
         global.gc();
       }
-      
-      // Skip module cache cleanup in ESM environment to prevent errors
     } catch (error) {
-      console.error('Cleanup error:', error);
+      // Silent error handling
     }
-  }, 2 * 60 * 1000); // 2 minutes for better stability
+  }, 10 * 60 * 1000); // 10 minutes
 }
 
 export function optimizeNodeOptions() {

@@ -145,6 +145,7 @@ app.post('/api/raffles/:id/approve-creator', async (req: any, res) => {
 
 // Remove duplicate middleware - already defined above
 
+// Optimized request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -158,8 +159,11 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    const statusCode = res.statusCode;
+    
+    // Only log errors and very slow requests to reduce spam
+    if (statusCode >= 400 || duration > 3000) {
+      let logLine = `${req.method} ${path} ${statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -208,9 +212,8 @@ app.use('/api', apiRoutes);
     log('DUXXAN server running with controller-based architecture');
   });
 
-  // Start memory monitoring and cleanup for stability
+  // Start optimized monitoring for stability
   optimizeNodeOptions();
-  startMemoryMonitoring();
   startPeriodicCleanup();
 
   // Graceful shutdown handling
