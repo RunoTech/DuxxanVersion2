@@ -24,6 +24,7 @@ import {
   Timer,
   Target
 } from 'lucide-react';
+import { DigitalRain } from '@/components/DigitalRain';
 
 export default function Home() {
   const { isConnected } = useWallet();
@@ -164,9 +165,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#1D2025] transition-colors duration-200">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-[#0F1419] dark:via-[#1A1B23] dark:to-[#2D1B69] py-24 overflow-hidden min-h-[90vh] flex items-center">
+    <div className="min-h-screen bg-white dark:bg-[#1D2025] transition-colors duration-200 relative">
+      {/* Digital Rain Background Effect */}
+      <DigitalRain />
+      
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-[#0F1419] dark:via-[#1A1B23] dark:to-[#2D1B69] py-24 overflow-hidden min-h-[90vh] flex items-center">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-orange-400/10 to-red-400/10 animate-pulse"></div>
           <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
