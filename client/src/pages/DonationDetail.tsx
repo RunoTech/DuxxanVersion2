@@ -34,11 +34,21 @@ export default function DonationDetail() {
   const { data: donation, isLoading } = useQuery({
     queryKey: [`/api/donations/${id}`],
     enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const { data: contributions } = useQuery({
     queryKey: [`/api/donations/${id}/contributions`],
     enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   // Mock chart data - bağış analizi

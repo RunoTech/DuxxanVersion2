@@ -68,11 +68,21 @@ export default function RaffleDetail() {
   const { data: raffle, isLoading } = useQuery({
     queryKey: [`/api/raffles/${id}`],
     enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const { data: tickets } = useQuery({
     queryKey: [`/api/raffles/${id}/tickets`],
     enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   // Gerçek chart verilerini sadece veri varsa kullan

@@ -32,17 +32,29 @@ export default function Home() {
   // Fetch platform statistics
   const { data: stats } = useQuery({
     queryKey: ['/api/stats'],
-    refetchInterval: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const { data: activeRaffles } = useQuery({
     queryKey: ['/api/raffles/active'],
-    refetchInterval: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const { data: activeDonations } = useQuery({
     queryKey: ['/api/donations/active'],
-    refetchInterval: 30000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 
   const heroSlides = [

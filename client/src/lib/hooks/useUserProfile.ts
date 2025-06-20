@@ -4,11 +4,14 @@ import type { User, InsertUser } from '@shared/schema';
 
 export function useUserProfile(walletAddress?: string) {
   return useQuery<User>({
-    queryKey: ['user', 'profile', walletAddress],
+    queryKey: ['/api/users/me', walletAddress],
     queryFn: () => apiRequest('GET', `/api/users/me`).then(res => res.json()),
     enabled: !!walletAddress,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
@@ -27,19 +30,27 @@ export function useUpdateUserProfile() {
 
 export function useUserDevices() {
   return useQuery({
-    queryKey: ['user', 'devices'],
+    queryKey: ['/api/users/me/devices'],
     queryFn: () => apiRequest('GET', '/api/users/me/devices').then(res => res.json()),
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useUserPhotos(photoType?: string) {
   return useQuery({
-    queryKey: ['user', 'photos', photoType],
+    queryKey: ['/api/users/me/photos', photoType],
     queryFn: () => {
       const url = photoType ? `/api/users/me/photos?type=${photoType}` : '/api/users/me/photos';
       return apiRequest('GET', url).then(res => res.json());
     },
-    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }

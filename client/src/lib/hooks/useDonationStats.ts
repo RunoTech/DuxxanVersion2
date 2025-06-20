@@ -18,36 +18,51 @@ export function useDonations(limit = 20) {
 
 export function useActiveDonations() {
   return useQuery<(Donation & { creator: User })[]>({
-    queryKey: ['donations', 'active'],
+    queryKey: ['/api/donations/active'],
     queryFn: () => apiRequest('GET', '/api/donations/active').then(res => res.json()),
-    staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useDonationDetail(id: number) {
   return useQuery<Donation & { creator: User }>({
-    queryKey: ['donations', 'detail', id],
+    queryKey: ['/api/donations/detail', id],
     queryFn: () => apiRequest('GET', `/api/donations/${id}`).then(res => res.json()),
     enabled: !!id,
-    staleTime: 30 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useDonationContributions(donationId: number) {
   return useQuery<(DonationContribution & { user: User })[]>({
-    queryKey: ['donations', donationId, 'contributions'],
+    queryKey: ['/api/donations/contributions', donationId],
     queryFn: () => apiRequest('GET', `/api/donations/${donationId}/contributions`).then(res => res.json()),
     enabled: !!donationId,
-    staleTime: 10 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
 export function useDonationStats() {
   return useQuery({
-    queryKey: ['donations', 'stats'],
+    queryKey: ['/api/donations/stats'],
     queryFn: () => apiRequest('GET', '/api/donations/stats').then(res => res.json()),
-    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
 
