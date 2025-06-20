@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Menu, Sun, Moon, Wallet, ArrowUpRight } from 'lucide-react';
+import { Menu, Sun, Moon, Wallet, ArrowUpRight, Home, Trophy, Heart, Users, User, Mail } from 'lucide-react';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useTheme } from '@/components/ThemeProvider';
 

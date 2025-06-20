@@ -637,7 +637,7 @@ export type UserRating = typeof userRatings.$inferSelect;
 export type InsertUserRating = z.infer<typeof insertUserRatingSchema>;
 export type Category = typeof categories.$inferSelect;
 export type Country = typeof countries.$inferSelect;
-export type ChatMessage = typeof chatMessages.$inferSelect;
+// ChatMessage type removed - using mail system now
 export type Channel = typeof channels.$inferSelect;
 export type InsertChannel = z.infer<typeof insertChannelSchema>;
 export type ChannelSubscription = typeof channelSubscriptions.$inferSelect;
@@ -646,3 +646,9 @@ export type UpcomingRaffle = typeof upcomingRaffles.$inferSelect;
 export type InsertUpcomingRaffle = z.infer<typeof insertUpcomingRaffleSchema>;
 export type UpcomingRaffleInterest = typeof upcomingRaffleInterests.$inferSelect;
 export type InsertUpcomingRaffleInterest = z.infer<typeof insertUpcomingRaffleInterestSchema>;
+
+// Mail System Types
+export type MailMessage = typeof mailMessages.$inferSelect;
+export type InsertMailMessage = typeof mailMessages.$inferInsert;
+export type MailAttachment = typeof mailAttachments.$inferSelect;
+export type InsertMailAttachment = typeof mailAttachments.$inferInsert;

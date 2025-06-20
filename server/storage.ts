@@ -477,33 +477,104 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(userRatings).where(eq(userRatings.ratedId, userId));
   }
 
-  async getChatMessages(raffleId: number): Promise<(ChatMessage & { sender: User; receiver: User })[]> {
-    // Get all chat messages for this raffle
-    const messages = await db
-      .select()
-      .from(chatMessages)
-      .where(eq(chatMessages.raffleId, raffleId))
-      .orderBy(asc(chatMessages.createdAt));
+  // Mail System Implementation
+  async getMailMessages(walletAddress: string, category?: string): Promise<MailMessage[]> {
+    return this.withErrorHandling(async () => {
+      let query = db
+        .select()
+        .from(mailMessages)
+        .where(eq(mailMessages.toWalletAddress, walletAddress))
+        .orderBy(desc(mailMessages.createdAt));
 
-    // Get sender and receiver info separately
-    const enrichedMessages = [];
-    for (const message of messages) {
-      const [sender] = await db.select().from(users).where(eq(users.id, message.senderId));
-      const [receiver] = await db.select().from(users).where(eq(users.id, message.receiverId));
+      if (category && category !== 'all' && category !== 'starred') {
+        query = query.where(and(
+          eq(mailMessages.toWalletAddress, walletAddress),
+          eq(mailMessages.category, category)
+        ));
+      }
+
+      const messages = await query;
       
-      enrichedMessages.push({
-        ...message,
-        sender,
-        receiver
-      });
-    }
-    
-    return enrichedMessages;
+      // Filter starred messages if requested
+      if (category === 'starred') {
+        return messages.filter(msg => msg.isStarred);
+      }
+
+      return messages;
+    }, 'getMailMessages');
   }
 
-  async createChatMessage(message: { raffleId: number; senderId: number; receiverId: number; message: string }): Promise<ChatMessage> {
-    const [newMessage] = await db.insert(chatMessages).values(message).returning();
-    return newMessage;
+  async sendMailMessage(message: InsertMailMessage): Promise<MailMessage> {
+    return this.withErrorHandling(async () => {
+      const [newMessage] = await db.insert(mailMessages).values(message).returning();
+      return newMessage;
+    }, 'sendMailMessage');
+  }
+
+  async markMailAsRead(messageId: number, walletAddress: string): Promise<boolean> {
+    return this.withErrorHandling(async () => {
+      const result = await db
+        .update(mailMessages)
+        .set({ isRead: true })
+        .where(and(
+          eq(mailMessages.id, messageId),
+          eq(mailMessages.toWalletAddress, walletAddress)
+        ));
+      
+      return (result.rowCount || 0) > 0;
+    }, 'markMailAsRead');
+  }
+
+  async markMailAsStarred(messageId: number, walletAddress: string, starred: boolean): Promise<boolean> {
+    return this.withErrorHandling(async () => {
+      const result = await db
+        .update(mailMessages)
+        .set({ isStarred: starred })
+        .where(and(
+          eq(mailMessages.id, messageId),
+          eq(mailMessages.toWalletAddress, walletAddress)
+        ));
+      
+      return (result.rowCount || 0) > 0;
+    }, 'markMailAsStarred');
+  }
+
+  async getUnreadMailCount(walletAddress: string): Promise<number> {
+    return this.withErrorHandling(async () => {
+      const [result] = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(mailMessages)
+        .where(and(
+          eq(mailMessages.toWalletAddress, walletAddress),
+          eq(mailMessages.isRead, false)
+        ));
+      
+      return result.count || 0;
+    }, 'getUnreadMailCount');
+  }
+
+  async sendSystemNotification(toWalletAddress: string, subject: string, content: string, raffleId?: number): Promise<MailMessage> {
+    return this.withErrorHandling(async () => {
+      const message: InsertMailMessage = {
+        fromWalletAddress: 'system@duxxan',
+        toWalletAddress,
+        subject,
+        content,
+        category: 'system',
+        raffleId
+      };
+      
+      return await this.sendMailMessage(message);
+    }, 'sendSystemNotification');
+  }
+
+  async sendCommunityMessage(fromWalletAddress: string, communityId: number, subject: string, content: string): Promise<number> {
+    return this.withErrorHandling(async () => {
+      // For now, return 0 since communities table is not fully implemented
+      // This will be updated when community system is complete
+      console.log('Community message sending not yet implemented');
+      return 0;
+    }, 'sendCommunityMessage');
   }
 
   async getPlatformStats(): Promise<{
@@ -618,7 +689,10 @@ export class DatabaseStorage implements IStorage {
     return this.withErrorHandling(async () => {
       const [newDevice] = await db
         .insert(userDevices)
-        .values(device)
+        .values({
+          ...device,
+          deviceFingerprint: device.deviceFingerprint || 'unknown'
+        })
         .returning();
       return newDevice;
     }, 'createUserDevice');
