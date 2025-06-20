@@ -378,19 +378,19 @@ export default function ProfileNew() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-gray-900 dark:via-gray-800 dark:to-yellow-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="relative">
-          <Card className="mb-8 overflow-hidden border-2 border-yellow-200 dark:border-yellow-800 shadow-xl">
-            <div className="relative h-48 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800">
-              <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-950">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Modern Header Section */}
+        <div className="relative mb-8">
+          <Card className="overflow-hidden border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+            <div className="relative h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-800">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               <div className="absolute top-4 right-4">
                 {!isEditing ? (
                   <Button
                     onClick={() => setIsEditing(true)}
                     size="sm"
-                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30"
+                    className="bg-white/90 hover:bg-white text-gray-700 border-0 shadow-sm"
                   >
                     <Edit3 className="h-4 w-4 mr-2" />
                     Düzenle
@@ -401,7 +401,7 @@ export default function ProfileNew() {
                       onClick={handleSave}
                       size="sm"
                       disabled={updateProfileMutation.isPending}
-                      className="bg-green-500 hover:bg-green-600 text-white"
+                      className="bg-green-500 hover:bg-green-600 text-white border-0 shadow-sm"
                     >
                       {updateProfileMutation.isPending ? (
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -412,8 +412,7 @@ export default function ProfileNew() {
                     <Button
                       onClick={handleCancel}
                       size="sm"
-                      variant="outline"
-                      className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30"
+                      className="bg-white/90 hover:bg-white text-gray-700 border-0"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -423,85 +422,62 @@ export default function ProfileNew() {
             </div>
             
             <CardContent className="pt-0 pb-8">
-              <div className="flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
-                {/* Profile Photo */}
-                <div className="relative">
-                  <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-700 shadow-xl">
+              <div className="flex flex-col items-center text-center -mt-16">
+                {/* Modern Profile Avatar */}
+                <div className="relative mb-6">
+                  <Avatar className="w-24 h-24 border-4 border-white dark:border-gray-800 shadow-xl">
                     <AvatarImage 
-                      src={photos.find((p: any) => p.photoType === 'profile')?.photoData || displayUser?.profileImage} 
+                      src={displayUser?.profileImage} 
                       alt={displayUser?.name || displayUser?.username}
                     />
-                    <AvatarFallback className="bg-yellow-500 text-white text-2xl font-bold">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-2xl font-bold">
                       {(displayUser?.name || displayUser?.username)?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  
-                  {isEditing && (
-                    <Button
-                      onClick={() => fileInputRef.current?.click()}
-                      size="sm"
-                      className="absolute -bottom-2 -right-2 rounded-full w-10 h-10 p-0 bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg"
-                      disabled={uploadingPhoto}
-                    >
-                      {uploadingPhoto ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Camera className="h-4 w-4" />
-                      )}
-                    </Button>
-                  )}
-                  
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
                 </div>
 
                 {/* User Info */}
-                <div className="flex-1 text-center md:text-left bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg">
-                  <div className="flex items-center gap-3 mb-2">
+                <div className="w-full max-w-2xl">
+                  <div className="flex items-center justify-center gap-3 mb-4">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                       {displayUser?.name || displayUser?.username}
                     </h1>
                     {displayUser?.isVerified && (
-                      <Badge className="bg-blue-500 text-white">
+                      <Badge className="bg-blue-500 text-white border-0">
                         <Shield className="h-3 w-3 mr-1" />
                         Doğrulanmış
                       </Badge>
                     )}
+                  </div>
+                  
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                    @{displayUser?.username}
+                  </p>
+                  
+                  <div className="flex flex-wrap justify-center gap-3 mb-4">
                     {displayUser?.organizationType === 'foundation' && (
-                      <Badge className="bg-green-500 text-white">Vakıf</Badge>
+                      <Badge className="bg-emerald-500 text-white border-0">Vakıf</Badge>
                     )}
                     {displayUser?.organizationType === 'association' && (
-                      <Badge className="bg-purple-500 text-white">Dernek</Badge>
+                      <Badge className="bg-violet-500 text-white border-0">Dernek</Badge>
+                    )}
+                    {displayUser?.profession && (
+                      <Badge variant="outline" className="border-gray-300 dark:border-gray-600">
+                        {displayUser?.profession}
+                      </Badge>
                     )}
                   </div>
                   
-                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-1">
-                    @{displayUser?.username}
-                  </p>
-                  {displayUser?.profession && (
-                    <p className="text-gray-500 dark:text-gray-400 mb-3">
-                      {displayUser?.profession}
-                    </p>
-                  )}
-                  
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                    <div className="flex items-center gap-1">
+                  <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2">
                       <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                       <span>{displayUser?.rating} ({displayUser?.ratingCount} değerlendirme)</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{displayUser?.country}</span>
-                    </div>
                     {displayUser?.country && (
-                      <span className="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded">
-                        {displayUser.country}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span>{displayUser?.country}</span>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -510,30 +486,29 @@ export default function ProfileNew() {
           </Card>
         </div>
 
-        {/* Tabs Section */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white dark:bg-gray-800 border-2 border-yellow-200 dark:border-yellow-800">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+        {/* Modern Tabs Section */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border-0 shadow-lg rounded-xl p-1">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
               <User className="h-4 w-4 mr-2" />
               Profil Bilgileri
             </TabsTrigger>
-            <TabsTrigger value="photos" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
-              <Camera className="h-4 w-4 mr-2" />
-              Fotoğraflar
-            </TabsTrigger>
-            <TabsTrigger value="security" className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+            <TabsTrigger value="security" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all duration-200">
               <Shield className="h-4 w-4 mr-2" />
-              Cihazlar & Güvenlik
+              Güvenlik & Cihazlar
             </TabsTrigger>
           </TabsList>
 
           {/* Profile Information Tab */}
-          <TabsContent value="profile" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="profile" className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Personal Information */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Kişisel Bilgiler</CardTitle>
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <User className="h-5 w-5 text-blue-600" />
+                    Kişisel Bilgiler
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -544,6 +519,7 @@ export default function ProfileNew() {
                         value={formData.name || ''}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         placeholder="Ad Soyad"
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -561,6 +537,7 @@ export default function ProfileNew() {
                         value={formData.email || ''}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                         placeholder="E-posta adresi"
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -595,11 +572,41 @@ export default function ProfileNew() {
               </Card>
 
               {/* Location Information */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Konum Bilgileri</CardTitle>
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-green-600" />
+                    Konum Bilgileri
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Ülke</Label>
+                    {isEditing ? (
+                      <Select value={formData.country || ''} onValueChange={(value) => setFormData({...formData, country: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Ülke seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="TR">🇹🇷 Türkiye</SelectItem>
+                          <SelectItem value="US">🇺🇸 Amerika Birleşik Devletleri</SelectItem>
+                          <SelectItem value="DE">🇩🇪 Almanya</SelectItem>
+                          <SelectItem value="FR">🇫🇷 Fransa</SelectItem>
+                          <SelectItem value="GB">🇬🇧 Birleşik Krallık</SelectItem>
+                          <SelectItem value="IT">🇮🇹 İtalya</SelectItem>
+                          <SelectItem value="ES">🇪🇸 İspanya</SelectItem>
+                          <SelectItem value="NL">🇳🇱 Hollanda</SelectItem>
+                          <SelectItem value="CA">🇨🇦 Kanada</SelectItem>
+                          <SelectItem value="AU">🇦🇺 Avustralya</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="text-gray-800 dark:text-gray-200 font-medium">
+                        {displayUser?.country || 'Belirtilmemiş'}
+                      </p>
+                    )}
+                  </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="city">Şehir</Label>
                     {isEditing ? (
@@ -608,6 +615,7 @@ export default function ProfileNew() {
                         value={formData.city || ''}
                         onChange={(e) => setFormData({...formData, city: e.target.value})}
                         placeholder="Şehir"
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -615,15 +623,16 @@ export default function ProfileNew() {
                       </p>
                     )}
                   </div>
-                  
-
                 </CardContent>
               </Card>
 
               {/* Professional Information */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Profesyonel Bilgiler</CardTitle>
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <Briefcase className="h-5 w-5 text-purple-600" />
+                    Profesyonel Bilgiler
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -634,6 +643,7 @@ export default function ProfileNew() {
                         value={formData.profession || ''}
                         onChange={(e) => setFormData({...formData, profession: e.target.value})}
                         placeholder="Mesleğiniz"
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -651,6 +661,7 @@ export default function ProfileNew() {
                         onChange={(e) => setFormData({...formData, bio: e.target.value})}
                         placeholder="Kendinizi tanıtın..."
                         rows={4}
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -662,9 +673,12 @@ export default function ProfileNew() {
               </Card>
 
               {/* Organization Information */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400">Organizasyon Bilgileri</CardTitle>
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <Building className="h-5 w-5 text-orange-600" />
+                    Organizasyon Bilgileri
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -699,6 +713,7 @@ export default function ProfileNew() {
                         value={formData.organizationName || ''}
                         onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
                         placeholder="Organizasyon adı"
+                        className="border-gray-200 dark:border-gray-700"
                       />
                     ) : (
                       <p className="text-gray-800 dark:text-gray-200 font-medium">
@@ -711,78 +726,16 @@ export default function ProfileNew() {
             </div>
           </TabsContent>
 
-          {/* Photos Tab */}
-          <TabsContent value="photos" className="space-y-6">
-            <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-              <CardHeader>
-                <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
-                  <Camera className="h-5 w-5" />
-                  Fotoğraflarım
-                </CardTitle>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Sadece JPEG formatında fotoğraf yükleyebilirsiniz. Maksimum dosya boyutu 5MB.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-4 mb-6">
-                  <Button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                    disabled={!user || uploadingPhoto}
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    {uploadingPhoto ? 'Yükleniyor...' : 'Fotoğraf Yükle'}
-                  </Button>
-                  {!user && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Demo modunda fotoğraf yüklenemez
-                    </p>
-                  )}
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {photos.map((photo: any) => (
-                    <div key={photo.id} className="relative group">
-                      <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-                        <img
-                          src={photo.photoData}
-                          alt={`Fotoğraf ${photo.id}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <Button
-                        onClick={() => deletePhotoMutation.mutate(photo.id)}
-                        size="sm"
-                        variant="destructive"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                        disabled={deletePhotoMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                
-                {photos.length === 0 && (
-                  <div className="text-center py-12">
-                    <Camera className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Henüz fotoğraf yüklenmemiş
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+
 
           {/* Security & Devices Tab */}
-          <TabsContent value="security" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TabsContent value="security" className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Wallet Information */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-600" />
                     Cüzdan Bilgileri
                   </CardTitle>
                 </CardHeader>
@@ -790,7 +743,7 @@ export default function ProfileNew() {
                   <div className="space-y-2">
                     <Label>Cüzdan Adresi</Label>
                     <div className="flex items-center gap-2">
-                      <code className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded flex-1 break-all">
+                      <code className="text-xs bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg flex-1 break-all font-mono border border-gray-200 dark:border-gray-700">
                         {displayUser?.walletAddress}
                       </code>
                     </div>
@@ -806,10 +759,10 @@ export default function ProfileNew() {
               </Card>
 
               {/* Login Devices */}
-              <Card className="border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader>
-                  <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center gap-2">
-                    <Monitor className="h-5 w-5" />
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                    <Monitor className="h-5 w-5 text-blue-600" />
                     Giriş Yapılan Cihazlar
                   </CardTitle>
                 </CardHeader>
