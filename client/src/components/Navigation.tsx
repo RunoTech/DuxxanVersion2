@@ -386,8 +386,14 @@ function NavigationComponent() {
                       {/* Theme Toggle */}
                       <div className="space-y-3">
                         <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">Tema</h3>
-                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 transition-colors duration-300">
-                          <div className="grid grid-cols-2 gap-1 relative">
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 relative overflow-hidden">
+                          {/* Sliding indicator */}
+                          <div 
+                            className={`absolute top-1 bottom-1 w-[calc(50%-2px)] bg-white dark:bg-gray-700 rounded-md shadow-sm transition-transform duration-300 ease-out ${
+                              theme === 'light' ? 'translate-x-0' : 'translate-x-[calc(100%+4px)]'
+                            }`}
+                          />
+                          <div className="grid grid-cols-2 gap-1 relative z-10">
                             <Button
                               onClick={() => {
                                 if (theme === 'dark') {
@@ -395,13 +401,13 @@ function NavigationComponent() {
                                 }
                               }}
                               variant="ghost"
-                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 relative z-10 ${
+                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
                                 theme === 'light' 
-                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md scale-[1.02]' 
-                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
+                                  ? 'text-gray-900 dark:text-white' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                               }`}
                             >
-                              <Sun className={`w-4 h-4 transition-all duration-300 ${theme === 'light' ? 'text-yellow-500 scale-110' : ''}`} />
+                              <Sun className={`w-4 h-4 transition-all duration-300 ${theme === 'light' ? 'text-yellow-500' : ''}`} />
                               Açık
                             </Button>
                             <Button
@@ -411,13 +417,13 @@ function NavigationComponent() {
                                 }
                               }}
                               variant="ghost"
-                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 relative z-10 ${
+                              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
                                 theme === 'dark' 
-                                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md scale-[1.02]' 
-                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
+                                  ? 'text-gray-900 dark:text-white' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                               }`}
                             >
-                              <Moon className={`w-4 h-4 transition-all duration-300 ${theme === 'dark' ? 'text-blue-400 scale-110' : ''}`} />
+                              <Moon className={`w-4 h-4 transition-all duration-300 ${theme === 'dark' ? 'text-blue-400' : ''}`} />
                               Koyu
                             </Button>
                           </div>

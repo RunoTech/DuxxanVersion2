@@ -21,12 +21,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
+    // Add transition class before theme change
+    root.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+    
     if (theme === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
     localStorage.setItem('theme', theme);
+    
+    // Remove transition after a brief delay to prevent interfering with other animations
+    setTimeout(() => {
+      root.style.transition = '';
+    }, 300);
   }, [theme]);
 
   const toggleTheme = () => {
