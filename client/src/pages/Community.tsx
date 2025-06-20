@@ -603,7 +603,10 @@ export default function Community() {
                 <p className="text-gray-600 dark:text-gray-400">Kanalları keşfedin ve favori topluluklarınıza katılın</p>
               </div>
             </div>
-                <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+
+            {/* Channel Creation Dialog */}
+            <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+              <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                   <DialogHeader className="text-center pb-4">
                     <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
                       <Sparkles className="w-6 h-6 text-white" />
@@ -779,7 +782,6 @@ export default function Community() {
                   </Form>
                 </DialogContent>
               </Dialog>
-            </div>
 
             {/* Edit Channel Dialog */}
             <Dialog open={showEditChannel} onOpenChange={setShowEditChannel}>
