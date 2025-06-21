@@ -495,7 +495,7 @@ export default function Community() {
               
               <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-3 rounded-xl">
+                  <Button variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-3 rounded-xl shadow-lg">
                     <Calendar className="h-5 w-5 mr-2" />
                     Çekiliş Duyuru
                   </Button>
@@ -711,12 +711,12 @@ export default function Community() {
                                   <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Ülke seçin" />
                                   </SelectTrigger>
-                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                                     {countries.map((country) => (
                                       <SelectItem 
                                         key={country.value} 
                                         value={country.value}
-                                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
                                       >
                                         {country.label}
                                       </SelectItem>
@@ -945,11 +945,15 @@ export default function Community() {
                                   <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
-                                  <SelectContent>
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                                     {categories
                                       .filter(cat => cat.id !== 'all')
                                       .map((category: any) => (
-                                        <SelectItem key={category.id} value={category.id.toString()}>
+                                        <SelectItem 
+                                          key={category.id} 
+                                          value={category.id.toString()}
+                                          className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                                        >
                                           {category.name}
                                         </SelectItem>
                                       ))}
