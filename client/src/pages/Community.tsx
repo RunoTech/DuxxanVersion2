@@ -1284,7 +1284,7 @@ export default function Community() {
                             <FormControl>
                               <Input {...field} 
                                 type="datetime-local" 
-                                className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200 [color-scheme:light] dark:[color-scheme:dark]" 
                               />
                             </FormControl>
                             <FormMessage />
