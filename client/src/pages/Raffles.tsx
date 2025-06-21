@@ -18,7 +18,14 @@ export default function Raffles() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
-  const [sortBy, setSortBy] = useState('newest');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setSelectedCountry('all');
+    setSelectedStatus('all');
+  };
 
   // Fetch categories with caching
   const { data: categories = [] } = useQuery({
@@ -36,13 +43,13 @@ export default function Raffles() {
 
   // Fetch active raffles with filters
   const { data: rafflesData, isLoading } = useQuery({
-    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, sortBy],
+    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, selectedStatus],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
       if (selectedCountry !== 'all') params.append('country', selectedCountry);
-      if (sortBy) params.append('sort', sortBy);
+      if (selectedStatus !== 'all') params.append('status', selectedStatus);
       
       const response = await apiRequest('GET', `/api/raffles/active?${params.toString()}`);
       const result = await response.json();
@@ -54,30 +61,18 @@ export default function Raffles() {
 
   const raffles = rafflesData || [];
 
-  // Filter and sort raffles
+  // Filter raffles
   const filteredRaffles = raffles.filter((raffle: any) => {
     const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory;
+    const matchesCountry = selectedCountry === 'all' || raffle.countryId?.toString() === selectedCountry;
+    const matchesStatus = selectedStatus === 'all' || 
+                         (selectedStatus === 'active' && raffle.isActive) ||
+                         (selectedStatus === 'ended' && !raffle.isActive);
     
-    return matchesSearch && matchesCategory;
-  })
-    .sort((a: any, b: any) => {
-      switch (sortBy) {
-        case 'newest':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        case 'ending-soon':
-          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-        case 'highest-value':
-          return parseFloat(b.prizeValue) - parseFloat(a.prizeValue);
-        case 'most-tickets':
-          return b.ticketsSold - a.ticketsSold;
-        case 'lowest-price':
-          return parseFloat(a.ticketPrice) - parseFloat(b.ticketPrice);
-        default:
-          return 0;
-      }
-    });
+    return matchesSearch && matchesCategory && matchesCountry && matchesStatus;
+  });
 
   const getActiveRafflesCount = () => {
     const now = new Date();
@@ -96,6 +91,97 @@ export default function Raffles() {
         {/* Wallet Status */}
         <div className="mb-6">
           <WalletStatus />
+        </div>
+
+        {/* Compact Filter Section */}
+        <div className="mb-8">
+          <div className="bg-gray-900 dark:bg-gray-800 rounded-2xl border border-gray-700 dark:border-gray-600 p-6 shadow-lg">
+            <div className="flex items-center gap-2 mb-6">
+              <Filter className="w-5 h-5 text-gray-400" />
+              <h2 className="text-lg font-semibold text-white">Gelişmiş Filtreler ve Arama</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Search Input */}
+              <div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Kampanya ara..."
+                    className="w-full pl-10 pr-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-gray-800 text-white placeholder-gray-400 text-sm transition-all"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Countries with green indicator */}
+              <div>
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <SelectValue placeholder="Tüm Ülkeler" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="all" className="text-white">Tüm Ülkeler</SelectItem>
+                    {countries.map((country) => (
+                      <SelectItem key={country.id} value={country.id.toString()} className="text-white">
+                        <div className="flex items-center gap-2">
+                          <span>{country.flag}</span>
+                          <span>{country.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
+                    <SelectValue placeholder="Tüm Kategoriler" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="all" className="text-white">Tüm Kategoriler</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id.toString()} className="text-white">
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Status */}
+              <div>
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
+                    <SelectValue placeholder="En Yeni" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="all" className="text-white">En Yeni</SelectItem>
+                    <SelectItem value="active" className="text-white">Aktif</SelectItem>
+                    <SelectItem value="ended" className="text-white">Biten</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Clear Filters Button */}
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={clearFilters}
+                variant="ghost"
+                className="text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm"
+              >
+                Tümünü Temizle
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Header */}
@@ -195,9 +281,57 @@ export default function Raffles() {
                 </SelectContent>
               </Select>
 
-              {/* Sort By */}
-              <Select value={sortBy} onValueChange={setSortBy}>
+              {/* Status Filter */}
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Tüm Durumlar" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all">Tüm Durumlar</SelectItem>
+                  <SelectItem value="active">Aktif</SelectItem>
+                  <SelectItem value="ended">Biten</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Clear Filters */}
+              <Button
+                onClick={clearFilters}
+                variant="outline"
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                Filtreleri Temizle
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Raffles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading ? (
+            <div className="col-span-full flex justify-center items-center py-12">
+              <div className="text-gray-600 dark:text-gray-400">Yükleniyor...</div>
+            </div>
+          ) : filteredRaffles.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-600 dark:text-gray-400 mb-4">Henüz çekiliş bulunmuyor</div>
+              <Link href="/create-raffle">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                  İlk Çekilişi Oluştur
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            filteredRaffles.map((raffle: any) => (
+              <AnimatedCard key={raffle.id} delay={0.1}>
+                <RaffleCard raffle={raffle} />
+              </AnimatedCard>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
                   <SelectValue placeholder="Sırala" />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
