@@ -16,10 +16,10 @@ class RaffleScheduler {
     // Check immediately on start
     this.checkUpcomingRaffles();
     
-    // Then check every minute
+    // Then check every 10 seconds for testing
     this.checkInterval = setInterval(() => {
       this.checkUpcomingRaffles();
-    }, 60000); // 60 seconds
+    }, 10000); // 10 seconds
   }
 
   stop() {
