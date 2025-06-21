@@ -142,11 +142,11 @@ export class UpcomingRaffleController extends BaseController {
         return this.error(res, 'Raffle not found', 404);
       }
 
-      console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount}`);
+      console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount} (action: ${action})`);
 
       return this.success(res, { 
         success: true, 
-        interestedCount: result[0].interestedCount,
+        interestedCount: Number(result[0].interestedCount),
         action,
         raffleId 
       });
