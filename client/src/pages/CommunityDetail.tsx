@@ -524,74 +524,34 @@ export default function CommunityDetail() {
           {isChannelCreator && (
             <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/10 dark:to-[#FFB800]/15 border border-[#FFC929]/40 dark:border-[#FFC929]/30 shadow-xl backdrop-blur-sm">
               <CardContent className="p-5">
-                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
                       <Settings className="h-6 w-6 text-black" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                         <Sparkles className="h-5 w-5 text-[#FFC929]" />
                         Kanal Yönetimi
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-md">
-                        Kanalınızı yönetin ve yeni içerik ekleyin. Topluluk üyeleriniz için değerli deneyimler oluşturun.
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        Kanalınızı yönetin ve yeni içerik ekleyin.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                    <Button 
-                      onClick={() => {
-                        toast({
-                          title: "Çekiliş Ekleme",
-                          description: "Yeni çekiliş ekleme özelliği yakında aktif olacak.",
-                        });
-                      }}
-                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                    >
-                      <Plus className="h-5 w-5 mr-2" />
-                      <span className="whitespace-nowrap">Çekiliş Ekle</span>
-                    </Button>
-                    
-                    <div className="flex gap-2">
-                      <Button 
-                        onClick={() => {
-                          toast({
-                            title: "Analitik Raporu",
-                            description: "Kanal analitikleri ve istatistikleri yakında kullanılabilir olacak.",
-                          });
-                        }}
-                        variant="outline" 
-                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
-                      >
-                        <Activity className="h-4 w-4" />
-                        <span className="hidden md:inline ml-2">Analitik</span>
-                      </Button>
-                      
-                      <Button 
-                        onClick={() => setIsEditing(true)}
-                        variant="outline" 
-                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span className="hidden md:inline ml-2">Düzenle</span>
-                      </Button>
-                      
-                      <Button 
-                        onClick={() => {
-                          toast({
-                            title: "Diğer Seçenekler",
-                            description: "Ek yönetim seçenekleri ve araçları geliştiriliyor.",
-                          });
-                        }}
-                        variant="outline" 
-                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+                  <Button 
+                    onClick={() => {
+                      toast({
+                        title: "Çekiliş Ekleme",
+                        description: "Yeni çekiliş ekleme özelliği yakında aktif olacak.",
+                      });
+                    }}
+                    className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    <span className="whitespace-nowrap">Çekiliş Ekle</span>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
