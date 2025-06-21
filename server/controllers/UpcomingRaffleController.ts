@@ -130,19 +130,25 @@ export class UpcomingRaffleController extends BaseController {
       const result = await db
         .update(upcomingRaffles)
         .set({ 
-          interestedCount: sql`GREATEST(0, ${upcomingRaffles.interestedCount} + ${increment})`
+          interestedCount: sql`GREATEST(0, COALESCE(${upcomingRaffles.interestedCount}, 0) + ${increment})`
         })
         .where(eq(upcomingRaffles.id, raffleId))
-        .returning();
+        .returning({
+          id: upcomingRaffles.id,
+          interestedCount: upcomingRaffles.interestedCount
+        });
 
       if (result.length === 0) {
         return this.error(res, 'Raffle not found', 404);
       }
 
+      console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount}`);
+
       return this.success(res, { 
         success: true, 
         interestedCount: result[0].interestedCount,
-        action 
+        action,
+        raffleId 
       });
     } catch (error) {
       console.error('Error toggling reminder:', error);
