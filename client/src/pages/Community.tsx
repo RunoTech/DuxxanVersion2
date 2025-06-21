@@ -56,7 +56,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
   const countdown = useCountdown(raffle.startDate);
 
   return (
-    <Card className="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-800 dark:to-gray-900 light:from-white light:to-gray-50 border border-gray-700 dark:border-gray-700 light:border-gray-200 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden">
+    <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden">
       <CardHeader className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-3">
@@ -67,10 +67,10 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <CardTitle className="text-white dark:text-white light:text-gray-900 text-lg font-bold truncate">
+              <CardTitle className="text-gray-900 dark:text-white text-lg font-bold truncate">
                 {raffle.title}
               </CardTitle>
-              <p className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-sm">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 @{raffle.creator?.username || 'anonim'}
               </p>
             </div>
@@ -85,7 +85,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
           </div>
         </div>
         
-        <p className="text-gray-300 dark:text-gray-300 light:text-gray-700 text-sm line-clamp-2 mb-4">
+        <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2 mb-4">
           {raffle.description}
         </p>
       </CardHeader>
@@ -93,7 +93,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
       <CardContent className="p-4 pt-0">
         <div className="space-y-3 mb-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 text-gray-400 dark:text-gray-400 light:text-gray-600">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <DollarSign className="h-4 w-4 text-[#FFC929]" />
               <span className="text-sm">Ödül:</span>
             </div>
@@ -101,29 +101,29 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
           </div>
           
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 text-gray-400 dark:text-gray-400 light:text-gray-600">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <Ticket className="h-4 w-4 text-[#FFC929]" />
               <span className="text-sm">Bilet:</span>
             </div>
-            <span className="text-white dark:text-white light:text-gray-900 font-medium">{parseFloat(raffle.ticketPrice).toFixed(6)} USDT</span>
+            <span className="text-gray-900 dark:text-white font-medium">{parseFloat(raffle.ticketPrice).toFixed(6)} USDT</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 text-gray-400 dark:text-gray-400 light:text-gray-600">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <Hash className="h-4 w-4 text-[#FFC929]" />
               <span className="text-sm">Max:</span>
             </div>
-            <span className="text-white dark:text-white light:text-gray-900 font-medium">{raffle.maxTickets}</span>
+            <span className="text-gray-900 dark:text-white font-medium">{raffle.maxTickets}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-sm">Başlangıç:</span>
-            <span className="text-white dark:text-white light:text-gray-900 font-medium">{new Date(raffle.startDate).toLocaleDateString('tr-TR')}</span>
+            <span className="text-gray-600 dark:text-gray-400 text-sm">Başlangıç:</span>
+            <span className="text-gray-900 dark:text-white font-medium">{new Date(raffle.startDate).toLocaleDateString('tr-TR')}</span>
           </div>
         </div>
         
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-1 text-gray-400 dark:text-gray-400 light:text-gray-600">
+          <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
             <Heart className="h-4 w-4" />
             <span className="text-sm">{raffle.interestedCount || 0} ilgilenen</span>
           </div>
@@ -138,23 +138,23 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
         </div>
         
         {/* Countdown Timer */}
-        <div className="bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-100 rounded-lg p-3 border border-gray-600 dark:border-gray-600 light:border-gray-300">
+        <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-300 dark:border-gray-600">
           <div className="flex justify-center space-x-4">
             <div className="text-center">
               <div className="text-[#FFC929] font-bold text-lg">{countdown.days.toString().padStart(2, '0')}</div>
-              <div className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-xs">Gün</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs">Gün</div>
             </div>
             <div className="text-center">
               <div className="text-[#FFC929] font-bold text-lg">{countdown.hours.toString().padStart(2, '0')}</div>
-              <div className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-xs">Saat</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs">Saat</div>
             </div>
             <div className="text-center">
               <div className="text-[#FFC929] font-bold text-lg">{countdown.minutes.toString().padStart(2, '0')}</div>
-              <div className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-xs">Dakika</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs">Dakika</div>
             </div>
             <div className="text-center">
               <div className="text-[#FFC929] font-bold text-lg">{countdown.seconds.toString().padStart(2, '0')}</div>
-              <div className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-xs">Saniye</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs">Saniye</div>
             </div>
           </div>
         </div>
