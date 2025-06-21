@@ -464,9 +464,9 @@ export default function Community() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600 dark:from-yellow-600 dark:via-orange-700 dark:to-yellow-800">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#FFC929] via-[#FFB800] to-[#FFA500] dark:from-[#FFC929] dark:via-[#FFB800] dark:to-[#FFA500]">
         <div className="absolute inset-0 bg-black/20 backdrop-blur-3xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FFC929]/20 to-[#FFB800]/20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
@@ -486,7 +486,7 @@ export default function Community() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white text-orange-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Button className="bg-white text-[#B8860B] hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <Plus className="h-5 w-5 mr-2" />
                     Kanal Oluştur
                   </Button>
@@ -906,14 +906,17 @@ export default function Community() {
               ) ? (
                 <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
                   <DialogTrigger asChild>
-                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                    <Button className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold">
                       <Plus className="h-4 w-4 mr-2" />
                       Çekiliş Duyuru
                     </Button>
                   </DialogTrigger>
-                <DialogContent className="bg-duxxan-card border-duxxan-border text-white max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Gelecek Çekiliş Duyurusu</DialogTitle>
+                <DialogContent className="max-w-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                  <DialogHeader className="text-center pb-4">
+                    <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-black" />
+                    </div>
+                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Gelecek Çekiliş Duyurusu</DialogTitle>
                   </DialogHeader>
                   <Form {...raffleForm}>
                     <form onSubmit={raffleForm.handleSubmit(onSubmitRaffle)} className="space-y-4">
@@ -923,9 +926,9 @@ export default function Community() {
                           name="title"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Başlık</FormLabel>
+                              <FormLabel className="text-gray-700 dark:text-gray-300">Başlık</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                                <Input {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
