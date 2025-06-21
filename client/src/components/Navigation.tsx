@@ -212,9 +212,9 @@ function NavigationComponent() {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 flex items-center justify-center"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 !flex !items-center !justify-center h-10 w-10 p-0"
                 >
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 p-0 transition-colors duration-300">
