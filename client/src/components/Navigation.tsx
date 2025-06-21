@@ -209,13 +209,9 @@ function NavigationComponent() {
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="custom-md:hidden">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 !flex !items-center !justify-center h-10 w-10 p-0"
-                >
+                <div className="flex items-center justify-center h-10 w-10 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer">
                   <Menu className="h-5 w-5" />
-                </Button>
+                </div>
               </SheetTrigger>
               <SheetContent side="right" className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 p-0 transition-colors duration-300">
                 <div className="h-full flex flex-col">
