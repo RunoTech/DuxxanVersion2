@@ -1245,6 +1245,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simple upcoming raffles endpoint without auth for testing
+  app.post('/api/test-upcoming-raffle', async (req, res) => {
+    try {
+      console.log('Test endpoint - Creating upcoming raffle with data:', req.body);
+      
+      const raffleData = {
+        title: req.body.title || 'Test Çekiliş',
+        description: req.body.description || 'Test açıklama',
+        prizeValue: req.body.prizeValue || '1000',
+        ticketPrice: req.body.ticketPrice || '10',
+        maxTickets: parseInt(req.body.maxTickets) || 100,
+        startDate: new Date(req.body.startDate || new Date(Date.now() + 24*60*60*1000)), // Tomorrow
+        categoryId: parseInt(req.body.categoryId) || 1,
+        creatorId: 1
+      };
+
+      console.log('Processed raffle data:', raffleData);
+      
+      // Insert directly into database
+      const [newRaffle] = await db
+        .insert(upcomingRaffles)
+        .values(raffleData)
+        .returning();
+
+      res.status(201).json({ success: true, data: newRaffle, message: 'Test raffle created successfully' });
+    } catch (error) {
+      console.error('Error creating test raffle:', error);
+      res.status(500).json({ success: false, message: 'Failed to create test raffle', error: error.message });
+    }
+  });
+
   // Integrate controller-based routes with proper middleware
   app.use('/api', 
     globalRateLimit,
