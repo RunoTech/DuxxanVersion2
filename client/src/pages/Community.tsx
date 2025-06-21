@@ -501,7 +501,7 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-48 flex flex-col"
+      className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-48 flex flex-col"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       {/* Header Section */}
@@ -515,10 +515,10 @@ export default function Community() {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-base font-bold text-white truncate">
+              <CardTitle className="text-base font-bold text-gray-900 dark:text-white truncate">
                 {channel.name}
               </CardTitle>
-              <p className="text-xs text-gray-400 truncate">
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                 @{channel.creator?.username || channel.creator?.walletAddress?.slice(0, 8) || 'user_44c417'}
               </p>
             </div>
@@ -530,7 +530,7 @@ export default function Community() {
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 w-6 p-0 text-gray-400 hover:text-white transition-colors"
+              className="h-6 w-6 p-0 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -544,7 +544,7 @@ export default function Community() {
       {/* Content Section - Flexible */}
       <CardContent className="flex-1 px-4 pb-4 flex flex-col justify-between">
         <div className="flex-1">
-          <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed">
             {channel.description || 'UI UX DESIGNER'}
           </p>
         </div>
@@ -552,17 +552,17 @@ export default function Community() {
         {/* Fixed Bottom Section */}
         <div className="flex justify-between items-center mt-4 pt-3">
           <div className="flex items-center space-x-4 text-sm">
-            <div className="flex items-center space-x-1 text-gray-400">
-              <div className="w-4 h-4 bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                <Users className="h-2.5 w-2.5 text-[#B8860B]" />
+            <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+              <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                <Users className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
               </div>
-              <span className="font-medium text-white text-xs">{channel.subscriberCount || 0}</span>
+              <span className="font-medium text-gray-700 dark:text-white text-xs">{channel.subscriberCount || 0}</span>
             </div>
-            <div className="flex items-center space-x-1 text-gray-400">
-              <div className="w-4 h-4 bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                <DollarSign className="h-2.5 w-2.5 text-[#B8860B]" />
+            <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+              <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                <DollarSign className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
               </div>
-              <span className="font-medium text-white text-xs">{channel.totalPrizeAmount || 0} USDT</span>
+              <span className="font-medium text-gray-700 dark:text-white text-xs">{channel.totalPrizeAmount || 0} USDT</span>
             </div>
           </div>
           <Button
