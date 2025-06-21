@@ -155,7 +155,7 @@ const RaffleCard = ({ raffle, isInterested, onToggleInterest }: {
         <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
           <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 flex-shrink-0">
             <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">{raffle.interestedCount || 0} ilgilenen</span>
+            <span className="text-xs sm:text-sm">{Number(raffle.interestedCount) || 0} ilgilenen</span>
           </div>
           <Button 
             size="sm" 
