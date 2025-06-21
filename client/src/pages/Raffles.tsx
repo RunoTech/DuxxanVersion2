@@ -2,27 +2,23 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RaffleCard } from '@/components/RaffleCard';
 import { WalletStatus } from '@/components/WalletStatus';
 import { AnimatedCard } from '@/components/ui/AnimatedCard';
+import { AnimatedList } from '@/components/ui/AnimatedList';
 import { Link } from 'wouter';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Globe } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
 
 export default function Raffles() {
   const { isConnected } = useWallet();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-
-  const clearFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('all');
-    setSelectedCountry('all');
-    setSelectedStatus('all');
-  };
+  const [sortBy, setSortBy] = useState('newest');
 
   // Fetch categories with caching
   const { data: categories = [] } = useQuery({
@@ -40,48 +36,58 @@ export default function Raffles() {
 
   // Fetch active raffles with filters
   const { data: rafflesData, isLoading } = useQuery({
-    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, selectedStatus],
+    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, sortBy],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
       if (selectedCountry !== 'all') params.append('country', selectedCountry);
-      if (selectedStatus !== 'all') params.append('status', selectedStatus);
+      if (sortBy) params.append('sort', sortBy);
       
-      const response = await fetch(`/api/raffles/active?${params.toString()}`);
+      const response = await apiRequest('GET', `/api/raffles/active?${params.toString()}`);
       const result = await response.json();
-      return Array.isArray(result.data) ? result.data : [];
+      return result.data || [];
     },
     staleTime: 1 * 60 * 1000, // 1 minute cache
     enabled: true
   });
 
-  const raffles = Array.isArray(rafflesData) ? rafflesData : [];
+  const raffles = rafflesData || [];
 
-  // Filter raffles
+  // Filter and sort raffles
   const filteredRaffles = raffles.filter((raffle: any) => {
     const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory;
-    const matchesCountry = selectedCountry === 'all' || raffle.countryId?.toString() === selectedCountry;
-    const matchesStatus = selectedStatus === 'all' || 
-                         (selectedStatus === 'active' && raffle.isActive) ||
-                         (selectedStatus === 'ended' && !raffle.isActive);
     
-    return matchesSearch && matchesCategory && matchesCountry && matchesStatus;
-  });
+    return matchesSearch && matchesCategory;
+  })
+    .sort((a: any, b: any) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'ending-soon':
+          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        case 'highest-value':
+          return parseFloat(b.prizeValue) - parseFloat(a.prizeValue);
+        case 'most-tickets':
+          return b.ticketsSold - a.ticketsSold;
+        case 'lowest-price':
+          return parseFloat(a.ticketPrice) - parseFloat(b.ticketPrice);
+        default:
+          return 0;
+      }
+    });
 
   const getActiveRafflesCount = () => {
-    if (!Array.isArray(raffles)) return 0;
     const now = new Date();
     return raffles.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
   };
 
   const getTotalPrizePool = () => {
-    if (!Array.isArray(raffles)) return 0;
     return raffles
       .filter((raffle: any) => raffle.isActive)
-      .reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue || 0), 0);
+      .reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0);
   };
 
   return (
@@ -90,97 +96,6 @@ export default function Raffles() {
         {/* Wallet Status */}
         <div className="mb-6">
           <WalletStatus />
-        </div>
-
-        {/* Compact Filter Section */}
-        <div className="mb-8">
-          <div className="bg-gray-900 dark:bg-gray-800 rounded-2xl border border-gray-700 dark:border-gray-600 p-6 shadow-lg">
-            <div className="flex items-center gap-2 mb-6">
-              <Filter className="w-5 h-5 text-gray-400" />
-              <h2 className="text-lg font-semibold text-white">Gelişmiş Filtreler ve Arama</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Search Input */}
-              <div>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input
-                    type="text"
-                    placeholder="Kampanya ara..."
-                    className="w-full pl-10 pr-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 bg-gray-800 text-white placeholder-gray-400 text-sm transition-all"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Countries with green indicator */}
-              <div>
-                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <SelectValue placeholder="Tüm Ülkeler" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    <SelectItem value="all" className="text-white">Tüm Ülkeler</SelectItem>
-                    {countries.map((country: any) => (
-                      <SelectItem key={country.id} value={country.id.toString()} className="text-white">
-                        <div className="flex items-center gap-2">
-                          <span>{country.flag}</span>
-                          <span>{country.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
-                    <SelectValue placeholder="Tüm Kategoriler" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    <SelectItem value="all" className="text-white">Tüm Kategoriler</SelectItem>
-                    {categories.map((category: any) => (
-                      <SelectItem key={category.id} value={category.id.toString()} className="text-white">
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Status */}
-              <div>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger className="w-full bg-gray-800 border-gray-600 text-white hover:border-gray-500 transition-colors py-3">
-                    <SelectValue placeholder="En Yeni" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    <SelectItem value="all" className="text-white">En Yeni</SelectItem>
-                    <SelectItem value="active" className="text-white">Aktif</SelectItem>
-                    <SelectItem value="ended" className="text-white">Biten</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Clear Filters Button */}
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={clearFilters}
-                variant="ghost"
-                className="text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm"
-              >
-                Tümünü Temizle
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* Header */}
@@ -228,29 +143,161 @@ export default function Raffles() {
           </Card>
         </div>
 
-        {/* Raffles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading ? (
-            <div className="col-span-full flex justify-center items-center py-12">
-              <div className="text-gray-600 dark:text-gray-400">Yükleniyor...</div>
+        {/* Filters */}
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <Filter className="w-5 h-5" />
+              Filtreler ve Arama
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Çekiliş ara..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
+                />
+              </div>
+
+              {/* Category Filter */}
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Tüm Kategoriler" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                  {(Array.isArray(categories) ? categories : []).map((category: any) => (
+                    <SelectItem key={category.id} value={category.id.toString()}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Country Filter */}
+              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <Globe className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Tüm Ülkeler" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
+                  {countries.map((country: any) => (
+                    <SelectItem key={country.code} value={country.code}>
+                      {country.flag} {country.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Sort By */}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectValue placeholder="Sırala" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="newest">En Yeni</SelectItem>
+                  <SelectItem value="ending-soon">Sona Erme</SelectItem>
+                  <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
+                  <SelectItem value="most-tickets">En Popüler</SelectItem>
+                  <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Clear Filters */}
+              <Button
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('all');
+                  setSelectedCountry('all');
+                  setSortBy('newest');
+                }}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+              >
+                Filtreleri Temizle
+              </Button>
             </div>
-          ) : filteredRaffles.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <div className="text-gray-600 dark:text-gray-400 mb-4">Henüz çekiliş bulunmuyor</div>
-              <Link href="/create-raffle">
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
-                  İlk Çekilişi Oluştur
-                </Button>
-              </Link>
-            </div>
-          ) : (
-            filteredRaffles.map((raffle: any) => (
-              <AnimatedCard key={raffle.id} delay={0.1}>
-                <RaffleCard raffle={raffle} />
-              </AnimatedCard>
-            ))
+          </CardContent>
+        </Card>
+
+        {/* Results Info */}
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-duxxan-text-secondary">
+            Showing {filteredRaffles.length} of {raffles.length} raffles
+          </p>
+          {searchTerm && (
+            <p className="text-sm text-duxxan-text-secondary">
+              Search results for "{searchTerm}"
+            </p>
           )}
         </div>
+
+        {/* Raffles Grid */}
+        {isLoading ? (
+          <div className="grid responsive-grid gap-4 md:gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Card key={i} className="responsive-card">
+                <div className="h-48 loading-skeleton rounded-t-xl"></div>
+                <CardContent className="p-4 md:p-6">
+                  <div className="h-4 loading-skeleton rounded w-3/4 mb-2"></div>
+                  <div className="h-3 loading-skeleton rounded w-full mb-4"></div>
+                  <div className="h-3 loading-skeleton rounded w-1/2"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : filteredRaffles.length > 0 ? (
+          <div className="grid responsive-grid gap-4 md:gap-6">
+            {filteredRaffles.map((raffle: any) => (
+              <RaffleCard key={raffle.id} raffle={raffle} />
+            ))}
+          </div>
+        ) : (
+          <Card className="duxxan-card text-center">
+            <CardContent className="p-12">
+              <h3 className="text-xl font-bold mb-4">No Raffles Found</h3>
+              <p className="text-duxxan-text-secondary mb-6">
+                {searchTerm || selectedCategory !== 'all' 
+                  ? 'Try adjusting your search criteria or filters'
+                  : 'Be the first to create an exciting raffle on DUXXAN!'
+                }
+              </p>
+              <div className="flex justify-center gap-4">
+                {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
+                  <Button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory('all');
+                      setSelectedCountry('all');
+                    }}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                  >
+                    Filtreleri Temizle
+                  </Button>
+                )}
+                <Link href="/create-raffle">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+                    Çekiliş Oluştur
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Load More Button (if needed for pagination) */}
+        {filteredRaffles.length > 0 && filteredRaffles.length < raffles.length && (
+          <div className="text-center mt-12">
+            <Button variant="outline" className="duxxan-button-secondary">
+              Load More Raffles
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
