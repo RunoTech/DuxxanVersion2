@@ -131,7 +131,7 @@ export class UpcomingRaffleController extends BaseController {
       const result = await db
         .update(upcomingRaffles)
         .set({ 
-          interestedCount: sql`GREATEST(0, COALESCE(${upcomingRaffles.interestedCount}, 0) + ${increment})`
+          interestedCount: sql`GREATEST(0, COALESCE(interested_count, 0) + ${increment})`
         })
         .where(eq(upcomingRaffles.id, raffleId))
         .returning({
