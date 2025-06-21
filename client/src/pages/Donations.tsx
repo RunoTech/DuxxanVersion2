@@ -660,7 +660,7 @@ export default function Donations() {
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white"
+                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-black dark:border-yellow-400 dark:text-yellow-400 dark:hover:bg-yellow-400 dark:hover:text-black transition-colors duration-200"
                     >
                       <MapPin className="w-4 h-4 mr-2" />
                       Tüm Ülkeleri Göster ({countries.length - 1})
@@ -721,7 +721,7 @@ export default function Donations() {
                   Dünya çapındaki vakıf ve derneklerin kampanyaları burada görünecek.
                 </p>
                 <div className="flex justify-center gap-4">
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200">
                     <Globe className="w-4 h-4 mr-2" />
                     İlk Küresel Kampanyayı Başlat
                   </Button>
@@ -782,13 +782,13 @@ export default function Donations() {
                   <Button
                     onClick={() => setSearchTerm('')}
                     variant="outline"
-                    className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white"
+                    className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-black dark:hover:text-black transition-colors duration-200"
                   >
                     Aramayı Temizle
                   </Button>
                 )}
                 <Link href="/create-donation">
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium border-2 border-yellow-500 transition-colors duration-200">
                     Kampanya Başlat
                   </Button>
                 </Link>
