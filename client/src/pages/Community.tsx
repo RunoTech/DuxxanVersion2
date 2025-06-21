@@ -508,53 +508,84 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
 
-        {/* Modern Filters */}
+        {/* Filters */}
         {activeTab === 'channels' && (
           <div className="mb-8">
-            <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-[#FFC929] transition-colors" />
-                  <Input
-                    placeholder="Kanal ara..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all"
-                  />
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <CardHeader className="pb-6">
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <Filter className="w-5 h-5" />
+                  Filtreler ve Arama
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
+                  {/* Search */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                    <Input
+                      placeholder="Kanal ara..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-10 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20"
+                    />
+                  </div>
+
+                  {/* Category Filter */}
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
+                      <SelectValue placeholder="📁 Tüm Kategoriler" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                      {categories.map((category: any) => (
+                        <SelectItem key={category.id} value={category.id} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Country Filter */}
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
+                      <SelectValue placeholder="🌍 Tüm Ülkeler" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white max-h-60 overflow-y-auto">
+                      <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">Tüm Ülkeler</SelectItem>
+                      {countries.map((country) => (
+                        <SelectItem key={country.value} value={country.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
+                          {country.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Clear Filters */}
+                  <Button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedCategory('all');
+                      setSelectedCountry('all');
+                    }}
+                    className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold"
+                  >
+                    Filtreleri Temizle
+                  </Button>
                 </div>
                 
-                <div className="relative">
-                  <Tag className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all appearance-none"
-                  >
-                    {categories.map((category: any) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                {/* Results Info inside filter card */}
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {filteredChannels.length} sonuç gösteriliyor ({channels.length} toplam kanal)
+                  </p>
+                  {searchQuery && (
+                    <p className="text-sm text-gray-500 dark:text-gray-500">
+                      "{searchQuery}" için arama sonuçları
+                    </p>
+                  )}
                 </div>
-                
-                <div className="relative">
-                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <select
-                    value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all appearance-none"
-                  >
-                    <option value="all">Tüm Ülkeler</option>
-                    {countries.map((country) => (
-                      <option key={country.value} value={country.value}>
-                        {country.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
