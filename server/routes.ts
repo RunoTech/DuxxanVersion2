@@ -3,9 +3,24 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { db, pool } from "./db";
-import { insertUserSchema, insertRaffleSchema, insertDonationSchema, insertTicketSchema, insertDonationContributionSchema, insertUserRatingSchema, donations, users } from "@shared/schema";
+import { 
+  insertUserSchema, 
+  insertRaffleSchema, 
+  insertDonationSchema, 
+  insertTicketSchema, 
+  insertDonationContributionSchema, 
+  insertUserRatingSchema, 
+  insertChannelLikeSchema,
+  insertChannelFavoriteSchema,
+  donations, 
+  users, 
+  channels, 
+  categories, 
+  channelLikes, 
+  channelFavorites 
+} from "@shared/schema";
 import { z } from "zod";
-import { sql, eq, desc } from "drizzle-orm";
+import { sql, eq, desc, and } from "drizzle-orm";
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { redis } from '../lib/redis';
