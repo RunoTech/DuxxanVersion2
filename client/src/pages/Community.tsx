@@ -68,6 +68,27 @@ const formatCurrency = (value: string | number) => {
 // Raffle Card Component
 const RaffleCard = ({ raffle }: { raffle: any }) => {
   const countdown = useCountdown(raffle.startDate);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const handleReminder = async () => {
+    try {
+      const response = await apiRequest('POST', `/api/upcoming-raffles/${raffle.id}/reminder`);
+      if (response.ok) {
+        toast({
+          title: "Başarılı",
+          description: "Hatırlatma ayarlandı!",
+        });
+        queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
+      }
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Hatırlatma ayarlanırken bir hata oluştu",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden w-full min-h-[400px] flex flex-col">
@@ -153,6 +174,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
             size="sm" 
             variant="outline" 
             className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200 text-xs px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0"
+            onClick={handleReminder}
           >
             <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
             Hatırlat
