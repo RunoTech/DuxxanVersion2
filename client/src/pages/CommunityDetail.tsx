@@ -488,11 +488,31 @@ export default function CommunityDetail() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
+                  <Button 
+                    onClick={() => {
+                      toast({
+                        title: "Beğenildi!",
+                        description: "Bu topluluğu beğendiniz.",
+                      });
+                    }}
+                    size="sm" 
+                    variant="outline" 
+                    className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10 transition-all duration-200"
+                  >
                     <Heart className="h-4 w-4" />
                     Beğen
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
+                  <Button 
+                    onClick={() => {
+                      toast({
+                        title: "Kaydedildi!",
+                        description: "Bu topluluk favorilerinize eklendi.",
+                      });
+                    }}
+                    size="sm" 
+                    variant="outline" 
+                    className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10 transition-all duration-200"
+                  >
                     <Bookmark className="h-4 w-4" />
                     Kaydet
                   </Button>
