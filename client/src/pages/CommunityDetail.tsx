@@ -39,7 +39,10 @@ import {
   MoreHorizontal,
   Plus,
   Eye,
-  Activity
+  Activity,
+  FileText,
+  Tag,
+  X
 } from 'lucide-react';
 
 export default function CommunityDetail() {
@@ -66,12 +69,14 @@ export default function CommunityDetail() {
     enabled: !!id,
   });
 
-  const channel = channelData;
-  const raffles = rafflesData || [];
+  // Parse API response properly
+  const channel = channelData?.data || channelData;
+  const raffles = rafflesData?.data || rafflesData || [];
   
   // Debug logging
   console.log('CommunityDetail - Channel ID:', id);
-  console.log('CommunityDetail - Channel data:', channelData);
+  console.log('CommunityDetail - Raw channel data:', channelData);
+  console.log('CommunityDetail - Parsed channel:', channel);
   console.log('CommunityDetail - Loading:', channelLoading);
   console.log('CommunityDetail - Error:', channelError);
   
