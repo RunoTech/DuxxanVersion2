@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { BaseController } from './BaseController';
 import { db } from '../db';
 import { upcomingRaffles, users, categories } from '../../shared/schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { insertUpcomingRaffleSchema } from '../../shared/schema';
 
 export class UpcomingRaffleController extends BaseController {
@@ -107,6 +107,46 @@ export class UpcomingRaffleController extends BaseController {
     } catch (error) {
       console.error('Error creating upcoming raffle:', error);
       return this.error(res, 'Failed to create upcoming raffle', 500);
+    }
+  }
+
+  // Toggle reminder for upcoming raffle
+  async toggleReminder(req: Request, res: Response) {
+    try {
+      const raffleId = parseInt(req.params.id);
+      const { action } = req.body;
+      
+      if (isNaN(raffleId)) {
+        return this.error(res, 'Invalid raffle ID', 400);
+      }
+
+      if (!action || !['add', 'remove'].includes(action)) {
+        return this.error(res, 'Invalid action. Must be "add" or "remove"', 400);
+      }
+
+      // Update interested count based on action
+      const increment = action === 'add' ? 1 : -1;
+      
+      const result = await db
+        .update(upcomingRaffles)
+        .set({ 
+          interestedCount: sql`GREATEST(0, ${upcomingRaffles.interestedCount} + ${increment})`
+        })
+        .where(eq(upcomingRaffles.id, raffleId))
+        .returning();
+
+      if (result.length === 0) {
+        return this.error(res, 'Raffle not found', 404);
+      }
+
+      return this.success(res, { 
+        success: true, 
+        interestedCount: result[0].interestedCount,
+        action 
+      });
+    } catch (error) {
+      console.error('Error toggling reminder:', error);
+      return this.error(res, 'Failed to toggle reminder', 500);
     }
   }
 

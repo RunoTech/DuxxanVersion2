@@ -66,28 +66,15 @@ const formatCurrency = (value: string | number) => {
 };
 
 // Raffle Card Component
-const RaffleCard = ({ raffle }: { raffle: any }) => {
+const RaffleCard = ({ raffle, isInterested, onToggleInterest }: { 
+  raffle: any; 
+  isInterested: boolean; 
+  onToggleInterest: (raffleId: number) => void; 
+}) => {
   const countdown = useCountdown(raffle.startDate);
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
 
-  const handleReminder = async () => {
-    try {
-      const response = await apiRequest('POST', `/api/upcoming-raffles/${raffle.id}/reminder`);
-      if (response.ok) {
-        toast({
-          title: "Başarılı",
-          description: "Hatırlatma ayarlandı!",
-        });
-        queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
-      }
-    } catch (error) {
-      toast({
-        title: "Hata",
-        description: "Hatırlatma ayarlanırken bir hata oluştu",
-        variant: "destructive",
-      });
-    }
+  const handleReminder = () => {
+    onToggleInterest(raffle.id);
   };
 
   return (
@@ -173,7 +160,11 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
           <Button 
             size="sm" 
             variant="outline" 
-            className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200 text-xs px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0"
+            className={`transition-all duration-200 text-xs px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0 ${
+              isInterested 
+                ? 'bg-[#FFC929] text-black border-[#FFC929] hover:bg-[#FFD700]' 
+                : 'border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover'
+            }`}
             onClick={handleReminder}
           >
             <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
@@ -294,6 +285,7 @@ export default function Community() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
+  const [interestedRaffles, setInterestedRaffles] = useState<number[]>([]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -611,6 +603,48 @@ export default function Community() {
       });
     },
   });
+
+  // Handle raffle interest toggle
+  const handleToggleRaffleInterest = async (raffleId: number) => {
+    if (!isConnected) {
+      toast({
+        title: "Uyarı",
+        description: "Hatırlatma için cüzdan bağlantısı gerekli",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const isCurrentlyInterested = interestedRaffles.includes(raffleId);
+      const action = isCurrentlyInterested ? 'remove' : 'add';
+      
+      const response = await apiRequest('POST', `/api/upcoming-raffles/${raffleId}/reminder`, { action });
+      
+      if (response.ok) {
+        if (isCurrentlyInterested) {
+          setInterestedRaffles(prev => prev.filter(id => id !== raffleId));
+          toast({
+            title: "Başarılı",
+            description: "Hatırlatma iptal edildi",
+          });
+        } else {
+          setInterestedRaffles(prev => [...prev, raffleId]);
+          toast({
+            title: "Başarılı",
+            description: "Hatırlatma ayarlandı!",
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: ['/api/upcoming-raffles'] });
+      }
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "İşlem sırasında bir hata oluştu",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleSubscribe = (channelId: number) => {
     if (!isConnected) {
