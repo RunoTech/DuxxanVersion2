@@ -1623,29 +1623,3 @@ export default function Community() {
     </div>
   );
 }
-                {upcomingRaffles.map((raffle: any) => (
-                  <RaffleCard 
-                    key={raffle.id} 
-                    raffle={raffle} 
-                    isInterested={interestedRaffles.includes(raffle.id)}
-                    onToggleInterest={handleToggleRaffleInterest}
-                  />
-                ))}
-              </div>
-            )}
-
-            {!rafflesLoading && upcomingRaffles.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">Gelecek çekiliş bulunamadı</p>
-                  <p className="text-sm">Yakında yeni duyurular yapılacak</p>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
