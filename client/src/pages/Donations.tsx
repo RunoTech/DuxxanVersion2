@@ -289,7 +289,7 @@ export default function Donations() {
                   value={type.value}
                   className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10 rounded-md transition-colors"
                   style={{
-                    backgroundColor: activeTab === type.value ? '#EAB308' : 'transparent',
+                    backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent',
                     borderRadius: '6px'
                   }}
                 >
@@ -337,12 +337,12 @@ export default function Donations() {
 
                 {/* Category Filter */}
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
                     <SelectValue placeholder="📁 Tüm Kategoriler" />
                   </SelectTrigger>
                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
                     {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <SelectItem key={category.value} value={category.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
                         {category.label}
                       </SelectItem>
                     ))}
@@ -351,15 +351,15 @@ export default function Donations() {
 
                 {/* Sort By */}
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
                     <SelectValue placeholder="🔄 Sırala" />
                   </SelectTrigger>
                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                    <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yeni</SelectItem>
-                    <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sona Erme</SelectItem>
-                    <SelectItem value="highest-goal" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yüksek Hedef</SelectItem>
-                    <SelectItem value="most-funded" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Çok Fonlanan</SelectItem>
-                    <SelectItem value="most-donors" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Çok Bağışçı</SelectItem>
+                    <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Yeni</SelectItem>
+                    <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">Sona Erme</SelectItem>
+                    <SelectItem value="highest-goal" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Yüksek Hedef</SelectItem>
+                    <SelectItem value="most-funded" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Çok Fonlanan</SelectItem>
+                    <SelectItem value="most-donors" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Çok Bağışçı</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -372,7 +372,7 @@ export default function Donations() {
                     setSelectedCategory('all');
                     setActiveTab('all');
                   }}
-                  className="h-11 bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200"
+                  className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold transition-all duration-200"
                 >
                   Filtreleri Temizle
                 </Button>
