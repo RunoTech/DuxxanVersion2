@@ -963,9 +963,9 @@ export default function Community() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Açıklama</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
                             <FormControl>
-                              <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                              <Textarea {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
