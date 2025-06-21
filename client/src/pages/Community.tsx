@@ -1145,7 +1145,7 @@ export default function Community() {
                               <FormControl>
                                 <Input {...field} 
                                   placeholder="Çekilişinizin başlığını girin..."
-                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                  className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200" 
                                 />
                               </FormControl>
                               <FormMessage />
@@ -1163,7 +1163,7 @@ export default function Community() {
                               </FormLabel>
                               <FormControl>
                                 <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                                  <SelectTrigger className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
+                                  <SelectTrigger className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
@@ -1199,7 +1199,7 @@ export default function Community() {
                             <FormControl>
                               <Textarea {...field} 
                                 placeholder="Çekilişinizin detaylarını, kurallarını ve özelliklerini açıklayın..."
-                                className="min-h-[100px] bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200 resize-none" 
+                                className="min-h-[100px] bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200 resize-none" 
                               />
                             </FormControl>
                             <FormMessage />
@@ -1222,7 +1222,7 @@ export default function Community() {
                                   type="number" 
                                   step="0.000001" 
                                   placeholder="100.00"
-                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                  className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200" 
                                 />
                               </FormControl>
                               <FormMessage />
@@ -1243,7 +1243,7 @@ export default function Community() {
                                   type="number" 
                                   step="0.000001" 
                                   placeholder="1.00"
-                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                  className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200" 
                                 />
                               </FormControl>
                               <FormMessage />
@@ -1263,7 +1263,7 @@ export default function Community() {
                                 <Input {...field} 
                                   type="number" 
                                   placeholder="1000"
-                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                  className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200" 
                                 />
                               </FormControl>
                               <FormMessage />
@@ -1284,7 +1284,7 @@ export default function Community() {
                             <FormControl>
                               <Input {...field} 
                                 type="datetime-local" 
-                                className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200 [color-scheme:light] dark:[color-scheme:dark]" 
+                                className="h-12 bg-white dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all duration-200 [color-scheme:light] dark:[color-scheme:dark]" 
                               />
                             </FormControl>
                             <FormMessage />
