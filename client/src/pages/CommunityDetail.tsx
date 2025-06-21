@@ -225,57 +225,81 @@ export default function CommunityDetail() {
                     Düzenle
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Kanal Düzenle</DialogTitle>
+                <DialogContent className="max-w-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 text-gray-900 dark:text-white shadow-2xl">
+                  <DialogHeader className="pb-6">
+                    <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#FFC929]/20 to-[#FFB800]/30 rounded-2xl mx-auto mb-6 shadow-lg">
+                      <Settings className="h-10 w-10 text-[#FFC929]" />
+                    </div>
+                    <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent text-center">
+                      Kanalı Düzenle
+                    </DialogTitle>
+                    <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
+                      Kanalınızın bilgilerini güncelleyebilirsiniz
+                    </p>
                   </DialogHeader>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div>
-                      <Label htmlFor="name">Kanal Adı</Label>
+                      <Label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center mb-2">
+                        <Users className="w-4 h-4 mr-2 text-[#FFC929]" />
+                        Kanal Adı
+                      </Label>
                       <Input
                         id="name"
                         value={editForm.name}
                         onChange={(e) => handleEditFormChange('name', e.target.value)}
-                        placeholder="Kanal adını girin"
+                        placeholder="Kanal adını girin..."
+                        className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="description">Açıklama</Label>
+                      <Label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center mb-2">
+                        <FileText className="w-4 h-4 mr-2 text-[#FFC929]" />
+                        Açıklama
+                      </Label>
                       <Textarea
                         id="description"
                         value={editForm.description}
                         onChange={(e) => handleEditFormChange('description', e.target.value)}
-                        placeholder="Kanal açıklamasını girin"
-                        rows={3}
+                        placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
+                        rows={4}
+                        className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200 resize-none"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="category">Kategori</Label>
+                      <Label htmlFor="category" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center mb-2">
+                        <Tag className="w-4 h-4 mr-2 text-[#FFC929]" />
+                        Kategori
+                      </Label>
                       <Select
                         value={editForm.category}
                         onValueChange={(value) => handleEditFormChange('category', value)}
                       >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Kategori seçin" />
+                        <SelectTrigger className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800">
+                          <SelectValue placeholder="Kategori seçin" className="text-gray-900 dark:text-white" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="kripto">Kripto</SelectItem>
-                          <SelectItem value="teknoloji">Teknoloji</SelectItem>
-                          <SelectItem value="finans">Finans</SelectItem>
-                          <SelectItem value="egitim">Eğitim</SelectItem>
-                          <SelectItem value="genel">Genel</SelectItem>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                          <SelectItem value="kripto" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Kripto</SelectItem>
+                          <SelectItem value="teknoloji" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Teknoloji</SelectItem>
+                          <SelectItem value="finans" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Finans</SelectItem>
+                          <SelectItem value="egitim" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Eğitim</SelectItem>
+                          <SelectItem value="genel" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Genel</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex gap-2 pt-4">
-                      <Button onClick={handleEditChannel} className="flex-1">
+                    <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <Button 
+                        onClick={handleEditChannel} 
+                        className="flex-1 h-12 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      >
+                        <CheckCircle className="h-5 w-5 mr-2" />
                         Kaydet
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => setIsEditing(false)}
-                        className="flex-1"
+                        className="flex-1 h-12 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold text-lg transition-all duration-200"
                       >
+                        <X className="h-5 w-5 mr-2" />
                         İptal
                       </Button>
                     </div>
