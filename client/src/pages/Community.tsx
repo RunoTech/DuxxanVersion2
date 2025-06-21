@@ -155,8 +155,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
             className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200 text-xs px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0"
           >
             <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-            <span className="hidden xs:inline">Hatırlat</span>
-            <span className="xs:hidden">⏰</span>
+            Hatırlat
           </Button>
         </div>
         
