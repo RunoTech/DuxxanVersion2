@@ -340,7 +340,7 @@ export default function Community() {
     enabled: true
   });
 
-  const upcomingRaffles = Array.isArray(upcomingRafflesData) ? upcomingRafflesData : [];
+  const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
