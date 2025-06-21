@@ -209,9 +209,9 @@ export default function CommunityDetail() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
       {/* Hero Section with Cover Image */}
-      <div className="relative h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      <div className="relative h-80 bg-gradient-to-r from-[#FFC929] via-[#FFB800] to-[#FFA500] overflow-hidden">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
         
         {/* Navigation */}
         <div className="relative z-10 flex items-center justify-between p-6">
@@ -370,9 +370,9 @@ export default function CommunityDetail() {
         {/* Hero Content */}
         <div className="absolute bottom-6 left-6 right-6 z-10">
           <div className="flex items-end gap-6">
-            <Avatar className="h-24 w-24 border-4 border-white/20 shadow-2xl">
+            <Avatar className="h-24 w-24 border-4 border-white/30 shadow-2xl ring-2 ring-[#FFC929]/50">
               <AvatarImage src={channel?.avatar} alt={channel?.name} />
-              <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white text-2xl font-bold">
+              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black text-2xl font-bold">
                 {(channel?.name || 'C').slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -381,7 +381,7 @@ export default function CommunityDetail() {
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-4xl font-bold">{channel?.name}</h1>
                 {channel?.isDemo && (
-                  <Badge className="bg-orange-500/90 text-white border-orange-400 px-3 py-1 text-sm backdrop-blur-sm">
+                  <Badge className="bg-[#FFC929]/90 text-black border-[#FFB800] px-3 py-1 text-sm backdrop-blur-sm font-semibold">
                     DEMO
                   </Badge>
                 )}
@@ -403,7 +403,7 @@ export default function CommunityDetail() {
             <Button
               onClick={handleJoin}
               size="lg"
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-0 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+              className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black border-0 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
             >
               <Users className="h-5 w-5 mr-2" />
               Katıl
@@ -416,10 +416,10 @@ export default function CommunityDetail() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 -mt-12 relative z-10">
-          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Users className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Users className="h-6 w-6 text-black" />
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 {(channel?.subscriberCount || 0).toLocaleString()}
@@ -428,9 +428,9 @@ export default function CommunityDetail() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                 <DollarSign className="h-6 w-6 text-white" />
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
@@ -440,9 +440,9 @@ export default function CommunityDetail() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                 <Activity className="h-6 w-6 text-white" />
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
@@ -452,10 +452,10 @@ export default function CommunityDetail() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <TrendingUp className="h-6 w-6 text-black" />
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 {Math.floor(Math.random() * 100)}%
@@ -467,11 +467,12 @@ export default function CommunityDetail() {
 
         {/* Action Bar */}
         <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          <Card className="flex-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="flex-1 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
+                    <Activity className="h-5 w-5 mr-2 text-[#FFC929]" />
                     Topluluk Aktivitesi
                   </h3>
                   <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
@@ -486,11 +487,11 @@ export default function CommunityDetail() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
                     <Heart className="h-4 w-4" />
                     Beğen
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2">
+                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
                     <Bookmark className="h-4 w-4" />
                     Kaydet
                   </Button>
@@ -500,11 +501,12 @@ export default function CommunityDetail() {
           </Card>
           
           {isChannelCreator && (
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-700">
+            <Card className="bg-gradient-to-r from-[#FFC929]/10 to-[#FFB800]/10 dark:from-[#FFC929]/20 dark:to-[#FFB800]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
+                      <Settings className="h-5 w-5 mr-2 text-[#FFC929]" />
                       Kanal Yönetimi
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -512,7 +514,7 @@ export default function CommunityDetail() {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" className="gap-2">
+                    <Button size="sm" className="gap-2 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold">
                       <Plus className="h-4 w-4" />
                       Çekiliş Ekle
                     </Button>
@@ -527,12 +529,12 @@ export default function CommunityDetail() {
         </div>
 
         {/* Raffles Section */}
-        <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-0 shadow-xl">
+        <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
           <CardHeader className="border-b border-gray-100 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
-                  <Target className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center shadow-lg">
+                  <Target className="h-5 w-5 text-black" />
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -544,14 +546,14 @@ export default function CommunityDetail() {
                 </div>
               </div>
               {channel?.isDemo && (
-                <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700 px-3 py-1">
+                <Badge className="bg-[#FFC929]/10 text-[#FFC929] dark:text-[#FFC929] border border-[#FFC929]/30 dark:border-[#FFC929]/40 px-3 py-1 font-semibold">
                   Örnek İçerik
                 </Badge>
               )}
             </div>
             {channel?.isDemo && (
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-                <p className="text-sm text-blue-700 dark:text-blue-400 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#FFC929]/10 dark:bg-[#FFC929]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg">
+                <p className="text-sm text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2 font-medium">
                   <Info className="h-4 w-4" />
                   Bu demo kanalında örnek çekiliş içerikleri görüntülenmektedir. Gerçek çekiliş değildir.
                 </p>
@@ -579,8 +581,8 @@ export default function CommunityDetail() {
                     onClick={() => !channel?.isDemo && setLocation(`/raffles/${raffle.id}`)}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Award className="h-8 w-8 text-white" />
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <Award className="h-8 w-8 text-black" />
                       </div>
                       
                       <div className="flex-1 min-w-0">
@@ -591,7 +593,7 @@ export default function CommunityDetail() {
                                 {raffle.title}
                               </h3>
                               {channel?.isDemo && (
-                                <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600 border-orange-200">
+                                <Badge variant="outline" className="text-xs bg-[#FFC929]/10 text-[#FFC929] border-[#FFC929]/30 font-semibold">
                                   DEMO
                                 </Badge>
                               )}
@@ -616,9 +618,9 @@ export default function CommunityDetail() {
                                   }
                                 </span>
                               </div>
-                              <div className="flex items-center gap-1 text-green-600 dark:text-green-400 font-semibold">
+                              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
                                 <DollarSign className="h-4 w-4" />
-                                <span>{raffle.prizeValue} USDT</span>
+                                <span>{raffle.prizeValue}</span>
                               </div>
                               <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
                                 <Users className="h-4 w-4" />
@@ -629,18 +631,18 @@ export default function CommunityDetail() {
                           
                           <div className="flex flex-col items-end gap-2">
                             {!channel?.isDemo ? (
-                              <Button size="sm" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white">
+                              <Button size="sm" className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg">
                                 Katıl
                               </Button>
                             ) : (
-                              <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
+                              <div className="text-xs text-[#FFC929] dark:text-[#FFC929] bg-[#FFC929]/10 dark:bg-[#FFC929]/20 px-3 py-1 rounded-full font-medium">
                                 Önizleme
                               </div>
                             )}
                             
                             <div className="flex items-center gap-1">
                               {!channel?.isDemo && <ExternalLink className="h-4 w-4 text-gray-400" />}
-                              <Star className="h-4 w-4 text-yellow-500" />
+                              <Star className="h-4 w-4 text-[#FFC929]" />
                               <span className="text-xs text-gray-500">{(Math.random() * 5).toFixed(1)}</span>
                             </div>
                           </div>
@@ -655,7 +657,7 @@ export default function CommunityDetail() {
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                               <div 
-                                className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" 
+                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] h-2 rounded-full shadow-sm" 
                                 style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }}
                               />
                             </div>
@@ -681,7 +683,7 @@ export default function CommunityDetail() {
                   }
                 </p>
                 {!channel?.isDemo && isChannelCreator && (
-                  <Button className="mt-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
+                  <Button className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg">
                     <Plus className="h-4 w-4 mr-2" />
                     İlk Çekilişi Oluştur
                   </Button>
@@ -693,13 +695,13 @@ export default function CommunityDetail() {
 
         {/* Demo Features Section */}
         {channel?.isDemo && demoContent?.features && (
-          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700">
+          <Card className="bg-gradient-to-br from-[#FFC929]/10 to-[#FFB800]/10 dark:from-[#FFC929]/20 dark:to-[#FFB800]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+              <CardTitle className="text-2xl font-bold text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2">
                 <Info className="h-6 w-6" />
                 Demo Özellikleri
               </CardTitle>
-              <p className="text-blue-700 dark:text-blue-400">
+              <p className="text-[#FFC929]/80 dark:text-[#FFC929]/80">
                 Bu demo kanalında deneyimleyebileceğiniz özellikler:
               </p>
             </CardHeader>
@@ -708,22 +710,22 @@ export default function CommunityDetail() {
                 {demoContent.features.map((feature: string, index: number) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-600 rounded-lg"
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg"
                   >
-                    <CheckCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929] flex-shrink-0" />
                     <span className="text-gray-900 dark:text-white">{feature}</span>
                   </div>
                 ))}
               </div>
               
-              <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+              <div className="mt-6 p-4 bg-[#FFC929]/10 dark:bg-[#FFC929]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929] flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-yellow-900 dark:text-yellow-300 mb-1">
+                    <h4 className="font-semibold text-[#FFC929] dark:text-[#FFC929] mb-1">
                       Demo Kanal Bilgisi
                     </h4>
-                    <p className="text-yellow-800 dark:text-yellow-400 text-sm">
+                    <p className="text-[#FFC929]/80 dark:text-[#FFC929]/80 text-sm">
                       Bu demo kanalında gerçek para transferi yapılmaz. Tüm işlemler simülasyon amaçlıdır ve 
                       platform özelliklerini denemeniz için tasarlanmıştır.
                     </p>
