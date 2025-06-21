@@ -155,12 +155,12 @@ export default function Raffles() {
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
                 <Input
                   placeholder="Çekiliş ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
+                  className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-10 focus:border-yellow-500 dark:focus:border-yellow-500"
                 />
               </div>
 
@@ -169,10 +169,10 @@ export default function Raffles() {
                 <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
                   <SelectValue placeholder="Tüm Kategoriler" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
-                  <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Tüm Kategoriler</SelectItem>
                   {(Array.isArray(categories) ? categories : []).map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
+                    <SelectItem key={category.id} value={category.id.toString()} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                       {category.name}
                     </SelectItem>
                   ))}
@@ -181,14 +181,14 @@ export default function Raffles() {
 
               {/* Country Filter */}
               <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <Globe className="w-4 h-4 mr-2" />
+                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
+                  <Globe className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                   <SelectValue placeholder="Tüm Ülkeler" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
-                  <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">🌍 Tüm Ülkeler</SelectItem>
                   {countries.map((country: any) => (
-                    <SelectItem key={country.code} value={country.code}>
+                    <SelectItem key={country.code} value={country.code} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                       {country.flag} {country.name}
                     </SelectItem>
                   ))}
@@ -197,15 +197,15 @@ export default function Raffles() {
 
               {/* Sort By */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
                   <SelectValue placeholder="Sırala" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
-                  <SelectItem value="newest">En Yeni</SelectItem>
-                  <SelectItem value="ending-soon">Sona Erme</SelectItem>
-                  <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
-                  <SelectItem value="most-tickets">En Popüler</SelectItem>
-                  <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yeni</SelectItem>
+                  <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sona Erme</SelectItem>
+                  <SelectItem value="highest-value" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yüksek Ödül</SelectItem>
+                  <SelectItem value="most-tickets" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Popüler</SelectItem>
+                  <SelectItem value="lowest-price" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Düşük Fiyat</SelectItem>
                 </SelectContent>
               </Select>
 
