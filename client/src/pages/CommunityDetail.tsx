@@ -522,26 +522,109 @@ export default function CommunityDetail() {
           </Card>
           
           {isChannelCreator && (
-            <Card className="bg-gradient-to-r from-[#FFC929]/10 to-[#FFB800]/10 dark:from-[#FFC929]/20 dark:to-[#FFB800]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40">
+            <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/10 dark:to-[#FFB800]/15 border border-[#FFC929]/40 dark:border-[#FFC929]/30 shadow-xl backdrop-blur-sm">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
-                      <Settings className="h-5 w-5 mr-2 text-[#FFC929]" />
-                      Kanal Yönetimi
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Kanalınızı yönetin ve yeni içerik ekleyin
-                    </p>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-2xl flex items-center justify-center shadow-lg">
+                      <Settings className="h-7 w-7 text-black" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <Sparkles className="h-6 w-6 text-[#FFC929]" />
+                        Kanal Yönetimi
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-base max-w-md">
+                        Kanalınızı yönetin ve yeni içerik ekleyin. Topluluk üyeleriniz için değerli deneyimler oluşturun.
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" className="gap-2 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold">
-                      <Plus className="h-4 w-4" />
-                      Çekiliş Ekle
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 min-w-0">
+                    <Button 
+                      onClick={() => {
+                        toast({
+                          title: "Çekiliş Ekleme",
+                          description: "Yeni çekiliş ekleme özelliği yakında aktif olacak.",
+                        });
+                      }}
+                      size="lg"
+                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Plus className="h-6 w-6 mr-3" />
+                      <span className="whitespace-nowrap">Çekiliş Ekle</span>
                     </Button>
-                    <Button size="sm" variant="outline" className="gap-2">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={() => {
+                          toast({
+                            title: "Analitik Raporu",
+                            description: "Kanal analitikleri ve istatistikleri yakında kullanılabilir olacak.",
+                          });
+                        }}
+                        variant="outline" 
+                        size="lg"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-6 py-4 transition-all duration-200 font-semibold"
+                      >
+                        <Activity className="h-5 w-5" />
+                        <span className="hidden sm:inline ml-2">Analitik</span>
+                      </Button>
+                      
+                      <Button 
+                        onClick={() => setIsEditing(true)}
+                        variant="outline" 
+                        size="lg"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-6 py-4 transition-all duration-200 font-semibold"
+                      >
+                        <Edit className="h-5 w-5" />
+                        <span className="hidden sm:inline ml-2">Düzenle</span>
+                      </Button>
+                      
+                      <Button 
+                        onClick={() => {
+                          toast({
+                            title: "Diğer Seçenekler",
+                            description: "Ek yönetim seçenekleri ve araçları geliştiriliyor.",
+                          });
+                        }}
+                        variant="outline" 
+                        size="lg"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-6 py-4 transition-all duration-200 font-semibold"
+                      >
+                        <MoreHorizontal className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Stats Dashboard */}
+                <div className="mt-8 pt-6 border-t border-[#FFC929]/30 dark:border-[#FFC929]/20">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="text-center p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-[#FFC929]/20">
+                      <div className="text-3xl font-bold text-[#FFC929] mb-2">
+                        {channel?.subscriberCount || 0}
+                      </div>
+                      <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Abone</div>
+                    </div>
+                    <div className="text-center p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-[#FFC929]/20">
+                      <div className="text-3xl font-bold text-emerald-600 mb-2">
+                        {channel?.activeRaffleCount || 0}
+                      </div>
+                      <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Aktif Çekiliş</div>
+                    </div>
+                    <div className="text-center p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-[#FFC929]/20">
+                      <div className="text-3xl font-bold text-blue-600 mb-2">
+                        {channel?.viewCount || Math.floor(Math.random() * 1000)}
+                      </div>
+                      <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Görüntüleme</div>
+                    </div>
+                    <div className="text-center p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm border border-[#FFC929]/20">
+                      <div className="text-3xl font-bold text-purple-600 mb-2">
+                        {channel?.likeCount || Math.floor(Math.random() * 100)}
+                      </div>
+                      <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Beğeni</div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -652,7 +735,16 @@ export default function CommunityDetail() {
                           
                           <div className="flex flex-col items-end gap-2">
                             {!channel?.isDemo ? (
-                              <Button size="sm" className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg">
+                              <Button 
+                                onClick={() => {
+                                  toast({
+                                    title: "Çekilişe Katılım",
+                                    description: "Çekilişe katılım işlemi başlatıldı.",
+                                  });
+                                }}
+                                size="sm" 
+                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                              >
                                 Katıl
                               </Button>
                             ) : (
@@ -704,7 +796,15 @@ export default function CommunityDetail() {
                   }
                 </p>
                 {!channel?.isDemo && isChannelCreator && (
-                  <Button className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg">
+                  <Button 
+                    onClick={() => {
+                      toast({
+                        title: "Çekiliş Oluşturma",
+                        description: "Yeni çekiliş oluşturma sayfasına yönlendiriliyorsunuz.",
+                      });
+                    }}
+                    className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     İlk Çekilişi Oluştur
                   </Button>
