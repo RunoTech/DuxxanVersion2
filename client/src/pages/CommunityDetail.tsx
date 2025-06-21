@@ -522,25 +522,25 @@ export default function CommunityDetail() {
           </Card>
           
           {isChannelCreator && (
-            <Card className="bg-gradient-to-br from-[#FFC929]/20 to-[#FFB800]/30 dark:from-[#FFC929]/15 dark:to-[#FFB800]/20 border border-[#FFC929]/50 dark:border-[#FFC929]/40 shadow-2xl backdrop-blur-lg">
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-3xl flex items-center justify-center shadow-2xl">
-                      <Settings className="h-8 w-8 text-black" />
+            <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/10 dark:to-[#FFB800]/15 border border-[#FFC929]/40 dark:border-[#FFC929]/30 shadow-xl backdrop-blur-sm">
+              <CardContent className="p-5">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                      <Settings className="h-6 w-6 text-black" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-3">
-                        <Sparkles className="h-7 w-7 text-[#FFC929]" />
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-[#FFC929]" />
                         Kanal Yönetimi
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-lg">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-md">
                         Kanalınızı yönetin ve yeni içerik ekleyin. Topluluk üyeleriniz için değerli deneyimler oluşturun.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                     <Button 
                       onClick={() => {
                         toast({
@@ -548,14 +548,13 @@ export default function CommunityDetail() {
                           description: "Yeni çekiliş ekleme özelliği yakında aktif olacak.",
                         });
                       }}
-                      size="lg"
-                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold px-10 py-5 text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
+                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
-                      <Plus className="h-7 w-7 mr-4" />
+                      <Plus className="h-5 w-5 mr-2" />
                       <span className="whitespace-nowrap">Çekiliş Ekle</span>
                     </Button>
                     
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       <Button 
                         onClick={() => {
                           toast({
@@ -564,21 +563,19 @@ export default function CommunityDetail() {
                           });
                         }}
                         variant="outline" 
-                        size="lg"
-                        className="border-3 border-[#FFC929]/70 text-[#FFC929] hover:bg-[#FFC929]/20 dark:border-[#FFC929]/50 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/15 px-8 py-5 transition-all duration-300 font-bold text-lg backdrop-blur-sm"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
                       >
-                        <Activity className="h-6 w-6" />
-                        <span className="hidden sm:inline ml-3">Analitik</span>
+                        <Activity className="h-4 w-4" />
+                        <span className="hidden md:inline ml-2">Analitik</span>
                       </Button>
                       
                       <Button 
                         onClick={() => setIsEditing(true)}
                         variant="outline" 
-                        size="lg"
-                        className="border-3 border-[#FFC929]/70 text-[#FFC929] hover:bg-[#FFC929]/20 dark:border-[#FFC929]/50 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/15 px-8 py-5 transition-all duration-300 font-bold text-lg backdrop-blur-sm"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
                       >
-                        <Edit className="h-6 w-6" />
-                        <span className="hidden sm:inline ml-3">Düzenle</span>
+                        <Edit className="h-4 w-4" />
+                        <span className="hidden md:inline ml-2">Düzenle</span>
                       </Button>
                       
                       <Button 
@@ -589,10 +586,9 @@ export default function CommunityDetail() {
                           });
                         }}
                         variant="outline" 
-                        size="lg"
-                        className="border-3 border-[#FFC929]/70 text-[#FFC929] hover:bg-[#FFC929]/20 dark:border-[#FFC929]/50 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/15 px-8 py-5 transition-all duration-300 font-bold text-lg backdrop-blur-sm"
+                        className="border-2 border-[#FFC929]/60 text-[#FFC929] hover:bg-[#FFC929]/15 dark:border-[#FFC929]/40 dark:text-[#FFC929] dark:hover:bg-[#FFC929]/10 px-4 py-3 transition-all duration-200 font-medium"
                       >
-                        <MoreHorizontal className="h-6 w-6" />
+                        <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
