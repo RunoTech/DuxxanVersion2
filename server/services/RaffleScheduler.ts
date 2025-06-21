@@ -3,6 +3,7 @@ import { upcomingRaffles, upcomingRaffleInterests, users, raffles } from '../../
 import { eq, and, lte } from 'drizzle-orm';
 import { emailService } from './EmailService';
 import { ReminderPersistence } from './ReminderPersistence';
+import { InternalMailService } from './InternalMailService';
 
 class RaffleScheduler {
   private checkInterval: NodeJS.Timeout | null = null;
@@ -99,15 +100,27 @@ class RaffleScheduler {
       const interestedUsers = await ReminderPersistence.getRaffleInterestedUsers(upcomingRaffle.id);
       console.log(`Found ${interestedUsers.length} interested users for raffle ${upcomingRaffle.id}`);
 
-      // Send simulated email notifications (since we don't have real email addresses)
+      // Send internal mail notifications to interested users
       if (interestedUsers.length > 0) {
-        const demoEmails = interestedUsers.map((_, index) => `user${index + 1}@example.com`);
-        await emailService.sendBulkRaffleStartNotifications(
-          demoEmails,
-          upcomingRaffle.title,
-          newRaffle.id
-        );
-        console.log(`✉️ Sent ${interestedUsers.length} email notifications for raffle: ${upcomingRaffle.title}`);
+        const subject = `🎉 ${upcomingRaffle.title} Çekilişi Başladı!`;
+        const body = `
+Merhaba,
+
+İlgilendiğiniz "${upcomingRaffle.title}" çekilişi artık aktif!
+
+📋 Çekiliş Detayları:
+💰 Ödül: ${upcomingRaffle.prizeValue} USDT
+🎫 Bilet Fiyatı: ${upcomingRaffle.ticketPrice} USDT
+🎯 Maksimum Bilet: ${upcomingRaffle.maxTickets}
+
+Şimdi bilet satın alabilir ve kazanma şansınızı yakalayabilirsiniz!
+
+İyi şanslar!
+DUXXAN Ekibi
+        `;
+
+        await InternalMailService.sendBulkMail(interestedUsers, subject, body);
+        console.log(`✉️ Sent ${interestedUsers.length} internal mail notifications for raffle: ${upcomingRaffle.title}`);
       }
 
       // Deactivate the upcoming raffle

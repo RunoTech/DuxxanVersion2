@@ -37,7 +37,7 @@ export class ReminderPersistence {
         SELECT raffle_id FROM user_raffle_reminders 
         WHERE user_session = ${userSession}
       `);
-      return result.map((row: any) => row.raffle_id);
+      return result.rows ? result.rows.map((row: any) => row.raffle_id) : [];
     } catch (error) {
       console.error('Error getting user reminders:', error);
       return [];
@@ -51,7 +51,7 @@ export class ReminderPersistence {
         SELECT DISTINCT user_session FROM user_raffle_reminders 
         WHERE raffle_id = ${raffleId}
       `);
-      return result.map((row: any) => row.user_session);
+      return result.rows ? result.rows.map((row: any) => row.user_session) : [];
     } catch (error) {
       console.error('Error getting raffle interested users:', error);
       return [];

@@ -93,6 +93,40 @@ router.get('/user-reminders/:session', async (req, res) => {
   }
 });
 
+// Internal mail routes
+router.get('/mail/inbox/:session', async (req, res) => {
+  try {
+    const { InternalMailService } = await import('../services/InternalMailService');
+    const mails = await InternalMailService.getUserInbox(req.params.session);
+    res.json(mails);
+  } catch (error) {
+    console.error('Error fetching inbox:', error);
+    res.status(500).json({ error: 'Failed to fetch inbox' });
+  }
+});
+
+router.get('/mail/unread-count/:session', async (req, res) => {
+  try {
+    const { InternalMailService } = await import('../services/InternalMailService');
+    const count = await InternalMailService.getUnreadCount(req.params.session);
+    res.json({ count });
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+    res.status(500).json({ error: 'Failed to fetch unread count' });
+  }
+});
+
+router.post('/mail/mark-read/:id', async (req, res) => {
+  try {
+    const { InternalMailService } = await import('../services/InternalMailService');
+    await InternalMailService.markAsRead(parseInt(req.params.id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error marking mail as read:', error);
+    res.status(500).json({ error: 'Failed to mark as read' });
+  }
+});
+
 // Test scheduler endpoint
 router.post('/test-scheduler', async (req, res) => {
   try {
