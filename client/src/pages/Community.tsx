@@ -285,55 +285,7 @@ export default function Community() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
-  const [interestedRaffles, setInterestedRaffles] = useState<number[]>([]);
-
-  // Get or create user session
-  const getUserSession = () => {
-    let session = localStorage.getItem('user_session');
-    if (!session) {
-      session = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
-      localStorage.setItem('user_session', session);
-    }
-    return session;
-  };
-
-  // Load reminders from both localStorage and server on component mount
-  useEffect(() => {
-    const loadReminders = async () => {
-      const userSession = getUserSession();
-      
-      // Load from localStorage first (immediate)
-      const savedReminders = localStorage.getItem('raffle_reminders');
-      if (savedReminders) {
-        try {
-          const reminders = JSON.parse(savedReminders);
-          setInterestedRaffles(reminders);
-        } catch (error) {
-          console.error('Error loading local reminders:', error);
-        }
-      }
-
-      // Then sync with server
-      try {
-        const response = await fetch(`/api/user-reminders/${userSession}`);
-        if (response.ok) {
-          const data = await response.json();
-          const serverReminders = data.reminders || [];
-          setInterestedRaffles(serverReminders);
-          localStorage.setItem('raffle_reminders', JSON.stringify(serverReminders));
-        }
-      } catch (error) {
-        console.error('Error syncing reminders with server:', error);
-      }
-    };
-
-    loadReminders();
-  }, []);
-
-  // Save reminders to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('raffle_reminders', JSON.stringify(interestedRaffles));
-  }, [interestedRaffles]);
+  const { interestedRaffles, userSession, addReminder, removeReminder, isInterested } = useReminders();
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -664,9 +616,8 @@ export default function Community() {
     }
 
     try {
-      const isCurrentlyInterested = interestedRaffles.includes(raffleId);
+      const isCurrentlyInterested = isInterested(raffleId);
       const action = isCurrentlyInterested ? 'remove' : 'add';
-      const userSession = getUserSession();
       
       const response = await apiRequest('POST', `/api/upcoming-raffles/${raffleId}/reminder`, { 
         action,
@@ -675,21 +626,13 @@ export default function Community() {
       
       if (response.ok) {
         if (isCurrentlyInterested) {
-          setInterestedRaffles(prev => {
-            const updated = prev.filter(id => id !== raffleId);
-            localStorage.setItem('raffle_reminders', JSON.stringify(updated));
-            return updated;
-          });
+          removeReminder(raffleId);
           toast({
             title: "Başarılı",
             description: "Hatırlatma iptal edildi",
           });
         } else {
-          setInterestedRaffles(prev => {
-            const updated = [...prev, raffleId];
-            localStorage.setItem('raffle_reminders', JSON.stringify(updated));
-            return updated;
-          });
+          addReminder(raffleId);
           toast({
             title: "Başarılı",
             description: "Hatırlatma ayarlandı!",

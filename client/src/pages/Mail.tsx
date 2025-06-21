@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { useReminders } from '@/contexts/ReminderContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,16 +30,11 @@ import { tr } from 'date-fns/locale';
 
 interface MailMessage {
   id: number;
-  fromWalletAddress: string;
-  toWalletAddress: string;
+  user_session: string;
   subject: string;
-  content: string;
-  category: 'system' | 'user' | 'community';
-  isRead: boolean;
-  isStarred: boolean;
-  raffleId?: number;
-  communityId?: number;
-  createdAt: string;
+  body: string;
+  is_read: boolean;
+  created_at: string;
 }
 
 type MailCategory = 'all' | 'system' | 'user' | 'community' | 'starred';
@@ -47,6 +43,7 @@ export default function Mail() {
   const { user, isConnected, address } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { userSession } = useReminders();
   
   const [activeCategory, setActiveCategory] = useState<MailCategory>('all');
   const [selectedMessage, setSelectedMessage] = useState<MailMessage | null>(null);
