@@ -159,18 +159,18 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-white dark:bg-gray-800 rounded-2xl overflow-hidden h-[560px] flex flex-col">
+      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-800 dark:bg-gray-900 rounded-2xl overflow-hidden h-[560px] flex flex-col">
         <div className="h-48 relative overflow-hidden">
           <div className="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
             <Heart className="w-16 h-16 text-white opacity-80" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
             <div className="absolute top-4 left-4">
               {getStatusBadge()}
             </div>
             <div className="absolute top-4 right-4">
               {donation.category && (
-                <Badge className="bg-yellow-500 text-white font-semibold px-3 py-1">
+                <Badge className="bg-yellow-500 text-black font-semibold px-3 py-1 rounded-md">
                   {donation.category}
                 </Badge>
               )}
@@ -178,44 +178,49 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
         </div>
       
-      <CardContent className="p-6 flex-1 flex flex-col">
+      <CardContent className="p-6 flex-1 flex flex-col bg-gray-800 dark:bg-gray-900">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{donation.title}</h3>
+            <h3 className="text-lg font-bold text-white leading-tight">{donation.title}</h3>
             <div className="flex items-center space-x-1">
               <span className="text-yellow-500 text-sm">★</span>
-              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">{donation.creator.rating}</span>
+              <span className="text-sm text-gray-300 font-medium">{donation.creator.rating}</span>
             </div>
           </div>
           
-          <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed flex-1 line-clamp-3">
+          <p className="text-gray-300 mb-4 text-sm leading-relaxed flex-1 line-clamp-2">
             {donation.description}
           </p>
 
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-4">
+          <div className="bg-gray-700 rounded-xl p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">İlerleme</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-white">
+              <span className="text-sm text-gray-300 font-medium">İlerleme</span>
+              <span className="text-sm font-bold text-white">
                 {parseFloat(donation.currentAmount).toLocaleString()} / {parseFloat(donation.goalAmount).toLocaleString()} USDT
               </span>
             </div>
-            <Progress value={progress} className="mb-2 h-2" />
-            <div className="text-xs text-gray-600 dark:text-gray-400">
+            <div className="w-full bg-gray-600 rounded-full h-2 mb-2">
+              <div 
+                className="bg-yellow-500 h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${Math.min(progress, 100)}%` }}
+              ></div>
+            </div>
+            <div className="text-xs text-gray-300">
               {progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse hedef!'}
             </div>
           </div>
 
           <div className="flex justify-between items-center mb-4 mt-auto">
             <div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Hedef Miktar</div>
-              <div className="text-lg font-bold text-gray-900 dark:text-white">
+              <div className="text-sm text-gray-300 mb-1">Hedef Miktar</div>
+              <div className="text-lg font-bold text-white">
                 {parseFloat(donation.goalAmount).toLocaleString()} USDT
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              <div className="text-sm text-gray-300 mb-1">
                 {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
               </div>
-              <div className="text-lg font-bold text-gray-900 dark:text-white">
+              <div className="text-lg font-bold text-white">
                 {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
               </div>
             </div>
