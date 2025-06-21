@@ -55,7 +55,7 @@ export default function CommunityDetail() {
   });
 
   // Fetch channel details
-  const { data: channelData, isLoading: channelLoading, refetch } = useQuery({
+  const { data: channelData, isLoading: channelLoading, error: channelError, refetch } = useQuery({
     queryKey: [`/api/channels/${id}`],
     enabled: !!id,
   });
@@ -66,8 +66,14 @@ export default function CommunityDetail() {
     enabled: !!id,
   });
 
-  const channel = (channelData as any)?.data;
-  const raffles = (rafflesData as any)?.data || [];
+  const channel = channelData;
+  const raffles = rafflesData || [];
+  
+  // Debug logging
+  console.log('CommunityDetail - Channel ID:', id);
+  console.log('CommunityDetail - Channel data:', channelData);
+  console.log('CommunityDetail - Loading:', channelLoading);
+  console.log('CommunityDetail - Error:', channelError);
   
   // Parse demo content if available
   const demoContent = channel?.demoContent ? JSON.parse(channel.demoContent) : null;
