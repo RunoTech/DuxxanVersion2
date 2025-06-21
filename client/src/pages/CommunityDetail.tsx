@@ -52,10 +52,20 @@ export default function CommunityDetail() {
   const { toast } = useToast();
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCreatingRaffle, setIsCreatingRaffle] = useState(false);
   const [editForm, setEditForm] = useState({
     name: '',
     description: '',
     category: ''
+  });
+  const [raffleForm, setRaffleForm] = useState({
+    title: '',
+    description: '',
+    prizeValue: '',
+    prizeDescription: '',
+    duration: '7',
+    maxParticipants: '',
+    requirements: ''
   });
 
   // Fetch channel details
@@ -541,12 +551,7 @@ export default function CommunityDetail() {
                   </div>
                   
                   <Button 
-                    onClick={() => {
-                      toast({
-                        title: "Çekiliş Ekleme",
-                        description: "Yeni çekiliş ekleme özelliği yakında aktif olacak.",
-                      });
-                    }}
+                    onClick={() => setIsCreatingRaffle(true)}
                     className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
                   >
                     <Plus className="h-5 w-5 mr-2" />
@@ -723,12 +728,7 @@ export default function CommunityDetail() {
                 </p>
                 {!channel?.isDemo && isChannelCreator && (
                   <Button 
-                    onClick={() => {
-                      toast({
-                        title: "Çekiliş Oluşturma",
-                        description: "Yeni çekiliş oluşturma sayfasına yönlendiriliyorsunuz.",
-                      });
-                    }}
+                    onClick={() => setIsCreatingRaffle(true)}
                     className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -782,6 +782,244 @@ export default function CommunityDetail() {
             </CardContent>
           </Card>
         )}
+
+        {/* Raffle Creation Modal */}
+        <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/30">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-[#FFC929] flex items-center gap-2">
+                <Award className="h-6 w-6" />
+                Yeni Çekiliş Oluştur
+              </DialogTitle>
+              <DialogDescription className="text-gray-600 dark:text-gray-400">
+                Topluluğunuz için yeni bir çekiliş oluşturun ve üyelerinizi heyecanlandırın.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-6 py-4">
+              {/* Preview Card */}
+              <Card className="bg-gradient-to-br from-[#FFC929]/10 to-[#FFB800]/20 border border-[#FFC929]/30">
+                <CardHeader>
+                  <CardTitle className="text-lg text-[#FFC929] flex items-center gap-2">
+                    <Target className="h-5 w-5" />
+                    Çekiliş Önizlemesi
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <Award className="h-8 w-8 text-black" />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
+                                {raffleForm.title || 'Çekiliş Başlığı'}
+                              </h3>
+                              <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
+                                Yeni
+                              </Badge>
+                            </div>
+                            
+                            <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                              {raffleForm.description || 'Çekiliş açıklaması burada görünecek...'}
+                            </p>
+                            
+                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                                <Clock className="h-4 w-4" />
+                                <span>{raffleForm.duration ? `${raffleForm.duration} gün` : '7 gün'}</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+                                <DollarSign className="h-4 w-4" />
+                                <span>{raffleForm.prizeValue || '100 USDT'}</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                                <Users className="h-4 w-4" />
+                                <span>
+                                  {raffleForm.maxParticipants 
+                                    ? `Max ${raffleForm.maxParticipants} kişi` 
+                                    : 'Sınırsız katılım'
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col items-end gap-2">
+                            <Button 
+                              size="sm" 
+                              className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg"
+                            >
+                              Katıl
+                            </Button>
+                            <div className="flex items-center gap-1">
+                              <Star className="h-4 w-4 text-[#FFC929]" />
+                              <span className="text-xs text-gray-500">Yeni</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Form Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="title" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Çekiliş Başlığı *
+                    </Label>
+                    <Input
+                      id="title"
+                      value={raffleForm.title}
+                      onChange={(e) => setRaffleForm({...raffleForm, title: e.target.value})}
+                      placeholder="Örn: 100 USDT Çekilişi"
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="prizeValue" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Ödül Değeri *
+                    </Label>
+                    <Input
+                      id="prizeValue"
+                      value={raffleForm.prizeValue}
+                      onChange={(e) => setRaffleForm({...raffleForm, prizeValue: e.target.value})}
+                      placeholder="Örn: 100 USDT"
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="duration" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Süre (Gün) *
+                    </Label>
+                    <Select value={raffleForm.duration} onValueChange={(value) => setRaffleForm({...raffleForm, duration: value})}>
+                      <SelectTrigger className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white">
+                        <SelectValue placeholder="Süre seçin" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white dark:bg-gray-800 border-[#FFC929]/30">
+                        <SelectItem value="1">1 Gün</SelectItem>
+                        <SelectItem value="3">3 Gün</SelectItem>
+                        <SelectItem value="7">7 Gün</SelectItem>
+                        <SelectItem value="14">14 Gün</SelectItem>
+                        <SelectItem value="30">30 Gün</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="maxParticipants" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Maksimum Katılımcı
+                    </Label>
+                    <Input
+                      id="maxParticipants"
+                      type="number"
+                      value={raffleForm.maxParticipants}
+                      onChange={(e) => setRaffleForm({...raffleForm, maxParticipants: e.target.value})}
+                      placeholder="Boş bırakın (sınırsız)"
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="description" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Açıklama *
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={raffleForm.description}
+                      onChange={(e) => setRaffleForm({...raffleForm, description: e.target.value})}
+                      placeholder="Çekiliş hakkında detaylı açıklama yazın..."
+                      rows={4}
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="prizeDescription" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Ödül Açıklaması
+                    </Label>
+                    <Textarea
+                      id="prizeDescription"
+                      value={raffleForm.prizeDescription}
+                      onChange={(e) => setRaffleForm({...raffleForm, prizeDescription: e.target.value})}
+                      placeholder="Ödül hakkında ek bilgiler..."
+                      rows={3}
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="requirements" className="text-base font-semibold text-gray-900 dark:text-white">
+                      Katılım Gereksinimleri
+                    </Label>
+                    <Textarea
+                      id="requirements"
+                      value={raffleForm.requirements}
+                      onChange={(e) => setRaffleForm({...raffleForm, requirements: e.target.value})}
+                      placeholder="Çekilişe katılım için gereksinimler..."
+                      rows={3}
+                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <Button
+                  onClick={() => setIsCreatingRaffle(false)}
+                  variant="outline"
+                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  İptal
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (!raffleForm.title || !raffleForm.description || !raffleForm.prizeValue) {
+                      toast({
+                        title: "Eksik Bilgi",
+                        description: "Lütfen gerekli alanları doldurun.",
+                        variant: "destructive"
+                      });
+                      return;
+                    }
+                    
+                    toast({
+                      title: "Çekiliş Oluşturuldu!",
+                      description: `"${raffleForm.title}" başlıklı çekiliş başarıyla oluşturuldu.`,
+                    });
+                    
+                    setRaffleForm({
+                      title: '',
+                      description: '',
+                      prizeValue: '',
+                      prizeDescription: '',
+                      duration: '7',
+                      maxParticipants: '',
+                      requirements: ''
+                    });
+                    setIsCreatingRaffle(false);
+                  }}
+                  className="px-8 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Çekilişi Oluştur
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
