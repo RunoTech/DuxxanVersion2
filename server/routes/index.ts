@@ -2,12 +2,14 @@ import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
 import { RaffleController } from '../controllers/RaffleController';
 import { DonationController } from '../controllers/DonationController';
+import { UpcomingRaffleController } from '../controllers/UpcomingRaffleController';
 import { translationService } from '../../lib/translation';
 
 // Initialize controllers
 const userController = new UserController();
 const raffleController = new RaffleController();
 const donationController = new DonationController();
+const upcomingRaffleController = new UpcomingRaffleController();
 
 // Create router
 const router = Router();

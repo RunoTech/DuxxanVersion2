@@ -1593,7 +1593,12 @@ export default function Community() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {upcomingRaffles.map((raffle: any) => (
-                  <RaffleCard key={raffle.id} raffle={raffle} />
+                  <RaffleCard 
+                    key={raffle.id} 
+                    raffle={raffle} 
+                    isInterested={interestedRaffles.includes(raffle.id)}
+                    onToggleInterest={handleToggleRaffleInterest}
+                  />
                 ))}
               </div>
             )}
