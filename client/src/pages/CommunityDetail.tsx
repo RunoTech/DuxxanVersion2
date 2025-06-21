@@ -42,7 +42,8 @@ import {
   Activity,
   FileText,
   Tag,
-  X
+  X,
+  Sparkles
 } from 'lucide-react';
 
 export default function CommunityDetail() {
