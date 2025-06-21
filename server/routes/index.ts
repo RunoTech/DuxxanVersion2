@@ -81,6 +81,18 @@ router.get('/upcoming-raffles', upcomingRaffleController.getUpcomingRaffles.bind
 router.post('/upcoming-raffles', upcomingRaffleController.createUpcomingRaffle.bind(upcomingRaffleController));
 router.post('/upcoming-raffles/:id/reminder', upcomingRaffleController.toggleReminder.bind(upcomingRaffleController));
 
+// Test scheduler endpoint
+router.post('/test-scheduler', async (req, res) => {
+  try {
+    const { raffleScheduler } = await import('../services/RaffleScheduler');
+    raffleScheduler.start();
+    res.json({ message: 'Scheduler started', status: 'success' });
+  } catch (error: any) {
+    console.error('Scheduler start error:', error);
+    res.status(500).json({ error: 'Failed to start scheduler', message: error.message });
+  }
+});
+
 // User location detection
 router.get('/user/location', async (req, res) => {
   try {
