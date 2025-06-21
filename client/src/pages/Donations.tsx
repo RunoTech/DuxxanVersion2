@@ -396,28 +396,31 @@ export default function Donations() {
           <TabsContent value="all" className="mt-6">
             {/* Donations Grid */}
             {isLoading ? (
-              <div className="grid responsive-grid gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <Card key={i} className="responsive-card">
-                    <div className="h-48 loading-skeleton rounded-t-xl"></div>
-                    <CardContent className="p-4 md:p-6">
-                      <div className="h-4 loading-skeleton rounded w-3/4 mb-2"></div>
-                      <div className="h-3 loading-skeleton rounded w-full mb-4"></div>
-                      <div className="h-3 loading-skeleton rounded w-1/2"></div>
+                  <Card key={i} className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[480px]">
+                    <div className="h-40 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+                    <CardContent className="p-4">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-3"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-full mb-2"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2 mb-4"></div>
+                      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : filteredDonations.length > 0 ? (
-              <div className="grid responsive-grid gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {filteredDonations.map((donation: any) => (
                   <DonationCard key={donation.id} donation={donation} />
                 ))}
               </div>
             ) : (
-              <Card className="duxxan-card text-center">
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
                 <CardContent className="p-12">
-                  <h3 className="text-xl font-bold mb-4">Kampanya Bulunamadı</h3>
+                  <Heart className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Kampanya Bulunamadı</h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
                     {searchTerm || selectedCategory !== 'all' 
                       ? 'Arama kriterlerinizi veya filtrelerinizi ayarlamayı deneyin'
@@ -432,13 +435,13 @@ export default function Donations() {
                           setSelectedCategory('all');
                           setSelectedCountry('all');
                         }}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200"
                       >
                         Filtreleri Temizle
                       </Button>
                     )}
                     <Link href="/create-donation">
-                      <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+                      <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200">
                         Kampanya Oluştur
                       </Button>
                     </Link>
@@ -454,8 +457,8 @@ export default function Donations() {
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                   <Building2 className="w-5 h-5 text-blue-500" />
                   Vakıf Kampanyaları
-                  <Badge className="bg-blue-100 text-blue-800">%2 Komisyon</Badge>
-                  <Badge className="bg-green-100 text-green-800 ml-2">
+                  <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">%2 Komisyon</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
                     <Shield className="w-3 h-3 mr-1" />
                     Doğrulanmış
                   </Badge>
@@ -513,8 +516,8 @@ export default function Donations() {
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                   <Users className="w-5 h-5 text-green-500" />
                   Dernek Kampanyaları
-                  <Badge className="bg-green-100 text-green-800">%2 Komisyon</Badge>
-                  <Badge className="bg-green-100 text-green-800 ml-2">
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">%2 Komisyon</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
                     <Shield className="w-3 h-3 mr-1" />
                     Doğrulanmış
                   </Badge>
@@ -572,8 +575,8 @@ export default function Donations() {
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                   <Heart className="w-5 h-5 text-red-500" />
                   Bireysel Kampanyalar
-                  <Badge className="bg-red-100 text-red-800">%10 Komisyon</Badge>
-                  <Badge className="bg-orange-100 text-orange-800 ml-2">
+                  <Badge className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">%10 Komisyon</Badge>
+                  <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 ml-2">
                     <Clock className="w-3 h-3 mr-1" />
                     30 Gün Limit
                   </Badge>
@@ -617,8 +620,8 @@ export default function Donations() {
                 <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                   <MapPin className="w-5 h-5 text-blue-500" />
                   Ülke Bazlı Kampanyalar
-                  <Badge className="bg-blue-100 text-blue-800">Küresel Destek</Badge>
-                  <Badge className="bg-green-100 text-green-800 ml-2">
+                  <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Küresel Destek</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
                     <Globe className="w-3 h-3 mr-1" />
                     Dünya Çapında
                   </Badge>
