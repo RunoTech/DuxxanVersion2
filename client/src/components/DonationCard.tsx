@@ -103,6 +103,20 @@ export function DonationCard({ donation }: DonationCardProps) {
     return donation.country ? countryFlags[donation.country] || '🌍' : '🌍';
   };
 
+  const getCategoryImage = (category: string) => {
+    const images: Record<string, string> = {
+      'health': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop&crop=center',
+      'education': 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop&crop=center',
+      'disaster': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop&crop=center',
+      'environment': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop&crop=center',
+      'animal': 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=600&h=400&fit=crop&crop=center',
+      'community': 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=400&fit=crop&crop=center',
+      'technology': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop&crop=center',
+      'general': 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&h=400&fit=crop&crop=center',
+    };
+    return images[category?.toLowerCase()] || images['general'];
+  };
+
   const contribute = async () => {
     if (!isConnected) {
       toast({
@@ -160,9 +174,14 @@ export function DonationCard({ donation }: DonationCardProps) {
   return (
     <Link href={`/donations/${donation.id}`}>
       <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[480px] flex flex-col hover:shadow-lg transition-all duration-300">
-        {/* Simple header */}
-        <div className="relative h-40 bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center">
-          <Heart className="w-12 h-12 text-white/80" />
+        {/* Header with category image */}
+        <div className="relative h-40 overflow-hidden">
+          <img 
+            src={getCategoryImage(donation.category || 'general')} 
+            alt={donation.category || 'Bağış'}
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
           
           {/* Status and category badges */}
           <div className="absolute top-3 left-3">
@@ -170,10 +189,17 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
           <div className="absolute top-3 right-3">
             {donation.category && (
-              <Badge className="bg-white/90 text-gray-800 font-medium px-2 py-1 text-xs">
+              <Badge className="bg-white/90 backdrop-blur-sm text-gray-800 font-medium px-3 py-1 text-xs">
                 {donation.category}
               </Badge>
             )}
+          </div>
+          
+          {/* Heart icon overlay */}
+          <div className="absolute bottom-3 right-3">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+              <Heart className="w-5 h-5 text-white" />
+            </div>
           </div>
         </div>
       
