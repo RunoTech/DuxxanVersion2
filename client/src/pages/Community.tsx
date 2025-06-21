@@ -501,7 +501,7 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
+      className="group bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-900 dark:to-gray-800 border border-[#FFC929]/30 hover:border-[#FFC929] hover:shadow-2xl hover:shadow-[#FFC929]/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       <CardHeader className="pb-4 bg-gradient-to-r from-[#FFC929]/10 to-[#FFC929]/20 dark:from-[#FFC929]/10 dark:to-[#FFC929]/20">
