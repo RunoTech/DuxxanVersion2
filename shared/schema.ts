@@ -680,7 +680,6 @@ export type Category = typeof categories.$inferSelect;
 export type Country = typeof countries.$inferSelect;
 // ChatMessage type removed - using mail system now
 export type Channel = typeof channels.$inferSelect;
-export type InsertChannel = z.infer<typeof insertChannelSchema>;
 export type ChannelSubscription = typeof channelSubscriptions.$inferSelect;
 export type InsertChannelSubscription = z.infer<typeof insertChannelSubscriptionSchema>;
 export type UpcomingRaffle = typeof upcomingRaffles.$inferSelect;
