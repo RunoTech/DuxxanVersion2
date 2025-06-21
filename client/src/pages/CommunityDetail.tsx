@@ -104,10 +104,31 @@ export default function CommunityDetail() {
   // Initialize counts when channel data loads
   useEffect(() => {
     if (channel) {
-      setLikeCount(channel.likeCount || 234);
-      setViewCount(channel.viewCount || 1200);
+      setLikeCount(channel.likeCount || 0);
+      setViewCount(channel.viewCount || 0);
     }
   }, [channel]);
+
+  // Check if user has already liked/favorited this channel
+  useEffect(() => {
+    const checkUserInteractions = async () => {
+      if (id) {
+        try {
+          // Check like status
+          const likeResponse = await fetch(`/api/channels/${id}/user-status/1`);
+          if (likeResponse.ok) {
+            const data = await likeResponse.json();
+            setIsLiked(data.liked || false);
+            setIsFavorited(data.favorited || false);
+          }
+        } catch (error) {
+          console.error('Error checking user interactions:', error);
+        }
+      }
+    };
+    
+    checkUserInteractions();
+  }, [id]);
 
   const handleJoin = () => {
     // Simulate wallet connection action
@@ -119,7 +140,14 @@ export default function CommunityDetail() {
 
   const handleLike = async () => {
     try {
-      const response = await apiRequest('POST', `/api/channels/${id}/like`, { userId: 1 });
+      const response = await fetch(`/api/channels/${id}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: 1 }),
+      });
+      
       if (response.ok) {
         const data = await response.json();
         setIsLiked(data.liked);
@@ -130,6 +158,7 @@ export default function CommunityDetail() {
         });
       }
     } catch (error) {
+      console.error('Like error:', error);
       toast({
         title: "Hata",
         description: "Beğeni işlemi gerçekleştirilemedi.",
@@ -140,7 +169,14 @@ export default function CommunityDetail() {
 
   const handleFavorite = async () => {
     try {
-      const response = await apiRequest('POST', `/api/channels/${id}/favorite`, { userId: 1 });
+      const response = await fetch(`/api/channels/${id}/favorite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: 1 }),
+      });
+      
       if (response.ok) {
         const data = await response.json();
         setIsFavorited(data.favorited);
@@ -150,6 +186,7 @@ export default function CommunityDetail() {
         });
       }
     } catch (error) {
+      console.error('Favorite error:', error);
       toast({
         title: "Hata",
         description: "Favori işlemi gerçekleştirilemedi.",
