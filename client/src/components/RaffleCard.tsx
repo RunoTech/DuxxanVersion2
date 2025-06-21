@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-800 dark:bg-gray-900 rounded-2xl overflow-hidden h-[560px] flex flex-col">
+      <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[480px] flex flex-col hover:shadow-lg transition-all duration-300">
         <div className="h-48 relative overflow-hidden">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
@@ -123,81 +123,71 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
       
-      <CardContent className="p-6 flex-1 flex flex-col bg-gray-800 dark:bg-gray-900">
+      <CardContent className="flex-1 flex flex-col p-4">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-bold text-white leading-tight">{raffle.title}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
             <span className="text-yellow-500 text-sm">★</span>
-            <span className="text-sm text-gray-300 font-medium">{raffle.creator.rating}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{raffle.creator.rating}</span>
           </div>
         </div>
         
-        <p className="text-gray-300 mb-4 text-sm leading-relaxed flex-1 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-2">
           {raffle.description}
         </p>
 
-        <div className="bg-gray-700 rounded-xl p-4 mb-4">
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-300 font-medium">Satılan Biletler</span>
-            <span className="text-sm font-bold text-white">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Satılan Biletler</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">
               {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
             </span>
           </div>
-          <div className="w-full bg-gray-600 rounded-full h-2 mb-2">
+          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mb-2">
             <div 
               className="bg-yellow-500 h-2 rounded-full transition-all duration-300" 
               style={{ width: `${Math.min(progress, 100)}%` }}
             ></div>
           </div>
-          <div className="text-xs text-gray-300">
-            {progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse tükendi!'}
+          <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+            <span>{progress.toFixed(1)}% satıldı</span>
+            <span>{progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse tükendi!'}</span>
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-4 mt-auto">
-          <div>
-            <div className="text-sm text-gray-300 mb-1">Bilet Fiyatı</div>
-            <div className="text-lg font-bold text-white">
-              {parseFloat(raffle.ticketPrice).toLocaleString()} USDT
+        <div className="grid grid-cols-2 gap-4 mb-4 mt-auto">
+          <div className="text-center">
+            <div className="text-lg font-bold text-gray-900 dark:text-white">
+              {parseFloat(raffle.ticketPrice).toLocaleString()}
             </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Bilet Fiyatı (USDT)</div>
           </div>
-          <div className="text-right">
-            <div className="text-sm text-gray-300 mb-1">
-              {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
+          <div className="text-center">
+            <div className="text-lg font-bold text-gray-900 dark:text-white">
+              {daysLeft > 0 ? daysLeft : 0}
             </div>
-            <div className="text-lg font-bold text-white">
-              {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
-            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Kalan Gün</div>
           </div>
         </div>
 
-        <div className="mt-auto space-y-4">
+        <div className="space-y-3">
           <Button
             onClick={() => buyTickets(1)}
             disabled={!isConnected || daysLeft <= 0}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 rounded-lg text-base"
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2.5 rounded-lg"
           >
             Bilet Al
           </Button>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">
-              Ödül Değeri: <span className="text-white font-bold">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600 dark:text-gray-400">
+              Ödül: <span className="text-gray-900 dark:text-white font-medium">
                 {parseFloat(raffle.prizeValue).toLocaleString()} USDT
               </span>
             </span>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowShareModal(true);
-              }}
-              variant="ghost"
-              size="icon"
-              className="text-gray-300 hover:text-yellow-500"
-            >
-              <Share2 className="h-5 w-5" />
-            </Button>
+            <span className="text-gray-500 dark:text-gray-400">
+              <span className="text-gray-900 dark:text-white font-medium">{raffle.creator.username}</span>
+            </span>
           </div>
         </div>
       </CardContent>
