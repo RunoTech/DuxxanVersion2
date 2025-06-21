@@ -145,7 +145,7 @@ export class UpcomingRaffleController extends BaseController {
 
       console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount} (action: ${action})`);
 
-      return this.success(res, { 
+      return res.json({ 
         success: true, 
         interestedCount: Number(result[0].interestedCount),
         action,

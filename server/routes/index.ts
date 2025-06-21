@@ -76,6 +76,11 @@ router.post('/translate', async (req, res) => {
   }
 });
 
+// Upcoming raffles routes
+router.get('/upcoming-raffles', upcomingRaffleController.getUpcomingRaffles.bind(upcomingRaffleController));
+router.post('/upcoming-raffles', upcomingRaffleController.createUpcomingRaffle.bind(upcomingRaffleController));
+router.post('/upcoming-raffles/:id/reminder', upcomingRaffleController.toggleReminder.bind(upcomingRaffleController));
+
 // User location detection
 router.get('/user/location', async (req, res) => {
   try {
