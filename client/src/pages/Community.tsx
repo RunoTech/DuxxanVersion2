@@ -368,27 +368,27 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-yellow-400 dark:hover:border-yellow-500 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
+      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      <CardHeader className="pb-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+      <CardHeader className="pb-4 bg-gradient-to-r from-[#FFC929]/10 to-[#FFC929]/20 dark:from-[#FFC929]/10 dark:to-[#FFC929]/20">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-4">
             <Avatar className="h-14 w-14 ring-2 ring-white/50 shadow-lg">
               <AvatarImage src={`/api/placeholder/48/48`} />
-              <AvatarFallback className="bg-gradient-to-br from-yellow-500 to-orange-600 text-white font-bold text-lg">
+              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-lg">
                 {channel.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
+              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-[#FFC929] dark:group-hover:text-[#FFC929] transition-colors">
                 {channel.name}
               </CardTitle>
               <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">@{channel.creator}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2 flex-wrap">
-            <Badge className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300 border-0 px-3 py-1 text-xs font-semibold rounded-full">
+            <Badge className="bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929] border-0 px-3 py-1 text-xs font-semibold rounded-full">
               {channel.categoryName || 'Genel'}
             </Badge>
             {channel.country && (
@@ -400,7 +400,7 @@ export default function Community() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0 text-gray-400 hover:text-yellow-600 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 rounded-full"
+                className="h-8 w-8 p-0 text-gray-400 hover:text-[#FFC929] hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleEditChannel(channel);
@@ -419,14 +419,14 @@ export default function Community() {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                <Users className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
+              <div className="p-1.5 bg-[#FFC929]/20 dark:bg-[#FFC929]/30 rounded-full">
+                <Users className="h-3 w-3 text-[#B8860B] dark:text-[#FFC929]" />
               </div>
               <span className="font-medium">{channel.subscriberCount}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                <Trophy className="h-3 w-3 text-orange-600 dark:text-orange-400" />
+              <div className="p-1.5 bg-[#FFC929]/20 dark:bg-[#FFC929]/30 rounded-full">
+                <Trophy className="h-3 w-3 text-[#B8860B] dark:text-[#FFC929]" />
               </div>
               <span className="font-medium">{channel.totalPrizes || 0} USDT</span>
             </div>
@@ -436,7 +436,7 @@ export default function Community() {
             variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
             className={subscribedChannels.includes(channel.id) 
               ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-0 shadow-md rounded-full px-4 font-semibold" 
-              : "border-yellow-400 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-500 dark:text-yellow-400 dark:hover:bg-yellow-900/20 rounded-full px-4 font-semibold"
+              : "border-[#FFC929] text-[#B8860B] hover:bg-[#FFC929]/10 dark:border-[#FFC929] dark:text-[#FFC929] dark:hover:bg-[#FFC929]/20 rounded-full px-4 font-semibold"
             }
             onClick={(e) => {
               e.stopPropagation();
@@ -514,12 +514,12 @@ export default function Community() {
             <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-yellow-500 transition-colors" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-[#FFC929] transition-colors" />
                   <Input
                     placeholder="Kanal ara..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all"
+                    className="pl-12 bg-gray-50/80 dark:bg-gray-800/80 border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all"
                   />
                 </div>
                 
