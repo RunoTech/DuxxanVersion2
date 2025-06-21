@@ -18,6 +18,151 @@ import { apiRequest } from '@/lib/queryClient';
 import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User, ExternalLink } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// Countdown hook
+const useCountdown = (targetDate: string) => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const target = new Date(targetDate).getTime();
+      const difference = target - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  return timeLeft;
+};
+
+// Raffle Card Component
+const RaffleCard = ({ raffle }: { raffle: any }) => {
+  const countdown = useCountdown(raffle.startDate);
+
+  return (
+    <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden">
+      <CardHeader className="p-4">
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex items-center space-x-3">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={`/api/placeholder/48/48`} />
+              <AvatarFallback className="bg-[#FFC929] text-black font-bold text-sm">
+                {raffle.creator?.username?.charAt(0).toUpperCase() || 'R'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <CardTitle className="text-white text-lg font-bold truncate">
+                {raffle.title}
+              </CardTitle>
+              <p className="text-gray-400 text-sm">
+                @{raffle.creator?.username || 'anonim'}
+              </p>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <Badge className="bg-[#FFC929] text-black px-2 py-1 text-xs font-bold rounded-full">
+              Genel
+            </Badge>
+            <Badge className="bg-emerald-600 text-white px-2 py-1 text-xs font-bold rounded-full">
+              Yakında
+            </Badge>
+          </div>
+        </div>
+        
+        <p className="text-gray-300 text-sm line-clamp-2 mb-4">
+          {raffle.description}
+        </p>
+      </CardHeader>
+      
+      <CardContent className="p-4 pt-0">
+        <div className="space-y-3 mb-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2 text-gray-400">
+              <DollarSign className="h-4 w-4 text-[#FFC929]" />
+              <span className="text-sm">Ödül:</span>
+            </div>
+            <span className="text-[#FFC929] font-bold text-lg">{parseFloat(raffle.prizeValue).toFixed(6)} USDT</span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2 text-gray-400">
+              <Ticket className="h-4 w-4 text-[#FFC929]" />
+              <span className="text-sm">Bilet:</span>
+            </div>
+            <span className="text-white font-medium">{parseFloat(raffle.ticketPrice).toFixed(6)} USDT</span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2 text-gray-400">
+              <Hash className="h-4 w-4 text-[#FFC929]" />
+              <span className="text-sm">Max:</span>
+            </div>
+            <span className="text-white font-medium">{raffle.maxTickets}</span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <span className="text-gray-400 text-sm">Başlangıç:</span>
+            <span className="text-white font-medium">{new Date(raffle.startDate).toLocaleDateString('tr-TR')}</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-1 text-gray-400">
+            <Heart className="h-4 w-4" />
+            <span className="text-sm">{raffle.interestedCount || 0} ilgilenen</span>
+          </div>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black transition-colors"
+          >
+            <Bell className="h-4 w-4 mr-1" />
+            Hatırlat
+          </Button>
+        </div>
+        
+        {/* Countdown Timer */}
+        <div className="bg-gray-700/50 rounded-lg p-3 border border-gray-600">
+          <div className="flex justify-center space-x-4">
+            <div className="text-center">
+              <div className="text-[#FFC929] font-bold text-lg">{countdown.days.toString().padStart(2, '0')}</div>
+              <div className="text-gray-400 text-xs">Gün</div>
+            </div>
+            <div className="text-center">
+              <div className="text-[#FFC929] font-bold text-lg">{countdown.hours.toString().padStart(2, '0')}</div>
+              <div className="text-gray-400 text-xs">Saat</div>
+            </div>
+            <div className="text-center">
+              <div className="text-[#FFC929] font-bold text-lg">{countdown.minutes.toString().padStart(2, '0')}</div>
+              <div className="text-gray-400 text-xs">Dakika</div>
+            </div>
+            <div className="text-center">
+              <div className="text-[#FFC929] font-bold text-lg">{countdown.seconds.toString().padStart(2, '0')}</div>
+              <div className="text-gray-400 text-xs">Saniye</div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
   description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(500, 'Açıklama en fazla 500 karakter olabilir'),
@@ -1362,90 +1507,7 @@ export default function Community() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {upcomingRaffles.map((raffle: any) => (
-                  <Card key={raffle.id} className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-64 flex flex-col">
-                    <CardHeader className="p-4 flex-shrink-0">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={`/api/placeholder/48/48`} />
-                            <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-sm">
-                              {raffle.creator?.username?.charAt(0).toUpperCase() || 'R'}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <CardTitle className="text-base font-bold text-gray-900 dark:text-white truncate">
-                              {raffle.title}
-                            </CardTitle>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                              @{raffle.creator?.username || 'anonim'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-1 flex-shrink-0">
-                          <Badge className="bg-[#FFC929] text-black px-2 py-0.5 text-xs font-bold rounded-full">
-                            {raffle.category?.name || 'Genel'}
-                          </Badge>
-                          <Badge className="bg-emerald-600 text-white px-2 py-0.5 text-xs font-bold rounded-full">
-                            Yakında
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="flex-1 px-4 pb-4 flex flex-col justify-between">
-                      <div className="flex-1">
-                        <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed mb-3">
-                          {raffle.description}
-                        </p>
-                      </div>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                              <DollarSign className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
-                            </div>
-                            <span className="font-medium text-gray-700 dark:text-white text-xs">Ödül:</span>
-                          </div>
-                          <span className="text-[#FFC929] font-bold text-sm">{raffle.prizeValue} USDT</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                              <Ticket className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
-                            </div>
-                            <span className="font-medium text-gray-700 dark:text-white text-xs">Bilet:</span>
-                          </div>
-                          <span className="text-gray-700 dark:text-white font-medium text-xs">{raffle.ticketPrice} USDT</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                              <Hash className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
-                            </div>
-                            <span className="font-medium text-gray-700 dark:text-white text-xs">Max:</span>
-                          </div>
-                          <span className="text-gray-700 dark:text-white font-medium text-xs">{raffle.maxTickets}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-400">
-                          <span>Başlangıç:</span>
-                          <span className="text-white">{new Date(raffle.startDate).toLocaleDateString('tr-TR')}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center space-x-1 text-sm text-gray-400">
-                          <Heart className="h-4 w-4" />
-                          <span>{raffle.interestedCount || 0} ilgilenen</span>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black"
-                        >
-                          <Bell className="h-4 w-4 mr-1" />
-                          Hatırlat
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <RaffleCard key={raffle.id} raffle={raffle} />
                 ))}
               </div>
             )}
