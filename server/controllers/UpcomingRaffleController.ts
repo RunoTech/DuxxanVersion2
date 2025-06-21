@@ -4,6 +4,7 @@ import { db } from '../db';
 import { upcomingRaffles, users, categories } from '../../shared/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 import { insertUpcomingRaffleSchema } from '../../shared/schema';
+import { ReminderPersistence } from '../services/ReminderPersistence';
 
 export class UpcomingRaffleController extends BaseController {
   // Get all upcoming raffles
@@ -143,19 +144,12 @@ export class UpcomingRaffleController extends BaseController {
         return res.status(404).json({ error: 'Raffle not found' });
       }
 
-      // Store user reminder in database
+      // Store user reminder in database using persistent service
       if (userSession) {
         if (action === 'add') {
-          await db.execute(sql`
-            INSERT INTO user_raffle_reminders (user_session, raffle_id) 
-            VALUES (${userSession}, ${raffleId}) 
-            ON CONFLICT (user_session, raffle_id) DO NOTHING
-          `);
+          await ReminderPersistence.saveReminder(userSession, raffleId);
         } else {
-          await db.execute(sql`
-            DELETE FROM user_raffle_reminders 
-            WHERE user_session = ${userSession} AND raffle_id = ${raffleId}
-          `);
+          await ReminderPersistence.removeReminder(userSession, raffleId);
         }
       }
 

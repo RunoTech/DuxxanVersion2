@@ -2,6 +2,7 @@ import { db } from '../db';
 import { upcomingRaffles, upcomingRaffleInterests, users, raffles } from '../../shared/schema';
 import { eq, and, lte } from 'drizzle-orm';
 import { emailService } from './EmailService';
+import { ReminderPersistence } from './ReminderPersistence';
 
 class RaffleScheduler {
   private checkInterval: NodeJS.Timeout | null = null;
@@ -94,13 +95,8 @@ class RaffleScheduler {
         })
         .returning({ id: raffles.id });
 
-      // Get all interested users for this upcoming raffle from user_raffle_reminders table
-      const interestedUsers = await db.execute(sql`
-        SELECT DISTINCT user_session
-        FROM user_raffle_reminders 
-        WHERE raffle_id = ${upcomingRaffle.id}
-      `);
-
+      // Get all interested users for this upcoming raffle
+      const interestedUsers = await ReminderPersistence.getRaffleInterestedUsers(upcomingRaffle.id);
       console.log(`Found ${interestedUsers.length} interested users for raffle ${upcomingRaffle.id}`);
 
       // Send simulated email notifications (since we don't have real email addresses)

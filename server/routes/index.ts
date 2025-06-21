@@ -81,6 +81,18 @@ router.get('/upcoming-raffles', upcomingRaffleController.getUpcomingRaffles.bind
 router.post('/upcoming-raffles', upcomingRaffleController.createUpcomingRaffle.bind(upcomingRaffleController));
 router.post('/upcoming-raffles/:id/reminder', upcomingRaffleController.toggleReminder.bind(upcomingRaffleController));
 
+// Get user reminders
+router.get('/user-reminders/:session', async (req, res) => {
+  try {
+    const { ReminderPersistence } = await import('../services/ReminderPersistence');
+    const reminders = await ReminderPersistence.getUserReminders(req.params.session);
+    res.json({ reminders });
+  } catch (error) {
+    console.error('Error fetching user reminders:', error);
+    res.status(500).json({ error: 'Failed to fetch reminders' });
+  }
+});
+
 // Test scheduler endpoint
 router.post('/test-scheduler', async (req, res) => {
   try {

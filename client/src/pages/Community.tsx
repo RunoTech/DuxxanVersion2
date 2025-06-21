@@ -297,17 +297,37 @@ export default function Community() {
     return session;
   };
 
-  // Load reminders from localStorage on component mount
+  // Load reminders from both localStorage and server on component mount
   useEffect(() => {
-    const savedReminders = localStorage.getItem('raffle_reminders');
-    if (savedReminders) {
-      try {
-        const reminders = JSON.parse(savedReminders);
-        setInterestedRaffles(reminders);
-      } catch (error) {
-        console.error('Error loading reminders:', error);
+    const loadReminders = async () => {
+      const userSession = getUserSession();
+      
+      // Load from localStorage first (immediate)
+      const savedReminders = localStorage.getItem('raffle_reminders');
+      if (savedReminders) {
+        try {
+          const reminders = JSON.parse(savedReminders);
+          setInterestedRaffles(reminders);
+        } catch (error) {
+          console.error('Error loading local reminders:', error);
+        }
       }
-    }
+
+      // Then sync with server
+      try {
+        const response = await fetch(`/api/user-reminders/${userSession}`);
+        if (response.ok) {
+          const data = await response.json();
+          const serverReminders = data.reminders || [];
+          setInterestedRaffles(serverReminders);
+          localStorage.setItem('raffle_reminders', JSON.stringify(serverReminders));
+        }
+      } catch (error) {
+        console.error('Error syncing reminders with server:', error);
+      }
+    };
+
+    loadReminders();
   }, []);
 
   // Save reminders to localStorage whenever they change
