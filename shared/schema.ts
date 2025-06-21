@@ -614,6 +614,31 @@ export const insertUpcomingRaffleSchema = createInsertSchema(upcomingRaffles).pi
   startDate: true,
   categoryId: true,
   channelId: true,
+}).extend({
+  title: z.string()
+    .min(5, "Title must be at least 5 characters")
+    .max(200, "Title must be less than 200 characters"),
+  description: z.string()
+    .min(10, "Description must be at least 10 characters")
+    .max(2000, "Description must be less than 2000 characters"),
+  prizeValue: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Prize value must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) > 0 && parseFloat(val) <= 10000000, "Prize value must be between 1 USDT and 10,000,000 USDT"),
+  ticketPrice: z.string()
+    .regex(/^\d+(\.\d{1,6})?$/, "Ticket price must be a valid number with up to 6 decimal places")
+    .refine(val => parseFloat(val) >= 1 && parseFloat(val) <= 100000, "Ticket price must be between 1 USDT and 100,000 USDT"),
+  maxTickets: z.number()
+    .int("Max tickets must be a whole number")
+    .min(1, "Must have at least 1 ticket")
+    .max(1000000, "Cannot exceed 1,000,000 tickets"),
+  categoryId: z.number()
+    .int("Category ID must be a whole number")
+    .min(1, "Invalid category selected"),
+  startDate: z.union([
+    z.date(),
+    z.string().transform((val) => new Date(val))
+  ]).refine((date) => date > new Date(), "Start date must be in the future"),
+  channelId: z.number().optional(),
 });
 
 export const insertUpcomingRaffleInterestSchema = createInsertSchema(upcomingRaffleInterests).pick({

@@ -54,7 +54,7 @@ export class UpcomingRaffleController extends BaseController {
       // Get user ID from session/auth or use default for testing
       const userId = req.session?.user?.id || 1; // Default to user ID 1 for testing
 
-      // Validate request body
+      // Validate request body with proper date conversion
       const validationResult = insertUpcomingRaffleSchema.safeParse({
         ...req.body,
         creatorId: userId
