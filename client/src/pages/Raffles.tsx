@@ -145,14 +145,14 @@ export default function Raffles() {
 
         {/* Filters */}
         <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <Filter className="w-5 h-5" />
               Filtreler ve Arama
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+          <CardContent className="pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
               {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -222,20 +222,20 @@ export default function Raffles() {
                 Filtreleri Temizle
               </Button>
             </div>
+            
+            {/* Results Info inside filter card */}
+            <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                {filteredRaffles.length} sonuç gösteriliyor ({raffles.length} toplam çekiliş)
+              </p>
+              {searchTerm && (
+                <p className="text-sm text-gray-500 dark:text-gray-500">
+                  "{searchTerm}" için arama sonuçları
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
-
-        {/* Results Info */}
-        <div className="flex justify-between items-center mb-6">
-          <p className="text-duxxan-text-secondary">
-            Showing {filteredRaffles.length} of {raffles.length} raffles
-          </p>
-          {searchTerm && (
-            <p className="text-sm text-duxxan-text-secondary">
-              Search results for "{searchTerm}"
-            </p>
-          )}
-        </div>
 
         {/* Raffles Grid */}
         {isLoading ? (
