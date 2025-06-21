@@ -528,7 +528,7 @@ export default function Community() {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all appearance-none"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all appearance-none"
                   >
                     {categories.map((category: any) => (
                       <option key={category.id} value={category.id}>
@@ -543,7 +543,7 @@ export default function Community() {
                   <select
                     value={selectedCountry}
                     onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all appearance-none"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-xl h-12 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-[#FFC929]/20 focus:border-[#FFC929] transition-all appearance-none"
                   >
                     <option value="all">Tüm Ülkeler</option>
                     {countries.map((country) => (
@@ -580,13 +580,13 @@ export default function Community() {
                 onClick={() => setActiveTab('upcoming')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'upcoming'
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg transform scale-[1.02]'
+                    ? 'bg-gradient-to-r from-[#FFC929] to-[#FFB800] text-black shadow-lg transform scale-[1.02]'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Calendar className="h-5 w-5" />
                 Gelecek Çekilişler
-                <Badge className={`${activeTab === 'upcoming' ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300'} font-bold`}>
+                <Badge className={`${activeTab === 'upcoming' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929]'} font-bold`}>
                   {upcomingRaffles.length}
                 </Badge>
               </button>
@@ -608,10 +608,10 @@ export default function Community() {
             <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
               <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                   <DialogHeader className="text-center pb-4">
-                    <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 text-white" />
+                    <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-black" />
                     </div>
-                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
+                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">
                       Yeni Kanal Oluştur
                     </DialogTitle>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
@@ -654,7 +654,7 @@ export default function Community() {
                               <Textarea 
                                 {...field} 
                                 placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent min-h-[80px]" 
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent min-h-[80px]" 
                               />
                             </FormControl>
                             <FormMessage />
@@ -674,7 +674,7 @@ export default function Community() {
                               </FormLabel>
                               <FormControl>
                                 <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
