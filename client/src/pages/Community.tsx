@@ -1001,15 +1001,18 @@ export default function Community() {
                   <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Kanalı Düzenle</DialogTitle>
                 </DialogHeader>
                 <Form {...editChannelForm}>
-                  <form onSubmit={editChannelForm.handleSubmit(onSubmitEditChannel)} className="space-y-4">
+                  <form onSubmit={editChannelForm.handleSubmit(onSubmitEditChannel)} className="space-y-6">
                     <FormField
                       control={editChannelForm.control}
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-700 dark:text-gray-300">Kanal Adı</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Kanal Adı</FormLabel>
                           <FormControl>
-                            <Input {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                            <Input {...field} 
+                              placeholder="Kanal adınızı girin..."
+                              className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200" 
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1020,9 +1023,12 @@ export default function Community() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
                           <FormControl>
-                            <Textarea {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                            <Textarea {...field} 
+                              placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
+                              className="min-h-[100px] bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200 resize-none" 
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1033,13 +1039,13 @@ export default function Community() {
                       name="categoryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-700 dark:text-gray-300">Kategori</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Kategori</FormLabel>
                           <FormControl>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                              <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
+                              <SelectTrigger className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929]">
                                 <SelectValue placeholder="Kategori seçin" />
                               </SelectTrigger>
-                              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                                 {categories
                                   .filter(cat => cat.id !== 'all')
                                   .map((category: any) => (
@@ -1058,13 +1064,25 @@ export default function Community() {
                         </FormItem>
                       )}
                     />
-                    <Button
-                      type="submit"
-                      disabled={editChannelMutation.isPending}
-                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full"
-                    >
-                      {editChannelMutation.isPending ? 'Güncelleniyor...' : 'Kanalı Güncelle'}
-                    </Button>
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <Button
+                        type="submit"
+                        disabled={editChannelMutation.isPending}
+                        className="h-14 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      >
+                        {editChannelMutation.isPending ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-3"></div>
+                            Güncelleniyor...
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <Edit className="h-5 w-5 mr-2" />
+                            Kanalı Güncelle
+                          </div>
+                        )}
+                      </Button>
+                    </div>
                   </form>
                 </Form>
               </DialogContent>
