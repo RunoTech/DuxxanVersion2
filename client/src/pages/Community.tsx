@@ -216,11 +216,11 @@ const createChannelSchema = z.object({
 });
 
 const createUpcomingRaffleSchema = z.object({
-  title: z.string().min(5, 'Başlık en az 5 karakter olmalı'),
-  description: z.string().min(20, 'Açıklama en az 20 karakter olmalı'),
-  prizeValue: z.string().min(1, 'Ödül değeri gerekli'),
-  ticketPrice: z.string().min(1, 'Bilet fiyatı gerekli'),
-  maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
+  title: z.string().min(5, 'Başlık en az 5 karakter olmalı').max(200, 'Başlık en fazla 200 karakter olabilir'),
+  description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(2000, 'Açıklama en fazla 2000 karakter olabilir'),
+  prizeValue: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Ödül değeri geçerli bir sayı olmalı'),
+  ticketPrice: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Bilet fiyatı geçerli bir sayı olmalı'),
+  maxTickets: z.number().int('Tam sayı olmalı').min(1, 'En az 1 bilet olmalı').max(1000000, 'En fazla 1,000,000 bilet olabilir'),
   startDate: z.string().min(1, 'Başlangıç tarihi gerekli'),
   categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
 });
@@ -552,7 +552,13 @@ export default function Community() {
   // Create upcoming raffle mutation
   const createUpcomingRaffleMutation = useMutation({
     mutationFn: async (data: CreateUpcomingRaffleForm) => {
-      const response = await apiRequest('POST', '/api/upcoming-raffles', data);
+      // Transform data to match backend expectations
+      const transformedData = {
+        ...data,
+        startDate: new Date(data.startDate).toISOString(),
+        maxTickets: Number(data.maxTickets)
+      };
+      const response = await apiRequest('POST', '/api/upcoming-raffles', transformedData);
       return response.json();
     },
     onSuccess: () => {
@@ -1006,6 +1012,7 @@ export default function Community() {
                                 <Input {...field} 
                                   type="number" 
                                   placeholder="1000"
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                                   className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200" 
                                 />
                               </FormControl>
