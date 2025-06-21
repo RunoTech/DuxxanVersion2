@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -96,115 +96,12 @@ export default function CommunityDetail() {
     });
   }
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [viewCount, setViewCount] = useState(0);
-
-  // Initialize counts when channel data loads
-  useEffect(() => {
-    if (channel) {
-      setLikeCount(channel.likeCount || 0);
-      setViewCount(channel.viewCount || 0);
-    }
-  }, [channel]);
-
-  // Check if user has already liked/favorited this channel
-  useEffect(() => {
-    const checkUserInteractions = async () => {
-      if (id) {
-        try {
-          // Check like status
-          const likeResponse = await fetch(`/api/channels/${id}/user-status/1`);
-          if (likeResponse.ok) {
-            const data = await likeResponse.json();
-            setIsLiked(data.liked || false);
-            setIsFavorited(data.favorited || false);
-          }
-        } catch (error) {
-          console.error('Error checking user interactions:', error);
-        }
-      }
-    };
-    
-    checkUserInteractions();
-  }, [id]);
-
   const handleJoin = () => {
     // Simulate wallet connection action
     toast({
       title: "Topluluğa Katılın",
       description: "Cüzdanınızı bağlayarak topluluğa katılabilirsiniz.",
     });
-  };
-
-  const handleLike = async () => {
-    try {
-      const response = await fetch(`/api/channels/${id}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: 1 }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setIsLiked(data.liked);
-        setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
-        
-        // Refresh channel data to get updated like count
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        
-        toast({
-          title: data.liked ? "Beğenildi!" : "Beğeni kaldırıldı",
-          description: data.message,
-        });
-      }
-    } catch (error) {
-      console.error('Like error:', error);
-      toast({
-        title: "Hata",
-        description: "Beğeni işlemi gerçekleştirilemedi.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleFavorite = async () => {
-    try {
-      const response = await fetch(`/api/channels/${id}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: 1 }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setIsFavorited(data.favorited);
-        
-        // Refresh favorites data
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        
-        toast({
-          title: data.favorited ? "Favorilere eklendi!" : "Favorilerden çıkarıldı",
-          description: data.message,
-        });
-      }
-    } catch (error) {
-      console.error('Favorite error:', error);
-      toast({
-        title: "Hata",
-        description: "Favori işlemi gerçekleştirilemedi.",
-        variant: "destructive",
-      });
-    }
   };
 
   const handleShare = () => {
@@ -581,40 +478,22 @@ export default function CommunityDetail() {
                   <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                       <Eye className="h-4 w-4" />
-                      {viewCount.toLocaleString()} görüntüleme
+                      1.2k görüntüleme
                     </div>
                     <div className="flex items-center gap-1">
                       <Heart className="h-4 w-4" />
-                      {likeCount.toLocaleString()} beğeni
+                      234 beğeni
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className={`gap-2 border-[#FFC929]/50 hover:bg-[#FFC929]/10 transition-all ${
-                      isLiked 
-                        ? 'bg-[#FFC929]/10 text-[#FFC929] border-[#FFC929]' 
-                        : 'text-[#FFC929]'
-                    }`}
-                    onClick={handleLike}
-                  >
-                    <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                    {isLiked ? 'Beğenildi' : 'Beğen'}
+                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
+                    <Heart className="h-4 w-4" />
+                    Beğen
                   </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className={`gap-2 border-[#FFC929]/50 hover:bg-[#FFC929]/10 transition-all ${
-                      isFavorited 
-                        ? 'bg-[#FFC929]/10 text-[#FFC929] border-[#FFC929]' 
-                        : 'text-[#FFC929]'
-                    }`}
-                    onClick={handleFavorite}
-                  >
-                    <Bookmark className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
-                    {isFavorited ? 'Kaydedildi' : 'Kaydet'}
+                  <Button size="sm" variant="outline" className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10">
+                    <Bookmark className="h-4 w-4" />
+                    Kaydet
                   </Button>
                 </div>
               </div>

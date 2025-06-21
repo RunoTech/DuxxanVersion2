@@ -210,8 +210,6 @@ export const channels = pgTable("channels", {
   demoContent: text("demo_content"),
   totalPrizeAmount: varchar("total_prize_amount", { length: 50 }).default('0'),
   activeRaffleCount: integer("active_raffle_count").default(0),
-  likeCount: integer("like_count").default(0),
-  viewCount: integer("view_count").default(0),
 });
 
 // Channel subscriptions
@@ -294,22 +292,6 @@ export const userPhotos = pgTable("user_photos", {
   isActive: boolean("is_active").default(true),
 });
 
-// Channel likes table
-export const channelLikes = pgTable('channel_likes', {
-  id: serial('id').primaryKey(),
-  channelId: integer('channel_id').references(() => channels.id),
-  userId: integer('user_id').references(() => users.id),
-  createdAt: timestamp('created_at').defaultNow(),
-});
-
-// Channel favorites table
-export const channelFavorites = pgTable('channel_favorites', {
-  id: serial('id').primaryKey(),
-  channelId: integer('channel_id').references(() => channels.id),
-  userId: integer('user_id').references(() => users.id),
-  createdAt: timestamp('created_at').defaultNow(),
-});
-
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   rafflesCreated: many(raffles, { relationName: "raffles_creator" }),
@@ -326,8 +308,6 @@ export const usersRelations = relations(users, ({ many }) => ({
   followers: many(follows, { relationName: "follows_following" }),
   devices: many(userDevices),
   photos: many(userPhotos),
-  channelLikes: many(channelLikes),
-  channelFavorites: many(channelFavorites),
 }));
 
 export const userDevicesRelations = relations(userDevices, ({ one }) => ({
@@ -389,8 +369,6 @@ export const channelsRelations = relations(channels, ({ one, many }) => ({
   }),
   subscriptions: many(channelSubscriptions),
   upcomingRaffles: many(upcomingRaffles),
-  likes: many(channelLikes),
-  favorites: many(channelFavorites),
 }));
 
 export const channelSubscriptionsRelations = relations(channelSubscriptions, ({ one }) => ({
@@ -622,23 +600,6 @@ export const insertChannelSchema = createInsertSchema(channels).pick({
   description: true,
   categoryId: true,
 });
-export type InsertChannel = z.infer<typeof insertChannelSchema>;
-
-// Channel likes schemas
-export const insertChannelLikeSchema = createInsertSchema(channelLikes).omit({
-  id: true,
-  createdAt: true,
-});
-export type InsertChannelLike = z.infer<typeof insertChannelLikeSchema>;
-export type ChannelLike = typeof channelLikes.$inferSelect;
-
-// Channel favorites schemas
-export const insertChannelFavoriteSchema = createInsertSchema(channelFavorites).omit({
-  id: true,
-  createdAt: true,
-});
-export type InsertChannelFavorite = z.infer<typeof insertChannelFavoriteSchema>;
-export type ChannelFavorite = typeof channelFavorites.$inferSelect;
 
 export const insertChannelSubscriptionSchema = createInsertSchema(channelSubscriptions).pick({
   channelId: true,
@@ -680,6 +641,7 @@ export type Category = typeof categories.$inferSelect;
 export type Country = typeof countries.$inferSelect;
 // ChatMessage type removed - using mail system now
 export type Channel = typeof channels.$inferSelect;
+export type InsertChannel = z.infer<typeof insertChannelSchema>;
 export type ChannelSubscription = typeof channelSubscriptions.$inferSelect;
 export type InsertChannelSubscription = z.infer<typeof insertChannelSubscriptionSchema>;
 export type UpcomingRaffle = typeof upcomingRaffles.$inferSelect;

@@ -783,8 +783,6 @@ export class DatabaseStorage implements IStorage {
       demoContent: channels.demoContent,
       totalPrizeAmount: channels.totalPrizeAmount,
       activeRaffleCount: channels.activeRaffleCount,
-      likeCount: channels.likeCount,
-      viewCount: channels.viewCount,
       creator: users.username,
       creatorWalletAddress: users.walletAddress,
       categoryName: categories.name
@@ -795,22 +793,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getChannelById(id: number): Promise<Channel | undefined> {
-    const [channel] = await db.select({
-      id: channels.id,
-      name: channels.name,
-      description: channels.description,
-      categoryId: channels.categoryId,
-      creatorId: channels.creatorId,
-      subscriberCount: channels.subscriberCount,
-      isActive: channels.isActive,
-      createdAt: channels.createdAt,
-      isDemo: channels.isDemo,
-      demoContent: channels.demoContent,
-      totalPrizeAmount: channels.totalPrizeAmount,
-      activeRaffleCount: channels.activeRaffleCount,
-      likeCount: channels.likeCount,
-      viewCount: channels.viewCount,
-    }).from(channels).where(eq(channels.id, id));
+    const [channel] = await db.select().from(channels).where(eq(channels.id, id));
     return channel;
   }
 

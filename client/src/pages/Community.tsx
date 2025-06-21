@@ -97,7 +97,6 @@ export default function Community() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
-  const [favoriteChannels, setFavoriteChannels] = useState<any[]>([]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -142,31 +141,6 @@ export default function Community() {
   });
 
   const channels = (channelsData as any)?.data || [];
-
-  // Fetch favorite channels
-  const { data: favoritesData, refetch: refetchFavorites } = useQuery({
-    queryKey: ['/api/channels/favorites/1'], // Using default user ID 1
-    enabled: true,
-    refetchOnWindowFocus: false,
-    staleTime: 30000, // 30 seconds
-  });
-
-  useEffect(() => {
-    if (favoritesData?.data) {
-      setFavoriteChannels(favoritesData.data);
-    }
-  }, [favoritesData]);
-
-  // Refetch favorites when user adds/removes favorites
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (selectedCategory === 'favorites') {
-        refetchFavorites();
-      }
-    }, 5000); // Refetch every 5 seconds when viewing favorites
-
-    return () => clearInterval(interval);
-  }, [selectedCategory, refetchFavorites]);
 
   // Fetch upcoming raffles from database with caching
   const { data: upcomingRafflesData, isLoading: rafflesLoading } = useQuery({
@@ -324,16 +298,14 @@ export default function Community() {
 
   // Filtered channels based on search, category, and country
   const filteredChannels = useMemo(() => {
-    let filtered = selectedCategory === 'favorites' ? favoriteChannels : channels;
-    
-    return filtered.filter((channel: any) => {
+    return channels.filter((channel: any) => {
       const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           channel.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || selectedCategory === 'favorites' || channel.categoryId === parseInt(selectedCategory);
+      const matchesCategory = selectedCategory === 'all' || channel.categoryId === parseInt(selectedCategory);
       const matchesCountry = selectedCountry === 'all' || channel.country === selectedCountry;
       return matchesSearch && matchesCategory && matchesCountry;
     });
-  }, [channels, favoriteChannels, searchQuery, selectedCategory, selectedCountry]);
+  }, [channels, searchQuery, selectedCategory, selectedCountry]);
 
   // Create channel mutation
   const createChannelMutation = useMutation({
@@ -698,9 +670,6 @@ export default function Community() {
                       <SelectValue placeholder="📁 Tüm Kategoriler" />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                      <SelectItem value="favorites" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
-                        ❤️ Favoriler ({favoriteChannels.length})
-                      </SelectItem>
                       {categories.map((category: any) => (
                         <SelectItem key={category.id} value={category.id} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
                           {category.name}
@@ -784,11 +753,7 @@ export default function Community() {
                 {/* Results Info inside filter card */}
                 <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {filteredChannels.length} sonuç gösteriliyor 
-                    {selectedCategory === 'favorites' 
-                      ? ` (${favoriteChannels.length} favori kanal)` 
-                      : ` (${channels.length} toplam kanal)`
-                    }
+                    {filteredChannels.length} sonuç gösteriliyor ({channels.length} toplam kanal)
                   </p>
                   {searchQuery && (
                     <p className="text-sm text-gray-500 dark:text-gray-500">
