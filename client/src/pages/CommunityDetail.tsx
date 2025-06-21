@@ -785,28 +785,28 @@ export default function CommunityDetail() {
 
         {/* Raffle Creation Modal */}
         <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/30">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-[#FFC929] flex items-center gap-2">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/40 dark:border-[#FFC929]/60 shadow-2xl backdrop-blur-sm">
+            <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
+              <DialogTitle className="text-2xl font-bold text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2">
                 <Award className="h-6 w-6" />
                 Yeni Çekiliş Oluştur
               </DialogTitle>
-              <DialogDescription className="text-gray-600 dark:text-gray-400">
+              <DialogDescription className="text-gray-600 dark:text-gray-400 mt-2">
                 Topluluğunuz için yeni bir çekiliş oluşturun ve üyelerinizi heyecanlandırın.
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6 py-4">
               {/* Preview Card */}
-              <Card className="bg-gradient-to-br from-[#FFC929]/10 to-[#FFB800]/20 border border-[#FFC929]/30">
-                <CardHeader>
-                  <CardTitle className="text-lg text-[#FFC929] flex items-center gap-2">
+              <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/20 dark:to-[#FFB800]/30 border border-[#FFC929]/40 dark:border-[#FFC929]/50 shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2 font-bold">
                     <Target className="h-5 w-5" />
                     Çekiliş Önizlemesi
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 shadow-inner">
                     <div className="flex items-start gap-4">
                       <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                         <Award className="h-8 w-8 text-black" />
@@ -880,7 +880,12 @@ export default function CommunityDetail() {
                       value={raffleForm.title}
                       onChange={(e) => setRaffleForm({...raffleForm, title: e.target.value})}
                       placeholder="Örn: 100 USDT Çekilişi"
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
 
@@ -893,7 +898,12 @@ export default function CommunityDetail() {
                       value={raffleForm.prizeValue}
                       onChange={(e) => setRaffleForm({...raffleForm, prizeValue: e.target.value})}
                       placeholder="Örn: 100 USDT"
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
 
@@ -902,15 +912,15 @@ export default function CommunityDetail() {
                       Süre (Gün) *
                     </Label>
                     <Select value={raffleForm.duration} onValueChange={(value) => setRaffleForm({...raffleForm, duration: value})}>
-                      <SelectTrigger className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white">
+                      <SelectTrigger className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white transition-all duration-200 shadow-sm focus:shadow-md hover:border-[#FFC929]/50 dark:hover:border-[#FFC929]/60">
                         <SelectValue placeholder="Süre seçin" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white dark:bg-gray-800 border-[#FFC929]/30">
-                        <SelectItem value="1">1 Gün</SelectItem>
-                        <SelectItem value="3">3 Gün</SelectItem>
-                        <SelectItem value="7">7 Gün</SelectItem>
-                        <SelectItem value="14">14 Gün</SelectItem>
-                        <SelectItem value="30">30 Gün</SelectItem>
+                      <SelectContent className="bg-white dark:bg-gray-800 border-2 border-[#FFC929]/40 dark:border-[#FFC929]/50 shadow-xl backdrop-blur-sm">
+                        <SelectItem value="1" className="text-gray-900 dark:text-white hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 focus:bg-[#FFC929]/15 dark:focus:bg-[#FFC929]/25 cursor-pointer">1 Gün</SelectItem>
+                        <SelectItem value="3" className="text-gray-900 dark:text-white hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 focus:bg-[#FFC929]/15 dark:focus:bg-[#FFC929]/25 cursor-pointer">3 Gün</SelectItem>
+                        <SelectItem value="7" className="text-gray-900 dark:text-white hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 focus:bg-[#FFC929]/15 dark:focus:bg-[#FFC929]/25 cursor-pointer">7 Gün</SelectItem>
+                        <SelectItem value="14" className="text-gray-900 dark:text-white hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 focus:bg-[#FFC929]/15 dark:focus:bg-[#FFC929]/25 cursor-pointer">14 Gün</SelectItem>
+                        <SelectItem value="30" className="text-gray-900 dark:text-white hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 focus:bg-[#FFC929]/15 dark:focus:bg-[#FFC929]/25 cursor-pointer">30 Gün</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -925,7 +935,12 @@ export default function CommunityDetail() {
                       value={raffleForm.maxParticipants}
                       onChange={(e) => setRaffleForm({...raffleForm, maxParticipants: e.target.value})}
                       placeholder="Boş bırakın (sınırsız)"
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
                 </div>
@@ -941,7 +956,12 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, description: e.target.value})}
                       placeholder="Çekiliş hakkında detaylı açıklama yazın..."
                       rows={4}
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
 
@@ -955,7 +975,12 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, prizeDescription: e.target.value})}
                       placeholder="Ödül hakkında ek bilgiler..."
                       rows={3}
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
 
@@ -969,18 +994,23 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, requirements: e.target.value})}
                       placeholder="Çekilişe katılım için gereksinimler..."
                       rows={3}
-                      className="mt-2 bg-white dark:bg-gray-800 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
+                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
+                      style={{
+                        backgroundColor: 'var(--background)',
+                        color: 'var(--foreground)',
+                        borderColor: 'rgba(255, 201, 41, 0.3)'
+                      }}
                     />
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   onClick={() => setIsCreatingRaffle(false)}
                   variant="outline"
-                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-400 transition-all duration-200 font-medium"
                 >
                   İptal
                 </Button>
@@ -1011,7 +1041,7 @@ export default function CommunityDetail() {
                     });
                     setIsCreatingRaffle(false);
                   }}
-                  className="px-8 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="px-8 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Plus className="h-5 w-5 mr-2" />
                   Çekilişi Oluştur
