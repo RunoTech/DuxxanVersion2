@@ -105,10 +105,10 @@ export class UpcomingRaffleController extends BaseController {
         .leftJoin(categories, eq(upcomingRaffles.categoryId, categories.id))
         .where(eq(upcomingRaffles.id, newRaffle.id));
 
-      return this.success(res, completeRaffle, 'Upcoming raffle created successfully', 201);
+      return this.sendSuccess(res, completeRaffle, 'Upcoming raffle created successfully', 201);
     } catch (error) {
       console.error('Error creating upcoming raffle:', error);
-      return this.error(res, 'Failed to create upcoming raffle', 500);
+      return this.sendError(res, 'Failed to create upcoming raffle', 500);
     }
   }
 
