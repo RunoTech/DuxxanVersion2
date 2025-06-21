@@ -849,7 +849,7 @@ export default function Community() {
                     <Button
                       type="submit"
                       disabled={editChannelMutation.isPending}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                      className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full"
                     >
                       {editChannelMutation.isPending ? 'Güncelleniyor...' : 'Kanalı Güncelle'}
                     </Button>
@@ -936,10 +936,10 @@ export default function Community() {
                           name="categoryId"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Kategori</FormLabel>
+                              <FormLabel className="text-gray-700 dark:text-gray-300">Kategori</FormLabel>
                               <FormControl>
                                 <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                                  <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -977,9 +977,9 @@ export default function Community() {
                           name="prizeValue"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Ödül (USDT)</FormLabel>
+                              <FormLabel className="text-gray-700 dark:text-gray-300">Ödül (USDT)</FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" step="0.000001" className="bg-duxxan-darker border-duxxan-border text-white" />
+                                <Input {...field} type="number" step="0.000001" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -990,9 +990,9 @@ export default function Community() {
                           name="ticketPrice"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Bilet Fiyatı (USDT)</FormLabel>
+                              <FormLabel className="text-gray-700 dark:text-gray-300">Bilet Fiyatı (USDT)</FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" step="0.000001" className="bg-duxxan-darker border-duxxan-border text-white" />
+                                <Input {...field} type="number" step="0.000001" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1003,9 +1003,9 @@ export default function Community() {
                           name="maxTickets"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-white">Max Bilet</FormLabel>
+                              <FormLabel className="text-gray-700 dark:text-gray-300">Max Bilet</FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" className="bg-duxxan-darker border-duxxan-border text-white" />
+                                <Input {...field} type="number" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1017,9 +1017,9 @@ export default function Community() {
                         name="startDate"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Başlangıç Tarihi</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">Başlangıç Tarihi</FormLabel>
                             <FormControl>
-                              <Input {...field} type="datetime-local" className="bg-duxxan-darker border-duxxan-border text-white" />
+                              <Input {...field} type="datetime-local" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1028,7 +1028,7 @@ export default function Community() {
                       <Button
                         type="submit"
                         disabled={createUpcomingRaffleMutation.isPending}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                        className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full"
                       >
                         {createUpcomingRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Duyuru Oluştur'}
                       </Button>
