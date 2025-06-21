@@ -152,6 +152,12 @@ export default function CommunityDetail() {
         const data = await response.json();
         setIsLiked(data.liked);
         setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
+        
+        // Refresh channel data to get updated like count
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        
         toast({
           title: data.liked ? "Beğenildi!" : "Beğeni kaldırıldı",
           description: data.message,
@@ -180,6 +186,12 @@ export default function CommunityDetail() {
       if (response.ok) {
         const data = await response.json();
         setIsFavorited(data.favorited);
+        
+        // Refresh favorites data
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        
         toast({
           title: data.favorited ? "Favorilere eklendi!" : "Favorilerden çıkarıldı",
           description: data.message,
