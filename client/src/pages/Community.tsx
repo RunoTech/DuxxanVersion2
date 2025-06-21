@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { useReminders } from '@/contexts/ReminderContext';
 import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User, ExternalLink } from 'lucide-react';
+import { UpcomingRaffleCard } from '@/components/UpcomingRaffleCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Countdown hook
@@ -1586,23 +1587,42 @@ export default function Community() {
             {rafflesLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
+                  <div key={i} className="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse border border-gray-200 dark:border-gray-700">
                     <div className="space-y-4">
-                      <div className="w-3/4 h-6 bg-gray-600 rounded"></div>
+                      <div className="w-3/4 h-6 bg-gray-300 dark:bg-gray-600 rounded"></div>
                       <div className="space-y-2">
-                        <div className="w-full h-3 bg-gray-600 rounded"></div>
-                        <div className="w-2/3 h-3 bg-gray-600 rounded"></div>
+                        <div className="w-full h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                        <div className="w-2/3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
                       </div>
                       <div className="flex justify-between">
-                        <div className="w-20 h-4 bg-gray-600 rounded"></div>
-                        <div className="w-16 h-4 bg-gray-600 rounded"></div>
+                        <div className="w-20 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                        <div className="w-16 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+            ) : upcomingRaffles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingRaffles.map((raffle: any) => (
+                  <UpcomingRaffleCard key={raffle.id} raffle={raffle} />
+                ))}
+              </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg text-gray-600 dark:text-gray-400">Henüz çekiliş duyurusu yok</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-500">İlk çekiliş duyurunuzu oluşturun</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
                 {upcomingRaffles.map((raffle: any) => (
                   <RaffleCard 
                     key={raffle.id} 
