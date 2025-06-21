@@ -77,6 +77,85 @@
   }
 }
 
+/* Force proper input styling for both themes */
+input, textarea, select {
+  background-color: white !important;
+  color: rgb(17, 24, 39) !important;
+  border-color: rgba(255, 201, 41, 0.3) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgb(107, 114, 128) !important;
+  opacity: 0.7 !important;
+}
+
+/* Dark theme specific input fixes */
+.dark input, .dark textarea, .dark select {
+  background-color: rgb(31, 41, 55) !important;
+  color: rgb(243, 244, 246) !important;
+  border-color: rgba(255, 201, 41, 0.4) !important;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  color: rgb(156, 163, 175) !important;
+  opacity: 0.8 !important;
+}
+
+/* Input focus states */
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid rgba(255, 201, 41, 0.5) !important;
+  outline-offset: 2px !important;
+  border-color: rgba(255, 201, 41, 0.6) !important;
+}
+
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  border-color: rgba(255, 201, 41, 0.7) !important;
+  background-color: rgb(31, 41, 55) !important;
+  color: rgb(243, 244, 246) !important;
+}
+
+/* Select dropdown styling */
+.dark [data-radix-select-content] {
+  background-color: rgb(31, 41, 55) !important;
+  color: rgb(243, 244, 246) !important;
+  border-color: rgba(255, 201, 41, 0.4) !important;
+}
+
+.dark [data-radix-select-item] {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark [data-radix-select-item]:hover {
+  background-color: rgba(255, 201, 41, 0.2) !important;
+}
+
+.dark [data-radix-select-trigger] {
+  background-color: rgb(31, 41, 55) !important;
+  color: rgb(243, 244, 246) !important;
+}
+
+/* Modal specific overrides */
+.dark .bg-white {
+  background-color: rgb(31, 41, 55) !important;
+}
+
+.dark .text-gray-900 {
+  color: rgb(243, 244, 246) !important;
+}
+
+/* Specific targeting for dialog inputs */
+[role="dialog"] input,
+[role="dialog"] textarea {
+  background-color: white !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+.dark [role="dialog"] input,
+.dark [role="dialog"] textarea {
+  background-color: rgb(31, 41, 55) !important;
+  color: rgb(243, 244, 246) !important;
+}
+
 @layer base {
   * {
     @apply border-border;

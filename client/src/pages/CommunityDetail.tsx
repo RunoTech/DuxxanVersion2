@@ -880,12 +880,7 @@ export default function CommunityDetail() {
                       value={raffleForm.title}
                       onChange={(e) => setRaffleForm({...raffleForm, title: e.target.value})}
                       placeholder="Örn: 100 USDT Çekilişi"
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
 
@@ -898,12 +893,7 @@ export default function CommunityDetail() {
                       value={raffleForm.prizeValue}
                       onChange={(e) => setRaffleForm({...raffleForm, prizeValue: e.target.value})}
                       placeholder="Örn: 100 USDT"
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
 
@@ -912,7 +902,7 @@ export default function CommunityDetail() {
                       Süre (Gün) *
                     </Label>
                     <Select value={raffleForm.duration} onValueChange={(value) => setRaffleForm({...raffleForm, duration: value})}>
-                      <SelectTrigger className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white transition-all duration-200 shadow-sm focus:shadow-md hover:border-[#FFC929]/50 dark:hover:border-[#FFC929]/60">
+                      <SelectTrigger className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] transition-all duration-200 shadow-sm focus:shadow-md hover:border-[#FFC929]/50 dark:hover:border-[#FFC929]/60">
                         <SelectValue placeholder="Süre seçin" />
                       </SelectTrigger>
                       <SelectContent className="bg-white dark:bg-gray-800 border-2 border-[#FFC929]/40 dark:border-[#FFC929]/50 shadow-xl backdrop-blur-sm">
@@ -935,12 +925,7 @@ export default function CommunityDetail() {
                       value={raffleForm.maxParticipants}
                       onChange={(e) => setRaffleForm({...raffleForm, maxParticipants: e.target.value})}
                       placeholder="Boş bırakın (sınırsız)"
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
                 </div>
@@ -956,12 +941,7 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, description: e.target.value})}
                       placeholder="Çekiliş hakkında detaylı açıklama yazın..."
                       rows={4}
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] resize-none transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
 
@@ -975,12 +955,7 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, prizeDescription: e.target.value})}
                       placeholder="Ödül hakkında ek bilgiler..."
                       rows={3}
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] resize-none transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
 
@@ -994,12 +969,7 @@ export default function CommunityDetail() {
                       onChange={(e) => setRaffleForm({...raffleForm, requirements: e.target.value})}
                       placeholder="Çekilişe katılım için gereksinimler..."
                       rows={3}
-                      className="mt-2 bg-white dark:bg-gray-800 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none transition-all duration-200 shadow-sm focus:shadow-md !important"
-                      style={{
-                        backgroundColor: 'var(--background)',
-                        color: 'var(--foreground)',
-                        borderColor: 'rgba(255, 201, 41, 0.3)'
-                      }}
+                      className="mt-2 border-2 border-[#FFC929]/30 dark:border-[#FFC929]/40 focus:border-[#FFC929] dark:focus:border-[#FFC929] resize-none transition-all duration-200 shadow-sm focus:shadow-md"
                     />
                   </div>
                 </div>
