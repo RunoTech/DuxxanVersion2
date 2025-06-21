@@ -214,7 +214,7 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
@@ -280,17 +280,17 @@ export default function Donations() {
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-800 dark:bg-gray-800 border-0 p-1 h-12">
+          <TabsList className="grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1 h-12 rounded-lg">
             {organizationTypes.map((type) => {
               const IconComponent = type.icon;
               return (
                 <TabsTrigger 
                   key={type.value} 
                   value={type.value}
-                  className="flex items-center gap-2 text-gray-300 dark:text-gray-300 hover:text-white dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10"
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10 rounded-md transition-colors"
                   style={{
                     backgroundColor: activeTab === type.value ? '#EAB308' : 'transparent',
-                    borderRadius: activeTab === type.value ? '8px' : '0px'
+                    borderRadius: '6px'
                   }}
                 >
                   <IconComponent className="w-4 h-4" />
@@ -312,21 +312,21 @@ export default function Donations() {
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
                 {/* Search */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
                   <Input
                     placeholder="Kampanya ara..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
+                    className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-10 focus:border-yellow-500 dark:focus:border-yellow-500"
                   />
                 </div>
 
                 {/* Country Filter */}
                 <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
                     <SelectValue placeholder="🌍 Tüm Ülkeler" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 max-h-60 overflow-y-auto">
                     {countries.map((country) => (
                       <SelectItem key={country.value} value={country.value}>
                         {country.label}
@@ -337,8 +337,8 @@ export default function Donations() {
 
                 {/* Category Filter */}
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                    <SelectValue placeholder="Tüm Kategoriler" />
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
+                    <SelectValue placeholder="📁 Tüm Kategoriler" />
                   </SelectTrigger>
                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                     {categories.map((category) => (
@@ -351,8 +351,8 @@ export default function Donations() {
 
                 {/* Sort By */}
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                    <SelectValue placeholder="Sırala" />
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
+                    <SelectValue placeholder="🔄 Sırala" />
                   </SelectTrigger>
                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                     <SelectItem value="newest">En Yeni</SelectItem>
@@ -372,7 +372,7 @@ export default function Donations() {
                     setSelectedCategory('all');
                     setActiveTab('all');
                   }}
-                  className="h-11 bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                  className="h-11 bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200"
                 >
                   Filtreleri Temizle
                 </Button>
