@@ -151,6 +151,20 @@ export default function Community() {
 
   const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setIsCountryDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Fetch categories from database with long caching
   const { data: categoriesData } = useQuery({
     queryKey: ['/api/categories'],
@@ -165,6 +179,34 @@ export default function Community() {
       name: cat.name
     }))
   ];
+
+  // Define countries array
+  const countries = [
+    { value: 'all', label: 'Tüm Ülkeler' },
+    { value: 'TUR', label: '🇹🇷 Türkiye' },
+    { value: 'USA', label: '🇺🇸 Amerika Birleşik Devletleri' },
+    { value: 'GER', label: '🇩🇪 Almanya' },
+    { value: 'FR', label: '🇫🇷 Fransa' },
+    { value: 'GB', label: '🇬🇧 Birleşik Krallık' },
+    { value: 'IT', label: '🇮🇹 İtalya' },
+    { value: 'ES', label: '🇪🇸 İspanya' },
+    { value: 'NL', label: '🇳🇱 Hollanda' },
+    { value: 'BE', label: '🇧🇪 Belçika' },
+    { value: 'CH', label: '🇨🇭 İsviçre' },
+    { value: 'AT', label: '🇦🇹 Avusturya' },
+    { value: 'SE', label: '🇸🇪 İsveç' },
+    { value: 'NO', label: '🇳🇴 Norveç' },
+    { value: 'DK', label: '🇩🇰 Danimarka' },
+    { value: 'FI', label: '🇫🇮 Finlandiya' },
+  ];
+
+  // Filter countries based on search
+  const filteredCountries = useMemo(() => {
+    if (!countrySearch) return countries;
+    return countries.filter(country => 
+      country.label.toLowerCase().includes(countrySearch.toLowerCase())
+    );
+  }, [countries, countrySearch]);
 
   // Filtered channels based on search, category, and country
   const filteredChannels = useMemo(() => {
