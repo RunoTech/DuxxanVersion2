@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const createChannelSchema = z.object({
@@ -545,20 +545,74 @@ export default function Community() {
                     </SelectContent>
                   </Select>
 
-                  {/* Country Filter */}
-                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
-                      <SelectValue placeholder="🌍 Tüm Ülkeler" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white max-h-60 overflow-y-auto">
-                      <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">Tüm Ülkeler</SelectItem>
-                      {countries.map((country) => (
-                        <SelectItem key={country.value} value={country.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
-                          {country.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {/* Country Filter with Search */}
+                  <div className="relative" ref={countryDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                      className="h-11 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20 rounded-md px-3 py-2 text-left flex items-center justify-between"
+                    >
+                      <span className="truncate">
+                        {selectedCountry === 'all' 
+                          ? '🌍 Tüm Ülkeler' 
+                          : countries.find(c => c.value === selectedCountry)?.label || '🌍 Tüm Ülkeler'
+                        }
+                      </span>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isCountryDropdownOpen && (
+                      <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-hidden">
+                        {/* Search Input */}
+                        <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+                          <div className="relative">
+                            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                            <Input
+                              placeholder="Ülke ara..."
+                              value={countrySearch}
+                              onChange={(e) => setCountrySearch(e.target.value)}
+                              className="pl-8 h-8 text-sm bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Country List */}
+                        <div className="max-h-48 overflow-y-auto">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedCountry('all');
+                              setIsCountryDropdownOpen(false);
+                              setCountrySearch('');
+                            }}
+                            className="w-full text-left px-3 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                          >
+                            Tüm Ülkeler
+                          </button>
+                          {filteredCountries.map((country) => (
+                            <button
+                              key={country.value}
+                              type="button"
+                              onClick={() => {
+                                setSelectedCountry(country.value);
+                                setIsCountryDropdownOpen(false);
+                                setCountrySearch('');
+                              }}
+                              className="w-full text-left px-3 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                            >
+                              {country.label}
+                            </button>
+                          ))}
+                          {filteredCountries.length === 0 && countrySearch && (
+                            <div className="px-3 py-2 text-gray-500 dark:text-gray-400 text-sm">
+                              Ülke bulunamadı
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Clear Filters */}
                   <Button
@@ -566,6 +620,7 @@ export default function Community() {
                       setSearchQuery('');
                       setSelectedCategory('all');
                       setSelectedCountry('all');
+                      setCountrySearch('');
                     }}
                     className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold"
                   >
