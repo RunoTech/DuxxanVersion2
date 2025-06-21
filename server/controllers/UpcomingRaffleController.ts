@@ -12,7 +12,7 @@ export class UpcomingRaffleController extends BaseController {
       const raffles = await db
         .select({
           id: upcomingRaffles.id,
-          title: upcomingRaffles.title,
+          title: upcomingRaffles.title,    
           description: upcomingRaffles.description,
           prizeValue: upcomingRaffles.prizeValue,
           ticketPrice: upcomingRaffles.ticketPrice,
@@ -22,6 +22,7 @@ export class UpcomingRaffleController extends BaseController {
           creatorId: upcomingRaffles.creatorId,
           isActive: upcomingRaffles.isActive,
           createdAt: upcomingRaffles.createdAt,
+          interestedCount: upcomingRaffles.interestedCount,
           creator: {
             id: users.id,
             username: users.username,
