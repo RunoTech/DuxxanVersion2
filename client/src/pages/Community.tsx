@@ -566,13 +566,13 @@ export default function Community() {
                 onClick={() => setActiveTab('channels')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'channels'
-                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg transform scale-[1.02]'
+                    ? 'bg-gradient-to-r from-[#FFC929] to-[#FFB800] text-black shadow-lg transform scale-[1.02]'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Users className="h-5 w-5" />
                 Kanallar
-                <Badge className={`${activeTab === 'channels' ? 'bg-white/20 text-white' : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300'} font-bold`}>
+                <Badge className={`${activeTab === 'channels' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929]'} font-bold`}>
                   {filteredChannels.length}
                 </Badge>
               </button>
@@ -633,7 +633,7 @@ export default function Community() {
                               <Input 
                                 {...field} 
                                 placeholder="Örn: Kripto Tartışmaları"
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent" 
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" 
                               />
                             </FormControl>
                             <FormMessage />
@@ -708,7 +708,7 @@ export default function Community() {
                               </FormLabel>
                               <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Ülke seçin" />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
@@ -743,7 +743,7 @@ export default function Community() {
                               <Input 
                                 {...field} 
                                 placeholder="Örn: kripto, nft, blockchain (virgülle ayırın)"
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent" 
+                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" 
                               />
                             </FormControl>
                             <FormMessage />
@@ -763,7 +763,7 @@ export default function Community() {
                         <Button
                           type="submit"
                           disabled={createChannelMutation.isPending}
-                          className="flex-1 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-black font-semibold shadow-lg disabled:opacity-50"
+                          className="flex-1 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg disabled:opacity-50"
                         >
                           {createChannelMutation.isPending ? (
                             <>
@@ -785,9 +785,12 @@ export default function Community() {
 
             {/* Edit Channel Dialog */}
             <Dialog open={showEditChannel} onOpenChange={setShowEditChannel}>
-              <DialogContent className="bg-duxxan-card border-duxxan-border text-white">
-                <DialogHeader>
-                  <DialogTitle>Kanalı Düzenle</DialogTitle>
+              <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                <DialogHeader className="text-center pb-4">
+                  <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
+                    <Edit className="w-6 h-6 text-black" />
+                  </div>
+                  <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Kanalı Düzenle</DialogTitle>
                 </DialogHeader>
                 <Form {...editChannelForm}>
                   <form onSubmit={editChannelForm.handleSubmit(onSubmitEditChannel)} className="space-y-4">
@@ -796,9 +799,9 @@ export default function Community() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white">Kanal Adı</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Kanal Adı</FormLabel>
                           <FormControl>
-                            <Input {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                            <Input {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -809,9 +812,9 @@ export default function Community() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white">Açıklama</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
                           <FormControl>
-                            <Textarea {...field} className="bg-duxxan-darker border-duxxan-border text-white" />
+                            <Textarea {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -822,10 +825,10 @@ export default function Community() {
                       name="categoryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white">Kategori</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Kategori</FormLabel>
                           <FormControl>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                              <SelectTrigger className="bg-duxxan-darker border-duxxan-border text-white">
+                              <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                 <SelectValue placeholder="Kategori seçin" />
                               </SelectTrigger>
                               <SelectContent>
