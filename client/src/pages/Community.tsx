@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const createChannelSchema = z.object({
@@ -1007,7 +1007,10 @@ export default function Community() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Kanal Adı</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                            <User className="w-4 h-4 mr-2 text-[#FFC929]" />
+                            Kanal Adı
+                          </FormLabel>
                           <FormControl>
                             <Input {...field} 
                               placeholder="Kanal adınızı girin..."
@@ -1023,7 +1026,10 @@ export default function Community() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                            <Edit className="w-4 h-4 mr-2 text-[#FFC929]" />
+                            Açıklama
+                          </FormLabel>
                           <FormControl>
                             <Textarea {...field} 
                               placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
@@ -1039,7 +1045,10 @@ export default function Community() {
                       name="categoryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">Kategori</FormLabel>
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                            <Trophy className="w-4 h-4 mr-2 text-[#FFC929]" />
+                            Kategori
+                          </FormLabel>
                           <FormControl>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
                               <SelectTrigger className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929]">
