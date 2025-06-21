@@ -993,12 +993,17 @@ export default function Community() {
 
             {/* Edit Channel Dialog */}
             <Dialog open={showEditChannel} onOpenChange={setShowEditChannel}>
-              <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                <DialogHeader className="text-center pb-4">
-                  <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
-                    <Edit className="w-6 h-6 text-black" />
+              <DialogContent className="max-w-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 text-gray-900 dark:text-white shadow-2xl">
+                <DialogHeader className="pb-6">
+                  <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#FFC929]/20 to-[#FFB800]/30 rounded-2xl mx-auto mb-6 shadow-lg">
+                    <Edit className="h-10 w-10 text-[#FFC929]" />
                   </div>
-                  <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Kanalı Düzenle</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent text-center">
+                    Kanalı Düzenle
+                  </DialogTitle>
+                  <p className="text-gray-500 dark:text-gray-400 text-center text-sm mt-2">
+                    Kanalınızın bilgilerini güncelleyebilirsiniz
+                  </p>
                 </DialogHeader>
                 <Form {...editChannelForm}>
                   <form onSubmit={editChannelForm.handleSubmit(onSubmitEditChannel)} className="space-y-6">
@@ -1051,10 +1056,10 @@ export default function Community() {
                           </FormLabel>
                           <FormControl>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                              <SelectTrigger className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929]">
-                                <SelectValue placeholder="Kategori seçin" />
+                              <SelectTrigger className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800">
+                                <SelectValue placeholder="Kategori seçin" className="text-gray-900 dark:text-white" />
                               </SelectTrigger>
-                              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                                 {categories
                                   .filter(cat => cat.id !== 'all')
                                   .map((category: any) => (
