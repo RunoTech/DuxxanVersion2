@@ -1356,34 +1356,68 @@ export default function Community() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {upcomingRaffles.map((raffle: any) => (
-                  <Card key={raffle.id} className="bg-duxxan-card border-duxxan-border hover:border-yellow-500 transition-all duration-200">
-                    <CardHeader>
-                      <CardTitle className="text-lg text-white">{raffle.title}</CardTitle>
-                      <div className="flex items-center justify-between">
-                        <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500">
-                          {raffle.category}
-                        </Badge>
-                        <Badge variant="outline" className="border-green-500 text-green-400">
-                          Yakında
-                        </Badge>
+                  <Card key={raffle.id} className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-64 flex flex-col">
+                    <CardHeader className="p-4 flex-shrink-0">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={`/api/placeholder/48/48`} />
+                            <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-sm">
+                              {raffle.creator?.username?.charAt(0).toUpperCase() || 'R'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="text-base font-bold text-gray-900 dark:text-white truncate">
+                              {raffle.title}
+                            </CardTitle>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                              @{raffle.creator?.username || 'anonim'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-1 flex-shrink-0">
+                          <Badge className="bg-[#FFC929] text-black px-2 py-0.5 text-xs font-bold rounded-full">
+                            {raffle.category?.name || 'Genel'}
+                          </Badge>
+                          <Badge className="bg-emerald-600 text-white px-2 py-0.5 text-xs font-bold rounded-full">
+                            Yakında
+                          </Badge>
+                        </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                        {raffle.description}
-                      </p>
+                    <CardContent className="flex-1 px-4 pb-4 flex flex-col justify-between">
+                      <div className="flex-1">
+                        <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed mb-3">
+                          {raffle.description}
+                        </p>
+                      </div>
                       <div className="space-y-2 text-sm">
-                        <div className="flex justify-between text-gray-400">
-                          <span>Ödül:</span>
-                          <span className="text-yellow-400 font-semibold">{raffle.prizeValue} USDT</span>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                              <DollarSign className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
+                            </div>
+                            <span className="font-medium text-gray-700 dark:text-white text-xs">Ödül:</span>
+                          </div>
+                          <span className="text-[#FFC929] font-bold text-sm">{raffle.prizeValue} USDT</span>
                         </div>
-                        <div className="flex justify-between text-gray-400">
-                          <span>Bilet Fiyatı:</span>
-                          <span className="text-white">{raffle.ticketPrice} USDT</span>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                              <Ticket className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
+                            </div>
+                            <span className="font-medium text-gray-700 dark:text-white text-xs">Bilet:</span>
+                          </div>
+                          <span className="text-gray-700 dark:text-white font-medium text-xs">{raffle.ticketPrice} USDT</span>
                         </div>
-                        <div className="flex justify-between text-gray-400">
-                          <span>Max Bilet:</span>
-                          <span className="text-white">{raffle.maxTickets}</span>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
+                            <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                              <Hash className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
+                            </div>
+                            <span className="font-medium text-gray-700 dark:text-white text-xs">Max:</span>
+                          </div>
+                          <span className="text-gray-700 dark:text-white font-medium text-xs">{raffle.maxTickets}</span>
                         </div>
                         <div className="flex justify-between text-gray-400">
                           <span>Başlangıç:</span>
