@@ -354,12 +354,12 @@ export default function Donations() {
                   <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-500">
                     <SelectValue placeholder="🔄 Sırala" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
-                    <SelectItem value="newest">En Yeni</SelectItem>
-                    <SelectItem value="ending-soon">Sona Erme</SelectItem>
-                    <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
-                    <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
-                    <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yeni</SelectItem>
+                    <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sona Erme</SelectItem>
+                    <SelectItem value="highest-goal" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yüksek Hedef</SelectItem>
+                    <SelectItem value="most-funded" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Çok Fonlanan</SelectItem>
+                    <SelectItem value="most-donors" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Çok Bağışçı</SelectItem>
                   </SelectContent>
                 </Select>
 
