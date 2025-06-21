@@ -7,7 +7,6 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { BlurOverlay } from "@/components/BlurOverlay";
-import { ReminderProvider } from "@/contexts/ReminderContext";
 
 import { useWalletFixed as useWallet } from "@/hooks/useWalletFixed";
 import { useWebSocket } from "@/hooks/useWebSocket";
@@ -156,12 +155,10 @@ function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <ReminderProvider>
-          <TranslationProvider>
-            <AppContent />
-            <Toaster />
-          </TranslationProvider>
-        </ReminderProvider>
+        <TranslationProvider>
+          <AppContent />
+          <Toaster />
+        </TranslationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

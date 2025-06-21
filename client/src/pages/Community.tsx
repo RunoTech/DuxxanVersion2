@@ -15,9 +15,7 @@ import { z } from 'zod';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { useReminders } from '@/contexts/ReminderContext';
 import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User, ExternalLink } from 'lucide-react';
-import { UpcomingRaffleCard } from '@/components/UpcomingRaffleCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Countdown hook
@@ -157,7 +155,7 @@ const RaffleCard = ({ raffle, isInterested, onToggleInterest }: {
         <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
           <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 flex-shrink-0">
             <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">{Number(raffle.interestedCount) || 0} ilgilenen</span>
+            <span className="text-xs sm:text-sm">{raffle.interestedCount || 0} ilgilenen</span>
           </div>
           <Button 
             size="sm" 
@@ -217,11 +215,11 @@ const createChannelSchema = z.object({
 });
 
 const createUpcomingRaffleSchema = z.object({
-  title: z.string().min(5, 'Başlık en az 5 karakter olmalı').max(200, 'Başlık en fazla 200 karakter olabilir'),
-  description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(2000, 'Açıklama en fazla 2000 karakter olabilir'),
-  prizeValue: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Ödül değeri geçerli bir sayı olmalı'),
-  ticketPrice: z.string().regex(/^\d+(\.\d{1,6})?$/, 'Bilet fiyatı geçerli bir sayı olmalı'),
-  maxTickets: z.number().int('Tam sayı olmalı').min(1, 'En az 1 bilet olmalı').max(1000000, 'En fazla 1,000,000 bilet olabilir'),
+  title: z.string().min(5, 'Başlık en az 5 karakter olmalı'),
+  description: z.string().min(20, 'Açıklama en az 20 karakter olmalı'),
+  prizeValue: z.string().min(1, 'Ödül değeri gerekli'),
+  ticketPrice: z.string().min(1, 'Bilet fiyatı gerekli'),
+  maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
   startDate: z.string().min(1, 'Başlangıç tarihi gerekli'),
   categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
 });
@@ -287,7 +285,7 @@ export default function Community() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
-  const { interestedRaffles, userSession, addReminder, removeReminder, isInterested } = useReminders();
+  const [interestedRaffles, setInterestedRaffles] = useState<number[]>([]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -340,7 +338,7 @@ export default function Community() {
     enabled: true
   });
 
-  const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
+  const upcomingRaffles = Array.isArray(upcomingRafflesData) ? upcomingRafflesData : [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -553,13 +551,7 @@ export default function Community() {
   // Create upcoming raffle mutation
   const createUpcomingRaffleMutation = useMutation({
     mutationFn: async (data: CreateUpcomingRaffleForm) => {
-      // Transform data to match backend expectations
-      const transformedData = {
-        ...data,
-        startDate: new Date(data.startDate).toISOString(),
-        maxTickets: Number(data.maxTickets)
-      };
-      const response = await apiRequest('POST', '/api/upcoming-raffles', transformedData);
+      const response = await apiRequest('POST', '/api/upcoming-raffles', data);
       return response.json();
     },
     onSuccess: () => {
@@ -624,23 +616,20 @@ export default function Community() {
     }
 
     try {
-      const isCurrentlyInterested = isInterested(raffleId);
+      const isCurrentlyInterested = interestedRaffles.includes(raffleId);
       const action = isCurrentlyInterested ? 'remove' : 'add';
       
-      const response = await apiRequest('POST', `/api/upcoming-raffles/${raffleId}/reminder`, { 
-        action,
-        userSession 
-      });
+      const response = await apiRequest('POST', `/api/upcoming-raffles/${raffleId}/reminder`, { action });
       
       if (response.ok) {
         if (isCurrentlyInterested) {
-          removeReminder(raffleId);
+          setInterestedRaffles(prev => prev.filter(id => id !== raffleId));
           toast({
             title: "Başarılı",
             description: "Hatırlatma iptal edildi",
           });
         } else {
-          addReminder(raffleId);
+          setInterestedRaffles(prev => [...prev, raffleId]);
           toast({
             title: "Başarılı",
             description: "Hatırlatma ayarlandı!",
@@ -1013,7 +1002,6 @@ export default function Community() {
                                 <Input {...field} 
                                   type="number" 
                                   placeholder="1000"
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                                   className="h-12 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#FFC929] focus:border-[#FFC929] focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white transition-all duration-200" 
                                 />
                               </FormControl>
@@ -1587,33 +1575,40 @@ export default function Community() {
             {rafflesLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse border border-gray-200 dark:border-gray-700">
+                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
                     <div className="space-y-4">
-                      <div className="w-3/4 h-6 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                      <div className="w-3/4 h-6 bg-gray-600 rounded"></div>
                       <div className="space-y-2">
-                        <div className="w-full h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-                        <div className="w-2/3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                        <div className="w-full h-3 bg-gray-600 rounded"></div>
+                        <div className="w-2/3 h-3 bg-gray-600 rounded"></div>
                       </div>
                       <div className="flex justify-between">
-                        <div className="w-20 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
-                        <div className="w-16 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                        <div className="w-20 h-4 bg-gray-600 rounded"></div>
+                        <div className="w-16 h-4 bg-gray-600 rounded"></div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            ) : upcomingRaffles.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {upcomingRaffles.map((raffle: any) => (
-                  <UpcomingRaffleCard key={raffle.id} raffle={raffle} />
+                  <RaffleCard 
+                    key={raffle.id} 
+                    raffle={raffle} 
+                    isInterested={interestedRaffles.includes(raffle.id)}
+                    onToggleInterest={handleToggleRaffleInterest}
+                  />
                 ))}
               </div>
-            ) : (
+            )}
+
+            {!rafflesLoading && upcomingRaffles.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg text-gray-600 dark:text-gray-400">Henüz çekiliş duyurusu yok</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500">İlk çekiliş duyurunuzu oluşturun</p>
+                  <p className="text-lg">Gelecek çekiliş bulunamadı</p>
+                  <p className="text-sm">Yakında yeni duyurular yapılacak</p>
                 </div>
               </div>
             )}

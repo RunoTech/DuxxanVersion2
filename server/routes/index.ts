@@ -76,69 +76,6 @@ router.post('/translate', async (req, res) => {
   }
 });
 
-// Upcoming raffles routes
-router.get('/upcoming-raffles', upcomingRaffleController.getUpcomingRaffles.bind(upcomingRaffleController));
-router.post('/upcoming-raffles', upcomingRaffleController.createUpcomingRaffle.bind(upcomingRaffleController));
-router.post('/upcoming-raffles/:id/reminder', upcomingRaffleController.toggleReminder.bind(upcomingRaffleController));
-
-// Get user reminders
-router.get('/user-reminders/:session', async (req, res) => {
-  try {
-    const { ReminderPersistence } = await import('../services/ReminderPersistence');
-    const reminders = await ReminderPersistence.getUserReminders(req.params.session);
-    res.json({ reminders });
-  } catch (error) {
-    console.error('Error fetching user reminders:', error);
-    res.status(500).json({ error: 'Failed to fetch reminders' });
-  }
-});
-
-// Internal mail routes
-router.get('/mail/inbox/:session', async (req, res) => {
-  try {
-    const { InternalMailService } = await import('../services/InternalMailService');
-    const mails = await InternalMailService.getUserInbox(req.params.session);
-    res.json(mails);
-  } catch (error) {
-    console.error('Error fetching inbox:', error);
-    res.status(500).json({ error: 'Failed to fetch inbox' });
-  }
-});
-
-router.get('/mail/unread-count/:session', async (req, res) => {
-  try {
-    const { InternalMailService } = await import('../services/InternalMailService');
-    const count = await InternalMailService.getUnreadCount(req.params.session);
-    res.json({ count });
-  } catch (error) {
-    console.error('Error fetching unread count:', error);
-    res.status(500).json({ error: 'Failed to fetch unread count' });
-  }
-});
-
-router.post('/mail/mark-read/:id', async (req, res) => {
-  try {
-    const { InternalMailService } = await import('../services/InternalMailService');
-    await InternalMailService.markAsRead(parseInt(req.params.id));
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Error marking mail as read:', error);
-    res.status(500).json({ error: 'Failed to mark as read' });
-  }
-});
-
-// Test scheduler endpoint
-router.post('/test-scheduler', async (req, res) => {
-  try {
-    const { raffleScheduler } = await import('../services/RaffleScheduler');
-    raffleScheduler.start();
-    res.json({ message: 'Scheduler started', status: 'success' });
-  } catch (error: any) {
-    console.error('Scheduler start error:', error);
-    res.status(500).json({ error: 'Failed to start scheduler', message: error.message });
-  }
-});
-
 // User location detection
 router.get('/user/location', async (req, res) => {
   try {

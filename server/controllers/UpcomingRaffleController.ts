@@ -4,7 +4,6 @@ import { db } from '../db';
 import { upcomingRaffles, users, categories } from '../../shared/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 import { insertUpcomingRaffleSchema } from '../../shared/schema';
-import { ReminderPersistence } from '../services/ReminderPersistence';
 
 export class UpcomingRaffleController extends BaseController {
   // Get all upcoming raffles
@@ -13,7 +12,7 @@ export class UpcomingRaffleController extends BaseController {
       const raffles = await db
         .select({
           id: upcomingRaffles.id,
-          title: upcomingRaffles.title,    
+          title: upcomingRaffles.title,
           description: upcomingRaffles.description,
           prizeValue: upcomingRaffles.prizeValue,
           ticketPrice: upcomingRaffles.ticketPrice,
@@ -23,7 +22,6 @@ export class UpcomingRaffleController extends BaseController {
           creatorId: upcomingRaffles.creatorId,
           isActive: upcomingRaffles.isActive,
           createdAt: upcomingRaffles.createdAt,
-          interestedCount: upcomingRaffles.interestedCount,
           creator: {
             id: users.id,
             username: users.username,
@@ -41,27 +39,30 @@ export class UpcomingRaffleController extends BaseController {
         .where(eq(upcomingRaffles.isActive, true))
         .orderBy(desc(upcomingRaffles.createdAt));
 
-      return this.sendSuccess(res, raffles);
+      return this.success(res, raffles);
     } catch (error) {
       console.error('Error fetching upcoming raffles:', error);
-      return this.sendError(res, 'Failed to fetch upcoming raffles', 500);
+      return this.error(res, 'Failed to fetch upcoming raffles', 500);
     }
   }
 
   // Create new upcoming raffle
   async createUpcomingRaffle(req: Request, res: Response) {
     try {
-      // Get user ID from session/auth or use default for testing
-      const userId = req.session?.user?.id || 1; // Default to user ID 1 for testing
+      // Get user ID from session/auth
+      const userId = req.session?.user?.id;
+      if (!userId) {
+        return this.error(res, 'Authentication required', 401);
+      }
 
-      // Validate request body with proper date conversion
+      // Validate request body
       const validationResult = insertUpcomingRaffleSchema.safeParse({
         ...req.body,
         creatorId: userId
       });
 
       if (!validationResult.success) {
-        return this.sendError(res, 'Invalid input data', 400, validationResult.error.errors);
+        return this.error(res, 'Invalid input data', 400, validationResult.error.errors);
       }
 
       const raffleData = validationResult.data;
@@ -102,10 +103,10 @@ export class UpcomingRaffleController extends BaseController {
         .leftJoin(categories, eq(upcomingRaffles.categoryId, categories.id))
         .where(eq(upcomingRaffles.id, newRaffle.id));
 
-      return this.sendSuccess(res, completeRaffle, 'Upcoming raffle created successfully', 201);
+      return this.success(res, completeRaffle, 'Upcoming raffle created successfully', 201);
     } catch (error) {
       console.error('Error creating upcoming raffle:', error);
-      return this.sendError(res, 'Failed to create upcoming raffle', 500);
+      return this.error(res, 'Failed to create upcoming raffle', 500);
     }
   }
 
@@ -113,14 +114,14 @@ export class UpcomingRaffleController extends BaseController {
   async toggleReminder(req: Request, res: Response) {
     try {
       const raffleId = parseInt(req.params.id);
-      const { action, userSession } = req.body;
+      const { action } = req.body;
       
       if (isNaN(raffleId)) {
-        return res.status(400).json({ error: 'Invalid raffle ID' });
+        return this.error(res, 'Invalid raffle ID', 400);
       }
 
       if (!action || !['add', 'remove'].includes(action)) {
-        return res.status(400).json({ error: 'Invalid action. Must be "add" or "remove"' });
+        return this.error(res, 'Invalid action. Must be "add" or "remove"', 400);
       }
 
       // Update interested count based on action
@@ -129,7 +130,7 @@ export class UpcomingRaffleController extends BaseController {
       const result = await db
         .update(upcomingRaffles)
         .set({ 
-          interestedCount: sql`GREATEST(0, COALESCE(interested_count, 0) + ${increment})`
+          interestedCount: sql`GREATEST(0, COALESCE(${upcomingRaffles.interestedCount}, 0) + ${increment})`
         })
         .where(eq(upcomingRaffles.id, raffleId))
         .returning({
@@ -138,29 +139,20 @@ export class UpcomingRaffleController extends BaseController {
         });
 
       if (result.length === 0) {
-        return res.status(404).json({ error: 'Raffle not found' });
+        return this.error(res, 'Raffle not found', 404);
       }
 
-      // Store user reminder in database using persistent service
-      if (userSession) {
-        if (action === 'add') {
-          await ReminderPersistence.saveReminder(userSession, raffleId);
-        } else {
-          await ReminderPersistence.removeReminder(userSession, raffleId);
-        }
-      }
+      console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount}`);
 
-      console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount} (action: ${action})`);
-
-      return res.json({ 
+      return this.success(res, { 
         success: true, 
-        interestedCount: Number(result[0].interestedCount),
+        interestedCount: result[0].interestedCount,
         action,
         raffleId 
       });
     } catch (error) {
       console.error('Error toggling reminder:', error);
-      return res.status(500).json({ error: 'Failed to toggle reminder' });
+      return this.error(res, 'Failed to toggle reminder', 500);
     }
   }
 
@@ -168,7 +160,11 @@ export class UpcomingRaffleController extends BaseController {
   async deleteUpcomingRaffle(req: Request, res: Response) {
     try {
       const raffleId = parseInt(req.params.id);
-      const userId = req.session?.user?.id || 1; // Default to user ID 1 for testing
+      const userId = req.session?.user?.id;
+
+      if (!userId) {
+        return this.error(res, 'Authentication required', 401);
+      }
 
       // Check if the raffle exists and belongs to the user
       const [raffle] = await db
@@ -177,11 +173,11 @@ export class UpcomingRaffleController extends BaseController {
         .where(eq(upcomingRaffles.id, raffleId));
 
       if (!raffle) {
-        return this.sendError(res, 'Upcoming raffle not found', 404);
+        return this.error(res, 'Upcoming raffle not found', 404);
       }
 
       if (raffle.creatorId !== userId) {
-        return this.sendError(res, 'Unauthorized to delete this raffle', 403);
+        return this.error(res, 'Unauthorized to delete this raffle', 403);
       }
 
       // Soft delete by setting isActive to false
@@ -190,10 +186,10 @@ export class UpcomingRaffleController extends BaseController {
         .set({ isActive: false })
         .where(eq(upcomingRaffles.id, raffleId));
 
-      return this.sendSuccess(res, null, 'Upcoming raffle deleted successfully');
+      return this.success(res, null, 'Upcoming raffle deleted successfully');
     } catch (error) {
       console.error('Error deleting upcoming raffle:', error);
-      return this.sendError(res, 'Failed to delete upcoming raffle', 500);
+      return this.error(res, 'Failed to delete upcoming raffle', 500);
     }
   }
 }
