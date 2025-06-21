@@ -156,6 +156,13 @@ input:focus, textarea:focus, select:focus {
   color: rgb(243, 244, 246) !important;
 }
 
+/* Custom button hover for raffle cards */
+.raffle-button-hover:hover {
+  background-color: #FFC929 !important;
+  color: #000000 !important;
+  border-color: #FFC929 !important;
+}
+
 @layer base {
   * {
     @apply border-border;

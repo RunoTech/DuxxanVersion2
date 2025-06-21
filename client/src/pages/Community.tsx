@@ -130,7 +130,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
           <Button 
             size="sm" 
             variant="outline" 
-            className="border-[#FFC929] text-[#FFC929] bg-transparent hover:bg-[#FFC929] hover:text-black hover:border-[#FFC929] dark:hover:bg-[#FFC929] dark:hover:text-black transition-all duration-200"
+            className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200"
           >
             <Bell className="h-4 w-4 mr-1" />
             Hatırlat
