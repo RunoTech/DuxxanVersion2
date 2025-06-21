@@ -624,17 +624,6 @@ export default function Community() {
                         
                         {/* Country List */}
                         <div className="max-h-48 overflow-y-auto">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedCountry('all');
-                              setIsCountryDropdownOpen(false);
-                              setCountrySearch('');
-                            }}
-                            className="w-full text-left px-3 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
-                          >
-                            Tüm Ülkeler
-                          </button>
                           {filteredCountries.map((country) => (
                             <button
                               key={country.value}
