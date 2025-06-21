@@ -115,7 +115,7 @@ export class UpcomingRaffleController extends BaseController {
   async toggleReminder(req: Request, res: Response) {
     try {
       const raffleId = parseInt(req.params.id);
-      const { action } = req.body;
+      const { action, userSession } = req.body;
       
       if (isNaN(raffleId)) {
         return res.status(400).json({ error: 'Invalid raffle ID' });
@@ -141,6 +141,22 @@ export class UpcomingRaffleController extends BaseController {
 
       if (result.length === 0) {
         return res.status(404).json({ error: 'Raffle not found' });
+      }
+
+      // Store user reminder in database
+      if (userSession) {
+        if (action === 'add') {
+          await db.execute(sql`
+            INSERT INTO user_raffle_reminders (user_session, raffle_id) 
+            VALUES (${userSession}, ${raffleId}) 
+            ON CONFLICT (user_session, raffle_id) DO NOTHING
+          `);
+        } else {
+          await db.execute(sql`
+            DELETE FROM user_raffle_reminders 
+            WHERE user_session = ${userSession} AND raffle_id = ${raffleId}
+          `);
+        }
       }
 
       console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount} (action: ${action})`);
