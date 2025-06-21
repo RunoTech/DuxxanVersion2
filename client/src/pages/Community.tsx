@@ -486,7 +486,7 @@ export default function Community() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white text-[#B8860B] hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Button className="bg-white dark:bg-gray-800 text-[#B8860B] dark:text-[#FFC929] hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border dark:border-gray-600">
                     <Plus className="h-5 w-5 mr-2" />
                     Kanal Oluştur
                   </Button>
@@ -831,11 +831,15 @@ export default function Community() {
                               <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                 <SelectValue placeholder="Kategori seçin" />
                               </SelectTrigger>
-                              <SelectContent>
+                              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                                 {categories
                                   .filter(cat => cat.id !== 'all')
                                   .map((category: any) => (
-                                    <SelectItem key={category.id} value={category.id.toString()}>
+                                    <SelectItem 
+                                      key={category.id} 
+                                      value={category.id.toString()}
+                                      className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                                    >
                                       {category.name}
                                     </SelectItem>
                                   ))}
