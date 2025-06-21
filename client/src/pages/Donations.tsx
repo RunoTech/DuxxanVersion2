@@ -396,11 +396,10 @@ export default function Donations() {
           <TabsContent value="all" className="mt-6">
             {/* Donations Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                {[...Array(8)].map((_, i) => (
-                  <Card key={i} className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[480px]">
-                    <div className="h-40 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-                    <CardContent className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden w-full animate-pulse">
+                    <CardContent className="p-3 sm:p-4">
                       <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-3"></div>
                       <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-full mb-2"></div>
                       <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2 mb-4"></div>
@@ -745,10 +744,10 @@ export default function Donations() {
 
         {/* Donations Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <Card key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 animate-pulse">
-                <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <Card key={i} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden w-full animate-pulse">
+                <CardContent className="p-3 sm:p-4">
                   <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
                   <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
                   <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
