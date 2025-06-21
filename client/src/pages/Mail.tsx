@@ -57,28 +57,26 @@ export default function Mail() {
 
   // Fetch messages with caching
   const { data: messages = [], isLoading } = useQuery<MailMessage[]>({
-    queryKey: ['/api/mail/inbox', activeCategory === 'all' ? undefined : activeCategory],
+    queryKey: ['/api/mail/inbox', userSession],
     queryFn: async () => {
-      const url = activeCategory === 'all' 
-        ? '/api/mail/inbox' 
-        : `/api/mail/inbox?category=${activeCategory}`;
-      const response = await apiRequest('GET', url);
-      const result = await response.json();
-      return result.data;
+      const response = await fetch(`/api/mail/inbox/${userSession}`);
+      if (!response.ok) throw new Error('Failed to fetch inbox');
+      return await response.json();
     },
-    enabled: isConnected,
+    enabled: !!userSession,
     staleTime: 30 * 1000, // 30 seconds cache
   });
 
   // Unread count with caching
   const { data: unreadCount = 0 } = useQuery<number>({
-    queryKey: ['/api/mail/unread-count'],
+    queryKey: ['/api/mail/unread-count', userSession],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/mail/unread-count');
+      const response = await fetch(`/api/mail/unread-count/${userSession}`);
+      if (!response.ok) throw new Error('Failed to fetch unread count');
       const result = await response.json();
-      return result.data.count;
+      return result.count;
     },
-    enabled: isConnected,
+    enabled: !!userSession,
     staleTime: 60 * 1000, // 1 minute cache
   });
 
@@ -111,7 +109,10 @@ export default function Mail() {
   // Mark as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      const response = await apiRequest('PUT', `/api/mail/${messageId}/read`);
+      const response = await fetch(`/api/mail/mark-read/${messageId}`, {
+        method: 'POST'
+      });
+      if (!response.ok) throw new Error('Failed to mark as read');
       return await response.json();
     },
     onSuccess: () => {
@@ -170,7 +171,7 @@ export default function Mail() {
 
   const handleMessageClick = (message: MailMessage) => {
     setSelectedMessage(message);
-    if (!message.isRead) {
+    if (!message.is_read) {
       markAsReadMutation.mutate(message.id);
     }
   };
@@ -200,12 +201,9 @@ export default function Mail() {
   };
 
   const filteredMessages = messages.filter(message => {
-    if (activeCategory === 'starred') {
-      return message.isStarred;
-    }
     if (searchTerm) {
       return message.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             message.content.toLowerCase().includes(searchTerm.toLowerCase());
+             message.body.toLowerCase().includes(searchTerm.toLowerCase());
     }
     return true;
   });
@@ -299,58 +297,38 @@ export default function Mail() {
                 filteredMessages.map((message) => (
                   <div
                     key={message.id}
-                    className={`border-b border-gray-100 dark:border-gray-700 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 ${
-                      selectedMessage?.id === message.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                    } ${!message.isRead ? 'bg-blue-25 dark:bg-blue-900/10 border-l-4 border-l-blue-500' : ''}`}
+                    className={`flex items-center gap-4 p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors ${
+                      !message.is_read ? 'bg-blue-50 dark:bg-blue-900/10' : ''
+                    }`}
                     onClick={() => handleMessageClick(message)}
                   >
-                    <div className="p-4 flex items-center gap-4">
-                      <button
-                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-                        onClick={(e) => handleStarToggle(message, e)}
-                      >
-                        <Star 
-                          className={`w-4 h-4 ${
-                            message.isStarred 
-                              ? 'fill-yellow-400 text-yellow-400' 
-                              : 'text-gray-400 hover:text-gray-600'
-                          }`} 
-                        />
-                      </button>
-                      
-                      <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className={`w-3 h-3 rounded-full ${!message.is_read ? 'bg-blue-600' : 'bg-transparent'}`} />
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-sm ${!message.isRead ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300'}`}>
-                            {message.fromWalletAddress === 'system@duxxan' 
-                              ? 'DUXXAN Sistemi' 
-                              : `${message.fromWalletAddress.slice(0, 6)}...${message.fromWalletAddress.slice(-4)}`
-                            }
+                          <span className={`font-medium truncate ${!message.is_read ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                            DUXXAN Sistem
                           </span>
-                          <Badge variant="outline" className={`text-xs ${getCategoryColor(message.category)}`}>
-                            {message.category}
+                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                            Sistem
                           </Badge>
                         </div>
-                        
-                        <h4 className={`text-sm mb-1 truncate ${
-                          !message.isRead ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'
-                        }`}>
-                          {message.subject}
-                        </h4>
-                        
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                          {message.content.substring(0, 100)}...
+                        <div className="flex items-center gap-2">
+                          <span className={`truncate ${!message.is_read ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                            {message.subject}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate mt-1">
+                          {message.body.substring(0, 100)}...
                         </p>
                       </div>
-                      
-                      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                        <Clock className="w-3 h-3" />
-                        {formatDistanceToNow(new Date(message.createdAt), { 
-                          addSuffix: true, 
-                          locale: tr 
-                        })}
-                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                      <Clock className="w-4 h-4" />
+                      {formatDistanceToNow(new Date(message.created_at), { addSuffix: true, locale: tr })}
                     </div>
                   </div>
+
                 ))
               )}
             </div>
@@ -371,22 +349,6 @@ export default function Mail() {
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Geri
                   </Button>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => handleStarToggle(selectedMessage, e)}
-                      className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                    >
-                      <Star 
-                        className={`w-4 h-4 ${
-                          selectedMessage.isStarred 
-                            ? 'fill-yellow-400 text-yellow-400' 
-                            : 'text-gray-400'
-                        }`} 
-                      />
-                    </Button>
-                  </div>
                 </div>
                 
                 <div className="space-y-3">
@@ -397,17 +359,14 @@ export default function Mail() {
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                        {getCategoryIcon(selectedMessage.category)}
+                        <Settings className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
-                          {selectedMessage.fromWalletAddress === 'system@duxxan' 
-                            ? 'DUXXAN Sistemi' 
-                            : `${selectedMessage.fromWalletAddress}@duxxan`
-                          }
+                          DUXXAN Sistemi
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {new Date(selectedMessage.createdAt).toLocaleDateString('tr-TR', {
+                          {new Date(selectedMessage.created_at).toLocaleDateString('tr-TR', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',
