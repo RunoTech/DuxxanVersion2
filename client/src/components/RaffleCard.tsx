@@ -107,7 +107,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-800 dark:bg-gray-900 rounded-2xl overflow-hidden h-[560px] flex flex-col">
+      <Card className="border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-800 dark:bg-gray-900 rounded-2xl overflow-hidden h-[560px] flex flex-col">
         <div className="h-48 relative overflow-hidden">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
