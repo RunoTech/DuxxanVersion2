@@ -91,7 +91,7 @@ export default function Raffles() {
   };
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
+    <div className="min-h-screen bg-background py-4 sm:py-6 lg:py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
@@ -99,77 +99,89 @@ export default function Raffles() {
         </div>
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Tüm Çekilişler</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Muhteşem ödülleri keşfedin ve heyecan verici çekilişlere katılın
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8">
+          <div className="w-full lg:w-auto">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">DUXXAN Çekiliş Platformu</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
+              Blockchain Tabanlı Şeffaf Çekiliş Sistemi - Muhteşem Ödüller Sizi Bekliyor
             </p>
           </div>
-          <Link href="/create-raffle">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
-              Yeni Çekiliş Oluştur
-            </Button>
-          </Link>
+          <div className="flex gap-2 sm:gap-3 mt-4 lg:mt-0 w-full lg:w-auto">
+            <Link href="/create-raffle" className="w-full lg:w-auto">
+              <Button className="w-full lg:w-auto">
+                <span className="mr-2">🎲</span>
+                Çekiliş Oluştur
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 md:p-4 text-center">
-              <div className="text-lg md:text-xl font-bold text-yellow-500 mb-2 break-words">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-green-500 mb-1">
                 {getActiveRafflesCount()}
               </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>
+              <div className="text-sm text-muted-foreground">Aktif Çekilişler</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-xl font-bold text-orange-500 mb-1">
                 ${getTotalPrizePool().toLocaleString()}
               </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplam Ödül Havuzu</div>
+              <div className="text-sm text-muted-foreground">Toplam Ödül Havuzu</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-xl md:text-2xl font-bold text-orange-500 mb-2 break-words">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-blue-500 mb-1">
                 {Array.isArray(raffles) ? raffles.length : 0}
               </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
+              <div className="text-sm text-muted-foreground">Tüm Çekilişler</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-purple-500 mb-1">
+                {raffles.reduce((sum: number, raffle: any) => sum + raffle.ticketsSold, 0)}
+              </div>
+              <div className="text-sm text-muted-foreground">Satılan Biletler</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Filters */}
-        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
+        {/* Enhanced Filters */}
+        <Card className="bg-card border border-border mb-8">
           <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Filter className="w-5 h-5" />
-              Filtreler ve Arama
+              Gelişmiş Filtreler ve Arama
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   placeholder="Çekiliş ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
+                  className="pl-10 h-10"
                 />
               </div>
 
               {/* Category Filter */}
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <SelectValue placeholder="Tüm Kategoriler" />
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="📁 Tüm Kategoriler" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                <SelectContent>
                   <SelectItem value="all">Tüm Kategoriler</SelectItem>
                   {(Array.isArray(categories) ? categories : []).map((category: any) => (
                     <SelectItem key={category.id} value={category.id.toString()}>
@@ -181,11 +193,10 @@ export default function Raffles() {
 
               {/* Country Filter */}
               <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <Globe className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Tüm Ülkeler" />
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="🌍 Tüm Ülkeler" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                <SelectContent>
                   <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
                   {countries.map((country: any) => (
                     <SelectItem key={country.code} value={country.code}>
@@ -197,14 +208,14 @@ export default function Raffles() {
 
               {/* Sort By */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <SelectValue placeholder="Sırala" />
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="🔄 En Yeni" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                <SelectContent>
                   <SelectItem value="newest">En Yeni</SelectItem>
-                  <SelectItem value="ending-soon">Sona Erme</SelectItem>
+                  <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
                   <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
-                  <SelectItem value="most-tickets">En Popüler</SelectItem>
+                  <SelectItem value="most-tickets">En Çok Satan</SelectItem>
                   <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
                 </SelectContent>
               </Select>
@@ -217,7 +228,8 @@ export default function Raffles() {
                   setSelectedCountry('all');
                   setSortBy('newest');
                 }}
-                className="h-11 bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                className="h-10"
+                variant="outline"
               >
                 Filtreleri Temizle
               </Button>
@@ -227,12 +239,12 @@ export default function Raffles() {
 
         {/* Results Info */}
         <div className="flex justify-between items-center mb-6">
-          <p className="text-duxxan-text-secondary">
-            Showing {filteredRaffles.length} of {raffles.length} raffles
+          <p className="text-muted-foreground text-sm">
+            {filteredRaffles.length} / {raffles.length} çekiliş görüntüleniyor
           </p>
           {searchTerm && (
-            <p className="text-sm text-duxxan-text-secondary">
-              Search results for "{searchTerm}"
+            <p className="text-sm text-muted-foreground">
+              "{searchTerm}" için arama sonuçları
             </p>
           )}
         </div>
