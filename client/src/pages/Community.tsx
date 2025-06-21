@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const createChannelSchema = z.object({
@@ -1131,16 +1131,22 @@ export default function Community() {
                     <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Gelecek Çekiliş Duyurusu</DialogTitle>
                   </DialogHeader>
                   <Form {...raffleForm}>
-                    <form onSubmit={raffleForm.handleSubmit(onSubmitRaffle)} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <form onSubmit={raffleForm.handleSubmit(onSubmitRaffle)} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField
                           control={raffleForm.control}
                           name="title"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-700 dark:text-gray-300">Başlık</FormLabel>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Trophy className="w-4 h-4 mr-2 text-[#FFC929]" />
+                                Başlık
+                              </FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                                <Input {...field} 
+                                  placeholder="Çekilişinizin başlığını girin..."
+                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1151,13 +1157,16 @@ export default function Community() {
                           name="categoryId"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-700 dark:text-gray-300">Kategori</FormLabel>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Tag className="w-4 h-4 mr-2 text-[#FFC929]" />
+                                Kategori
+                              </FormLabel>
                               <FormControl>
                                 <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
+                                  <SelectTrigger className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
                                     <SelectValue placeholder="Kategori seçin" />
                                   </SelectTrigger>
-                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                                     {categories
                                       .filter(cat => cat.id !== 'all')
                                       .map((category: any) => (
@@ -1177,28 +1186,44 @@ export default function Community() {
                           )}
                         />
                       </div>
+                      
                       <FormField
                         control={raffleForm.control}
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-700 dark:text-gray-300">Açıklama</FormLabel>
+                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                              <Edit className="w-4 h-4 mr-2 text-[#FFC929]" />
+                              Açıklama
+                            </FormLabel>
                             <FormControl>
-                              <Textarea {...field} className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                              <Textarea {...field} 
+                                placeholder="Çekilişinizin detaylarını, kurallarını ve özelliklerini açıklayın..."
+                                className="min-h-[100px] bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200 resize-none" 
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <FormField
                           control={raffleForm.control}
                           name="prizeValue"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-700 dark:text-gray-300">Ödül (USDT)</FormLabel>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <DollarSign className="w-4 h-4 mr-2 text-[#FFC929]" />
+                                Ödül (USDT)
+                              </FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" step="0.000001" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                                <Input {...field} 
+                                  type="number" 
+                                  step="0.000001" 
+                                  placeholder="100.00"
+                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1209,9 +1234,17 @@ export default function Community() {
                           name="ticketPrice"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-700 dark:text-gray-300">Bilet Fiyatı (USDT)</FormLabel>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Ticket className="w-4 h-4 mr-2 text-[#FFC929]" />
+                                Bilet Fiyatı (USDT)
+                              </FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" step="0.000001" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                                <Input {...field} 
+                                  type="number" 
+                                  step="0.000001" 
+                                  placeholder="1.00"
+                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1222,35 +1255,62 @@ export default function Community() {
                           name="maxTickets"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-gray-700 dark:text-gray-300">Max Bilet</FormLabel>
+                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                                <Hash className="w-4 h-4 mr-2 text-[#FFC929]" />
+                                Max Bilet
+                              </FormLabel>
                               <FormControl>
-                                <Input {...field} type="number" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                                <Input {...field} 
+                                  type="number" 
+                                  placeholder="1000"
+                                  className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                       </div>
+                      
                       <FormField
                         control={raffleForm.control}
                         name="startDate"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-700 dark:text-gray-300">Başlangıç Tarihi</FormLabel>
+                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                              <Clock className="w-4 h-4 mr-2 text-[#FFC929]" />
+                              Başlangıç Tarihi
+                            </FormLabel>
                             <FormControl>
-                              <Input {...field} type="datetime-local" className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" />
+                              <Input {...field} 
+                                type="datetime-local" 
+                                className="h-12 bg-gray-50/50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent transition-all duration-200" 
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <Button
-                        type="submit"
-                        disabled={createUpcomingRaffleMutation.isPending}
-                        className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full"
-                      >
-                        {createUpcomingRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Duyuru Oluştur'}
-                      </Button>
+                      
+                      <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <Button
+                          type="submit"
+                          disabled={createUpcomingRaffleMutation.isPending}
+                          className="h-14 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        >
+                          {createUpcomingRaffleMutation.isPending ? (
+                            <div className="flex items-center">
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-3"></div>
+                              Oluşturuluyor...
+                            </div>
+                          ) : (
+                            <div className="flex items-center">
+                              <Calendar className="h-5 w-5 mr-2" />
+                              Duyuru Oluştur
+                            </div>
+                          )}
+                        </Button>
+                      </div>
                     </form>
                   </Form>
                 </DialogContent>
