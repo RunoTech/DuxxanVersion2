@@ -1204,12 +1204,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log('Processed raffle data:', raffleData);
       
-      const raffle = await storage.createUpcomingRaffle(raffleData);
+      // Insert directly using db to ensure consistency
+      const [newRaffle] = await db
+        .insert(upcomingRaffles)
+        .values(raffleData)
+        .returning();
+
+      console.log('Raffle created in database:', newRaffle);
       
-      res.status(201).json({ success: true, data: raffle, message: 'Upcoming raffle created successfully' });
+      // Return the raffle directly without wrapper
+      res.status(201).json(newRaffle);
     } catch (error) {
       console.error('Error creating upcoming raffle:', error);
-      res.status(500).json({ success: false, message: 'Failed to create upcoming raffle' });
+      res.status(500).json({ error: 'Failed to create upcoming raffle', details: error.message });
     }
   });
 

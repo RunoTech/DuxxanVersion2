@@ -149,7 +149,7 @@ export default function Community() {
     enabled: true
   });
 
-  const upcomingRaffles = (upcomingRafflesData as any)?.data || [];
+  const upcomingRaffles = Array.isArray(upcomingRafflesData) ? upcomingRafflesData : [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -1331,8 +1331,14 @@ export default function Community() {
 
         {activeTab === 'upcoming' && (
           <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-black dark:text-white">Gelecek Çekilişler</h2>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-2">
+                <Trophy className="h-6 w-6 text-[#FFC929]" />
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Gelecek Çekilişler</h2>
+                <Badge variant="secondary" className="bg-[#FFC929]/20 text-[#FFC929] border border-[#FFC929]/30">
+                  {upcomingRaffles.length}
+                </Badge>
+              </div>
             </div>
 
             {rafflesLoading ? (
