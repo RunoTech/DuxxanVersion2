@@ -622,6 +622,23 @@ export const insertChannelSchema = createInsertSchema(channels).pick({
   description: true,
   categoryId: true,
 });
+export type InsertChannel = z.infer<typeof insertChannelSchema>;
+
+// Channel likes schemas
+export const insertChannelLikeSchema = createInsertSchema(channelLikes).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertChannelLike = z.infer<typeof insertChannelLikeSchema>;
+export type ChannelLike = typeof channelLikes.$inferSelect;
+
+// Channel favorites schemas
+export const insertChannelFavoriteSchema = createInsertSchema(channelFavorites).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertChannelFavorite = z.infer<typeof insertChannelFavoriteSchema>;
+export type ChannelFavorite = typeof channelFavorites.$inferSelect;
 
 export const insertChannelSubscriptionSchema = createInsertSchema(channelSubscriptions).pick({
   channelId: true,

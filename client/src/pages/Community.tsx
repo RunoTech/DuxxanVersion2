@@ -97,6 +97,7 @@ export default function Community() {
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
+  const [favoriteChannels, setFavoriteChannels] = useState<any[]>([]);
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
