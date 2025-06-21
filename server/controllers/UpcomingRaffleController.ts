@@ -40,10 +40,10 @@ export class UpcomingRaffleController extends BaseController {
         .where(eq(upcomingRaffles.isActive, true))
         .orderBy(desc(upcomingRaffles.createdAt));
 
-      return this.success(res, raffles);
+      return res.json(raffles);
     } catch (error) {
       console.error('Error fetching upcoming raffles:', error);
-      return this.error(res, 'Failed to fetch upcoming raffles', 500);
+      return res.status(500).json({ error: 'Failed to fetch upcoming raffles' });
     }
   }
 
@@ -118,11 +118,11 @@ export class UpcomingRaffleController extends BaseController {
       const { action } = req.body;
       
       if (isNaN(raffleId)) {
-        return this.error(res, 'Invalid raffle ID', 400);
+        return res.status(400).json({ error: 'Invalid raffle ID' });
       }
 
       if (!action || !['add', 'remove'].includes(action)) {
-        return this.error(res, 'Invalid action. Must be "add" or "remove"', 400);
+        return res.status(400).json({ error: 'Invalid action. Must be "add" or "remove"' });
       }
 
       // Update interested count based on action
@@ -140,7 +140,7 @@ export class UpcomingRaffleController extends BaseController {
         });
 
       if (result.length === 0) {
-        return this.error(res, 'Raffle not found', 404);
+        return res.status(404).json({ error: 'Raffle not found' });
       }
 
       console.log(`Raffle ${raffleId} interested count updated to: ${result[0].interestedCount} (action: ${action})`);
@@ -153,7 +153,7 @@ export class UpcomingRaffleController extends BaseController {
       });
     } catch (error) {
       console.error('Error toggling reminder:', error);
-      return this.error(res, 'Failed to toggle reminder', 500);
+      return res.status(500).json({ error: 'Failed to toggle reminder' });
     }
   }
 
