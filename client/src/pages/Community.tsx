@@ -70,7 +70,7 @@ const RaffleCard = ({ raffle }: { raffle: any }) => {
   const countdown = useCountdown(raffle.startDate);
 
   return (
-    <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden w-full max-w-sm mx-auto">
+    <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden w-full">
       <CardHeader className="p-3 sm:p-4">
         <div className="flex justify-between items-start mb-3 gap-2">
           <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
@@ -1527,7 +1527,7 @@ export default function Community() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {upcomingRaffles.map((raffle: any) => (
                   <RaffleCard key={raffle.id} raffle={raffle} />
                 ))}
