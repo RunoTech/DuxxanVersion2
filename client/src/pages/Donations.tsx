@@ -214,7 +214,7 @@ export default function Donations() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-4 sm:py-6 lg:py-8 transition-colors duration-200">
+    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
         <div className="mb-6">
@@ -222,88 +222,61 @@ export default function Donations() {
         </div>
 
         {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8">
-          <div className="w-full lg:w-auto">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">DUXXAN Bağış Platformu</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Vakıflar, Dernekler ve Bireysel Bağışçılar İçin Blockchain Tabanlı Şeffaf Platform
             </p>
           </div>
-          <div className="flex gap-2 sm:gap-3 mt-4 lg:mt-0 w-full lg:w-auto">
-            <Link href="/create-donation" className="w-full lg:w-auto">
-              <Button className="w-full lg:w-auto">
-                <Heart className="w-4 h-4 mr-2" />
-                Kampanya Başlat
-              </Button>
-            </Link>
-          </div>
+          <Link href="/create-donation">
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
+              <Heart className="w-4 h-4 mr-2" />
+              Kampanya Başlat
+            </Button>
+          </Link>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-500 mb-1">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-3 md:p-4 text-center">
+              <div className="text-lg md:text-xl font-bold text-yellow-500 mb-2 break-words">
                 {getActiveCampaignsCount()}
               </div>
-              <div className="text-sm text-muted-foreground">Aktif Kampanyalar</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-xl font-bold text-orange-500 mb-1">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
                 {getTotalRaised().toLocaleString()} USDT
               </div>
-              <div className="text-sm text-muted-foreground">Toplanan Miktar</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-500 mb-1">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-orange-500 mb-2 break-words">
                 {getTotalDonors()}
               </div>
-              <div className="text-sm text-muted-foreground">Toplam Bağışçı</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-purple-500 mb-1">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-purple-500 mb-2 break-words">
                 {Array.isArray(donations) ? donations.length : 0}
               </div>
-              <div className="text-sm text-muted-foreground">Tüm Kampanyalar</div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Market Cap Display */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-foreground">
-                  <TrendingUp className="w-5 h-5 text-green-500" />
-                  Bağış Pazar Değeri
-                </h3>
-                <div className="text-3xl font-bold text-green-500 mb-2">
-                  {getTotalRaised().toLocaleString()} USDT
-                </div>
-                <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-green-500">↗ Canlı Güncellemeler</span>
-                  <span className="text-muted-foreground">Blockchain Doğrulanmış</span>
-                  <span className="text-muted-foreground">
-                    {donations.length} Toplam Kampanya
-                  </span>
-                </div>
-              </div>
-              <div className="hidden md:block w-32 h-16 bg-muted rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-8 h-8 text-green-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
 
         {/* Organization Types Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
@@ -316,7 +289,7 @@ export default function Donations() {
                   value={type.value}
                   className="flex items-center gap-2 text-gray-300 dark:text-gray-300 hover:text-white dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10"
                   style={{
-                    backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent',
+                    backgroundColor: activeTab === type.value ? '#EAB308' : 'transparent',
                     borderRadius: activeTab === type.value ? '8px' : '0px'
                   }}
                 >
@@ -327,34 +300,33 @@ export default function Donations() {
             })}
           </TabsList>
 
-          {/* Enhanced Filters */}
-          <Card className="bg-card border border-border mt-6">
+          {/* Filters */}
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-6">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-foreground">
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Filter className="w-5 h-5" />
-                Gelişmiş Filtreler ve Arama
+                Filtreler ve Arama
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Single Row - All filters in one line */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                 {/* Search */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     placeholder="Kampanya ara..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-10"
+                    className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white pl-10"
                   />
                 </div>
 
                 {/* Country Filter */}
                 <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
                     <SelectValue placeholder="🌍 Tüm Ülkeler" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                     {countries.map((country) => (
                       <SelectItem key={country.value} value={country.value}>
                         {country.label}
@@ -365,10 +337,10 @@ export default function Donations() {
 
                 {/* Category Filter */}
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="h-10">
-                    <SelectValue placeholder="📁 Tüm Kategoriler" />
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    <SelectValue placeholder="Tüm Kategoriler" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                     {categories.map((category) => (
                       <SelectItem key={category.value} value={category.value}>
                         {category.label}
@@ -379,12 +351,12 @@ export default function Donations() {
 
                 {/* Sort By */}
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="h-10">
-                    <SelectValue placeholder="🔄 En Yeni" />
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    <SelectValue placeholder="Sırala" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
                     <SelectItem value="newest">En Yeni</SelectItem>
-                    <SelectItem value="ending-soon">Yakında Bitiyor</SelectItem>
+                    <SelectItem value="ending-soon">Sona Erme</SelectItem>
                     <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
                     <SelectItem value="most-funded">En Çok Fonlanan</SelectItem>
                     <SelectItem value="most-donors">En Çok Bağışçı</SelectItem>
@@ -400,58 +372,78 @@ export default function Donations() {
                     setSelectedCategory('all');
                     setActiveTab('all');
                   }}
-                  className="h-10"
+                  className="h-11 bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
                 >
-                  Tümünü Temizle
+                  Filtreleri Temizle
                 </Button>
               </div>
             </CardContent>
           </Card>
 
+          {/* Results Info */}
+          <div className="flex justify-between items-center mb-6">
+            <p className="text-gray-600 dark:text-gray-400">
+              {filteredDonations.length} sonuç gösteriliyor ({donations.length} toplam kampanya)
+            </p>
+            {searchTerm && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                "{searchTerm}" için arama sonuçları
+              </p>
+            )}
+          </div>
+
           {/* Tab Content */}
           <TabsContent value="all" className="mt-6">
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-                  <Globe className="w-5 h-5 text-yellow-500" />
-                  Tüm Bağış Kampanyaları
-                </CardTitle>
-              </CardHeader>
-            </Card>
-            
             {/* Donations Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+              <div className="grid responsive-grid gap-4 md:gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-[450px] sm:h-[500px] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                  <Card key={i} className="responsive-card">
+                    <div className="h-48 loading-skeleton rounded-t-xl"></div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="h-4 loading-skeleton rounded w-3/4 mb-2"></div>
+                      <div className="h-3 loading-skeleton rounded w-full mb-4"></div>
+                      <div className="h-3 loading-skeleton rounded w-1/2"></div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             ) : filteredDonations.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+              <div className="grid responsive-grid gap-4 md:gap-6">
                 {filteredDonations.map((donation: any) => (
                   <DonationCard key={donation.id} donation={donation} />
                 ))}
               </div>
             ) : (
-              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
-                <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Henüz kampanya bulunmuyor
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Filtreleri değiştirerek daha fazla kampanya bulabilirsiniz.
-                </p>
-                <Button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSortBy('newest');
-                    setSelectedCountry('all');
-                    setSelectedCategory('all');
-                  }}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                >
-                  Filtreleri Temizle
-                </Button>
+              <Card className="duxxan-card text-center">
+                <CardContent className="p-12">
+                  <h3 className="text-xl font-bold mb-4">Kampanya Bulunamadı</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    {searchTerm || selectedCategory !== 'all' 
+                      ? 'Arama kriterlerinizi veya filtrelerinizi ayarlamayı deneyin'
+                      : 'DUXXAN\'da ilk bağış kampanyanızı oluşturun!'
+                    }
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
+                      <Button
+                        onClick={() => {
+                          setSearchTerm('');
+                          setSelectedCategory('all');
+                          setSelectedCountry('all');
+                        }}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
+                      >
+                        Filtreleri Temizle
+                      </Button>
+                    )}
+                    <Link href="/create-donation">
+                      <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
+                        Kampanya Oluştur
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
               </Card>
             )}
           </TabsContent>

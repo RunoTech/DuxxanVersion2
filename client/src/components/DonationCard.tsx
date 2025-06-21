@@ -159,128 +159,86 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <Link href={`/donations/${donation.id}`}>
-      <Card className="h-full bg-white dark:bg-gray-900 border-2 border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden min-h-[350px] sm:min-h-[380px]">
-        <CardContent className="p-3 h-full flex flex-col">
-          {/* Header with title and status */}
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex items-center gap-1 flex-1 min-w-0">
-              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-              <h3 className="text-gray-900 dark:text-white font-bold text-sm leading-tight truncate">{donation.title}</h3>
-            </div>
-            <div className="ml-1 flex-shrink-0">
+      <Card className="border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-xl transition-all duration-300 cursor-pointer bg-white dark:bg-gray-800 rounded-2xl overflow-hidden h-[560px] flex flex-col">
+        <div className="h-48 relative overflow-hidden">
+          <div className="w-full h-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+            <Heart className="w-16 h-16 text-white opacity-80" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent">
+            <div className="absolute top-4 left-4">
               {getStatusBadge()}
             </div>
+            <div className="absolute top-4 right-4">
+              {donation.category && (
+                <Badge className="bg-yellow-500 text-white font-semibold px-3 py-1">
+                  {donation.category}
+                </Badge>
+              )}
+            </div>
           </div>
-
-          {/* Description */}
-          <p className="text-gray-600 dark:text-gray-300 text-xs mb-2 line-clamp-2 leading-relaxed">
+        </div>
+      
+        <CardContent className="p-6 flex-1 flex flex-col">
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{donation.title}</h3>
+            <div className="flex items-center space-x-1">
+              <span className="text-yellow-500 text-sm">★</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">{donation.creator.rating}</span>
+            </div>
+          </div>
+          
+          <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed flex-1 line-clamp-3">
             {donation.description}
           </p>
 
-          {/* Badges */}
-          <div className="flex flex-wrap gap-2 mb-4 min-h-[32px]">
-            {getOrganizationBadge()}
-            {getCommissionBadge()}
-            {donation.category && (
-              <Badge className="bg-blue-600 text-white text-xs px-2 py-1 rounded-md font-medium">
-                {donation.category}
-              </Badge>
-            )}
-          </div>
-
-          {/* Progress Section */}
-          <div className="mb-4">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-500 dark:text-gray-400 text-sm">İlerleme</span>
-              <span className="text-gray-900 dark:text-white font-bold text-sm">
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">İlerleme</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">
                 {parseFloat(donation.currentAmount).toLocaleString()} / {parseFloat(donation.goalAmount).toLocaleString()} USDT
               </span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
-              <div 
-                className="bg-yellow-500 h-2 rounded-full transition-all duration-300" 
-                style={{ width: `${Math.min(progress, 100)}%` }}
-              ></div>
-            </div>
-            <div className="text-center text-gray-500 dark:text-gray-400 text-xs">
-              %{progress.toFixed(1)} fonlandı
+            <Progress value={progress} className="mb-2 h-2" />
+            <div className="text-xs text-gray-600 dark:text-gray-400">
+              {progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse hedef!'}
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4 lg:mb-5 text-center">
+          <div className="flex justify-between items-center mb-4 mt-auto">
             <div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{donation.donorCount}</div>
-              <div className="text-gray-500 dark:text-gray-400 text-xs">Bağışçılar</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {daysLeft > 0 ? daysLeft : 0}
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Hedef Miktar</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {parseFloat(donation.goalAmount).toLocaleString()} USDT
               </div>
-              <div className="text-gray-500 dark:text-gray-400 text-xs">Kalan Gün</div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {avgDonation > 0 ? avgDonation.toFixed(0) : '0'}
+            <div className="text-right">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                {daysLeft > 0 ? 'Bitiş' : 'Bitti'}
               </div>
-              <div className="text-gray-500 dark:text-gray-400 text-xs">Ort. Bağış</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
+              </div>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-auto space-y-3">
-            {daysLeft > 0 && progress < 100 ? (
-              <>
-                {/* Amount Input and Donate Button */}
-                <div className="donation-input-responsive">
-                  <Input
-                    type="number"
-                    placeholder="Miktar (USDT)"
-                    value={donationAmount}
-                    onChange={(e) => setDonationAmount(e.target.value)}
-                    className="bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg text-xs px-2 py-2"
-                    min="1"
-                    step="1"
-                  />
-                  <Button
-                    onClick={contribute}
-                    disabled={!isConnected || isContributing || !donationAmount}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-3 py-2 rounded-lg text-xs"
-                  >
-                    Bağış Yap
-                  </Button>
-                </div>
+          <div className="mt-auto space-y-4">
+            <Button
+              onClick={contribute}
+              disabled={!isConnected || daysLeft <= 0}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl text-base"
+            >
+              Bağış Yap
+            </Button>
 
-                {/* Quick Amount Buttons */}
-                <div className="donation-quick-grid">
-                  {[10, 25, 50, 100].map((amount) => (
-                    <Button
-                      key={amount}
-                      onClick={() => quickDonate(amount)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-md"
-                    >
-                      {amount} USDT
-                    </Button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <Badge className={`${progress >= 100 ? 'bg-green-600' : 'bg-gray-600'} text-white px-6 py-2 rounded-full text-sm`}>
-                  {progress >= 100 ? 'Hedef Tamamlandı' : 'Süresi Doldu'}
-                </Badge>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <div className="text-gray-500 dark:text-gray-400 text-sm truncate">
-              Oluşturan: <span className="text-gray-900 dark:text-white font-medium">{donation.creator.username}</span>
-            </div>
-            <div className="flex items-center space-x-1 flex-shrink-0">
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <span className="text-gray-900 dark:text-white text-sm font-medium">{donation.creator.rating}</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Bağışçı Sayısı: <span className="text-gray-900 dark:text-white font-bold">
+                  {donation.donorCount}
+                </span>
+              </span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Oluşturan: <span className="text-gray-900 dark:text-white font-medium">{donation.creator.username}</span>
+              </span>
             </div>
           </div>
       </CardContent>
