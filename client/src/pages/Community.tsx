@@ -501,75 +501,76 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-900 dark:to-gray-800 border border-[#FFC929]/30 hover:border-[#FFC929] hover:shadow-2xl hover:shadow-[#FFC929]/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden"
+      className="group bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-48 flex flex-col"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      <CardHeader className="pb-4 bg-gradient-to-r from-[#FFC929]/10 to-[#FFC929]/20 dark:from-[#FFC929]/10 dark:to-[#FFC929]/20">
+      {/* Header Section */}
+      <CardHeader className="p-4 flex-shrink-0">
         <div className="flex justify-between items-start">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-14 w-14 ring-2 ring-white/50 shadow-lg">
+          <div className="flex items-center space-x-3">
+            <Avatar className="h-10 w-10">
               <AvatarImage src={`/api/placeholder/48/48`} />
-              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-lg">
-                {channel.name.charAt(0).toUpperCase()}
+              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-sm">
+                Y
               </AvatarFallback>
             </Avatar>
-            <div>
-              <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-[#FFC929] dark:group-hover:text-[#FFC929] transition-colors">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-base font-bold text-white truncate">
                 {channel.name}
               </CardTitle>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">@{channel.creator}</p>
+              <p className="text-xs text-gray-400 truncate">
+                @{channel.creator?.username || channel.creator?.walletAddress?.slice(0, 8) || 'user_44c417'}
+              </p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 flex-wrap">
-            <Badge className="bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929] border-0 px-3 py-1 text-xs font-semibold rounded-full">
-              {channel.categoryName || 'Genel'}
+          <div className="flex items-center space-x-1 flex-shrink-0">
+            <Badge className="bg-[#FFC929] text-black px-2 py-0.5 text-xs font-bold rounded-full">
+              {channel.categoryName || 'Elektronik'}
             </Badge>
-            {channel.country && (
-              <Badge variant="outline" className="text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 rounded-full">
-                {countries.find(c => c.value === channel.country)?.label || channel.country}
-              </Badge>
-            )}
-            {isOwner && (
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 w-8 p-0 text-gray-400 hover:text-[#FFC929] hover:bg-[#FFC929]/10 dark:hover:bg-[#FFC929]/20 rounded-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditChannel(channel);
-                }}
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-            )}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 w-6 p-0 text-gray-400 hover:text-white transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ExternalLink className="h-3 w-3" />
+            </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 p-6">
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2 leading-relaxed">
-          {channel.description}
-        </p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-[#FFC929]/20 dark:bg-[#FFC929]/30 rounded-full">
-                <Users className="h-3 w-3 text-[#B8860B] dark:text-[#FFC929]" />
+
+      {/* Content Section - Flexible */}
+      <CardContent className="flex-1 px-4 pb-4 flex flex-col justify-between">
+        <div className="flex-1">
+          <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed">
+            {channel.description || 'UI UX DESIGNER'}
+          </p>
+        </div>
+
+        {/* Fixed Bottom Section */}
+        <div className="flex justify-between items-center mt-4 pt-3">
+          <div className="flex items-center space-x-4 text-sm">
+            <div className="flex items-center space-x-1 text-gray-400">
+              <div className="w-4 h-4 bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                <Users className="h-2.5 w-2.5 text-[#B8860B]" />
               </div>
-              <span className="font-medium">{channel.subscriberCount}</span>
+              <span className="font-medium text-white text-xs">{channel.subscriberCount || 0}</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="p-1.5 bg-[#FFC929]/20 dark:bg-[#FFC929]/30 rounded-full">
-                <Trophy className="h-3 w-3 text-[#B8860B] dark:text-[#FFC929]" />
+            <div className="flex items-center space-x-1 text-gray-400">
+              <div className="w-4 h-4 bg-[#B8860B]/20 rounded-full flex items-center justify-center">
+                <DollarSign className="h-2.5 w-2.5 text-[#B8860B]" />
               </div>
-              <span className="font-medium">{channel.totalPrizes || 0} USDT</span>
+              <span className="font-medium text-white text-xs">{channel.totalPrizeAmount || 0} USDT</span>
             </div>
           </div>
           <Button
             size="sm"
-            variant={subscribedChannels.includes(channel.id) ? "secondary" : "outline"}
+            variant={subscribedChannels.includes(channel.id) ? "default" : "outline"}
             className={subscribedChannels.includes(channel.id) 
-              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-0 shadow-md rounded-full px-4 font-semibold" 
-              : "border-[#FFC929] text-[#B8860B] hover:bg-[#FFC929]/10 dark:border-[#FFC929] dark:text-[#FFC929] dark:hover:bg-[#FFC929]/20 rounded-full px-4 font-semibold"
+              ? "bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1 rounded-full text-xs h-6 border-0" 
+              : "border border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black font-semibold px-3 py-1 rounded-full text-xs h-6"
             }
             onClick={(e) => {
               e.stopPropagation();
@@ -577,15 +578,12 @@ export default function Community() {
             }}
           >
             {subscribedChannels.includes(channel.id) ? (
-              <>
-                <CheckCircle className="h-4 w-4 mr-1" />
-                Abone
-              </>
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="h-2.5 w-2.5" />
+                <span>Abone</span>
+              </div>
             ) : (
-              <>
-                <Plus className="h-4 w-4 mr-1" />
-                Abone Ol
-              </>
+              'Abone Ol'
             )}
           </Button>
         </div>
