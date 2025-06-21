@@ -178,7 +178,7 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
         </div>
       
-        <CardContent className="p-6 flex-1 flex flex-col">
+      <CardContent className="p-6 flex-1 flex flex-col">
           <div className="flex items-start justify-between mb-3">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{donation.title}</h3>
             <div className="flex items-center space-x-1">
@@ -240,7 +240,7 @@ export function DonationCard({ donation }: DonationCardProps) {
                 Oluşturan: <span className="text-gray-900 dark:text-white font-medium">{donation.creator.username}</span>
               </span>
             </div>
-          </div>
+        </div>
       </CardContent>
     </Card>
     </Link>
