@@ -41,10 +41,10 @@ export class UpcomingRaffleController extends BaseController {
         .where(eq(upcomingRaffles.isActive, true))
         .orderBy(desc(upcomingRaffles.createdAt));
 
-      return res.json(raffles);
+      return this.sendSuccess(res, raffles);
     } catch (error) {
       console.error('Error fetching upcoming raffles:', error);
-      return res.status(500).json({ error: 'Failed to fetch upcoming raffles' });
+      return this.sendError(res, 'Failed to fetch upcoming raffles', 500);
     }
   }
 
@@ -54,7 +54,7 @@ export class UpcomingRaffleController extends BaseController {
       // Get user ID from session/auth
       const userId = req.session?.user?.id;
       if (!userId) {
-        return this.error(res, 'Authentication required', 401);
+        return this.sendError(res, 'Authentication required', 401);
       }
 
       // Validate request body
@@ -64,7 +64,7 @@ export class UpcomingRaffleController extends BaseController {
       });
 
       if (!validationResult.success) {
-        return this.error(res, 'Invalid input data', 400, validationResult.error.errors);
+        return this.sendError(res, 'Invalid input data', 400, validationResult.error.errors);
       }
 
       const raffleData = validationResult.data;
@@ -174,7 +174,7 @@ export class UpcomingRaffleController extends BaseController {
       const userId = req.session?.user?.id;
 
       if (!userId) {
-        return this.error(res, 'Authentication required', 401);
+        return this.sendError(res, 'Authentication required', 401);
       }
 
       // Check if the raffle exists and belongs to the user
@@ -184,11 +184,11 @@ export class UpcomingRaffleController extends BaseController {
         .where(eq(upcomingRaffles.id, raffleId));
 
       if (!raffle) {
-        return this.error(res, 'Upcoming raffle not found', 404);
+        return this.sendError(res, 'Upcoming raffle not found', 404);
       }
 
       if (raffle.creatorId !== userId) {
-        return this.error(res, 'Unauthorized to delete this raffle', 403);
+        return this.sendError(res, 'Unauthorized to delete this raffle', 403);
       }
 
       // Soft delete by setting isActive to false
@@ -197,10 +197,10 @@ export class UpcomingRaffleController extends BaseController {
         .set({ isActive: false })
         .where(eq(upcomingRaffles.id, raffleId));
 
-      return this.success(res, null, 'Upcoming raffle deleted successfully');
+      return this.sendSuccess(res, null, 'Upcoming raffle deleted successfully');
     } catch (error) {
       console.error('Error deleting upcoming raffle:', error);
-      return this.error(res, 'Failed to delete upcoming raffle', 500);
+      return this.sendError(res, 'Failed to delete upcoming raffle', 500);
     }
   }
 }
