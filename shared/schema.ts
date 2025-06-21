@@ -613,6 +613,7 @@ export const insertUpcomingRaffleSchema = createInsertSchema(upcomingRaffles).pi
   maxTickets: true,
   startDate: true,
   categoryId: true,
+  creatorId: true,
   channelId: true,
 }).extend({
   title: z.string()
