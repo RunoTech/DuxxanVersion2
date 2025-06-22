@@ -43,7 +43,7 @@ export function WalletConnectButton({
         <Button 
           size={size} 
           variant={variant}
-          className={`bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFD700] hover:to-[#FFC929] text-white ${className}`}
+          className={`bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white ${className}`}
         >
           {showIcon && <Wallet className="mr-2 h-4 w-4" />}
           Cüzdan Bağla

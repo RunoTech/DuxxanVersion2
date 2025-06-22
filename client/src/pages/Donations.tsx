@@ -1,483 +1,793 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DonationCard } from '@/components/DonationCard';
 import { WalletStatus } from '@/components/WalletStatus';
+import { AnimatedCard } from '@/components/ui/AnimatedCard';
+import { AnimatedList } from '@/components/ui/AnimatedList';
 import { Link } from 'wouter';
-import { 
-  Search, 
-  Filter, 
-  Globe,
-  Heart,
-  Target,
-  Users,
-  Calendar,
-  Plus,
-  TrendingUp,
-  Handshake,
-  Shield,
-  Zap
-} from 'lucide-react';
-
-// New Modern Donation Card Component
-function ModernDonationCard({ donation }: { donation: any }) {
-  const progress = (parseFloat(donation.currentAmount) / parseFloat(donation.goalAmount)) * 100;
-  const endDate = new Date(donation.endDate);
-  const timeLeft = endDate.getTime() - Date.now();
-  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
-
-  const formatCurrency = (value: string | number) => {
-    const num = parseFloat(value.toString());
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  };
-
-  const getUrgencyLevel = () => {
-    if (progress < 25) return { color: 'red', label: 'Acil', icon: '🚨' };
-    if (progress < 50) return { color: 'orange', label: 'Önemli', icon: '⚡' };
-    if (progress < 75) return { color: 'blue', label: 'İlerliyor', icon: '📈' };
-    return { color: 'green', label: 'Hedefte', icon: '🎯' };
-  };
-
-  const urgency = getUrgencyLevel();
-
-  return (
-    <Card className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-emerald-400/50 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      {/* Top Accent Bar */}
-      <div className="h-1 bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500"></div>
-      
-      <CardHeader className="p-5 pb-3">
-        {/* Header Row */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Avatar className="h-12 w-12 ring-2 ring-emerald-100 dark:ring-emerald-900">
-                <AvatarImage src="/api/placeholder/48/48" />
-                <AvatarFallback className="bg-emerald-500 text-white font-bold">
-                  {donation.creator?.username?.charAt(0).toUpperCase() || 'D'}
-                </AvatarFallback>
-              </Avatar>
-              {donation.creator?.organizationVerified && (
-                <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-1">
-                  <Shield className="h-3 w-3 text-white" />
-                </div>
-              )}
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight mb-1">
-                {donation.title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600 dark:text-gray-400 text-sm">
-                  @{donation.creator?.username || 'anonim'}
-                </span>
-                {donation.creator?.organizationType && (
-                  <Badge variant="secondary" className="text-xs">
-                    {donation.creator.organizationType}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col items-end gap-1">
-            <Badge className={`bg-${urgency.color}-100 text-${urgency.color}-700 border-${urgency.color}-200`}>
-              {urgency.icon} {urgency.label}
-            </Badge>
-            <Badge variant="outline" className="text-xs">
-              {donation.category || 'Bağış'}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-4">
-          {donation.description}
-        </p>
-
-        {/* Progress Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              İlerleme: {formatCurrency(donation.currentAmount)} / {formatCurrency(donation.goalAmount)} USDT
-            </span>
-            <span className="text-sm font-bold text-emerald-600">{progress.toFixed(1)}%</span>
-          </div>
-          
-          <div className="relative">
-            <Progress value={progress} className="h-3 bg-gray-100 dark:bg-gray-700">
-              <div 
-                className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-700 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </Progress>
-            {progress >= 100 && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-bold text-white">✓ Tamamlandı</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-5 pt-0">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Users className="h-4 w-4 text-blue-500" />
-              <span className="text-lg font-bold text-blue-600">{donation.donorCount}</span>
-            </div>
-            <span className="text-xs text-gray-600 dark:text-gray-400">Bağışçı</span>
-          </div>
-          
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Calendar className="h-4 w-4 text-[#FFB800]" />
-              <span className="text-lg font-bold text-[#FFB800]">
-                {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
-              </span>
-            </div>
-            <span className="text-xs text-gray-600 dark:text-gray-400">Kalan</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="space-y-3">
-          {/* Quick Donation Amounts */}
-          <div className="grid grid-cols-3 gap-2">
-            {['10', '25', '50'].map((amount) => (
-              <Button
-                key={amount}
-                variant="outline"
-                size="sm"
-                className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/20 text-xs"
-              >
-                ${amount}
-              </Button>
-            ))}
-          </div>
-          
-          {/* Main Actions */}
-          <div className="flex gap-2">
-            <Button 
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-              disabled={progress >= 100 || daysLeft <= 0}
-            >
-              <Heart className="h-4 w-4 mr-2" />
-              Bağışla
-            </Button>
-            <Link href={`/donations/${donation.id}`}>
-              <Button variant="outline" className="border-emerald-400 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20">
-                Detay
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="flex items-center justify-center gap-4 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Shield className="h-3 w-3" />
-            <span>Güvenli</span>
-          </div>
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Zap className="h-3 w-3" />
-            <span>Hızlı</span>
-          </div>
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Heart className="h-3 w-3" />
-            <span>Şeffaf</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
+import { Search, Filter, TrendingUp, Building2, Users, Globe, Heart, Award, Clock, MapPin, Star, Shield, Dice6, PlayCircle } from 'lucide-react';
 
 export default function Donations() {
+  const { isConnected } = useWallet();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCountry, setSelectedCountry] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [activeTab, setActiveTab] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showAllCountries, setShowAllCountries] = useState(false);
 
-  const { data: donations = [], isLoading } = useQuery({
+  // Fetch donations with optimized caching
+  const { data: donationsResponse, isLoading } = useQuery({
     queryKey: ['/api/donations'],
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    enabled: true,
+    retry: 0 // No retries for faster loading
   });
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ['/api/donation-categories'],
-  });
+  const donations = (donationsResponse as any)?.data || [];
 
-  const countries = [
-    { code: 'TR', name: 'Türkiye', flag: '🇹🇷' },
-    { code: 'US', name: 'Amerika', flag: '🇺🇸' },
-    { code: 'GB', name: 'İngiltere', flag: '🇬🇧' },
-    { code: 'DE', name: 'Almanya', flag: '🇩🇪' },
-    { code: 'FR', name: 'Fransa', flag: '🇫🇷' },
+  // Organization types and countries
+  const organizationTypes = [
+    { value: 'all', label: 'Tüm Türler', icon: Globe },
+    { value: 'countries', label: 'Ülkeler', icon: MapPin },
+    { value: 'foundation', label: 'Vakıflar', icon: Building2 },
+    { value: 'association', label: 'Dernekler', icon: Users },
+    { value: 'individual', label: 'Bireysel', icon: Heart },
   ];
 
-  const filteredDonations = useMemo(() => {
-    if (!Array.isArray(donations)) return [];
-    
-    return donations
-      .filter((donation: any) => {
-        const matchesSearch = donation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            donation.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || donation.category === selectedCategory;
-        const matchesCountry = selectedCountry === 'all' || donation.country === selectedCountry;
-        
-        return matchesSearch && matchesCategory && matchesCountry;
-      })
-      .sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'ending-soon':
-            return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-          case 'highest-goal':
-            return parseFloat(b.goalAmount) - parseFloat(a.goalAmount);
-          case 'most-funded':
-            return parseFloat(b.currentAmount) - parseFloat(a.currentAmount);
-          case 'most-donors':
-            return b.donorCount - a.donorCount;
-          case 'urgent':
-            const progressA = (parseFloat(a.currentAmount) / parseFloat(a.goalAmount)) * 100;
-            const progressB = (parseFloat(b.currentAmount) / parseFloat(b.goalAmount)) * 100;
-            return progressA - progressB;
-          default:
-            return new Date(b.createdAt || b.id).getTime() - new Date(a.createdAt || a.id).getTime();
-        }
-      });
-  }, [donations, searchTerm, selectedCategory, selectedCountry, sortBy]);
+  const countries = [
+    { value: 'all', label: '🌍 Tüm Ülkeler' },
+    { value: 'TUR', label: '🇹🇷 Türkiye' },
+    { value: 'USA', label: '🇺🇸 Amerika' },
+    { value: 'GER', label: '🇩🇪 Almanya' },
+    { value: 'FRA', label: '🇫🇷 Fransa' },
+    { value: 'GBR', label: '🇬🇧 İngiltere' },
+    { value: 'JPN', label: '🇯🇵 Japonya' },
+    { value: 'CHN', label: '🇨🇳 Çin' },
+    { value: 'IND', label: '🇮🇳 Hindistan' },
+    { value: 'RUS', label: '🇷🇺 Rusya' },
+    { value: 'BRA', label: '🇧🇷 Brezilya' },
+    { value: 'CAN', label: '🇨🇦 Kanada' },
+    { value: 'AUS', label: '🇦🇺 Avustralya' },
+    { value: 'MEX', label: '🇲🇽 Meksika' },
+    { value: 'ITA', label: '🇮🇹 İtalya' },
+    { value: 'ESP', label: '🇪🇸 İspanya' },
+    { value: 'KOR', label: '🇰🇷 Güney Kore' },
+    { value: 'NLD', label: '🇳🇱 Hollanda' },
+    { value: 'SAU', label: '🇸🇦 Suudi Arabistan' },
+    { value: 'CHE', label: '🇨🇭 İsviçre' },
+    { value: 'SWE', label: '🇸🇪 İsveç' },
+    { value: 'NOR', label: '🇳🇴 Norveç' },
+    { value: 'DNK', label: '🇩🇰 Danimarka' },
+    { value: 'FIN', label: '🇫🇮 Finlandiya' },
+    { value: 'BEL', label: '🇧🇪 Belçika' },
+    { value: 'AUT', label: '🇦🇹 Avusturya' },
+    { value: 'POL', label: '🇵🇱 Polonya' },
+    { value: 'GRC', label: '🇬🇷 Yunanistan' },
+    { value: 'PRT', label: '🇵🇹 Portekiz' },
+    { value: 'CZE', label: '🇨🇿 Çek Cumhuriyeti' },
+    { value: 'HUN', label: '🇭🇺 Macaristan' },
+    { value: 'SVK', label: '🇸🇰 Slovakya' },
+    { value: 'SVN', label: '🇸🇮 Slovenya' },
+    { value: 'HRV', label: '🇭🇷 Hırvatistan' },
+    { value: 'BGR', label: '🇧🇬 Bulgaristan' },
+    { value: 'ROU', label: '🇷🇴 Romanya' },
+    { value: 'LTU', label: '🇱🇹 Litvanya' },
+    { value: 'LVA', label: '🇱🇻 Letonya' },
+    { value: 'EST', label: '🇪🇪 Estonya' },
+    { value: 'MLT', label: '🇲🇹 Malta' },
+    { value: 'CYP', label: '🇨🇾 Kıbrıs' },
+    { value: 'LUX', label: '🇱🇺 Lüksemburg' },
+    { value: 'ISL', label: '🇮🇸 İzlanda' },
+    { value: 'IRL', label: '🇮🇪 İrlanda' },
+    { value: 'NZL', label: '🇳🇿 Yeni Zelanda' },
+    { value: 'SGP', label: '🇸🇬 Singapur' },
+    { value: 'ARE', label: '🇦🇪 BAE' },
+    { value: 'QAT', label: '🇶🇦 Katar' },
+    { value: 'KWT', label: '🇰🇼 Kuveyt' },
+    { value: 'BHR', label: '🇧🇭 Bahreyn' },
+    { value: 'OMN', label: '🇴🇲 Umman' },
+    { value: 'JOR', label: '🇯🇴 Ürdün' },
+    { value: 'LBN', label: '🇱🇧 Lübnan' },
+    { value: 'ISR', label: '🇮🇱 İsrail' },
+    { value: 'EGY', label: '🇪🇬 Mısır' },
+    { value: 'ZAF', label: '🇿🇦 Güney Afrika' },
+    { value: 'MAR', label: '🇲🇦 Fas' },
+    { value: 'TUN', label: '🇹🇳 Tunus' },
+    { value: 'DZA', label: '🇩🇿 Cezayir' },
+    { value: 'NGA', label: '🇳🇬 Nijerya' },
+    { value: 'KEN', label: '🇰🇪 Kenya' },
+    { value: 'GHA', label: '🇬🇭 Gana' },
+    { value: 'ETH', label: '🇪🇹 Etiyopya' },
+    { value: 'THA', label: '🇹🇭 Tayland' },
+    { value: 'VNM', label: '🇻🇳 Vietnam' },
+    { value: 'MYS', label: '🇲🇾 Malezya' },
+    { value: 'IDN', label: '🇮🇩 Endonezya' },
+    { value: 'PHL', label: '🇵🇭 Filipinler' },
+    { value: 'BGD', label: '🇧🇩 Bangladeş' },
+    { value: 'PAK', label: '🇵🇰 Pakistan' },
+    { value: 'LKA', label: '🇱🇰 Sri Lanka' },
+    { value: 'NPL', label: '🇳🇵 Nepal' },
+    { value: 'AFG', label: '🇦🇫 Afganistan' },
+    { value: 'IRN', label: '🇮🇷 İran' },
+    { value: 'IRQ', label: '🇮🇶 Irak' },
+    { value: 'SYR', label: '🇸🇾 Suriye' },
+    { value: 'YEM', label: '🇾🇪 Yemen' },
+    { value: 'ARG', label: '🇦🇷 Arjantin' },
+    { value: 'CHL', label: '🇨🇱 Şili' },
+    { value: 'COL', label: '🇨🇴 Kolombiya' },
+    { value: 'PER', label: '🇵🇪 Peru' },
+    { value: 'VEN', label: '🇻🇪 Venezuela' },
+    { value: 'ECU', label: '🇪🇨 Ekvador' },
+    { value: 'URY', label: '🇺🇾 Uruguay' },
+    { value: 'PRY', label: '🇵🇾 Paraguay' },
+    { value: 'BOL', label: '🇧🇴 Bolivya' },
+    { value: 'UKR', label: '🇺🇦 Ukrayna' },
+    { value: 'BLR', label: '🇧🇾 Belarus' },
+    { value: 'MDA', label: '🇲🇩 Moldova' },
+    { value: 'GEO', label: '🇬🇪 Gürcistan' },
+    { value: 'ARM', label: '🇦🇲 Ermenistan' },
+    { value: 'AZE', label: '🇦🇿 Azerbaycan' },
+    { value: 'KAZ', label: '🇰🇿 Kazakistan' },
+    { value: 'UZB', label: '🇺🇿 Özbekistan' },
+    { value: 'KGZ', label: '🇰🇬 Kırgızistan' },
+    { value: 'TJK', label: '🇹🇯 Tacikistan' },
+    { value: 'TKM', label: '🇹🇲 Türkmenistan' },
+    { value: 'MNG', label: '🇲🇳 Moğolistan' },
+  ];
 
-  const getStats = () => {
-    const activeDonations = Array.isArray(donations) ? donations.filter((d: any) => new Date(d.endDate) > new Date()) : [];
-    const totalRaised = Array.isArray(donations) ? donations.reduce((sum: number, donation: any) => sum + parseFloat(donation.currentAmount), 0) : 0;
-    const totalDonors = Array.isArray(donations) ? donations.reduce((sum: number, donation: any) => sum + donation.donorCount, 0) : 0;
-    
-    return { activeDonations: activeDonations.length, totalRaised, totalDonors };
+  const categories = [
+    { value: 'all', label: 'Tüm Kategoriler' },
+    { value: 'health', label: 'Sağlık' },
+    { value: 'education', label: 'Eğitim' },
+    { value: 'disaster', label: 'Afet Yardımı' },
+    { value: 'environment', label: 'Çevre' },
+    { value: 'animal', label: 'Hayvan Hakları' },
+    { value: 'community', label: 'Toplum' },
+    { value: 'technology', label: 'Teknoloji' },
+    { value: 'general', label: 'Genel' },
+  ];
+
+  // Filter and sort donations
+  const filteredDonations = (Array.isArray(donations) ? donations : [])
+    .filter((donation: any) => {
+      const matchesSearch = donation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           donation.description.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesType = activeTab === 'all' || 
+                         (activeTab === 'unlimited' && donation.isUnlimited) ||
+                         (activeTab === 'timed' && !donation.isUnlimited) ||
+                         (donation.creator?.organizationType === activeTab);
+      
+      const matchesCountry = selectedCountry === 'all' || donation.country === selectedCountry;
+      const matchesCategory = selectedCategory === 'all' || donation.category === selectedCategory;
+      
+      return matchesSearch && matchesType && matchesCountry && matchesCategory;
+    })
+    .sort((a: any, b: any) => {
+      switch (sortBy) {
+        case 'ending-soon':
+          if (!a.endDate && !b.endDate) return 0;
+          if (!a.endDate) return 1;
+          if (!b.endDate) return -1;
+          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        case 'highest-goal':
+          return parseFloat(b.goalAmount) - parseFloat(a.goalAmount);
+        case 'most-funded':
+          return parseFloat(b.currentAmount) - parseFloat(a.currentAmount);
+        case 'most-donors':
+          return b.donorCount - a.donorCount;
+        default: // newest
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+
+  const getActiveCampaignsCount = () => {
+    const now = new Date();
+    return donations.filter((donation: any) => new Date(donation.endDate) > now && donation.isActive).length;
   };
 
-  const stats = getStats();
+  const getTotalRaised = () => {
+    return donations
+      .filter((donation: any) => donation.isActive)
+      .reduce((sum: number, donation: any) => sum + parseFloat(donation.currentAmount), 0);
+  };
+
+  const getTotalDonors = () => {
+    return donations
+      .filter((donation: any) => donation.isActive)
+      .reduce((sum: number, donation: any) => sum + donation.donorCount, 0);
+  };
+
+  const getAverageContribution = () => {
+    const totalRaised = getTotalRaised();
+    const totalDonors = getTotalDonors();
+    return totalDonors > 0 ? totalRaised / totalDonors : 0;
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900/20">
-      {/* Modern Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600">
-        <div className="absolute inset-0 bg-black/5"></div>
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }}></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <div className="flex justify-center mb-6">
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4">
-                <Handshake className="h-12 w-12 text-white" />
-              </div>
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-4">Hayat Değiştiren Bağışlar</h1>
-            <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto">
-              İyilik yapmak için bir araya geliyoruz. Her bağış bir umut, her destek bir değişim.
-            </p>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Target className="h-6 w-6 text-white" />
-                  <div className="text-3xl font-bold text-white">{stats.activeDonations}</div>
-                </div>
-                <div className="text-white/80">Aktif Kampanya</div>
-              </div>
-              <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Heart className="h-6 w-6 text-white" />
-                  <div className="text-3xl font-bold text-white">${stats.totalRaised.toLocaleString()}</div>
-                </div>
-                <div className="text-white/80">Toplanan Bağış</div>
-              </div>
-              <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Users className="h-6 w-6 text-white" />
-                  <div className="text-3xl font-bold text-white">{stats.totalDonors.toLocaleString()}</div>
-                </div>
-                <div className="text-white/80">Destek Veren</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Wallet Status */}
-        <div className="mb-8">
+        <div className="mb-6">
           <WalletStatus />
         </div>
 
-        {/* Action Bar */}
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">DUXXAN Bağış Platformu</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Vakıflar, Dernekler ve Bireysel Bağışçılar İçin Blockchain Tabanlı Şeffaf Platform
+            </p>
+          </div>
           <Link href="/create-donation">
-            <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold shadow-lg hover:shadow-xl px-6 py-3">
-              <Plus className="h-5 w-5 mr-2" />
-              Yeni Kampanya Başlat
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
+              <Heart className="w-4 h-4 mr-2" />
+              Kampanya Başlat
             </Button>
           </Link>
-          
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {filteredDonations.length} kampanya gösteriliyor
-          </div>
         </div>
 
-        {/* Compact Icon Filters */}
-        <div className="mb-8 flex flex-wrap items-center gap-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-200 dark:border-gray-700">
-          {/* Search */}
-          <div className="relative flex-1 min-w-[250px]">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Kampanya ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-gray-200 dark:border-gray-700 focus:border-emerald-500 focus:ring-emerald-500 h-10"
-            />
-          </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-3 md:p-4 text-center">
+              <div className="text-lg md:text-xl font-bold text-yellow-500 mb-2 break-words">
+                {getActiveCampaignsCount()}
+              </div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Kampanyalar</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
+                {getTotalRaised().toLocaleString()} USDT
+              </div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplanan Miktar</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-orange-500 mb-2 break-words">
+                {getTotalDonors()}
+              </div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplam Bağışçı</div>
+            </CardContent>
+          </Card>
 
-          {/* Category Filter */}
-          <div className="relative">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50/50">
-                <Filter className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                <SelectItem value="health">Sağlık</SelectItem>
-                <SelectItem value="education">Eğitim</SelectItem>
-                <SelectItem value="environment">Çevre</SelectItem>
-                <SelectItem value="disaster">Afet</SelectItem>
-                <SelectItem value="animal">Hayvan</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-4 md:p-6 text-center">
+              <div className="text-xl md:text-2xl font-bold text-purple-500 mb-2 break-words">
+                {Array.isArray(donations) ? donations.length : 0}
+              </div>
+              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Tüm Kampanyalar</div>
+            </CardContent>
+          </Card>
+        </div>
 
-          {/* Country Filter */}
-          <div className="relative">
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50/50">
-                <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
-                {countries.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
-                    {country.flag} {country.name}
-                  </SelectItem>
+
+
+        {/* Organization Types Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1 h-12 rounded-lg">
+            {organizationTypes.map((type) => {
+              const IconComponent = type.icon;
+              return (
+                <TabsTrigger 
+                  key={type.value} 
+                  value={type.value}
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white data-[state=active]:text-black dark:data-[state=active]:text-black data-[state=active]:shadow-none border-0 h-10 rounded-md transition-colors"
+                  style={{
+                    backgroundColor: activeTab === type.value ? '#FFC929' : 'transparent',
+                    borderRadius: '6px'
+                  }}
+                >
+                  <IconComponent className="w-4 h-4" />
+                  <span className="hidden md:inline text-sm font-medium">{type.label}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          {/* Filters */}
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-6">
+            <CardHeader className="pb-6">
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Filter className="w-5 h-5" />
+                Filtreler ve Arama
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                  <Input
+                    placeholder="Kampanya ara..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-10 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20"
+                  />
+                </div>
+
+                {/* Country Filter */}
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
+                    <SelectValue placeholder="🌍 Tüm Ülkeler" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white max-h-60 overflow-y-auto">
+                    {countries.map((country) => (
+                      <SelectItem key={country.value} value={country.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
+                        {country.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Category Filter */}
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
+                    <SelectValue placeholder="📁 Tüm Kategoriler" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    {categories.map((category) => (
+                      <SelectItem key={category.value} value={category.value} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Sort By */}
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
+                    <SelectValue placeholder="🔄 Sırala" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Yeni</SelectItem>
+                    <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">Sona Erme</SelectItem>
+                    <SelectItem value="highest-goal" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Yüksek Hedef</SelectItem>
+                    <SelectItem value="most-funded" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Çok Fonlanan</SelectItem>
+                    <SelectItem value="most-donors" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">En Çok Bağışçı</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Clear Filters */}
+                <Button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSortBy('newest');
+                    setSelectedCountry('all');
+                    setSelectedCategory('all');
+                    setActiveTab('all');
+                  }}
+                  className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold transition-all duration-200"
+                >
+                  Filtreleri Temizle
+                </Button>
+              </div>
+              
+              {/* Results Info inside filter card */}
+              <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  {filteredDonations.length} sonuç gösteriliyor ({donations.length} toplam kampanya)
+                </p>
+                {searchTerm && (
+                  <p className="text-sm text-gray-500 dark:text-gray-500">
+                    "{searchTerm}" için arama sonuçları
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tab Content */}
+          <TabsContent value="all" className="mt-6">
+            {/* Donations Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden w-full animate-pulse">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-3"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-full mb-2"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2 mb-4"></div>
+                      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </CardContent>
+                  </Card>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
+              </div>
+            ) : filteredDonations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDonations.map((donation: any) => (
+                  <DonationCard key={donation.id} donation={donation} />
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+                <CardContent className="p-12">
+                  <Heart className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Kampanya Bulunamadı</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    {searchTerm || selectedCategory !== 'all' 
+                      ? 'Arama kriterlerinizi veya filtrelerinizi ayarlamayı deneyin'
+                      : 'DUXXAN\'da ilk bağış kampanyanızı oluşturun!'
+                    }
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
+                      <Button
+                        onClick={() => {
+                          setSearchTerm('');
+                          setSelectedCategory('all');
+                          setSelectedCountry('all');
+                        }}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200"
+                      >
+                        Filtreleri Temizle
+                      </Button>
+                    )}
+                    <Link href="/create-donation">
+                      <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200">
+                        Kampanya Oluştur
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
 
-          {/* Sort Filter */}
-          <div className="relative">
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50/50">
-                <TrendingUp className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">En Yeni</SelectItem>
-                <SelectItem value="urgent">En Acil</SelectItem>
-                <SelectItem value="ending-soon">Sona Erme</SelectItem>
-                <SelectItem value="highest-goal">En Yüksek Hedef</SelectItem>
-                <SelectItem value="most-funded">En Çok Bağış</SelectItem>
-                <SelectItem value="most-donors">En Çok Destekçi</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <TabsContent value="foundation" className="mt-6">
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <Building2 className="w-5 h-5 text-blue-500" />
+                  Vakıf Kampanyaları
+                  <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">%2 Komisyon</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
+                    <Shield className="w-3 h-3 mr-1" />
+                    Doğrulanmış
+                  </Badge>
+                </CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Doğrulanmış vakıflar tarafından yürütülen profesyonel bağış kampanyaları. 
+                  Sınırsız süre imkanı ve düşük komisyon oranı.
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <Link href="/create-raffle">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Çekiliş Oluştur
+                    </Button>
+                  </Link>
+                  <Link href="/raffles">
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Çekilişe Katıl
+                    </Button>
+                  </Link>
+                </div>
+              </CardHeader>
+            </Card>
+            
+            {/* Foundation Donations Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="h-[500px] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ) : filteredDonations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDonations.map((donation: any) => (
+                  <DonationCard key={donation.id} donation={donation} />
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
+                <Building2 className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Henüz vakıf kampanyası bulunmuyor
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Doğrulanmış vakıfların kampanyaları burada görünecek.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
 
-          {/* Clear Filters */}
-          {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all' || sortBy !== 'newest') && (
-            <Button
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedCategory('all');
-                setSelectedCountry('all');
-                setSortBy('newest');
-              }}
-              variant="outline"
-              size="sm"
-              className="h-10 px-3 border-emerald-400/50 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-            >
-              Temizle
-            </Button>
+          <TabsContent value="association" className="mt-6">
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <Users className="w-5 h-5 text-green-500" />
+                  Dernek Kampanyaları
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">%2 Komisyon</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
+                    <Shield className="w-3 h-3 mr-1" />
+                    Doğrulanmış
+                  </Badge>
+                </CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Sivil toplum kuruluşları ve dernekler tarafından organize edilen 
+                  toplumsal fayda odaklı bağış projeleri.
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <Link href="/create-raffle">
+                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Çekiliş Oluştur
+                    </Button>
+                  </Link>
+                  <Link href="/raffles">
+                    <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white">
+                      <Heart className="w-4 h-4 mr-2" />
+                      Çekilişe Katıl
+                    </Button>
+                  </Link>
+                </div>
+              </CardHeader>
+            </Card>
+            
+            {/* Association Donations Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ) : filteredDonations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDonations.map((donation: any) => (
+                  <DonationCard key={donation.id} donation={donation} />
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
+                <Users className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Henüz dernek kampanyası bulunmuyor
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Doğrulanmış derneklerin kampanyaları burada görünecek.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="individual" className="mt-6">
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <Heart className="w-5 h-5 text-red-500" />
+                  Bireysel Kampanyalar
+                  <Badge className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">%10 Komisyon</Badge>
+                  <Badge className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 ml-2">
+                    <Clock className="w-3 h-3 mr-1" />
+                    30 Gün Limit
+                  </Badge>
+                </CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Bireysel ihtiyaçlar ve acil durumlar için başlatılan kişisel bağış kampanyaları. 
+                  Maksimum 30 gün süre ile sınırlı.
+                </p>
+              </CardHeader>
+            </Card>
+            
+            {/* Individual Donations Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ) : filteredDonations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDonations.map((donation: any) => (
+                  <DonationCard key={donation.id} donation={donation} />
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
+                <Heart className="w-16 h-16 text-red-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Henüz bireysel kampanya bulunmuyor
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Bireysel bağış kampanyaları burada görünecek.
+                </p>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="countries" className="mt-6">
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <MapPin className="w-5 h-5 text-blue-500" />
+                  Ülke Bazlı Kampanyalar
+                  <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Küresel Destek</Badge>
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 ml-2">
+                    <Globe className="w-3 h-3 mr-1" />
+                    Dünya Çapında
+                  </Badge>
+                </CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Tüm dünyadan ülkelerin bağış kampanyaları ve çekilişleri. 
+                  Her ülkeden vakıf ve dernekler için özel alanlar.
+                </p>
+                
+
+              </CardHeader>
+            </Card>
+            
+            {/* Popular Countries - Compact Design */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-yellow-500" />
+                Popüler Ülkeler
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 mb-6">
+                {countries.slice(1, 9).map((country) => ( // Show only first 8 countries
+                  <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-2 sm:p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md min-h-[60px] flex flex-col justify-center">
+                      <div className="text-base sm:text-lg mb-1">{country.label.split(' ')[0]}</div>
+                      <div className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 line-clamp-2 leading-tight">
+                        {country.label.split(' ').slice(1).join(' ')}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              
+              {/* Show All Countries Button */}
+              <div className="text-center">
+                <Dialog open={showAllCountries} onOpenChange={setShowAllCountries}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-black dark:border-yellow-400 dark:text-yellow-400 dark:hover:bg-yellow-400 dark:hover:text-black transition-colors duration-200"
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Tüm Ülkeleri Göster ({countries.length - 1})
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+                    <DialogHeader className="sticky top-0 bg-white dark:bg-gray-900 z-10 pb-4 border-b border-gray-200 dark:border-gray-700">
+                      <DialogTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Globe className="w-5 h-5 text-yellow-500" />
+                        Tüm Ülkeler
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-y-auto max-h-[60vh] pt-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
+                        {countries.slice(1).map((country) => (
+                          <Link key={country.value} href={`/country/${country.value.toLowerCase()}`}>
+                            <div 
+                              className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:border-yellow-400 dark:hover:border-yellow-400 rounded-lg p-2 sm:p-3 text-center transition-all duration-200 cursor-pointer group hover:shadow-md hover:bg-gray-200 dark:hover:bg-gray-600 min-h-[80px] flex flex-col justify-center"
+                              onClick={() => setShowAllCountries(false)}
+                            >
+                              <div className="text-base sm:text-lg mb-1 text-gray-900 dark:text-white">{country.label.split(' ')[0]}</div>
+                              <div className="text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 line-clamp-2 leading-tight mb-1">
+                                {country.label.split(' ').slice(1).join(' ')}
+                              </div>
+                              <div className="text-xs text-gray-600 dark:text-gray-300">
+                                0 Kampanya
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+            
+            {/* Countries Donations Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ) : filteredDonations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDonations.map((donation: any) => (
+                  <DonationCard key={donation.id} donation={donation} />
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-12 text-center">
+                <MapPin className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Ülkeler arası kampanyalar başlıyor
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Dünya çapındaki vakıf ve derneklerin kampanyaları burada görünecek.
+                </p>
+                <div className="flex justify-center gap-4">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium transition-colors duration-200">
+                    <Globe className="w-4 h-4 mr-2" />
+                    İlk Küresel Kampanyayı Başlat
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
+
+        {/* Results Info */}
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-gray-600 dark:text-gray-400">
+            {filteredDonations.length} / {donations.length} kampanya gösteriliyor
+          </p>
+          {searchTerm && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              "{searchTerm}" için arama sonuçları
+            </p>
           )}
-
-          {/* Filter Info */}
-          <div className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
-            {filteredDonations.length} kampanya
-          </div>
         </div>
 
         {/* Donations Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse border-0 shadow-lg">
-                <div className="h-1 bg-gray-200 dark:bg-gray-700"></div>
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                    <div className="flex-1">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                    </div>
-                  </div>
+              <Card key={i} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden w-full animate-pulse">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
                   <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         ) : filteredDonations.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredDonations.map((donation: any) => (
-              <ModernDonationCard key={donation.id} donation={donation} />
+              <DonationCard key={donation.id} donation={donation} />
             ))}
           </div>
         ) : (
-          <Card className="text-center py-16 border-0 shadow-xl">
-            <CardContent>
-              <div className="flex justify-center mb-6">
-                <div className="bg-emerald-100 dark:bg-emerald-900/20 rounded-full p-6">
-                  <Heart className="h-12 w-12 text-emerald-600" />
-                </div>
-              </div>
-              <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">Kampanya Bulunamadı</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                {searchTerm || selectedCategory !== 'all' 
-                  ? 'Arama kriterlerinizi değiştirmeyi deneyin'
-                  : 'İlk yardım kampanyasını başlatan siz olun!'
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+            <CardContent className="p-12">
+              <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Kampanya Bulunamadı</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                {searchTerm 
+                  ? 'Arama kriterlerinizi ayarlamayı deneyin'
+                  : 'DUXXAN\'da anlamlı bir bağış kampanyası oluşturan ilk kişi olun!'
                 }
               </p>
               <div className="flex justify-center gap-4">
-                {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
+                {searchTerm && (
                   <Button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSelectedCategory('all');
-                      setSelectedCountry('all');
-                    }}
+                    onClick={() => setSearchTerm('')}
                     variant="outline"
-                    className="border-emerald-400 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                    className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-black dark:hover:text-black transition-colors duration-200"
                   >
-                    Filtreleri Temizle
+                    Aramayı Temizle
                   </Button>
                 )}
                 <Link href="/create-donation">
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium border-2 border-yellow-500 transition-colors duration-200">
                     Kampanya Başlat
                   </Button>
                 </Link>
@@ -485,6 +795,36 @@ export default function Donations() {
             </CardContent>
           </Card>
         )}
+
+        {/* Load More Button (if needed for pagination) */}
+        {filteredDonations.length > 0 && filteredDonations.length < donations.length && (
+          <div className="text-center mt-12">
+            <Button variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white">
+              Daha Fazla Kampanya Yükle
+            </Button>
+          </div>
+        )}
+
+        {/* Call to Action */}
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mt-12">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Bugün Bir Fark Yaratın</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+              Her bağış önemlidir. Cömert bağışçılar topluluğumuza katılın ve şeffaf, 
+              blockchain doğrulanmış katkılarla dünyada olumlu değişim yaratmaya yardımcı olun.
+            </p>
+            <div className="flex justify-center gap-4">
+              <Link href="/create-donation">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500">
+                  Kampanyanızı Başlatın
+                </Button>
+              </Link>
+              <Button variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-white">
+                Daha Fazla Öğren
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

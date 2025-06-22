@@ -830,26 +830,26 @@ export default function Community() {
         <div className="absolute inset-0 bg-black/20 backdrop-blur-3xl"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#FFC929]/20 to-[#FFB800]/20"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <div className="p-2 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30">
-                <Users className="h-6 w-6 text-white" />
+            <div className="inline-flex items-center gap-3 mb-6">
+              <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30">
+                <Users className="h-8 w-8 text-white" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-black text-white">
+              <h1 className="text-4xl md:text-5xl font-black text-white">
                 DUXXAN Topluluk
               </h1>
             </div>
             
-            <p className="text-base text-white/90 mb-6 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
               Kanallar oluşturun, gelecek çekilişleri duyurun ve küresel topluluğa katılın
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white dark:bg-gray-800 text-[#B8860B] dark:text-[#FFC929] hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all border dark:border-gray-600">
-                    <Plus className="h-4 w-4 mr-2" />
+                  <Button className="bg-white dark:bg-gray-800 text-[#B8860B] dark:text-[#FFC929] hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border dark:border-gray-600">
+                    <Plus className="h-5 w-5 mr-2" />
                     Kanal Oluştur
                   </Button>
                 </DialogTrigger>
@@ -857,8 +857,8 @@ export default function Community() {
               
               <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-6 py-2 rounded-lg shadow-lg">
-                    <Calendar className="h-4 w-4 mr-2" />
+                  <Button variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-3 rounded-xl shadow-lg">
+                    <Calendar className="h-5 w-5 mr-2" />
                     Çekiliş Duyuru
                   </Button>
                 </DialogTrigger>
