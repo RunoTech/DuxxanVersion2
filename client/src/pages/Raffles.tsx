@@ -26,6 +26,8 @@ import {
 
 // New Modern Raffle Card Component
 function ModernRaffleCard({ raffle }: { raffle: any }) {
+  console.log('Rendering raffle:', raffle); // Debug log
+  
   const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
   const endDate = new Date(raffle.endDate);
   const timeLeft = endDate.getTime() - Date.now();
@@ -145,13 +147,20 @@ export default function Raffles() {
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  const { data: raffles = [], isLoading } = useQuery({
+  const { data: rafflesResponse, isLoading } = useQuery({
     queryKey: ['/api/raffles/active'],
   });
 
-  const { data: categories = [] } = useQuery({
+  const { data: categoriesResponse } = useQuery({
     queryKey: ['/api/categories'],
   });
+
+  // Extract data from API response
+  const raffles = rafflesResponse?.data || [];
+  const categories = categoriesResponse?.data || [];
+  
+  console.log('Raffles data:', raffles); // Debug log
+  console.log('Categories data:', categories); // Debug log
 
   const countries = [
     { code: 'TR', name: 'Türkiye', flag: '🇹🇷' },
@@ -162,13 +171,14 @@ export default function Raffles() {
   ];
 
   const filteredRaffles = useMemo(() => {
+    console.log('Filtering raffles:', raffles); // Debug log
     if (!Array.isArray(raffles)) return [];
     
     return raffles
       .filter((raffle: any) => {
         const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || raffle.category?.id.toString() === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || raffle.categoryId?.toString() === selectedCategory;
         const matchesCountry = selectedCountry === 'all' || raffle.country === selectedCountry;
         
         return matchesSearch && matchesCategory && matchesCountry;
@@ -190,9 +200,9 @@ export default function Raffles() {
   }, [raffles, searchTerm, selectedCategory, selectedCountry, sortBy]);
 
   const getStats = () => {
-    const activeRaffles = Array.isArray(raffles) ? raffles.filter((r: any) => new Date(r.endDate) > new Date()) : [];
-    const totalPrizePool = Array.isArray(raffles) ? raffles.reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0) : 0;
-    const totalTicketsSold = Array.isArray(raffles) ? raffles.reduce((sum: number, raffle: any) => sum + raffle.ticketsSold, 0) : 0;
+    const activeRaffles = raffles.filter((r: any) => new Date(r.endDate) > new Date());
+    const totalPrizePool = raffles.reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0);
+    const totalTicketsSold = raffles.reduce((sum: number, raffle: any) => sum + raffle.ticketsSold, 0);
     
     return { activeRaffles: activeRaffles.length, totalPrizePool, totalTicketsSold };
   };
@@ -274,7 +284,7 @@ export default function Raffles() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                {Array.isArray(categories) && categories.map((category: any) => (
+                {categories.map((category: any) => (
                   <SelectItem key={category.id} value={category.id.toString()}>
                     {category.name}
                   </SelectItem>
