@@ -11,7 +11,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { ShareModal } from '@/components/ShareModal';
 import { Link } from 'wouter';
-import { Users, Gift, Clock, Target, DollarSign, Ticket, Share2 } from 'lucide-react';
+import { Users, Gift, Clock, Target, DollarSign, Ticket, Share2, Calendar } from 'lucide-react';
 import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 // Helper function to format numbers
@@ -61,20 +61,20 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   const getStatusBadge = () => {
     if (raffle.ticketsSold >= raffle.maxTickets) {
       return (
-        <Badge className="bg-red-600 text-white px-1.5 py-0.5 text-xs font-bold rounded-full whitespace-nowrap">
+        <Badge className="bg-red-500 text-white text-xs font-medium px-2 py-1">
           Tamamlandı
         </Badge>
       );
     }
     if (daysLeft <= 0) {
       return (
-        <Badge className="bg-gray-600 text-white px-1.5 py-0.5 text-xs font-bold rounded-full whitespace-nowrap">
+        <Badge className="bg-gray-500 text-white text-xs font-medium px-2 py-1">
           Bitti
         </Badge>
       );
     }
     return (
-      <Badge className="bg-[#FFC929] text-black px-1.5 py-0.5 text-xs font-bold rounded-full whitespace-nowrap">
+      <Badge className="bg-emerald-500 text-white text-xs font-medium px-2 py-1">
         Aktif
       </Badge>
     );
@@ -158,114 +158,142 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <>
-      <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all rounded-lg overflow-hidden w-full h-[240px] flex flex-col">
-        <CardHeader className="p-2 flex-shrink-0">
-          <div className="flex justify-between items-start mb-2 gap-2">
-            <div className="flex items-center space-x-2 flex-1 min-w-0">
-              <Avatar className="h-6 w-6 flex-shrink-0">
+      <Card className="group bg-white dark:bg-gray-800/95 backdrop-blur-sm border border-gray-200/80 dark:border-gray-700/50 hover:border-[#FFC929]/60 transition-all duration-300 rounded-xl overflow-hidden shadow-sm hover:shadow-xl h-[320px] flex flex-col">
+        {/* Header Section */}
+        <CardHeader className="p-4 pb-3 flex-shrink-0 border-b border-gray-100 dark:border-gray-700/50">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <Avatar className="h-10 w-10 ring-2 ring-[#FFC929]/20">
                 <AvatarImage src={`/api/placeholder/48/48`} />
-                <AvatarFallback className="bg-[#FFC929] text-black font-bold text-xs">
+                <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-sm">
                   {raffle.creator?.username?.charAt(0).toUpperCase() || 'R'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <CardTitle className="text-gray-900 dark:text-white text-sm font-bold truncate">
+                <CardTitle className="text-gray-900 dark:text-white text-base font-bold truncate leading-tight">
                   {raffle.title}
                 </CardTitle>
-                <p className="text-gray-600 dark:text-gray-400 text-xs truncate">
+                <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
                   @{raffle.creator?.username || 'anonim'}
                 </p>
               </div>
             </div>
-            <div className="flex flex-col gap-1 flex-shrink-0">
-              <Badge className="bg-[#FFC929] text-black px-1.5 py-0.5 text-xs font-bold rounded-full whitespace-nowrap">
+            <div className="flex flex-col gap-1.5 items-end">
+              <Badge className="bg-[#FFC929] text-black text-xs font-semibold px-2.5 py-1">
                 {raffle.category?.name || 'Çekiliş'}
               </Badge>
               {getStatusBadge()}
             </div>
           </div>
           
-          <p className="text-gray-700 dark:text-gray-300 text-xs line-clamp-2 mb-2">
+          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mt-3 leading-relaxed">
             {raffle.description}
           </p>
         </CardHeader>
         
-        <CardContent className="p-2 pt-0 flex-1 flex flex-col">
-          <div className="space-y-1 mb-2">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
-                <Target className="h-3 w-3 text-[#FFC929] flex-shrink-0" />
-                <span className="text-xs">Ödül:</span>
+        {/* Content Section */}
+        <CardContent className="p-4 flex-1 flex flex-col justify-between">
+          {/* Prize and Ticket Info */}
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center">
+                  <Target className="h-4 w-4 text-black" />
+                </div>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Ödül</span>
               </div>
-              <span className="text-[#FFC929] font-bold text-sm truncate ml-2">
+              <span className="text-lg font-bold text-[#FFC929]">
                 {formatCurrency(raffle.prizeValue)} USDT
               </span>
             </div>
             
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
-                <DollarSign className="h-3 w-3 text-emerald-600 flex-shrink-0" />
-                <span className="text-xs">Bilet:</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <Ticket className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Bilet</span>
               </div>
-              <span className="text-emerald-600 font-bold text-sm truncate ml-2">
+              <span className="text-base font-semibold text-emerald-600">
                 {formatCurrency(raffle.ticketPrice)} USDT
               </span>
             </div>
             
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
-                <Ticket className="h-3 w-3 text-blue-600 flex-shrink-0" />
-                <span className="text-xs">Biletler:</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                  <Users className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Satış</span>
               </div>
-              <span className="text-blue-600 font-bold text-sm truncate ml-2">
+              <span className="text-base font-semibold text-blue-600">
                 {raffle.ticketsSold}/{raffle.maxTickets}
               </span>
             </div>
           </div>
           
-          <div className="mb-2">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-xs text-gray-600 dark:text-gray-400">Satış Oranı</span>
-              <span className="text-xs font-medium text-gray-900 dark:text-white">
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">İlerleme</span>
+              <span className="text-xs font-bold text-gray-900 dark:text-white">
                 {progress.toFixed(1)}%
               </span>
             </div>
-            <Progress value={progress} className="h-1" />
-          </div>
-          
-          <div className="flex space-x-2 mb-2">
-            <Input
-              type="number"
-              placeholder="Adet"
-              value={ticketQuantity}
-              onChange={(e) => setTicketQuantity(e.target.value)}
-              min="1"
-              max={raffle.maxTickets - raffle.ticketsSold}
-              className="flex-1 text-xs h-7 px-2"
+            <Progress 
+              value={progress} 
+              className="h-2 bg-gray-200 dark:bg-gray-700" 
             />
-            <Button
-              onClick={handleBuyTicket}
-              disabled={!isConnected || isPurchasing || raffle.ticketsSold >= raffle.maxTickets || daysLeft <= 0}
-              className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-3 py-1 text-xs h-7 relative z-10"
-            >
-              {isPurchasing ? 'Alınıyor...' : 'Al'}
-            </Button>
           </div>
           
-          <div className="flex gap-2 mt-auto">
-            <Link href={`/raffles/${raffle.id}`} className="flex-1">
-              <Button variant="outline" className="w-full border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black font-semibold text-xs h-7">
-                Detaylar
+          {/* Time Left */}
+          <div className="flex items-center gap-2 mb-4">
+            <Calendar className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {daysLeft > 0 ? `${daysLeft} gün kaldı` : 'Süresi doldu'}
+            </span>
+          </div>
+          
+          {/* Purchase Section */}
+          <div className="space-y-3 mt-auto">
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                placeholder="Adet"
+                value={ticketQuantity}
+                onChange={(e) => setTicketQuantity(e.target.value)}
+                min="1"
+                max={raffle.maxTickets - raffle.ticketsSold}
+                className="flex-1 h-9 text-sm border-gray-300 dark:border-gray-600 focus:border-[#FFC929] focus:ring-[#FFC929]/20"
+              />
+              <Button
+                onClick={handleBuyTicket}
+                disabled={!isConnected || isPurchasing || raffle.ticketsSold >= raffle.maxTickets || daysLeft <= 0}
+                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-4 h-9 text-sm shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                {isPurchasing ? 'Alınıyor...' : 'Al'}
               </Button>
-            </Link>
-            <Button 
-              onClick={() => setShowShareModal(true)}
-              variant="outline"
-              size="sm"
-              className="border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black px-1.5 py-1 h-7 w-7"
-            >
-              <Share2 className="h-3 w-3" />
-            </Button>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <Link href={`/raffles/${raffle.id}`} className="flex-1">
+                <Button 
+                  variant="outline" 
+                  className="w-full h-9 text-sm border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929] hover:text-black transition-all duration-200"
+                >
+                  Detaylar
+                </Button>
+              </Link>
+              <Button 
+                onClick={() => setShowShareModal(true)}
+                variant="outline"
+                size="sm"
+                className="h-9 w-9 p-0 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929] hover:text-black transition-all duration-200"
+              >
+                <Share2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

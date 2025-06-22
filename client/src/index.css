@@ -34,13 +34,19 @@
 /* Enhanced Grid Layout */
 .responsive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
 @media (min-width: 768px) {
   .responsive-grid {
     gap: 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   }
 }
 
@@ -75,20 +81,45 @@
   }
 }
 
-/* Better Button Z-Index */
+/* Better Button Z-Index and Layering */
 button {
   position: relative;
-  z-index: 10;
+  z-index: 20;
+}
+
+.card-content button {
+  position: relative;
+  z-index: 30;
 }
 
 /* Enhanced Card Styles */
 .enhanced-card {
   @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm transition-all duration-300;
+  position: relative;
+  z-index: 1;
 }
 
 .enhanced-card:hover {
   @apply shadow-lg border-[#FFC929]/30;
   transform: translateY(-2px);
+  z-index: 2;
+}
+
+/* Card Overlay Protection */
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* Button Container */
+.button-container {
+  position: relative;
+  z-index: 50;
+  background: transparent;
 }
 
 @layer base {
