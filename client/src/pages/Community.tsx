@@ -129,7 +129,7 @@ const RaffleCard = ({ raffle, isInterested, onToggleInterest }: {
               <Ticket className="h-3 w-3 text-[#FFC929] flex-shrink-0" />
               <span className="text-xs font-medium">Bilet:</span>
             </div>
-            <span className="text-gray-900 dark:text-white font-medium text-xs sm:text-sm truncate ml-2">
+            <span className="text-gray-900 dark:text-white font-medium text-xs truncate ml-2">
               {formatCurrency(raffle.ticketPrice)} USDT
             </span>
           </div>
@@ -139,7 +139,7 @@ const RaffleCard = ({ raffle, isInterested, onToggleInterest }: {
               <Hash className="h-3 w-3 text-[#FFC929] flex-shrink-0" />
               <span className="text-xs font-medium">Max:</span>
             </div>
-            <span className="text-gray-900 dark:text-white font-medium text-xs sm:text-sm truncate ml-2">
+            <span className="text-gray-900 dark:text-white font-medium text-xs truncate ml-2">
               {formatCurrency(raffle.maxTickets)}
             </span>
           </div>
@@ -176,25 +176,25 @@ const RaffleCard = ({ raffle, isInterested, onToggleInterest }: {
         <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-2 border border-gray-300 dark:border-gray-600 mt-auto">
           <div className="flex justify-center space-x-2">
             <div className="text-center flex-1 min-w-0">
-              <div className="text-[#FFC929] font-bold text-sm sm:text-base md:text-lg leading-tight">
+              <div className="text-[#FFC929] font-bold text-sm leading-tight">
                 {countdown.days.toString().padStart(2, '0')}
               </div>
               <div className="text-gray-600 dark:text-gray-400 text-xs leading-tight">Gün</div>
             </div>
             <div className="text-center flex-1 min-w-0">
-              <div className="text-[#FFC929] font-bold text-sm sm:text-base md:text-lg leading-tight">
+              <div className="text-[#FFC929] font-bold text-sm leading-tight">
                 {countdown.hours.toString().padStart(2, '0')}
               </div>
               <div className="text-gray-600 dark:text-gray-400 text-xs leading-tight">Saat</div>
             </div>
             <div className="text-center flex-1 min-w-0">
-              <div className="text-[#FFC929] font-bold text-sm sm:text-base md:text-lg leading-tight">
+              <div className="text-[#FFC929] font-bold text-sm leading-tight">
                 {countdown.minutes.toString().padStart(2, '0')}
               </div>
               <div className="text-gray-600 dark:text-gray-400 text-xs leading-tight">Dakika</div>
             </div>
             <div className="text-center flex-1 min-w-0">
-              <div className="text-[#FFC929] font-bold text-sm sm:text-base md:text-lg leading-tight">
+              <div className="text-[#FFC929] font-bold text-sm leading-tight">
                 {countdown.seconds.toString().padStart(2, '0')}
               </div>
               <div className="text-gray-600 dark:text-gray-400 text-xs leading-tight">Saniye</div>

@@ -107,8 +107,8 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <Link href={`/raffles/${raffle.id}`}>
-      <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[480px] flex flex-col hover:shadow-lg transition-all duration-300">
-        <div className="h-48 relative overflow-hidden">
+      <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[360px] flex flex-col hover:shadow-lg transition-all duration-300">
+        <div className="h-32 relative overflow-hidden">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
             alt={raffle.category.name}
@@ -123,7 +123,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
           </div>
         </div>
       
-      <CardContent className="flex-1 flex flex-col p-4">
+      <CardContent className="flex-1 flex flex-col p-3">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{raffle.title}</h3>
           <div className="flex items-center space-x-1">
