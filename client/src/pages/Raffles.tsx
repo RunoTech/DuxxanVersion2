@@ -253,89 +253,91 @@ export default function Raffles() {
           </div>
         </div>
 
-        {/* Modern Filters */}
-        <Card className="mb-8 border-0 shadow-lg bg-white dark:bg-gray-800">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-[#FFC929]" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Filtreler</h3>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Çekiliş ara..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-gray-200 dark:border-gray-700 focus:border-[#FFC929] focus:ring-[#FFC929]"
-                />
-              </div>
+        {/* Compact Icon Filters */}
+        <div className="mb-8 flex flex-wrap items-center gap-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-200 dark:border-gray-700">
+          {/* Search */}
+          <div className="relative flex-1 min-w-[250px]">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Çekiliş ara..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 border-gray-200 dark:border-gray-700 focus:border-[#FFC929] focus:ring-[#FFC929] h-10"
+            />
+          </div>
 
-              {/* Category */}
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:border-[#FFC929]">
-                  <SelectValue placeholder="Kategori" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                  {Array.isArray(categories) && categories.map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Category Filter */}
+          <div className="relative">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-[#FFC929] hover:bg-[#FFC929]/10">
+                <Filter className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                {Array.isArray(categories) && categories.map((category: any) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-              {/* Country */}
-              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:border-[#FFC929]">
-                  <Globe className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Ülke" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
-                  {countries.map((country) => (
-                    <SelectItem key={country.code} value={country.code}>
-                      {country.flag} {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Country Filter */}
+          <div className="relative">
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-[#FFC929] hover:bg-[#FFC929]/10">
+                <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
+                {countries.map((country) => (
+                  <SelectItem key={country.code} value={country.code}>
+                    {country.flag} {country.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-              {/* Sort */}
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:border-[#FFC929]">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Sırala" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">En Yeni</SelectItem>
-                  <SelectItem value="ending-soon">Sona Erme</SelectItem>
-                  <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
-                  <SelectItem value="most-tickets">En Popüler</SelectItem>
-                  <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* Sort Filter */}
+          <div className="relative">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-10 h-10 p-0 border-gray-200 dark:border-gray-700 hover:border-[#FFC929] hover:bg-[#FFC929]/10">
+                <TrendingUp className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">En Yeni</SelectItem>
+                <SelectItem value="ending-soon">Sona Erme</SelectItem>
+                <SelectItem value="highest-value">En Yüksek Ödül</SelectItem>
+                <SelectItem value="most-tickets">En Popüler</SelectItem>
+                <SelectItem value="lowest-price">En Düşük Fiyat</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-              {/* Clear */}
-              <Button
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                  setSelectedCountry('all');
-                  setSortBy('newest');
-                }}
-                variant="outline"
-                className="border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black"
-              >
-                Temizle
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Clear Filters */}
+          {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all' || sortBy !== 'newest') && (
+            <Button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setSelectedCountry('all');
+                setSortBy('newest');
+              }}
+              variant="outline"
+              size="sm"
+              className="h-10 px-3 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929] hover:text-black"
+            >
+              Temizle
+            </Button>
+          )}
+
+          {/* Filter Info */}
+          <div className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
+            {filteredRaffles.length} çekiliş
+          </div>
+        </div>
 
         {/* Raffles Grid */}
         {isLoading ? (
