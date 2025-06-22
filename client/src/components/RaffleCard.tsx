@@ -246,7 +246,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
             <Button
               onClick={handleBuyTicket}
               disabled={!isConnected || isPurchasing || raffle.ticketsSold >= raffle.maxTickets || daysLeft <= 0}
-              className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-3 py-1 text-xs h-7"
+              className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-3 py-1 text-xs h-7 relative z-10"
             >
               {isPurchasing ? 'Alınıyor...' : 'Al'}
             </Button>

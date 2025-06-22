@@ -243,7 +243,7 @@ export function DonationCard({ donation }: DonationCardProps) {
             <Button
               onClick={handleDonate}
               disabled={!isConnected || !donationAmount || parseFloat(donationAmount) <= 0}
-              className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-3 py-1 text-xs h-7"
+              className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-3 py-1 text-xs h-7 relative z-10"
             >
               Bağışla
             </Button>
