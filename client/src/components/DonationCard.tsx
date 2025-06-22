@@ -306,6 +306,14 @@ export function DonationCard({ donation }: DonationCardProps) {
           </div>
         </div>
       </CardContent>
+      
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        title={donation.title}
+        description={donation.description}
+        shareUrl={`${window.location.origin}/donations/${donation.id}`}
+      />
     </Card>
   );
 }
