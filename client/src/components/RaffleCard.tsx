@@ -158,7 +158,7 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
 
   return (
     <>
-      <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929]/60 transition-all duration-300 rounded-lg overflow-hidden shadow-sm hover:shadow-lg h-[260px] flex flex-col">
+      <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929]/60 transition-all duration-300 rounded-lg overflow-hidden shadow-sm hover:shadow-lg h-[260px] flex flex-col relative z-10 hover:z-20">
         {/* Compact Header */}
         <CardHeader className="p-3 pb-2 flex-shrink-0">
           <div className="flex items-start gap-2 mb-2">
