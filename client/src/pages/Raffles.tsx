@@ -26,8 +26,6 @@ import {
 
 // New Modern Raffle Card Component
 function ModernRaffleCard({ raffle }: { raffle: any }) {
-  console.log('Rendering raffle:', raffle); // Debug log
-  
   const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
   const endDate = new Date(raffle.endDate);
   const timeLeft = endDate.getTime() - Date.now();
@@ -51,7 +49,7 @@ function ModernRaffleCard({ raffle }: { raffle: any }) {
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute top-4 left-4 flex gap-2">
             <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
-              {raffle.category?.name || 'Çekiliş'}
+              {categories.find(c => c.id === raffle.categoryId)?.name || 'Çekiliş'}
             </Badge>
             {progress >= 80 && (
               <Badge className="bg-red-500/80 text-white border-0 backdrop-blur-sm animate-pulse">
@@ -68,10 +66,10 @@ function ModernRaffleCard({ raffle }: { raffle: any }) {
               <Avatar className="h-6 w-6 ring-2 ring-white/30">
                 <AvatarImage src="/api/placeholder/32/32" />
                 <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
-                  {raffle.creator?.username?.charAt(0).toUpperCase() || 'R'}
+                  {raffle.creator?.username?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-white/90 text-sm">@{raffle.creator?.username || 'anonim'}</span>
+              <span className="text-white/90 text-sm">@{raffle.creator?.username || 'duxxan_admin'}</span>
             </div>
           </div>
 
@@ -159,8 +157,7 @@ export default function Raffles() {
   const raffles = rafflesResponse?.data || [];
   const categories = categoriesResponse?.data || [];
   
-  console.log('Raffles data:', raffles); // Debug log
-  console.log('Categories data:', categories); // Debug log
+
 
   const countries = [
     { code: 'TR', name: 'Türkiye', flag: '🇹🇷' },
@@ -171,7 +168,6 @@ export default function Raffles() {
   ];
 
   const filteredRaffles = useMemo(() => {
-    console.log('Filtering raffles:', raffles); // Debug log
     if (!Array.isArray(raffles)) return [];
     
     return raffles
