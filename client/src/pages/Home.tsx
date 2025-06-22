@@ -18,7 +18,8 @@ import {
   Zap,
   Star,
   Award,
-  Sparkles
+  Sparkles,
+  Eye
 } from 'lucide-react';
 
 export default function Home() {
@@ -105,119 +106,126 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#FFC929] via-[#FFB800] to-[#FFA500] py-16 lg:py-24 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-20 h-20 border border-white rounded-full"></div>
-          <div className="absolute top-32 right-20 w-16 h-16 border border-white rounded-full"></div>
-          <div className="absolute bottom-20 left-32 w-12 h-12 border border-white rounded-full"></div>
-          <div className="absolute bottom-10 right-10 w-24 h-24 border border-white rounded-full"></div>
+      {/* Hero Section - Compact & Impactful */}
+      <section className="relative bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFA500] py-12 lg:py-16 overflow-hidden">
+        {/* Modern Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-8 left-8 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute top-16 right-16 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+          <div className="absolute bottom-12 left-1/4 w-20 h-20 bg-white rounded-full blur-xl"></div>
+          <div className="absolute bottom-8 right-8 w-28 h-28 bg-white rounded-full blur-3xl"></div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Animated Grid */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="grid grid-cols-12 grid-rows-8 h-full w-full">
+            {[...Array(96)].map((_, i) => (
+              <div key={i} className="border border-white"></div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            {/* Logo and Brand */}
-            <div className="inline-flex items-center gap-4 mb-8">
+            {/* Compact Logo */}
+            <div className="inline-flex items-center gap-3 mb-6">
               <div className="relative">
-                <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-                  <span className="text-3xl font-black bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">D</span>
+                <div className="w-14 h-14 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-xl">
+                  <span className="text-2xl font-black bg-gradient-to-r from-[#FFC929] to-[#FF8C00] bg-clip-text text-transparent">D</span>
                 </div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-3 h-3 text-white" />
                 </div>
               </div>
-              <div className="text-left">
-                <h1 className="text-5xl lg:text-7xl font-black text-white leading-none">
+              <div>
+                <h1 className="text-3xl lg:text-4xl font-black text-white leading-none tracking-tight">
                   DUXXAN
                 </h1>
-                <p className="text-xl text-white/90 font-semibold tracking-wider">
-                  BLOCKCHAIN PLATFORM
+                <p className="text-sm text-white/80 font-medium tracking-widest">
+                  BLOCKCHAIN
                 </p>
               </div>
             </div>
             
-            {/* Main Heading */}
-            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Blockchain Tabanlı<br />
-              <span className="relative">
-                Güvenli Platform
-                <Sparkles className="inline-block w-8 h-8 ml-2 text-white" />
+            {/* Powerful Headline */}
+            <h2 className="text-2xl lg:text-4xl font-bold text-white mb-4 leading-tight max-w-4xl mx-auto">
+              Geleceğin <span className="relative inline-block">
+                Dijital Platformu
+                <div className="absolute -bottom-1 left-0 right-0 h-1 bg-white/30 rounded-full"></div>
               </span>
             </h2>
             
-            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Şeffaf bağışlar, adil çekilişler ve güvenli blockchain teknolojisi ile desteklenen 
-              yeni nesil dijital platform. Dünya çapında güvenilir işlemler.
+            <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed font-medium">
+              Blockchain güvenliği ile şeffaf çekilişler, güvenilir bağışlar. 
+              <span className="block mt-1 text-white/80">Her işlem doğrulanabilir, her adım güvenli.</span>
             </p>
             
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
               {!isConnected ? (
-                <WalletConnectButton size="lg" className="bg-white text-[#B8860B] hover:bg-gray-100 font-bold px-8 py-4 text-lg rounded-xl shadow-2xl" />
+                <WalletConnectButton size="lg" className="bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white font-bold px-6 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105" />
               ) : (
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Link href="/create-raffle">
-                    <Button size="lg" className="bg-white text-[#B8860B] hover:bg-gray-100 font-bold px-8 py-4 text-lg rounded-xl shadow-2xl">
-                      <Gift className="h-6 w-6 mr-3" />
-                      Çekiliş Oluştur
+                    <Button size="lg" className="bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white font-bold px-6 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                      <Gift className="h-5 w-5 mr-2" />
+                      Çekiliş Başlat
                     </Button>
                   </Link>
                   
                   <Link href="/create-donation">
-                    <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-4 text-lg rounded-xl">
-                      <Heart className="h-6 w-6 mr-3" />
-                      Bağış Kampanyası
+                    <Button size="lg" variant="outline" className="border-2 border-white/80 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105">
+                      <Heart className="h-5 w-5 mr-2" />
+                      Bağış Yap
                     </Button>
                   </Link>
                 </div>
               )}
             </div>
             
-            {/* Quick Links */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/raffles">
-                <Button variant="ghost" className="text-white hover:bg-white/10 font-semibold">
-                  Çekilişleri Keşfet
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
-              
-              <Link href="/donations">
-                <Button variant="ghost" className="text-white hover:bg-white/10 font-semibold">
-                  Bağış Kampanyaları
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap justify-center items-center gap-6 text-white/70 text-sm">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                <span>Blockchain Güvenli</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                <span>%100 Şeffaf</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4" />
+                <span>Anında İşlem</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="py-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Platform İstatistikleri
+      {/* Statistics Section - Compact & Modern */}
+      <section className="py-12 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+              Güvenilir Rakamlar
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              DUXXAN topluluğunun büyüklüğü ve başarıları
+            <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+              Blockchain teknolojisiyle desteklenen şeffaf istatistikler
             </p>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {statistics.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <div key={index} className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl mb-4">
-                    <IconComponent className={`h-8 w-8 ${stat.color}`} />
+                <div key={index} className="text-center group">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#FFC929]/10 to-[#FFA500]/10 rounded-xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <IconComponent className={`h-6 w-6 ${stat.color}`} />
                   </div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                  <div className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <div className="text-xs lg:text-sm text-gray-600 dark:text-gray-400 font-medium">
                     {stat.label}
                   </div>
                 </div>
@@ -227,31 +235,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Neden DUXXAN?
+      {/* Features Section - Streamlined */}
+      <section className="py-16 lg:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Dijital Güvenin Yeni Çağı
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Blockchain teknolojisinin gücüyle desteklenen güvenli ve şeffaf platform özellikleri
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Her işlem blockchain'de kayıtlı, her adım doğrulanabilir
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {platformFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <Card key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden group hover:scale-105">
-                  <CardContent className="p-8 text-center">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                      <IconComponent className="h-8 w-8 text-white" />
+                <Card key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden group hover:scale-[1.02]">
+                  <CardContent className="p-6 text-center">
+                    <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                       {feature.description}
                     </p>
                   </CardContent>
@@ -331,31 +339,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 lg:py-32 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Bugün Başlayın
+      {/* Call to Action - Impactful & Compact */}
+      <section className="py-16 lg:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#FFC929] rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-[#FFA500] rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            Geleceğe Hazır mısın?
           </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            DUXXAN'a katılın ve blockchain teknolojisinin gücüyle güvenli, 
-            şeffaf işlemler gerçekleştirin. Topluluğumuzun bir parçası olun.
+          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto font-medium">
+            Blockchain'in gücüyle desteklenen yeni dijital deneyimi keşfet. 
+            <span className="block mt-1 text-[#FFC929]">Güvenli, şeffaf, adil.</span>
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/raffles">
-              <Button size="lg" className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-bold px-8 py-4 text-lg rounded-xl shadow-2xl">
-                <Gift className="h-6 w-6 mr-3" />
-                Çekilişleri Keşfet
+              <Button size="lg" className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFC929] text-black font-bold px-8 py-3 rounded-xl shadow-2xl hover:shadow-[#FFC929]/25 transition-all duration-300 hover:scale-105">
+                <Gift className="h-5 w-5 mr-2" />
+                Çekilişe Katıl
               </Button>
             </Link>
             
             <Link href="/donations">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 font-bold px-8 py-4 text-lg rounded-xl">
-                <Heart className="h-6 w-6 mr-3" />
-                Bağışları İncele
+              <Button size="lg" variant="outline" className="border-2 border-white/70 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl transition-all duration-300 hover:scale-105">
+                <Heart className="h-5 w-5 mr-2" />
+                Hayır Yap
               </Button>
             </Link>
+          </div>
+          
+          {/* Trust Badge */}
+          <div className="mt-8 inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm">
+            <Shield className="h-4 w-4 text-emerald-400" />
+            <span>Blockchain Güvencesi</span>
           </div>
         </div>
       </section>
