@@ -307,7 +307,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     server: httpServer, 
     path: '/ws',
     maxPayload: 1024 * 1024, // 1MB limit
-    perMessageDeflate: false // Disable compression to reduce CPU
+    perMessageDeflate: false, // Disable compression to reduce CPU
+    clientTracking: true,
+    skipUTF8Validation: true // Better performance
   });
   
   const clients = new Set<WebSocket>();
@@ -316,12 +318,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     clients.add(ws);
     console.log(`🔗 WebSocket connected. Total clients: ${clients.size}`);
     
-    // Set ping interval to keep connections alive
+    // Set ping interval to keep connections alive (reduced frequency)
     const pingInterval = setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.ping();
+        try {
+          ws.ping();
+        } catch (error) {
+          console.log('Ping failed, connection may be closed');
+          clearInterval(pingInterval);
+          clients.delete(ws);
+        }
       }
-    }, 30000); // 30 seconds
+    }, 60000); // 60 seconds - reduced frequency
     
     ws.on('close', () => {
       clients.delete(ws);
@@ -330,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     
     ws.on('error', (error) => {
-      console.error('WebSocket error:', error);
+      // Suppress error logging in iframe context
       clients.delete(ws);
       clearInterval(pingInterval);
     });

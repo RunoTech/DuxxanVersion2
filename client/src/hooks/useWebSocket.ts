@@ -17,8 +17,8 @@ export function useWebSocket() {
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.hostname;
-    const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
-    const wsUrl = `${protocol}//${host}:5000/ws`;
+    const port = window.location.port || '5000';
+    const wsUrl = `${protocol}//${host}:${port}/ws`;
     
     try {
       ws.current = new WebSocket(wsUrl);
@@ -73,9 +73,9 @@ export function useWebSocket() {
         setIsConnected(false);
         console.log('WebSocket disconnected');
         
-        // Schedule reconnection attempt with exponential backoff
-        if (reconnectAttempts.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
+        // Reduce reconnection attempts in iframe environment
+        if (reconnectAttempts.current < 2) {
+          const delay = 5000; // Fixed 5 second delay
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttempts.current++;
             connect();
@@ -84,7 +84,7 @@ export function useWebSocket() {
       };
 
       ws.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        console.warn('WebSocket connection may be restricted in iframe context');
         setIsConnected(false);
       };
     } catch (error) {
