@@ -139,8 +139,8 @@ function ModernDonationCard({ donation }: { donation: any }) {
           
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <Calendar className="h-4 w-4 text-orange-500" />
-              <span className="text-lg font-bold text-orange-600">
+              <Calendar className="h-4 w-4 text-[#FFB800]" />
+              <span className="text-lg font-bold text-[#FFB800]">
                 {daysLeft > 0 ? `${daysLeft}g` : 'Bitti'}
               </span>
             </div>

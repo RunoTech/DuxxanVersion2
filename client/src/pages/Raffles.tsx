@@ -208,7 +208,7 @@ export default function Raffles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Modern Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#FFC929] via-orange-400 to-yellow-500">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#FFC929] via-[#FFD700] to-[#FFB800]">
         <div className="absolute inset-0 bg-black/5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
@@ -248,7 +248,7 @@ export default function Raffles() {
         {/* Action Bar */}
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-8">
           <Link href="/create-raffle">
-            <Button className="bg-gradient-to-r from-[#FFC929] to-orange-400 hover:from-orange-400 hover:to-[#FFC929] text-black font-semibold shadow-lg hover:shadow-xl px-6 py-3">
+            <Button className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFC929] text-black font-semibold shadow-lg hover:shadow-xl px-6 py-3">
               <Plus className="h-5 w-5 mr-2" />
               Yeni Çekiliş Oluştur
             </Button>
@@ -395,7 +395,7 @@ export default function Raffles() {
                   </Button>
                 )}
                 <Link href="/create-raffle">
-                  <Button className="bg-gradient-to-r from-[#FFC929] to-orange-400 hover:from-orange-400 hover:to-[#FFC929] text-black font-semibold">
+                  <Button className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFC929] text-black font-semibold">
                     Çekiliş Oluştur
                   </Button>
                 </Link>
