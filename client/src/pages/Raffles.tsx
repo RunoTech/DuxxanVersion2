@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 // New Modern Raffle Card Component
-function ModernRaffleCard({ raffle }: { raffle: any }) {
+function ModernRaffleCard({ raffle, categories }: { raffle: any; categories: any[] }) {
   const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
   const endDate = new Date(raffle.endDate);
   const timeLeft = endDate.getTime() - Date.now();
@@ -362,7 +362,7 @@ export default function Raffles() {
         ) : filteredRaffles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredRaffles.map((raffle: any) => (
-              <ModernRaffleCard key={raffle.id} raffle={raffle} />
+              <ModernRaffleCard key={raffle.id} raffle={raffle} categories={categories} />
             ))}
           </div>
         ) : (

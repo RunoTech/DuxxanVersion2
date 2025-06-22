@@ -319,9 +319,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Set ping interval to keep connections alive
     const pingInterval = setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.ping();
+        try {
+          ws.ping();
+        } catch (error) {
+          console.error('Ping failed:', error);
+          clients.delete(ws);
+          clearInterval(pingInterval);
+        }
+      } else {
+        clearInterval(pingInterval);
       }
-    }, 30000); // 30 seconds
+    }, 45000); // 45 seconds
     
     ws.on('close', () => {
       clients.delete(ws);
@@ -333,6 +341,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('WebSocket error:', error);
       clients.delete(ws);
       clearInterval(pingInterval);
+    });
+
+    ws.on('pong', () => {
+      // Connection is alive
+    });
+
+    // Handle unexpected close events
+    ws.on('unexpected-response', (request, response) => {
+      console.error('WebSocket unexpected response:', response.statusCode);
     });
   });
 
