@@ -108,11 +108,11 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
   return (
     <Link href={`/raffles/${raffle.id}`}>
       <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[360px] flex flex-col hover:shadow-lg transition-all duration-300">
-        <div className="h-32 relative overflow-hidden">
+        <div className="h-16 relative overflow-hidden">
           <img 
             src={getCategoryImage(raffle.category.slug)} 
             alt={raffle.category.name}
-            className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
             <div className="absolute top-4 left-4">
