@@ -11,7 +11,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { blockchainService } from '@/lib/blockchain';
 import { ShareModal } from '@/components/ShareModal';
 import { Link } from 'wouter';
-import { Users, Heart, Clock, Target, DollarSign, Share2, Calendar, TrendingUp } from 'lucide-react';
+import { Users, Heart, Target, DollarSign, Share2, Calendar } from 'lucide-react';
 import { CONTRACT_FEES } from '@/lib/contractConstants';
 
 // Helper function to format numbers
@@ -65,20 +65,20 @@ export function DonationCard({ donation }: DonationCardProps) {
   const getStatusBadge = () => {
     if (progress >= 100) {
       return (
-        <Badge className="bg-emerald-500 text-white text-xs font-medium px-2 py-1">
+        <Badge className="bg-emerald-500 text-white text-xs px-2 py-0.5">
           Tamamlandı
         </Badge>
       );
     }
     if (daysLeft <= 0) {
       return (
-        <Badge className="bg-red-500 text-white text-xs font-medium px-2 py-1">
+        <Badge className="bg-red-500 text-white text-xs px-2 py-0.5">
           Bitti
         </Badge>
       );
     }
     return (
-      <Badge className="bg-blue-500 text-white text-xs font-medium px-2 py-1">
+      <Badge className="bg-blue-500 text-white text-xs px-2 py-0.5">
         Aktif
       </Badge>
     );
@@ -157,116 +157,105 @@ export function DonationCard({ donation }: DonationCardProps) {
 
   return (
     <>
-      <Card className="group bg-white dark:bg-gray-800/95 backdrop-blur-sm border border-gray-200/80 dark:border-gray-700/50 hover:border-emerald-400/60 transition-all duration-300 rounded-xl overflow-hidden shadow-sm hover:shadow-xl h-[320px] flex flex-col">
-        {/* Header Section */}
-        <CardHeader className="p-4 pb-3 flex-shrink-0 border-b border-gray-100 dark:border-gray-700/50">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <Avatar className="h-10 w-10 ring-2 ring-emerald-400/20">
-                <AvatarImage src={`/api/placeholder/48/48`} />
-                <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-bold text-sm">
-                  {donation.creator?.username?.charAt(0).toUpperCase() || 'D'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-gray-900 dark:text-white text-base font-bold truncate leading-tight">
-                  {donation.title}
-                </CardTitle>
-                <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
-                  @{donation.creator?.username || 'anonim'}
-                </p>
-              </div>
+      <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-emerald-400/60 transition-all duration-300 rounded-lg overflow-hidden shadow-sm hover:shadow-lg h-[260px] flex flex-col">
+        {/* Compact Header */}
+        <CardHeader className="p-3 pb-2 flex-shrink-0">
+          <div className="flex items-start gap-2 mb-2">
+            <Avatar className="h-8 w-8 ring-1 ring-emerald-400/30">
+              <AvatarImage src={`/api/placeholder/48/48`} />
+              <AvatarFallback className="bg-emerald-500 text-white font-bold text-xs">
+                {donation.creator?.username?.charAt(0).toUpperCase() || 'D'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-gray-900 dark:text-white text-sm font-bold truncate">
+                {donation.title}
+              </CardTitle>
+              <p className="text-gray-500 dark:text-gray-400 text-xs truncate">
+                @{donation.creator?.username || 'anonim'}
+              </p>
             </div>
-            <div className="flex flex-col gap-1.5 items-end">
-              <Badge className="bg-emerald-500 text-white text-xs font-semibold px-2.5 py-1">
+            <div className="flex flex-col gap-1 items-end">
+              <Badge className="bg-emerald-500 text-white text-xs px-2 py-0.5">
                 {donation.category || 'Bağış'}
               </Badge>
               {getStatusBadge()}
             </div>
           </div>
           
-          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mt-3 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 text-xs line-clamp-1">
             {donation.description}
           </p>
         </CardHeader>
         
-        {/* Content Section */}
-        <CardContent className="p-4 flex-1 flex flex-col justify-between">
-          {/* Goal and Current Info */}
-          <div className="space-y-3 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <Target className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Hedef</span>
+        {/* Compact Content */}
+        <CardContent className="p-3 pt-1 flex-1 flex flex-col">
+          {/* Goal Info - Compact */}
+          <div className="space-y-2 mb-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-1">
+                <Target className="h-3 w-3 text-emerald-600" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Hedef:</span>
               </div>
-              <span className="text-lg font-bold text-emerald-600">
+              <span className="text-sm font-bold text-emerald-600">
                 {formatCurrency(donation.goalAmount)} USDT
               </span>
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center">
-                  <DollarSign className="h-4 w-4 text-black" />
-                </div>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Toplanan</span>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-1">
+                <DollarSign className="h-3 w-3 text-[#FFC929]" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Toplanan:</span>
               </div>
-              <span className="text-base font-semibold text-[#FFC929]">
+              <span className="text-sm font-semibold text-[#FFC929]">
                 {formatCurrency(donation.currentAmount)} USDT
               </span>
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <Users className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Bağışçı</span>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-1">
+                <Users className="h-3 w-3 text-blue-600" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Bağışçı:</span>
               </div>
-              <span className="text-base font-semibold text-blue-600">
+              <span className="text-sm font-semibold text-blue-600">
                 {donation.donorCount}
               </span>
             </div>
           </div>
           
-          {/* Progress Bar */}
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">İlerleme</span>
+          {/* Progress */}
+          <div className="mb-3">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs text-gray-600 dark:text-gray-400">İlerleme</span>
               <span className="text-xs font-bold text-gray-900 dark:text-white">
                 {progress.toFixed(1)}%
               </span>
             </div>
-            <Progress 
-              value={progress} 
-              className="h-2 bg-gray-200 dark:bg-gray-700"
-            />
+            <Progress value={progress} className="h-1.5" />
           </div>
           
-          {/* Time Left */}
-          <div className="flex items-center gap-2 mb-4">
-            <Calendar className="h-4 w-4 text-gray-500" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+          {/* Time */}
+          <div className="flex items-center gap-1 mb-3">
+            <Calendar className="h-3 w-3 text-gray-500" />
+            <span className="text-xs text-gray-600 dark:text-gray-400">
               {daysLeft > 0 ? `${daysLeft} gün kaldı` : 'Süresi doldu'}
             </span>
           </div>
           
-          {/* Donation Section */}
-          <div className="space-y-3 mt-auto">
+          {/* Donation Section - Compact */}
+          <div className="space-y-2 mt-auto">
             <div className="flex gap-2">
               <Input
                 type="number"
                 placeholder="Miktar (USDT)"
                 value={donationAmount}
                 onChange={(e) => setDonationAmount(e.target.value)}
-                className="flex-1 h-9 text-sm border-gray-300 dark:border-gray-600 focus:border-emerald-500 focus:ring-emerald-500/20"
+                className="flex-1 h-8 text-xs"
               />
               <Button
                 onClick={handleDonate}
                 disabled={!isConnected || !donationAmount || parseFloat(donationAmount) <= 0 || isContributing}
-                className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold px-4 h-9 text-sm shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-3 h-8 text-xs"
               >
                 {isContributing ? 'Bağışlanıyor...' : 'Bağışla'}
               </Button>
@@ -277,7 +266,7 @@ export function DonationCard({ donation }: DonationCardProps) {
               <Link href={`/donations/${donation.id}`} className="flex-1">
                 <Button 
                   variant="outline" 
-                  className="w-full h-9 text-sm border-emerald-400/50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all duration-200"
+                  className="w-full h-8 text-xs border-emerald-400/50 text-emerald-600 hover:bg-emerald-500 hover:text-white"
                 >
                   Detaylar
                 </Button>
@@ -286,9 +275,9 @@ export function DonationCard({ donation }: DonationCardProps) {
                 onClick={() => setShowShareModal(true)}
                 variant="outline"
                 size="sm"
-                className="h-9 w-9 p-0 border-emerald-400/50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all duration-200"
+                className="h-8 w-8 p-0 border-emerald-400/50 text-emerald-600 hover:bg-emerald-500 hover:text-white"
               >
-                <Share2 className="h-4 w-4" />
+                <Share2 className="h-3 w-3" />
               </Button>
             </div>
           </div>
