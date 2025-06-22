@@ -106,96 +106,97 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Hero Section - Compact & Impactful */}
-      <section className="relative bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFA500] py-12 lg:py-16 overflow-hidden">
-        {/* Modern Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-8 left-8 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute top-16 right-16 w-24 h-24 bg-white rounded-full blur-2xl"></div>
-          <div className="absolute bottom-12 left-1/4 w-20 h-20 bg-white rounded-full blur-xl"></div>
-          <div className="absolute bottom-8 right-8 w-28 h-28 bg-white rounded-full blur-3xl"></div>
+      {/* Hero Section - Bold & Clear */}
+      <section className="relative bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#1a1a1a] py-16 lg:py-24 overflow-hidden">
+        {/* Golden Accent Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#FFC929] via-[#FFD700] to-[#FFC929]"></div>
+          <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-[#FFC929] via-[#FFD700] to-[#FFC929]"></div>
+          <div className="absolute top-20 right-20 w-64 h-64 bg-[#FFC929]/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#FFD700]/10 rounded-full blur-3xl"></div>
         </div>
         
-        {/* Animated Grid */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="grid grid-cols-12 grid-rows-8 h-full w-full">
-            {[...Array(96)].map((_, i) => (
-              <div key={i} className="border border-white"></div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            {/* Compact Logo */}
-            <div className="inline-flex items-center gap-3 mb-6">
+            {/* Bold Logo */}
+            <div className="inline-flex items-center gap-4 mb-8">
               <div className="relative">
-                <div className="w-14 h-14 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-xl">
-                  <span className="text-2xl font-black bg-gradient-to-r from-[#FFC929] to-[#FF8C00] bg-clip-text text-transparent">D</span>
+                <div className="w-20 h-20 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-2xl flex items-center justify-center shadow-2xl border-4 border-[#FFC929]/30">
+                  <span className="text-3xl font-black text-black">D</span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-3 h-3 text-white" />
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white">
+                  <CheckCircle className="w-4 h-4 text-white" />
                 </div>
               </div>
-              <div>
-                <h1 className="text-3xl lg:text-4xl font-black text-white leading-none tracking-tight">
+              <div className="text-left">
+                <h1 className="text-5xl lg:text-7xl font-black text-white leading-none tracking-tight">
                   DUXXAN
                 </h1>
-                <p className="text-sm text-white/80 font-medium tracking-widest">
-                  BLOCKCHAIN
+                <p className="text-xl text-[#FFC929] font-bold tracking-wider">
+                  BLOCKCHAIN PLATFORM
                 </p>
               </div>
             </div>
             
-            {/* Powerful Headline */}
-            <h2 className="text-2xl lg:text-4xl font-bold text-white mb-4 leading-tight max-w-4xl mx-auto">
-              Geleceğin <span className="relative inline-block">
-                Dijital Platformu
-                <div className="absolute -bottom-1 left-0 right-0 h-1 bg-white/30 rounded-full"></div>
+            {/* Powerful Headlines */}
+            <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-[#FFC929] to-[#FFD700] bg-clip-text text-transparent">
+                GÜVENİLİR
+              </span>
+              <br />
+              <span className="text-white">
+                DİJİTAL PLATFORM
               </span>
             </h2>
             
-            <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed font-medium">
-              Blockchain güvenliği ile şeffaf çekilişler, güvenilir bağışlar. 
-              <span className="block mt-1 text-white/80">Her işlem doğrulanabilir, her adım güvenli.</span>
+            <p className="text-xl lg:text-2xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed font-medium">
+              <span className="text-[#FFC929] font-bold">Blockchain teknolojisi</span> ile desteklenen şeffaf çekilişler ve güvenli bağışlar.
+              <br />
+              <span className="text-white font-semibold">Her işlem doğrulanabilir, her sonuç şeffaf.</span>
             </p>
             
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
+            {/* Clear Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               {!isConnected ? (
-                <WalletConnectButton size="lg" className="bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white font-bold px-6 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105" />
+                <WalletConnectButton 
+                  size="lg" 
+                  className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFC929] text-black font-black text-lg px-10 py-4 rounded-2xl shadow-2xl hover:shadow-[#FFC929]/50 transition-all duration-300 hover:scale-105 border-0" 
+                />
               ) : (
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Link href="/create-raffle">
-                    <Button size="lg" className="bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white font-bold px-6 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                      <Gift className="h-5 w-5 mr-2" />
-                      Çekiliş Başlat
+                    <Button size="lg" className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFC929] text-black font-black text-lg px-10 py-4 rounded-2xl shadow-2xl hover:shadow-[#FFC929]/50 transition-all duration-300 hover:scale-105 border-0">
+                      <Gift className="h-6 w-6 mr-3" />
+                      ÇEKİLİŞ BAŞLAT
                     </Button>
                   </Link>
                   
                   <Link href="/create-donation">
-                    <Button size="lg" variant="outline" className="border-2 border-white/80 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105">
-                      <Heart className="h-5 w-5 mr-2" />
-                      Bağış Yap
+                    <Button size="lg" className="bg-white/10 backdrop-blur-sm border-2 border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black font-black text-lg px-10 py-4 rounded-2xl transition-all duration-300 hover:scale-105">
+                      <Heart className="h-6 w-6 mr-3" />
+                      BAĞIŞ YAP
                     </Button>
                   </Link>
                 </div>
               )}
             </div>
             
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-6 text-white/70 text-sm">
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                <span>Blockchain Güvenli</span>
+            {/* Trust Indicators - More Prominent */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-[#FFC929]/20">
+                <Shield className="h-8 w-8 text-[#FFC929] mx-auto mb-2" />
+                <div className="text-white font-bold text-sm">BLOCKCHAIN GÜVENLİ</div>
+                <div className="text-gray-400 text-xs">%100 Güvenli İşlemler</div>
               </div>
-              <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4" />
-                <span>%100 Şeffaf</span>
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-[#FFC929]/20">
+                <Eye className="h-8 w-8 text-[#FFC929] mx-auto mb-2" />
+                <div className="text-white font-bold text-sm">TAMAMEN ŞEFFAF</div>
+                <div className="text-gray-400 text-xs">Her Adım Görünür</div>
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                <span>Anında İşlem</span>
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-[#FFC929]/20">
+                <Zap className="h-8 w-8 text-[#FFC929] mx-auto mb-2" />
+                <div className="text-white font-bold text-sm">ANINDA İŞLEM</div>
+                <div className="text-gray-400 text-xs">Hızlı ve Güvenilir</div>
               </div>
             </div>
           </div>
