@@ -750,6 +750,13 @@ export default function Community() {
       <div className="relative h-16 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
         
+        {/* Channel Name */}
+        <div className="absolute top-3 left-3">
+          <h3 className="text-gray-900 dark:text-gray-900 text-lg font-bold truncate max-w-[200px]">
+            {channel.name}
+          </h3>
+        </div>
+        
         {/* Actions */}
         <div className="absolute top-3 right-3">
           {isOwner && (
@@ -768,13 +775,8 @@ export default function Community() {
 
       {/* Content Section */}
       <div className="p-4 flex-1 flex flex-col">
-        {/* Channel Title */}
-        <h3 className="text-white dark:text-white text-lg font-bold mb-2 group-hover:text-gray-200 transition-colors">
-          {channel.name}
-        </h3>
-        
         {/* Description */}
-        <p className="text-gray-300 dark:text-gray-300 text-sm mb-3 line-clamp-1">
+        <p className="text-gray-300 dark:text-gray-300 text-sm mb-3 line-clamp-2">
           {channel.description || "Join our vibrant community of blockchain enthusiasts, developers, and investors"}
         </p>
 
