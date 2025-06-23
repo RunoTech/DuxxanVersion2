@@ -436,7 +436,7 @@ export default function CommunityDetail() {
             {/* Subscribe Button and Member Count */}
             <div className="flex flex-col items-end gap-3">
               <Button
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium shadow-lg"
+                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black px-6 py-2 rounded-lg font-medium shadow-lg"
               >
                 <Users className="h-4 w-4 mr-2" />
                 Abone Ol
