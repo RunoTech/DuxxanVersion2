@@ -597,27 +597,16 @@ export default function CommunityDetail() {
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {channel?.isDemo ? 'Demo Çekilişler' : 'Aktif ve Gelecek Çekilişler'}
+                    Aktif ve Gelecek Çekilişler
                   </CardTitle>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
                     {displayRaffles.length} çekiliş bulundu
                   </p>
                 </div>
               </div>
-              {channel?.isDemo && (
-                <Badge className="bg-[#FFC929]/10 text-[#FFC929] dark:text-[#FFC929] border border-[#FFC929]/30 dark:border-[#FFC929]/40 px-3 py-1 font-semibold">
-                  Örnek İçerik
-                </Badge>
-              )}
+
             </div>
-            {channel?.isDemo && (
-              <div className="mt-4 p-3 bg-[#FFC929]/10 dark:bg-[#FFC929]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg">
-                <p className="text-sm text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2 font-medium">
-                  <Info className="h-4 w-4" />
-                  Bu demo kanalında örnek çekiliş içerikleri görüntülenmektedir. Gerçek çekiliş değildir.
-                </p>
-              </div>
-            )}
+
           </CardHeader>
           <CardContent className="p-0">
             {rafflesLoading ? (
@@ -631,13 +620,9 @@ export default function CommunityDetail() {
               <div className="divide-y divide-gray-100 dark:divide-gray-700">
                 {displayRaffles.map((raffle: any, index: number) => (
                   <div
-                    key={channel?.isDemo ? `demo-${index}` : raffle.id}
-                    className={`p-6 transition-all duration-200 ${
-                      channel?.isDemo 
-                        ? 'cursor-default' 
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer'
-                    }`}
-                    onClick={() => !channel?.isDemo && setLocation(`/raffles/${raffle.id}`)}
+                    key={raffle.id}
+                    className="p-6 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
+                    onClick={() => setLocation(`/raffles/${raffle.id}`)}
                   >
                     <div className="flex items-start gap-4">
                       <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -651,11 +636,7 @@ export default function CommunityDetail() {
                               <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
                                 {raffle.title}
                               </h3>
-                              {channel?.isDemo && (
-                                <Badge variant="outline" className="text-xs bg-[#FFC929]/10 text-[#FFC929] border-[#FFC929]/30 font-semibold">
-                                  DEMO
-                                </Badge>
-                              )}
+
                               <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
                                 Aktif
                               </Badge>
@@ -671,10 +652,7 @@ export default function CommunityDetail() {
                               <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
                                 <Clock className="h-4 w-4" />
                                 <span>
-                                  {channel?.isDemo 
-                                    ? formatDate(raffle.endDate) 
-                                    : formatDate(raffle.startDate || raffle.createdAt)
-                                  }
+                                  {formatDate(raffle.startDate || raffle.createdAt)}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
@@ -689,48 +667,28 @@ export default function CommunityDetail() {
                           </div>
                           
                           <div className="flex flex-col items-end gap-2">
-                            {!channel?.isDemo ? (
-                              <Button 
-                                onClick={() => {
-                                  toast({
-                                    title: "Çekilişe Katılım",
-                                    description: "Çekilişe katılım işlemi başlatıldı.",
-                                  });
-                                }}
-                                size="sm" 
-                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                              >
-                                Katıl
-                              </Button>
-                            ) : (
-                              <div className="text-xs text-[#FFC929] dark:text-[#FFC929] bg-[#FFC929]/10 dark:bg-[#FFC929]/20 px-3 py-1 rounded-full font-medium">
-                                Önizleme
-                              </div>
-                            )}
+                            <Button 
+                              onClick={() => {
+                                toast({
+                                  title: "Çekilişe Katılım",
+                                  description: "Çekilişe katılım işlemi başlatıldı.",
+                                });
+                              }}
+                              size="sm" 
+                              className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                            >
+                              Katıl
+                            </Button>
                             
                             <div className="flex items-center gap-1">
-                              {!channel?.isDemo && <ExternalLink className="h-4 w-4 text-gray-400" />}
+                              <ExternalLink className="h-4 w-4 text-gray-400" />
                               <Star className="h-4 w-4 text-[#FFC929]" />
                               <span className="text-xs text-gray-500">{(Math.random() * 5).toFixed(1)}</span>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Progress Bar for Demo */}
-                        {channel?.isDemo && (
-                          <div className="mt-4">
-                            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
-                              <span>İlerleme</span>
-                              <span>{Math.floor(Math.random() * 80) + 20}%</span>
-                            </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div 
-                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] h-2 rounded-full shadow-sm" 
-                                style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   </div>
