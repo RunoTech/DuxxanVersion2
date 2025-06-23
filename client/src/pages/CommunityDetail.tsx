@@ -424,11 +424,11 @@ export default function CommunityDetail() {
                 
                 {/* Tags */}
                 <div className="flex gap-2">
-                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">BTC</Badge>
-                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">ETH</Badge>
-                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">Analiz</Badge>
-                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">DeFi</Badge>
-                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">NFT</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-white border-gray-300 dark:border-gray-600 px-3 py-1 text-xs">BTC</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-white border-gray-300 dark:border-gray-600 px-3 py-1 text-xs">ETH</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-white border-gray-300 dark:border-gray-600 px-3 py-1 text-xs">Analiz</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-white border-gray-300 dark:border-gray-600 px-3 py-1 text-xs">DeFi</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-800/80 dark:text-white border-gray-300 dark:border-gray-600 px-3 py-1 text-xs">NFT</Badge>
                 </div>
               </div>
             </div>
@@ -530,7 +530,7 @@ export default function CommunityDetail() {
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
                         <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white truncate flex-1 mr-2">Harley Davidson</h3>
                         <div className="flex items-center gap-1 flex-shrink-0">
-                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          <Star className="h-3 w-3 text-[#FFC929] fill-current" />
                           <span className="text-gray-900 dark:text-white text-xs font-medium">5.0</span>
                         </div>
                       </div>
