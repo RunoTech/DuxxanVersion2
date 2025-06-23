@@ -969,11 +969,15 @@ export default function Community() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="h-10 px-4 bg-[#FFC929] dark:bg-[#FFC929] hover:bg-[#FFB800] dark:hover:bg-[#FFB800] text-black dark:text-black border-0 rounded-lg font-medium">
-                Tümü
-              </Button>
-              <Button className="h-10 px-4 bg-gray-600 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-500 text-white dark:text-white border-0 rounded-lg font-medium">
-                Tümü
+              <Button 
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('all');
+                  setSelectedCountry('all');
+                }}
+                className="h-10 px-4 bg-gray-500 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-white dark:text-white border-0 rounded-lg font-medium"
+              >
+                Filtreleri Temizle
               </Button>
             </div>
           </div>
