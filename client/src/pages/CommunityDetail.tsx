@@ -501,213 +501,200 @@ export default function CommunityDetail() {
           </Card>
         </div>
 
-        {/* Community Statistics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Statistics Card */}
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Topluluk İstatistikleri</h3>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">156</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Çekiliş</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">892</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Kazanan</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">$450</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Ortalama Ödül</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">1250</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Aktif Üye</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activities Card */}
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Activity className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Son Aktiviteler</h3>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <Award className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-gray-900 dark:text-white">iPhone 15 Pro Max çekilişi</span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-2">2 saat önce</span>
+        {/* Main Content Layout */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          {/* Left Content - Raffles Section */}
+          <div className="xl:col-span-3">
+            {/* Raffles Section */}
+            <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
+              <CardHeader className="border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center shadow-lg">
+                    <Target className="h-4 w-4 text-black" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-bold text-gray-900 dark:text-white">
+                      Aktif Çekilişler
+                    </CardTitle>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      {displayRaffles.length} çekiliş bulundu
+                    </p>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-3 text-sm">
-                  <Users className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-gray-900 dark:text-white">250 yeni üye katıldı</span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-2">5 saat önce</span>
+              </CardHeader>
+              <CardContent className="p-0">
+                {rafflesLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="animate-spin w-6 h-6 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-3" />
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">Çekilişler yükleniyor...</p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center gap-3 text-sm">
-                  <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-gray-900 dark:text-white">MacBook Air çekilişi tamamlandı</span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-2">1 gün önce</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3 text-sm">
-                  <BarChart className="h-4 w-4 text-purple-500 flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-gray-900 dark:text-white">Haftalık rapor yayınlandı</span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-2">2 gün önce</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Raffles Section */}
-        <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
-          <CardHeader className="border-b border-gray-100 dark:border-gray-700">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center shadow-lg">
-                  <Target className="h-5 w-5 text-black" />
-                </div>
-                <div>
-                  <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Aktif ve Gelecek Çekilişler
-                  </CardTitle>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {displayRaffles.length} çekiliş bulundu
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-          </CardHeader>
-          <CardContent className="p-0">
-            {rafflesLoading ? (
-              <div className="flex items-center justify-center py-16">
-                <div className="text-center">
-                  <div className="animate-spin w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4" />
-                  <p className="text-gray-600 dark:text-gray-400">Çekilişler yükleniyor...</p>
-                </div>
-              </div>
-            ) : displayRaffles.length > 0 ? (
-              <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                {displayRaffles.map((raffle: any, index: number) => (
-                  <div
-                    key={raffle.id}
-                    className="p-6 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
-                    onClick={() => setLocation(`/raffles/${raffle.id}`)}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <Award className="h-8 w-8 text-black" />
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
-                                {raffle.title}
-                              </h3>
-
-                              <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
-                                Aktif
-                              </Badge>
-                            </div>
-                            
-                            {raffle.description && (
-                              <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                                {raffle.description}
-                              </p>
-                            )}
-                            
-                            <div className="flex flex-wrap items-center gap-4 text-sm">
-                              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                                <Clock className="h-4 w-4" />
-                                <span>
-                                  {formatDate(raffle.startDate || raffle.createdAt)}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-                                <DollarSign className="h-4 w-4" />
-                                <span>{raffle.prizeValue}</span>
-                              </div>
-                              <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                                <Users className="h-4 w-4" />
-                                <span>{Math.floor(Math.random() * 500) + 50} katılımcı</span>
-                              </div>
-                            </div>
+                ) : displayRaffles.length > 0 ? (
+                  <div className="divide-y divide-gray-100 dark:divide-gray-700">
+                    {displayRaffles.map((raffle: any, index: number) => (
+                      <div
+                        key={raffle.id}
+                        className="p-4 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
+                        onClick={() => setLocation(`/raffles/${raffle.id}`)}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg">
+                            <Award className="h-6 w-6 text-black" />
                           </div>
                           
-                          <div className="flex flex-col items-end gap-2">
-                            <Button 
-                              onClick={() => {
-                                toast({
-                                  title: "Çekilişe Katılım",
-                                  description: "Çekilişe katılım işlemi başlatıldı.",
-                                });
-                              }}
-                              size="sm" 
-                              className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                            >
-                              Katıl
-                            </Button>
-                            
-                            <div className="flex items-center gap-1">
-                              <ExternalLink className="h-4 w-4 text-gray-400" />
-                              <Star className="h-4 w-4 text-[#FFC929]" />
-                              <span className="text-xs text-gray-500">{(Math.random() * 5).toFixed(1)}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
+                                    {raffle.title}
+                                  </h3>
+                                  <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
+                                    Aktif
+                                  </Badge>
+                                </div>
+                                
+                                {raffle.description && (
+                                  <p className="text-gray-600 dark:text-gray-400 mb-2 line-clamp-1 text-sm">
+                                    {raffle.description}
+                                  </p>
+                                )}
+                                
+                                <div className="flex flex-wrap items-center gap-3 text-sm">
+                                  <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+                                    <DollarSign className="h-3 w-3" />
+                                    <span>{raffle.prizeValue}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                                    <Users className="h-3 w-3" />
+                                    <span>{Math.floor(Math.random() * 500) + 50}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <Button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toast({
+                                    title: "Çekilişe Katılım",
+                                    description: "Çekilişe katılım işlemi başlatıldı.",
+                                  });
+                                }}
+                                size="sm" 
+                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                              >
+                                Katıl
+                              </Button>
                             </div>
                           </div>
                         </div>
-                        
-
                       </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      Henüz Çekiliş Yok
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      Bu toplulukta henüz aktif çekiliş bulunmuyor.
+                    </p>
+                    {isChannelCreator && (
+                      <Button 
+                        onClick={() => setIsCreatingRaffle(true)}
+                        className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                        size="sm"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Çekiliş Oluştur
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Sidebar - Statistics */}
+          <div className="xl:col-span-1 space-y-6">
+            {/* Statistics Card */}
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Topluluk İstatistikleri</h3>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Toplam Çekiliş</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">156</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Toplam Kazanan</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">892</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Ortalama Ödül</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">$450</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Aktif Üye</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">1250</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activities Card */}
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Activity className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Son Aktiviteler</h3>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <Award className="h-3 w-3 text-blue-500 flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-900 dark:text-white font-medium truncate">iPhone 15 Pro Max</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">2 saat önce</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="h-12 w-12 text-gray-400" />
+                  
+                  <div className="flex items-start gap-2">
+                    <Users className="h-3 w-3 text-green-500 flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-900 dark:text-white font-medium">250 yeni üye</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">5 saat önce</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="h-3 w-3 text-emerald-500 flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-900 dark:text-white font-medium truncate">MacBook Air tamamlandı</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">1 gün önce</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <BarChart className="h-3 w-3 text-purple-500 flex-shrink-0 mt-1" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-900 dark:text-white font-medium">Haftalık rapor</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">2 gün önce</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Henüz Çekiliş Yok
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                  Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor. İlk çekilişi başlatmak için kanal oluşturucusuyla iletişime geçin.
-                </p>
-                {isChannelCreator && (
-                  <Button 
-                    onClick={() => setIsCreatingRaffle(true)}
-                    className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    İlk Çekilişi Oluştur
-                  </Button>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
 
 
