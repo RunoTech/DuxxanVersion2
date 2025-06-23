@@ -751,21 +751,18 @@ export default function Community() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
         
         {/* Actions */}
-        <div className="absolute top-3 right-3 flex gap-2">
+        <div className="absolute top-3 right-3">
           {isOwner && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleEditChannel(channel);
               }}
-              className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg"
+              className="p-2 bg-white/30 dark:bg-black/30 rounded-full backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 transition-colors shadow-lg border border-white/20 dark:border-gray-600/20"
             >
-              <Edit className="h-3 w-3 text-white" />
+              <Edit className="h-4 w-4 text-white dark:text-white" />
             </button>
           )}
-          <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg">
-            <ExternalLink className="h-3 w-3 text-white" />
-          </div>
         </div>
       </div>
 
