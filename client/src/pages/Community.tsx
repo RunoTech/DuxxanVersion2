@@ -828,16 +828,18 @@ export default function Community() {
         </div>
 
         {/* Subscribe Button */}
-        <Button
-          className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleSubscribe(channel.id);
-          }}
-        >
-          <Star className="h-4 w-4 mr-2" />
-          Abone Ol
-        </Button>
+        <div className="mt-auto">
+          <Button
+            className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSubscribe(channel.id);
+            }}
+          >
+            <Star className="h-4 w-4 mr-2" />
+            Abone Ol
+          </Button>
+        </div>
       </div>
     </Card>
     );
@@ -1282,7 +1284,9 @@ export default function Community() {
                           <div className="w-8 h-2 bg-gray-600 rounded mx-auto"></div>
                         </div>
                       </div>
-                      <div className="w-full h-10 bg-gray-600 rounded-lg mt-auto"></div>
+                      <div className="mt-auto">
+                        <div className="w-full h-10 bg-gradient-to-r from-[#FFC929]/30 to-[#FFB800]/30 rounded-xl"></div>
+                      </div>
                     </div>
                   </Card>
                 ))}
