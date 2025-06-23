@@ -719,48 +719,7 @@ export default function CommunityDetail() {
           </CardContent>
         </Card>
 
-        {/* Demo Features Section */}
-        {channel?.isDemo && demoContent?.features && (
-          <Card className="bg-gradient-to-br from-[#FFC929]/10 to-[#FFB800]/10 dark:from-[#FFC929]/20 dark:to-[#FFB800]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2">
-                <Info className="h-6 w-6" />
-                Demo Özellikleri
-              </CardTitle>
-              <p className="text-[#FFC929]/80 dark:text-[#FFC929]/80">
-                Bu demo kanalında deneyimleyebileceğiniz özellikler:
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {demoContent.features.map((feature: string, index: number) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg"
-                  >
-                    <CheckCircle className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929] flex-shrink-0" />
-                    <span className="text-gray-900 dark:text-white">{feature}</span>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 p-4 bg-[#FFC929]/10 dark:bg-[#FFC929]/20 border border-[#FFC929]/30 dark:border-[#FFC929]/40 rounded-lg">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-[#FFC929] dark:text-[#FFC929] mb-1">
-                      Demo Kanal Bilgisi
-                    </h4>
-                    <p className="text-[#FFC929]/80 dark:text-[#FFC929]/80 text-sm">
-                      Bu demo kanalında gerçek para transferi yapılmaz. Tüm işlemler simülasyon amaçlıdır ve 
-                      platform özelliklerini denemeniz için tasarlanmıştır.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+
 
         {/* Raffle Creation Modal */}
         <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
