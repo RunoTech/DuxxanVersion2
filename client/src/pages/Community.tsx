@@ -743,24 +743,35 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 border border-purple-600/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-80"
+      className="group bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       {/* Background Cover */}
-      <div className="relative h-32 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-purple-800/20"></div>
+      <div className="relative h-32 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
         
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          <div className="flex items-center gap-1 px-2 py-1 bg-green-600 rounded-full text-xs font-medium text-white">
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+          <div className="flex items-center gap-1 px-2 py-1 bg-green-600 rounded-full text-xs font-medium text-white shadow-lg">
+            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
             Çevrimiçi
           </div>
         </div>
         
-        {/* External Link Icon */}
-        <div className="absolute top-3 right-3">
-          <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors">
+        {/* Actions */}
+        <div className="absolute top-3 right-3 flex gap-2">
+          {isOwner && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditChannel(channel);
+              }}
+              className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg"
+            >
+              <Edit className="h-3 w-3 text-white" />
+            </button>
+          )}
+          <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg">
             <ExternalLink className="h-3 w-3 text-white" />
           </div>
         </div>
@@ -769,12 +780,12 @@ export default function Community() {
       {/* Content Section */}
       <div className="p-4 flex-1 flex flex-col">
         {/* Channel Title */}
-        <h3 className="text-white text-lg font-bold mb-2 group-hover:text-purple-200 transition-colors">
+        <h3 className="text-white dark:text-white text-lg font-bold mb-2 group-hover:text-gray-200 transition-colors">
           {channel.name}
         </h3>
         
         {/* Description */}
-        <p className="text-purple-200 text-sm mb-4 flex-1 line-clamp-2">
+        <p className="text-gray-300 dark:text-gray-300 text-sm mb-4 flex-1 line-clamp-2">
           {channel.description || "Türkiye'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri."}
         </p>
 
@@ -1286,7 +1297,7 @@ export default function Community() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredChannels.map((channel: any) => (
                   <ChannelCard key={channel.id} channel={channel} />
                 ))}
