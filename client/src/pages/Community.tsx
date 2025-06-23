@@ -769,7 +769,7 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
+      className="group bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       {/* Header Section */}
@@ -1280,37 +1280,37 @@ export default function Community() {
             {channelsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
+                  <Card key={i} className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
                     <div className="p-3">
                       <div className="bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30 rounded-lg w-20 h-6"></div>
                     </div>
                     <div className="p-4 flex-1 flex flex-col">
-                      <div className="w-3/4 h-6 bg-gray-600 rounded mb-2"></div>
-                      <div className="w-full h-3 bg-gray-600 rounded mb-1"></div>
-                      <div className="w-2/3 h-3 bg-gray-600 rounded mb-4"></div>
+                      <div className="w-3/4 h-6 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
+                      <div className="w-full h-3 bg-gray-300 dark:bg-gray-600 rounded mb-1"></div>
+                      <div className="w-2/3 h-3 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 bg-gray-600 rounded-full"></div>
+                        <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
                         <div className="space-y-1">
-                          <div className="w-20 h-3 bg-gray-600 rounded"></div>
-                          <div className="w-16 h-2 bg-gray-600 rounded"></div>
+                          <div className="w-20 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="w-16 h-2 bg-gray-300 dark:bg-gray-600 rounded"></div>
                         </div>
                       </div>
                       <div className="flex gap-2 mb-4">
-                        <div className="w-12 h-5 bg-gray-600 rounded"></div>
-                        <div className="w-10 h-5 bg-gray-600 rounded"></div>
+                        <div className="w-12 h-5 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                        <div className="w-10 h-5 bg-gray-300 dark:bg-gray-600 rounded"></div>
                       </div>
                       <div className="grid grid-cols-3 gap-2 mb-4">
                         <div className="text-center">
-                          <div className="w-10 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
-                          <div className="w-6 h-2 bg-gray-600 rounded mx-auto"></div>
+                          <div className="w-10 h-5 bg-gray-300 dark:bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-6 h-2 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
                         </div>
                         <div className="text-center">
-                          <div className="w-8 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
-                          <div className="w-6 h-2 bg-gray-600 rounded mx-auto"></div>
+                          <div className="w-8 h-5 bg-gray-300 dark:bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-6 h-2 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
                         </div>
                         <div className="text-center">
-                          <div className="w-12 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
-                          <div className="w-8 h-2 bg-gray-600 rounded mx-auto"></div>
+                          <div className="w-12 h-5 bg-gray-300 dark:bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-8 h-2 bg-gray-300 dark:bg-gray-600 rounded mx-auto"></div>
                         </div>
                       </div>
                       <div className="mt-auto">
@@ -1330,7 +1330,7 @@ export default function Community() {
 
             {!channelsLoading && filteredChannels.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
+                <div className="text-gray-500 dark:text-gray-400 mb-4">
                   <Users className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg">Kanal bulunamadı</p>
                   <p className="text-sm">Arama kriterlerinizi değiştirmeyi deneyin</p>
