@@ -500,7 +500,89 @@ export default function CommunityDetail() {
           </Card>
         </div>
 
-        
+        {/* Community Statistics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Statistics Card */}
+          <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <TrendingUp className="h-6 w-6 text-purple-200" />
+                <h3 className="text-xl font-bold">Topluluk İstatistikleri</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-purple-100">Toplam Çekiliş</span>
+                  <span className="text-2xl font-bold">156</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-purple-100">Toplam Kazanan</span>
+                  <span className="text-2xl font-bold">892</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-purple-100">Ortalama Ödül</span>
+                  <span className="text-2xl font-bold">$450</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-purple-100">Aktif Üye</span>
+                  <span className="text-2xl font-bold">1250</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Activities Card */}
+          <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Activity className="h-6 w-6 text-purple-200" />
+                <h3 className="text-xl font-bold">Son Aktiviteler</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Award className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
+                    <p className="text-purple-200 text-sm">2 saat önce</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Users className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium">250 yeni üye katıldı</p>
+                    <p className="text-purple-200 text-sm">5 saat önce</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <CheckCircle className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium">MacBook Air çekilişi tamamlandı</p>
+                    <p className="text-purple-200 text-sm">1 gün önce</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <BarChart className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium">Haftalık analiz raporu yayınlandı</p>
+                    <p className="text-purple-200 text-sm">2 gün önce</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Raffles Section */}
         <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
