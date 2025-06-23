@@ -577,51 +577,51 @@ export default function CommunityDetail() {
 
                   {/* Active Raffle 2 */}
                   <Card className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-base text-white">iPhone 15 Pro Max</h3>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                          <span className="text-white text-xs font-medium">4.8</span>
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white truncate flex-1 mr-2">iPhone 15 Pro Max</h3>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          <span className="text-gray-900 dark:text-white text-xs font-medium">4.8</span>
                         </div>
                       </div>
                       
-                      <p className="text-gray-300 text-xs mb-3 line-clamp-2">
+                      <p className="text-gray-600 dark:text-gray-300 text-xs mb-2 sm:mb-3 line-clamp-2">
                         Yepyeni iPhone 15 Pro Max 256GB + AirPods Pro 2. Kutu açılmamış.
                       </p>
                       
-                      <div className="mb-3">
+                      <div className="mb-2 sm:mb-3">
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-gray-400">Satılan Biletler</span>
-                          <span className="text-white font-medium">2.450 / 5.000</span>
+                          <span className="text-gray-500 dark:text-gray-400">Satılan Biletler</span>
+                          <span className="text-gray-900 dark:text-white font-medium">2.450 / 5.000</span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full" style={{width: '49%'}}></div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-300" style={{width: '49%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-400">49% satıldı</span>
-                          <span className="text-green-400 font-medium">Popüler!</span>
+                          <span className="text-gray-500 dark:text-gray-400">49% satıldı</span>
+                          <span className="text-green-600 dark:text-green-400 font-medium">Popüler!</span>
                         </div>
                       </div>
                       
-                      <div className="flex justify-between items-center mb-3">
+                      <div className="flex justify-between items-center mb-2 sm:mb-3">
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">25</div>
-                          <div className="text-xs text-gray-400">Bilet Fiyatı</div>
+                          <div className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">25</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Bilet Fiyatı</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">12</div>
-                          <div className="text-xs text-gray-400">Kalan Gün</div>
+                          <div className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">12</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Kalan Gün</div>
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-2 text-sm rounded-xl transition-all duration-300">
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Bilet Al
                       </Button>
                       
-                      <div className="flex justify-between items-center mt-3 text-xs">
-                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">1.5K</span></span>
-                        <span className="text-gray-400">duxxan_admin</span>
+                      <div className="flex justify-between items-center mt-2 sm:mt-3 text-xs">
+                        <span className="text-gray-500 dark:text-gray-400 truncate">Ödül: <span className="text-gray-900 dark:text-white font-bold">1.5K</span></span>
+                        <span className="text-gray-500 dark:text-gray-400 truncate">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
