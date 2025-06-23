@@ -791,7 +791,7 @@ export default function Community() {
               }}
               className="p-2 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors shadow-lg border border-white/20 dark:border-gray-600/20 flex-shrink-0"
             >
-              <Edit className="h-4 w-4 text-white dark:text-white" />
+              <Edit className="h-4 w-4 text-gray-800 dark:text-white" />
             </button>
           )}
         </div>
@@ -800,7 +800,7 @@ export default function Community() {
       {/* Content Section */}
       <div className="p-4 flex-1 flex flex-col">
         {/* Description */}
-        <p className="text-gray-300 dark:text-gray-300 text-sm mb-3 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2">
           {channel.description || "Join our vibrant community of blockchain enthusiasts, developers, and investors"}
         </p>
 
@@ -813,10 +813,10 @@ export default function Community() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="text-white dark:text-white text-sm font-medium">
+            <div className="text-gray-800 dark:text-white text-sm font-medium">
               {channel.creator?.username || 'CryptoExpert'}
             </div>
-            <div className="text-gray-400 dark:text-gray-400 text-xs">
+            <div className="text-gray-500 dark:text-gray-400 text-xs">
               Topluluk Sahibi
             </div>
           </div>
@@ -834,23 +834,23 @@ export default function Community() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2 mb-3">
           <div className="text-center">
-            <div className="text-xl font-bold text-white dark:text-white">{formatCurrency(memberCount)}</div>
-            <div className="text-gray-400 dark:text-gray-400 text-xs">Üye</div>
+            <div className="text-xl font-bold text-gray-800 dark:text-white">{formatCurrency(memberCount)}</div>
+            <div className="text-gray-500 dark:text-gray-400 text-xs">Üye</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-bold text-green-400 dark:text-green-400">{activeCount}</div>
-            <div className="text-gray-400 dark:text-gray-400 text-xs">Aktif</div>
+            <div className="text-xl font-bold text-green-600 dark:text-green-400">{activeCount}</div>
+            <div className="text-gray-500 dark:text-gray-400 text-xs">Aktif</div>
           </div>
           <div className="text-center">
             <div className="text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">{categoryInfo.name}</div>
-            <div className="text-gray-400 dark:text-gray-400 text-xs">Kategori</div>
+            <div className="text-gray-500 dark:text-gray-400 text-xs">Kategori</div>
           </div>
         </div>
 
         {/* Location */}
         <div className="flex items-center justify-center gap-1 mb-3">
-          <Globe className="h-3 w-3 text-gray-400 dark:text-gray-400" />
-          <span className="text-gray-400 dark:text-gray-400 text-xs">Türkiye</span>
+          <Globe className="h-3 w-3 text-gray-500 dark:text-gray-400" />
+          <span className="text-gray-500 dark:text-gray-400 text-xs">Türkiye</span>
         </div>
 
         {/* Subscribe Button */}
@@ -877,8 +877,8 @@ export default function Community() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
         {/* Hero Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/10 via-[#FFD700]/5 to-[#FFB800]/10"></div>
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+          <div className="absolute inset-0 bg-gradient-to-br from-black/10 via-black/5 to-black/10 dark:from-[#FFC929]/10 dark:via-[#FFD700]/5 dark:to-[#FFB800]/10"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
@@ -889,35 +889,35 @@ export default function Community() {
             </div>
             
             {/* Main Title */}
-            <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+            <h1 className="text-5xl md:text-6xl font-black text-black dark:text-white mb-4">
               DUXXAN Topluluk
             </h1>
             
-            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-800 dark:text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
               Blockchain topluluklarına katıl, çekilişleri takip et ve birlikte kazan
             </p>
             
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white/50 dark:bg-gray-800/50 border border-gray-300/50 dark:border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
                 <Users className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white mb-1">127</div>
-                <div className="text-gray-300 text-sm">Aktif Topluluk</div>
+                <div className="text-3xl font-bold text-black dark:text-white mb-1">127</div>
+                <div className="text-gray-700 dark:text-gray-300 text-sm">Aktif Topluluk</div>
               </div>
-              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white/50 dark:bg-gray-800/50 border border-gray-300/50 dark:border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
                 <Trophy className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white mb-1">45K+</div>
-                <div className="text-gray-300 text-sm">Toplam Üye</div>
+                <div className="text-3xl font-bold text-black dark:text-white mb-1">45K+</div>
+                <div className="text-gray-700 dark:text-gray-300 text-sm">Toplam Üye</div>
               </div>
-              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white/50 dark:bg-gray-800/50 border border-gray-300/50 dark:border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
                 <Gift className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white mb-1">89</div>
-                <div className="text-gray-300 text-sm">Aktif Çekiliş</div>
+                <div className="text-3xl font-bold text-black dark:text-white mb-1">89</div>
+                <div className="text-gray-700 dark:text-gray-300 text-sm">Aktif Çekiliş</div>
               </div>
-              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white/50 dark:bg-gray-800/50 border border-gray-300/50 dark:border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
                 <MessageCircle className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white mb-1">2.1K</div>
-                <div className="text-gray-300 text-sm">Günlük Mesaj</div>
+                <div className="text-3xl font-bold text-black dark:text-white mb-1">2.1K</div>
+                <div className="text-gray-700 dark:text-gray-300 text-sm">Günlük Mesaj</div>
               </div>
             </div>
             
