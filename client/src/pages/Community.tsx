@@ -846,47 +846,47 @@ export default function Community() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
         {/* Hero Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800]">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
+        <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/10 via-[#FFD700]/5 to-[#FFB800]/10"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             {/* Header Badge */}
-            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-black/30 rounded-full border border-black/30 backdrop-blur-sm">
-              <Users className="h-4 w-4 text-black" />
-              <span className="text-black text-sm font-medium">TOPLULUK</span>
+            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-[#FFC929]/20 rounded-full border border-[#FFC929]/30 backdrop-blur-sm">
+              <Users className="h-4 w-4 text-[#FFC929]" />
+              <span className="text-[#FFC929] text-sm font-medium">TOPLULUK</span>
             </div>
             
             {/* Main Title */}
-            <h1 className="text-5xl md:text-6xl font-black text-black mb-4">
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
               DUXXAN Topluluk
             </h1>
             
-            <p className="text-xl text-black/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
               Blockchain topluluklarına katıl, çekilişleri takip et ve birlikte kazan
             </p>
             
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-              <div className="bg-black/30 border border-black/30 rounded-2xl p-6 backdrop-blur-sm">
-                <Users className="h-8 w-8 text-black mx-auto mb-3" />
-                <div className="text-3xl font-bold text-black mb-1">127</div>
-                <div className="text-black/70 text-sm">Aktif Topluluk</div>
+              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+                <Users className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">127</div>
+                <div className="text-gray-300 text-sm">Aktif Topluluk</div>
               </div>
-              <div className="bg-black/30 border border-black/30 rounded-2xl p-6 backdrop-blur-sm">
-                <Trophy className="h-8 w-8 text-black mx-auto mb-3" />
-                <div className="text-3xl font-bold text-black mb-1">45K+</div>
-                <div className="text-black/70 text-sm">Toplam Üye</div>
+              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+                <Trophy className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">45K+</div>
+                <div className="text-gray-300 text-sm">Toplam Üye</div>
               </div>
-              <div className="bg-black/30 border border-black/30 rounded-2xl p-6 backdrop-blur-sm">
-                <Gift className="h-8 w-8 text-black mx-auto mb-3" />
-                <div className="text-3xl font-bold text-black mb-1">89</div>
-                <div className="text-black/70 text-sm">Aktif Çekiliş</div>
+              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+                <Gift className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">89</div>
+                <div className="text-gray-300 text-sm">Aktif Çekiliş</div>
               </div>
-              <div className="bg-black/30 border border-black/30 rounded-2xl p-6 backdrop-blur-sm">
-                <MessageCircle className="h-8 w-8 text-black mx-auto mb-3" />
-                <div className="text-3xl font-bold text-black mb-1">2.1K</div>
-                <div className="text-black/70 text-sm">Günlük Mesaj</div>
+              <div className="bg-gray-800/50 border border-[#FFC929]/20 rounded-2xl p-6 backdrop-blur-sm">
+                <MessageCircle className="h-8 w-8 text-[#FFC929] mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">2.1K</div>
+                <div className="text-gray-300 text-sm">Günlük Mesaj</div>
               </div>
             </div>
             
@@ -901,7 +901,7 @@ export default function Community() {
                 </DialogTrigger>
               </Dialog>
               
-              <Button className="bg-black hover:bg-gray-800 text-[#FFC929] font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border border-black">
+              <Button className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border border-[#FFC929]/30">
                 <Heart className="h-5 w-5 mr-2" />
                 Gelecek Çekilişler
               </Button>
@@ -912,40 +912,40 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Section */}
-        <div className="bg-gradient-to-r from-[#FFC929] via-[#FFD700] to-[#FFB800] dark:from-[#FFC929] dark:via-[#FFD700] dark:to-[#FFB800] backdrop-blur-sm rounded-xl p-4 mb-8 border border-[#FFC929]/50 dark:border-[#FFC929]/50 shadow-lg">
+        <div className="bg-gray-800/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 mb-8 border border-[#FFC929]/20 dark:border-[#FFC929]/20 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Filter className="h-5 w-5 text-black dark:text-black" />
-              <span className="text-black dark:text-black font-medium">Filtreler:</span>
+              <Filter className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929]" />
+              <span className="text-white dark:text-white font-medium">Filtreler:</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black/70 dark:text-black/70" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-400" />
                 <Input
                   type="text"
                   placeholder="Kanal ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-72 h-10 bg-black/20 dark:bg-black/20 border-black/30 dark:border-black/30 text-black dark:text-black placeholder-black/60 dark:placeholder-black/60 focus:border-black dark:focus:border-black focus:ring-2 focus:ring-black/30 dark:focus:ring-black/30 rounded-lg"
+                  className="pl-10 w-72 h-10 bg-gray-700/50 dark:bg-gray-700/50 border-gray-600/50 dark:border-gray-600/50 text-white dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-28 h-10 bg-black/20 dark:bg-black/20 border-black/30 dark:border-black/30 text-black dark:text-black focus:border-black dark:focus:border-black focus:ring-2 focus:ring-black/30 dark:focus:ring-black/30 rounded-lg">
+                <SelectTrigger className="w-28 h-10 bg-gray-700/50 dark:bg-gray-700/50 border-gray-600/50 dark:border-gray-600/50 text-white dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg">
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#FFC929] dark:bg-[#FFC929] border-black dark:border-black">
-                  <SelectItem value="all" className="text-black dark:text-black hover:bg-black/20 dark:hover:bg-black/20">Tümü</SelectItem>
+                <SelectContent className="bg-gray-800 dark:bg-gray-800 border-gray-600 dark:border-gray-600">
+                  <SelectItem value="all" className="text-white dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">Tümü</SelectItem>
                   {categories.filter(cat => cat.id !== 'all').map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()} className="text-black dark:text-black hover:bg-black/20 dark:hover:bg-black/20">
+                    <SelectItem key={category.id} value={category.id.toString()} className="text-white dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
                       {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="h-10 px-4 bg-black dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-800 text-[#FFC929] dark:text-[#FFC929] border-0 rounded-lg font-medium">
+              <Button className="h-10 px-4 bg-[#FFC929] dark:bg-[#FFC929] hover:bg-[#FFB800] dark:hover:bg-[#FFB800] text-black dark:text-black border-0 rounded-lg font-medium">
                 Tümü
               </Button>
-              <Button className="h-10 px-4 bg-black dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-800 text-[#FFC929] dark:text-[#FFC929] border-0 rounded-lg font-medium">
+              <Button className="h-10 px-4 bg-gray-600 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-500 text-white dark:text-white border-0 rounded-lg font-medium">
                 Tümü
               </Button>
             </div>
