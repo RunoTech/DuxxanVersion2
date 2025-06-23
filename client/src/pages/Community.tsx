@@ -1345,21 +1345,21 @@ export default function Community() {
           </Card>
         </div>
 
-        {/* Modern Navigation Tabs */}
+        {/* Modern Navigation Tabs - Moved below filters */}
         <div className="mb-8">
-          <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+          <div className="bg-gray-800/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-[#FFC929]/20 dark:border-[#FFC929]/20">
             <div className="flex">
               <button
                 onClick={() => setActiveTab('channels')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'channels'
-                    ? 'bg-gradient-to-r from-[#FFC929] to-[#FFB800] text-black shadow-lg transform scale-[1.02]'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'bg-[#FFC929] text-black shadow-lg transform scale-[1.02]'
+                    : 'text-white hover:bg-gray-700/50'
                 }`}
               >
                 <Users className="h-5 w-5" />
                 Kanallar
-                <Badge className={`${activeTab === 'channels' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929]'} font-bold`}>
+                <Badge className={`${activeTab === 'channels' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#FFC929]'} font-bold`}>
                   {filteredChannels.length}
                 </Badge>
               </button>
@@ -1367,13 +1367,13 @@ export default function Community() {
                 onClick={() => setActiveTab('upcoming')}
                 className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'upcoming'
-                    ? 'bg-gradient-to-r from-[#FFC929] to-[#FFB800] text-black shadow-lg transform scale-[1.02]'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'bg-[#FFC929] text-black shadow-lg transform scale-[1.02]'
+                    : 'text-white hover:bg-gray-700/50'
                 }`}
               >
                 <Calendar className="h-5 w-5" />
                 Gelecek Çekilişler
-                <Badge className={`${activeTab === 'upcoming' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#B8860B] dark:bg-[#FFC929]/30 dark:text-[#FFC929]'} font-bold`}>
+                <Badge className={`${activeTab === 'upcoming' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#FFC929]'} font-bold`}>
                   {upcomingRaffles.length}
                 </Badge>
               </button>
