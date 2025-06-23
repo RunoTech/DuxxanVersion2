@@ -1774,38 +1774,7 @@ export default function Community() {
           </div>
         )}
 
-        {/* Removed old filter section - replaced with new design above */}
-        {/* Modern Navigation Tabs */}
-        {/* Removed navigation tabs section */}
 
-        {/* Communities Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredChannels.map((channel: any) => (
-            <ChannelCard key={channel.id} channel={channel} />
-          ))}
-        </div>
-
-        {filteredChannels.length === 0 && (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-            <div className="mb-8">
-              <Users className="h-24 w-24 text-gray-400 dark:text-gray-500 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-4">
-                {searchQuery ? 'Kanal bulunamadı' : 'Henüz kanal bulunmuyor'}
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400 text-lg mb-8 max-w-md mx-auto">
-                {searchQuery ? 'Arama kriterlerinizi değiştirmeyi deneyin' : 'Kanalları keşfedin ve favori topluluklarınıza katılın'}
-              </p>
-            </div>
-            <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
-              <DialogTrigger asChild>
-                <Button className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all">
-                  <Plus className="h-5 w-5 mr-2" />
-                  İlk Kanalı Oluştur
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-          </div>
-        )}
       </div>
 
       {/* Create Channel Dialog */}
