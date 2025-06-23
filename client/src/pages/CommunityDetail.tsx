@@ -502,7 +502,7 @@ export default function CommunityDetail() {
         </div>
 
         {/* Main Content Layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
           {/* Left Content - Raffles Section */}
           <div className="xl:col-span-3">
             {/* Raffles Section */}
@@ -736,7 +736,7 @@ export default function CommunityDetail() {
           </div>
 
           {/* Right Sidebar - Statistics */}
-          <div className="xl:col-span-1 space-y-6">
+          <div className="xl:col-span-1 space-y-6 xl:mt-0">
             {/* Statistics Card */}
             <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
               <CardContent className="p-4">
