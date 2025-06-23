@@ -765,7 +765,7 @@ export default function Community() {
     return (
     <Card 
       key={channel.id}
-      className="group bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
+      className="group bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       {/* Header Section */}
@@ -785,7 +785,7 @@ export default function Community() {
                 e.stopPropagation();
                 handleEditChannel(channel);
               }}
-              className="p-2 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors shadow-lg border border-white/20 dark:border-gray-600/20 flex-shrink-0"
+              className="p-2 bg-white/80 dark:bg-gray-800/80 rounded-full backdrop-blur-sm hover:bg-white dark:hover:bg-gray-700 transition-colors shadow-lg border border-gray-200/50 dark:border-gray-600/50 flex-shrink-0"
             >
               <Edit className="h-4 w-4 text-gray-800 dark:text-white" />
             </button>
@@ -939,28 +939,28 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Section */}
-        <div className="bg-white/20 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 mb-8 border border-[#FFC929]/20 dark:border-[#FFC929]/20 shadow-lg">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 mb-8 border border-gray-200/50 dark:border-[#FFC929]/30 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Filter className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929]" />
+              <Filter className="h-5 w-5 text-[#FFC929]" />
               <span className="text-gray-800 dark:text-white font-medium">Filtreler:</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                 <Input
                   type="text"
                   placeholder="Kanal ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-72 h-10 bg-white/50 dark:bg-gray-700/50 border-gray-300/50 dark:border-gray-600/50 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg"
+                  className="pl-10 w-72 h-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 rounded-lg"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-28 h-10 bg-white/50 dark:bg-gray-700/50 border-gray-300/50 dark:border-gray-600/50 text-gray-800 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg">
+                <SelectTrigger className="w-28 h-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 rounded-lg">
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600">
                   <SelectItem value="all" className="text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Tümü</SelectItem>
                   {categories.filter(cat => cat.id !== 'all').map((category: any) => (
                     <SelectItem key={category.id} value={category.id.toString()} className="text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -975,7 +975,7 @@ export default function Community() {
                   setSelectedCategory('all');
                   setSelectedCountry('all');
                 }}
-                className="h-10 px-4 bg-gray-500 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-white dark:text-white border-0 rounded-lg font-medium"
+                className="h-10 px-4 bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500 text-white border-0 rounded-lg font-medium transition-colors"
               >
                 Filtreleri Temizle
               </Button>
@@ -1228,7 +1228,7 @@ export default function Community() {
             {channelsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
+                  <Card key={i} className="bg-white dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
                     <div className="p-3">
                       <div className="bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30 rounded-lg w-20 h-6"></div>
                     </div>
@@ -1278,10 +1278,10 @@ export default function Community() {
 
             {!channelsLoading && filteredChannels.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-500 dark:text-gray-400 mb-4">
-                  <Users className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">Kanal bulunamadı</p>
-                  <p className="text-sm">Arama kriterlerinizi değiştirmeyi deneyin</p>
+                <div className="text-gray-600 dark:text-gray-400 mb-4">
+                  <Users className="h-16 w-16 mx-auto mb-4 opacity-50 text-gray-400 dark:text-gray-500" />
+                  <p className="text-lg text-gray-700 dark:text-gray-300">Kanal bulunamadı</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Arama kriterlerinizi değiştirmeyi deneyin</p>
                 </div>
               </div>
             )}
