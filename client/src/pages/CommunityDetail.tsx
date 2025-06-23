@@ -407,7 +407,7 @@ export default function CommunityDetail() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Profile Card */}
-        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl rounded-2xl p-6 mb-4 -mt-40 relative z-10">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl rounded-2xl p-6 mb-4 -mt-56 relative z-10">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-6">
               <Avatar className="h-16 w-16 border-4 border-white/30 shadow-2xl">
