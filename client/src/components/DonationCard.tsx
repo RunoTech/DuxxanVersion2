@@ -12,6 +12,7 @@ import { blockchainService } from '@/lib/blockchain';
 import { Link } from 'wouter';
 import { Building2, Users, Heart, Clock, Shield, Star, Globe, DollarSign, Target, Hash } from 'lucide-react';
 import { CONTRACT_FEES } from '@/lib/contractConstants';
+import { ShareModal } from '@/components/ShareModal';
 
 // Helper function to format numbers
 const formatCurrency = (value: string | number) => {
@@ -52,6 +53,7 @@ interface DonationCardProps {
 export function DonationCard({ donation }: DonationCardProps) {
   const [donationAmount, setDonationAmount] = useState('');
   const [isContributing, setIsContributing] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const { isConnected, getApiHeaders } = useWallet();
   const { toast } = useToast();
 
@@ -312,7 +314,7 @@ export function DonationCard({ donation }: DonationCardProps) {
         onClose={() => setShowShareModal(false)}
         title={donation.title}
         description={donation.description}
-        shareUrl={`${window.location.origin}/donations/${donation.id}`}
+        url={`/donations/${donation.id}`}
       />
     </Card>
   );

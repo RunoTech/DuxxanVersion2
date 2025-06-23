@@ -25,7 +25,10 @@ import {
   Heart,
   Shield,
   Calendar,
-  DollarSign
+  DollarSign,
+  Edit3,
+  Save,
+  X
 } from 'lucide-react';
 import { MutualApprovalSystem } from '@/components/MutualApprovalSystem';
 
@@ -37,6 +40,9 @@ export default function RaffleDetail() {
   const queryClient = useQueryClient();
   const [ticketCount, setTicketCount] = useState(1);
   const [isClient, setIsClient] = useState(false);
+  const [isEditingCard, setIsEditingCard] = useState(false);
+  const [editableTitle, setEditableTitle] = useState('');
+  const [editableDescription, setEditableDescription] = useState('');
 
   // Client-side only rendering to prevent SSR issues
   useEffect(() => {
@@ -135,6 +141,44 @@ export default function RaffleDetail() {
     : 0;
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
+  // Initialize editable values when raffle data loads
+  useEffect(() => {
+    if (safeRaffle && !editableTitle) {
+      setEditableTitle(safeRaffle.title || '');
+      setEditableDescription(safeRaffle.description || '');
+    }
+  }, [safeRaffle, editableTitle]);
+
+  const handleSaveEdit = async () => {
+    try {
+      const response = await apiRequest('PATCH', `/api/raffles/${id}`, {
+        title: editableTitle,
+        description: editableDescription
+      });
+      
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+        setIsEditingCard(false);
+        toast({
+          title: 'Başarılı',
+          description: 'Çekiliş bilgileri güncellendi',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Güncelleme başarısız oldu',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditableTitle(safeRaffle.title || '');
+    setEditableDescription(safeRaffle.description || '');
+    setIsEditingCard(false);
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-duxxan-dark">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
@@ -180,13 +224,46 @@ export default function RaffleDetail() {
                     <TrendingUp className="w-5 h-5 text-duxxan-yellow" />
                     Katılım Verileri
                   </CardTitle>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
                     <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success">
                       Aktif
                     </Badge>
                     <Badge variant="outline" className="border-duxxan-yellow text-duxxan-yellow bg-duxxan-yellow/10">
                       24h: +189 katılımcı
                     </Badge>
+                    {user && safeRaffle.creatorId === user.id && (
+                      <div className="flex gap-1">
+                        {isEditingCard ? (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleSaveEdit}
+                              className="h-7 px-2 bg-green-600 hover:bg-green-700 text-white border-green-600"
+                            >
+                              <Save className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleCancelEdit}
+                              className="h-7 px-2 bg-red-600 hover:bg-red-700 text-white border-red-600"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setIsEditingCard(true)}
+                            className="h-7 px-2 border-duxxan-yellow text-duxxan-yellow hover:bg-duxxan-yellow hover:text-duxxan-dark"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardHeader>
