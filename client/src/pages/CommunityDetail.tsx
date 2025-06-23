@@ -349,7 +349,7 @@ export default function CommunityDetail() {
               </Dialog>
             )}
             
-            <div className="relative">
+            <div className="relative z-50">
               <Button
                 onClick={handleShare}
                 variant="ghost"
@@ -360,7 +360,7 @@ export default function CommunityDetail() {
               </Button>
               
               {showShareMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl backdrop-blur-sm z-50">
+                <div className="fixed right-6 top-20 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl backdrop-blur-sm z-[9999]">
                   <div className="p-2">
                     <button
                       onClick={copyToClipboard}
@@ -401,7 +401,7 @@ export default function CommunityDetail() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Profile Card */}
-        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl rounded-2xl p-6 mb-4 -mt-72 relative z-10">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl rounded-2xl p-6 mb-4 -mt-72 relative z-10 overflow-visible">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-6">
               <Avatar className="h-16 w-16 border-4 border-white/30 shadow-2xl">
