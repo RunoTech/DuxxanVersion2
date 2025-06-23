@@ -172,26 +172,26 @@ export default function RaffleDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Ana İçerik */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Borsa Tarzı Chart */}
+            {/* Katılım Verileri */}
             <Card className="bg-gray-50 dark:bg-duxxan-surface border-gray-200 dark:border-duxxan-border">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-gray-900 dark:text-duxxan-yellow flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-duxxan-yellow" />
-                    Katılım Analizi
+                    Katılım Verileri
                   </CardTitle>
                   <div className="flex gap-2">
                     <Badge variant="secondary" className="bg-duxxan-success/20 text-duxxan-success">
                       Aktif
                     </Badge>
-                    <Badge variant="outline" className="border-duxxan-yellow text-duxxan-yellow">
+                    <Badge variant="outline" className="border-duxxan-yellow text-duxxan-yellow bg-duxxan-yellow/10">
                       24h: +189 katılımcı
                     </Badge>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80 w-full flex items-center justify-center bg-gray-50 dark:bg-duxxan-surface border border-duxxan-border rounded-lg">
+                <div className="h-80 w-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 dark:from-duxxan-dark dark:to-slate-900 border border-duxxan-border rounded-lg">
                   <div className="text-center">
                     <TrendingUp className="w-12 h-12 text-duxxan-yellow mx-auto mb-2" />
                     <p className="text-duxxan-text-secondary">Henüz katılım verisi yok</p>
@@ -199,7 +199,7 @@ export default function RaffleDetail() {
                   </div>
                 </div>
                 
-                {/* İstatistikler */}
+                {/* Katılım İstatistikleri */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-duxxan-border">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-duxxan-yellow">{safeRaffle.ticketsSold || 0}</div>
