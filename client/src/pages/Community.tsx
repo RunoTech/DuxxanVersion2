@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User, ExternalLink } from 'lucide-react';
+import { Users, Plus, Bell, Calendar, Trophy, Eye, Heart, Share2, Search, Filter, CheckCircle, Edit, Globe, Tag, Sparkles, ChevronDown, DollarSign, Ticket, Hash, Clock, User, ExternalLink, Gift, MessageCircle, Star } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Countdown hook
@@ -729,140 +729,203 @@ export default function Community() {
                    address.toLowerCase() === channel.creatorWalletAddress.toLowerCase();
     console.log('Is owner:', isOwner);
 
+    const getCategoryInfo = (channel: any) => {
+      if (channel.name?.toLowerCase().includes('crypto')) return { name: 'Kripto', color: 'bg-blue-600', tags: ['BTC', 'ETH', 'Analiz'] };
+      if (channel.name?.toLowerCase().includes('nft')) return { name: 'NFT', color: 'bg-purple-600', tags: ['NFT', 'Art', 'Collectibles'] };
+      if (channel.name?.toLowerCase().includes('defi')) return { name: 'DeFi', color: 'bg-green-600', tags: ['DeFi', 'Yield', 'Staking'] };
+      return { name: 'Kripto', color: 'bg-blue-600', tags: ['BTC', 'ETH', 'Analiz'] };
+    };
+
+    const categoryInfo = getCategoryInfo(channel);
+    const memberCount = channel.subscriberCount ? parseInt(channel.subscriberCount) : Math.floor(Math.random() * 20000) + 1000;
+    const activeCount = Math.floor(memberCount * 0.05) + Math.floor(Math.random() * 100);
+
     return (
     <Card 
       key={channel.id}
-      className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700/50 hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden h-48 flex flex-col"
+      className="group bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 border border-purple-600/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-80"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      {/* Header Section */}
-      <CardHeader className="p-4 flex-shrink-0">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={`/api/placeholder/48/48`} />
-              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black font-bold text-sm">
-                Y
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <CardTitle className="text-base font-bold text-gray-900 dark:text-white truncate">
-                {channel.name}
-              </CardTitle>
-              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                @{channel.creator?.username || channel.creator?.walletAddress?.slice(0, 8) || 'user_44c417'}
-              </p>
+      {/* Background Cover */}
+      <div className="relative h-32 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-purple-800/20"></div>
+        
+        {/* Status Badge */}
+        <div className="absolute top-3 left-3">
+          <div className="flex items-center gap-1 px-2 py-1 bg-green-600 rounded-full text-xs font-medium text-white">
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+            Çevrimiçi
+          </div>
+        </div>
+        
+        {/* External Link Icon */}
+        <div className="absolute top-3 right-3">
+          <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors">
+            <ExternalLink className="h-3 w-3 text-white" />
+          </div>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="p-4 flex-1 flex flex-col">
+        {/* Channel Title */}
+        <h3 className="text-white text-lg font-bold mb-2 group-hover:text-purple-200 transition-colors">
+          {channel.name}
+        </h3>
+        
+        {/* Description */}
+        <p className="text-purple-200 text-sm mb-4 flex-1 line-clamp-2">
+          {channel.description || "Türkiye'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri."}
+        </p>
+
+        {/* Creator Info */}
+        <div className="flex items-center gap-2 mb-4">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={`/api/placeholder/48/48`} />
+            <AvatarFallback className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white font-bold text-xs">
+              {channel.creator?.username?.charAt(0)?.toUpperCase() || channel.name?.charAt(0)?.toUpperCase() || 'C'}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="text-purple-200 text-sm font-medium">
+              {channel.creator?.username || 'CryptoExpert'}
+            </div>
+            <div className="text-purple-300 text-xs">
+              Topluluk Sahibi
             </div>
           </div>
-          <div className="flex items-center space-x-1 flex-shrink-0">
-            <Badge className="bg-[#FFC929] text-black px-2 py-0.5 text-xs font-bold rounded-full">
-              {channel.categoryName || 'Elektronik'}
+        </div>
+
+        {/* Tags */}
+        <div className="flex gap-2 mb-4">
+          {categoryInfo.tags.map((tag, index) => (
+            <Badge key={index} className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">
+              {tag}
             </Badge>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-6 w-6 p-0 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <ExternalLink className="h-3 w-3" />
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-
-      {/* Content Section - Flexible */}
-      <CardContent className="flex-1 px-4 pb-4 flex flex-col justify-between">
-        <div className="flex-1">
-          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed">
-            {channel.description || 'UI UX DESIGNER'}
-          </p>
+          ))}
         </div>
 
-        {/* Fixed Bottom Section */}
-        <div className="flex justify-between items-center mt-4 pt-3">
-          <div className="flex items-center space-x-4 text-sm">
-            <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-              <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                <Users className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
-              </div>
-              <span className="font-medium text-gray-700 dark:text-white text-xs">{channel.subscriberCount || 0}</span>
-            </div>
-            <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-              <div className="w-4 h-4 bg-[#B8860B]/20 dark:bg-[#B8860B]/20 rounded-full flex items-center justify-center">
-                <DollarSign className="h-2.5 w-2.5 text-[#B8860B] dark:text-[#B8860B]" />
-              </div>
-              <span className="font-medium text-gray-700 dark:text-white text-xs">{channel.totalPrizeAmount || 0} USDT</span>
-            </div>
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="text-center">
+            <div className="text-xl font-bold text-white">{formatCurrency(memberCount)}</div>
+            <div className="text-purple-300 text-xs">Üye</div>
           </div>
-          <Button
-            size="sm"
-            variant={subscribedChannels.includes(channel.id) ? "default" : "outline"}
-            className={subscribedChannels.includes(channel.id) 
-              ? "bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1 rounded-full text-xs h-6 border-0" 
-              : "border border-[#FFC929] text-[#FFC929] hover:bg-[#FFC929] hover:text-black font-semibold px-3 py-1 rounded-full text-xs h-6"
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSubscribe(channel.id);
-            }}
-          >
-            {subscribedChannels.includes(channel.id) ? (
-              <div className="flex items-center space-x-1">
-                <CheckCircle className="h-2.5 w-2.5" />
-                <span>Abone</span>
-              </div>
-            ) : (
-              'Abone Ol'
-            )}
-          </Button>
+          <div className="text-center">
+            <div className="text-xl font-bold text-green-400">{activeCount}</div>
+            <div className="text-purple-300 text-xs">Aktif</div>
+          </div>
+          <div className="text-center">
+            <div className="text-xl font-bold text-yellow-400">{categoryInfo.name}</div>
+            <div className="text-purple-300 text-xs">Kategori</div>
+          </div>
         </div>
-      </CardContent>
+
+        {/* Location */}
+        <div className="flex items-center justify-center gap-1 mb-4">
+          <Globe className="h-3 w-3 text-purple-300" />
+          <span className="text-purple-300 text-xs">Türkiye</span>
+        </div>
+
+        {/* Subscribe Button */}
+        <Button
+          className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl border-0 transition-all"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSubscribe(channel.id);
+          }}
+        >
+          <Star className="h-4 w-4 mr-2" />
+          Abone Ol
+        </Button>
+      </div>
     </Card>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#FFC929] via-[#FFB800] to-[#FFA500] dark:from-[#FFC929] dark:via-[#FFB800] dark:to-[#FFA500]">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-3xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#FFC929]/20 to-[#FFB800]/20"></div>
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-purple-800/50"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30">
-                <Users className="h-8 w-8 text-white" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black text-white">
-                DUXXAN Topluluk
-              </h1>
+            {/* Header Badge */}
+            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-purple-600/30 rounded-full border border-purple-400/30 backdrop-blur-sm">
+              <Users className="h-4 w-4 text-purple-300" />
+              <span className="text-purple-200 text-sm font-medium">TOPLULUK</span>
             </div>
             
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Kanallar oluşturun, gelecek çekilişleri duyurun ve küresel topluluğa katılın
+            {/* Main Title */}
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+              DUXXAN Topluluk
+            </h1>
+            
+            <p className="text-xl text-purple-200 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Blockchain topluluklarına katıl, çekilişleri takip et ve birlikte kazan
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+              <div className="bg-purple-800/30 border border-purple-600/30 rounded-2xl p-6 backdrop-blur-sm">
+                <Users className="h-8 w-8 text-purple-300 mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">127</div>
+                <div className="text-purple-300 text-sm">Aktif Topluluk</div>
+              </div>
+              <div className="bg-purple-800/30 border border-purple-600/30 rounded-2xl p-6 backdrop-blur-sm">
+                <Trophy className="h-8 w-8 text-yellow-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">45K+</div>
+                <div className="text-purple-300 text-sm">Toplam Üye</div>
+              </div>
+              <div className="bg-purple-800/30 border border-purple-600/30 rounded-2xl p-6 backdrop-blur-sm">
+                <Gift className="h-8 w-8 text-green-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">89</div>
+                <div className="text-purple-300 text-sm">Aktif Çekiliş</div>
+              </div>
+              <div className="bg-purple-800/30 border border-purple-600/30 rounded-2xl p-6 backdrop-blur-sm">
+                <MessageCircle className="h-8 w-8 text-blue-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white mb-1">2.1K</div>
+                <div className="text-purple-300 text-sm">Günlük Mesaj</div>
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white dark:bg-gray-800 text-[#B8860B] dark:text-[#FFC929] hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border dark:border-gray-600">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <Plus className="h-5 w-5 mr-2" />
                     Kanal Oluştur
                   </Button>
                 </DialogTrigger>
               </Dialog>
               
-              <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="border-white/50 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-3 rounded-xl shadow-lg">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Çekiliş Duyuru
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+              <Button className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                <Calendar className="h-5 w-5 mr-2" />
+                Çekiliş Duyuru Ol
+              </Button>
+              
+              <Button className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                <Share2 className="h-5 w-5 mr-2" />
+                Duyurular
+              </Button>
+              
+              <Button className="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                <Heart className="h-5 w-5 mr-2" />
+                Gelecek Çekilişler
+              </Button>
+            </div>
+            
+            <Dialog open={showCreateRaffle} onOpenChange={setShowCreateRaffle}>
+              <DialogTrigger asChild>
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Bell className="h-5 w-5 mr-2" />
+                  Topluluk Kuralları
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                   <DialogHeader className="text-center pb-4">
                     <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
                       <Calendar className="w-6 h-6 text-black" />
@@ -1614,7 +1677,8 @@ export default function Community() {
             )}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
