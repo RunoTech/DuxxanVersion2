@@ -294,9 +294,7 @@ export default function Community() {
     defaultValues: {
       name: '',
       description: '',
-      categoryId: 0,
-      country: '',
-      tags: '',
+      categoryId: undefined,
     },
   });
 
@@ -305,9 +303,7 @@ export default function Community() {
     defaultValues: {
       name: '',
       description: '',
-      categoryId: 0,
-      country: '',
-      tags: '',
+      categoryId: undefined,
     },
   });
 
@@ -501,12 +497,10 @@ export default function Community() {
   // Create channel mutation
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
-      console.log('Sending channel data to API:', data);
       const response = await apiRequest('POST', '/api/channels', data);
       return response.json();
     },
-    onSuccess: (result) => {
-      console.log('Channel creation success:', result);
+    onSuccess: () => {
       toast({
         title: "Başarılı",
         description: "Kanal başarıyla oluşturuldu",
@@ -516,7 +510,6 @@ export default function Community() {
       channelForm.reset();
     },
     onError: (error: any) => {
-      console.error('Channel creation error:', error);
       const errorMessage = error.response?.data?.message || error.message || "Kanal oluşturulurken bir hata oluştu";
       toast({
         title: "Hata",
@@ -698,10 +691,6 @@ export default function Community() {
   };
 
   const onSubmitChannel = async (data: CreateChannelForm) => {
-    console.log('Form submission data:', data);
-    console.log('Is connected:', isConnected);
-    console.log('Form errors:', channelForm.formState.errors);
-    
     if (!isConnected) {
       toast({
         title: "Uyarı",
