@@ -500,39 +500,7 @@ export default function CommunityDetail() {
           </Card>
         </div>
 
-        {/* Action Bar */}
-        {isChannelCreator && (
-          <div className="mb-4">
-            <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/10 dark:to-[#FFB800]/15 border border-[#FFC929]/40 dark:border-[#FFC929]/30 shadow-xl backdrop-blur-sm">
-              <CardContent className="p-5">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                      <Settings className="h-6 w-6 text-black" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-                        <Sparkles className="h-5 w-5 text-[#FFC929]" />
-                        Kanal Yönetimi
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        Kanalınızı yönetin ve yeni içerik ekleyin.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    onClick={() => setIsCreatingRaffle(true)}
-                    className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
-                  >
-                    <Plus className="h-5 w-5 mr-2" />
-                    <span className="whitespace-nowrap">Çekiliş Ekle</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        
 
         {/* Raffles Section */}
         <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
