@@ -1138,6 +1138,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put('/api/channels/:id', getUser, async (req: any, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+      }
+
+      const channelId = parseInt(req.params.id);
+      
+      // Check if the user is the channel creator
+      const channel = await storage.getChannelById(channelId);
+      if (!channel) {
+        return res.status(404).json({ success: false, message: 'Channel not found' });
+      }
+      
+      if (channel.creatorId !== req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: 'Bu kanalı düzenleme yetkiniz yok. Sadece kanal yaratıcısı düzenleyebilir.'
+        });
+      }
+
+      const updateData = req.body;
+      const updatedChannel = await storage.updateChannel(channelId, updateData);
+      
+      res.json({ success: true, data: updatedChannel, message: 'Kanal başarıyla güncellendi' });
+    } catch (error) {
+      console.error('Error updating channel:', error);
+      res.status(500).json({ success: false, message: 'Kanal güncellenirken hata oluştu' });
+    }
+  });
+
   app.post('/api/channels/:id/subscribe', getUser, async (req: any, res) => {
     try {
       if (!req.user) {
