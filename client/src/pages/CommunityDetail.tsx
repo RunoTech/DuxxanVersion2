@@ -506,31 +506,28 @@ export default function CommunityDetail() {
           {/* Left Content - Raffles Section */}
           <div className="xl:col-span-3">
             {/* Raffles Section */}
-            <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
-              <CardHeader className="border-b border-purple-700 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <Target className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg font-bold text-white">
-                      Kanalda Açılmış Çekilişler
-                    </CardTitle>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <Target className="h-4 w-4 text-white" />
+                </div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Kanalda Açılmış Çekilişler
+                </h2>
+              </div>
+
+              {rafflesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center">
+                    <div className="animate-spin w-6 h-6 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-3" />
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Çekilişler yükleniyor...</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                {rafflesLoading ? (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                      <div className="animate-spin w-6 h-6 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-3" />
-                      <p className="text-purple-200 text-sm">Çekilişler yükleniyor...</p>
-                    </div>
-                  </div>
-                ) : displayRaffles.length > 0 ? (
-                  <div className="space-y-4">
-                    {/* Active Raffles */}
-                    <div className="bg-purple-800/50 rounded-lg p-4">
+              ) : displayRaffles.length > 0 ? (
+                <div className="space-y-4">
+                  {/* Active Raffles */}
+                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -555,9 +552,11 @@ export default function CommunityDetail() {
                           <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '49%'}}></div>
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    <div className="bg-purple-800/50 rounded-lg p-4">
+                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -582,9 +581,11 @@ export default function CommunityDetail() {
                           <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '76%'}}></div>
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    <div className="bg-purple-800/50 rounded-lg p-4">
+                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -609,19 +610,21 @@ export default function CommunityDetail() {
                           <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '80%'}}></div>
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Completed Raffle */}
-                    <div className="bg-purple-800/30 rounded-lg p-4">
+                  {/* Completed Raffle */}
+                  <Card className="bg-gradient-to-br from-gray-600 to-gray-700 text-white border-0 shadow-xl opacity-75">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
                             <Award className="h-5 w-5 text-white" />
                           </div>
                           <div>
                             <h3 className="font-semibold text-white">Apple MacBook Air M2</h3>
                             <p className="text-green-400 font-medium">$1,200</p>
-                            <p className="text-purple-200 text-sm">📅 2024-01-25</p>
+                            <p className="text-gray-200 text-sm">📅 2024-01-25</p>
                           </div>
                         </div>
                         <Badge className="bg-gray-600 text-white text-xs px-2 py-1">
@@ -632,52 +635,58 @@ export default function CommunityDetail() {
                         <CheckCircle className="h-4 w-4" />
                         <span>Çekiliş Tamamlandı</span>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Upcoming Raffle */}
-                    <div className="bg-purple-800/30 rounded-lg p-4">
+                  {/* Upcoming Raffle */}
+                  <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white border-0 shadow-xl">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                             <Star className="h-5 w-5 text-white" />
                           </div>
                           <div>
                             <h3 className="font-semibold text-white">Bored Ape NFT Collection</h3>
                             <p className="text-green-400 font-medium">$2,500</p>
-                            <p className="text-purple-200 text-sm">📅 2024-02-28</p>
+                            <p className="text-blue-200 text-sm">📅 2024-02-28</p>
                           </div>
                         </div>
-                        <Badge className="bg-blue-600 text-white text-xs px-2 py-1">
+                        <Badge className="bg-blue-500 text-white text-xs px-2 py-1">
                           Yakında
                         </Badge>
                       </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ) : (
+                <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <CardContent className="p-12">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Calendar className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        Henüz Çekiliş Yok
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">
+                        Bu toplulukta henüz aktif çekiliş bulunmuyor.
+                      </p>
+                      {isChannelCreator && (
+                        <Button 
+                          onClick={() => setIsCreatingRaffle(true)}
+                          className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                          size="sm"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Çekiliş Oluştur
+                        </Button>
+                      )}
                     </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-purple-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="h-8 w-8 text-purple-300" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      Henüz Çekiliş Yok
-                    </h3>
-                    <p className="text-purple-200 text-sm">
-                      Bu toplulukta henüz aktif çekiliş bulunmuyor.
-                    </p>
-                    {isChannelCreator && (
-                      <Button 
-                        onClick={() => setIsCreatingRaffle(true)}
-                        className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                        size="sm"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Çekiliş Oluştur
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
 
           {/* Right Sidebar - Statistics */}
