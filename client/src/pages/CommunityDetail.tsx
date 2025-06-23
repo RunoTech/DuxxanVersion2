@@ -398,7 +398,6 @@ export default function CommunityDetail() {
         </div>
         
       </div>
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Profile Card */}
@@ -736,7 +735,7 @@ export default function CommunityDetail() {
           </div>
 
           {/* Right Sidebar - Statistics */}
-          <div className="xl:col-span-1 space-y-6 xl:mt-0">
+          <div className="xl:col-span-1 space-y-6 xl:mt-0 pt-[56px] pb-[56px]">
             {/* Statistics Card */}
             <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
               <CardContent className="p-4">
