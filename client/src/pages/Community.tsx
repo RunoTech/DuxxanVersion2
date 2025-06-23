@@ -652,11 +652,6 @@ export default function Community() {
 
   const handleSubscribe = (channelId: number) => {
     if (!isConnected) {
-      toast({
-        title: "Uyarı",
-        description: "Abone olmak için cüzdan bağlantısı gerekli",
-        variant: "destructive",
-      });
       return;
     }
 
