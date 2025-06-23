@@ -1349,12 +1349,6 @@ export default function Community() {
 
         {/* Content */}
         <div>
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Topluluk Kanalları</h2>
-                <p className="text-gray-600 dark:text-gray-400">Kanalları keşfedin ve favori topluluklarınıza katılın</p>
-              </div>
-            </div>
 
             {/* Channel Creation Dialog */}
             <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
