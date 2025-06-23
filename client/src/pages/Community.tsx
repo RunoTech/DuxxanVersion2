@@ -660,7 +660,33 @@ export default function Community() {
       return;
     }
 
+    const isCurrentlySubscribed = subscriptions.has(channelId);
+    const newSubscriptions = new Set(subscriptions);
+    const currentCount = memberCounts[channelId] ?? parseInt(channels?.find(c => c.id === channelId)?.subscriberCount || '0');
+    
+    if (isCurrentlySubscribed) {
+      newSubscriptions.delete(channelId);
+      setMemberCounts(prev => ({
+        ...prev,
+        [channelId]: Math.max(0, currentCount - 1)
+      }));
+    } else {
+      newSubscriptions.add(channelId);
+      setMemberCounts(prev => ({
+        ...prev,
+        [channelId]: currentCount + 1
+      }));
+    }
+    
+    setSubscriptions(newSubscriptions);
+    
+    // Keep legacy state in sync and make API call
     const action = subscribedChannels.includes(channelId) ? 'unsubscribe' : 'subscribe';
+    setSubscribedChannels(prev => 
+      prev.includes(channelId) 
+        ? prev.filter(id => id !== channelId)
+        : [...prev, channelId]
+    );
     subscribeMutation.mutate({ channelId, action });
   };
 
