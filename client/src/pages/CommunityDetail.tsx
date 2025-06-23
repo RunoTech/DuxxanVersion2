@@ -525,136 +525,182 @@ export default function CommunityDetail() {
                 </div>
               ) : displayRaffles.length > 0 ? (
                 <div className="space-y-4">
-                  {/* Active Raffles */}
-                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                            <Award className="h-5 w-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">iPhone 15 Pro Max + AirPods Pro</h3>
-                            <p className="text-green-400 font-medium">$1,500</p>
-                            <p className="text-purple-200 text-sm">📅 2024-02-15</p>
-                          </div>
-                        </div>
-                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
-                          Aktif
-                        </Badge>
-                      </div>
-                      <div className="mb-2">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-purple-200">Katılım</span>
-                          <span className="text-white">2,450/5,000</span>
-                        </div>
-                        <div className="w-full bg-purple-700 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '49%'}}></div>
+                  {/* Active Raffle 1 */}
+                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="font-bold text-lg text-white">Harley Davidson</h3>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <span className="text-white text-sm font-medium">5.0</span>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                            <DollarSign className="h-5 w-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">1000 USDT Ödül Havuzu</h3>
-                            <p className="text-green-400 font-medium">$1,000</p>
-                            <p className="text-purple-200 text-sm">📅 2024-02-10</p>
-                          </div>
+                      
+                      <p className="text-gray-300 text-sm mb-4">
+                        2024 model Harley Davidson Sportster S. Sıfır kilometre motosiklet.
+                      </p>
+                      
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-gray-400">Satılan Biletler</span>
+                          <span className="text-white font-medium">89 / 1.200</span>
                         </div>
-                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
-                          Aktif
-                        </Badge>
+                        <div className="w-full bg-gray-700 rounded-full h-2 mb-1">
+                          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" style={{width: '7.4%'}}></div>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400">7.4% satıldı</span>
+                          <span className="text-green-400 font-medium">Yeni başlıyor!</span>
+                        </div>
                       </div>
-                      <div className="mb-2">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-purple-200">Katılım</span>
-                          <span className="text-white">1,890/2,500</span>
+                      
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">90</div>
+                          <div className="text-xs text-gray-400">Bilet Fiyatı (USDT)</div>
                         </div>
-                        <div className="w-full bg-purple-700 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '76%'}}></div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">38</div>
+                          <div className="text-xs text-gray-400">Kalan Gün</div>
                         </div>
+                      </div>
+                      
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 rounded-xl transition-all duration-300">
+                        Bilet Al
+                      </Button>
+                      
+                      <div className="flex justify-between items-center mt-4 text-sm">
+                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">420.000 USDT</span></span>
+                        <span className="text-gray-400">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                            <Target className="h-5 w-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">PlayStation 5 + 3 Oyun</h3>
-                            <p className="text-green-400 font-medium">$800</p>
-                            <p className="text-purple-200 text-sm">📅 2024-02-20</p>
-                          </div>
+                  {/* Active Raffle 2 */}
+                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="font-bold text-lg text-white">iPhone 15 Pro Max</h3>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <span className="text-white text-sm font-medium">4.8</span>
                         </div>
-                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
-                          Aktif
-                        </Badge>
                       </div>
-                      <div className="mb-2">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-purple-200">Katılım</span>
-                          <span className="text-white">3,200/4,000</span>
+                      
+                      <p className="text-gray-300 text-sm mb-4">
+                        Yepyeni iPhone 15 Pro Max 256GB + AirPods Pro 2. Kutu açılmamış.
+                      </p>
+                      
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-gray-400">Satılan Biletler</span>
+                          <span className="text-white font-medium">2.450 / 5.000</span>
                         </div>
-                        <div className="w-full bg-purple-700 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '80%'}}></div>
+                        <div className="w-full bg-gray-700 rounded-full h-2 mb-1">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{width: '49%'}}></div>
                         </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400">49% satıldı</span>
+                          <span className="text-green-400 font-medium">Popüler!</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">25</div>
+                          <div className="text-xs text-gray-400">Bilet Fiyatı (USDT)</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">12</div>
+                          <div className="text-xs text-gray-400">Kalan Gün</div>
+                        </div>
+                      </div>
+                      
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 rounded-xl transition-all duration-300">
+                        Bilet Al
+                      </Button>
+                      
+                      <div className="flex justify-between items-center mt-4 text-sm">
+                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">1.500 USDT</span></span>
+                        <span className="text-gray-400">duxxan_admin</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Active Raffle 3 */}
+                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="font-bold text-lg text-white">PlayStation 5 Bundle</h3>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <span className="text-white text-sm font-medium">4.9</span>
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-300 text-sm mb-4">
+                        PS5 konsol + 3 popüler oyun + ekstra DualSense kontrolcü paketi.
+                      </p>
+                      
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-gray-400">Satılan Biletler</span>
+                          <span className="text-white font-medium">3.200 / 4.000</span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-2 mb-1">
+                          <div className="bg-gradient-to-r from-green-500 to-teal-500 h-2 rounded-full" style={{width: '80%'}}></div>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400">80% satıldı</span>
+                          <span className="text-red-400 font-medium">Son şans!</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">15</div>
+                          <div className="text-xs text-gray-400">Bilet Fiyatı (USDT)</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">5</div>
+                          <div className="text-xs text-gray-400">Kalan Gün</div>
+                        </div>
+                      </div>
+                      
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 rounded-xl transition-all duration-300">
+                        Bilet Al
+                      </Button>
+                      
+                      <div className="flex justify-between items-center mt-4 text-sm">
+                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">800 USDT</span></span>
+                        <span className="text-gray-400">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
 
                   {/* Completed Raffle */}
-                  <Card className="bg-gradient-to-br from-gray-600 to-gray-700 text-white border-0 shadow-xl opacity-75">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
-                            <Award className="h-5 w-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">Apple MacBook Air M2</h3>
-                            <p className="text-green-400 font-medium">$1,200</p>
-                            <p className="text-gray-200 text-sm">📅 2024-01-25</p>
-                          </div>
+                  <Card className="bg-slate-700 text-white border-0 shadow-xl rounded-2xl overflow-hidden opacity-75">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="font-bold text-lg text-white">MacBook Air M2</h3>
+                        <div className="flex items-center gap-1">
+                          <CheckCircle className="h-4 w-4 text-green-400" />
+                          <span className="text-green-400 text-sm font-medium">Tamamlandı</span>
                         </div>
-                        <Badge className="bg-gray-600 text-white text-xs px-2 py-1">
-                          Tamamlandı
-                        </Badge>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-green-400">
+                      
+                      <p className="text-gray-300 text-sm mb-4">
+                        Apple MacBook Air M2 çip, 256GB SSD, 8GB RAM. Sıfır kutusunda.
+                      </p>
+                      
+                      <div className="flex items-center gap-2 text-sm text-green-400 mb-4">
                         <CheckCircle className="h-4 w-4" />
-                        <span>Çekiliş Tamamlandı</span>
+                        <span>Çekiliş Tamamlandı - Kazanan belirlendi</span>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Upcoming Raffle */}
-                  <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white border-0 shadow-xl">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                            <Star className="h-5 w-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">Bored Ape NFT Collection</h3>
-                            <p className="text-green-400 font-medium">$2,500</p>
-                            <p className="text-blue-200 text-sm">📅 2024-02-28</p>
-                          </div>
-                        </div>
-                        <Badge className="bg-blue-500 text-white text-xs px-2 py-1">
-                          Yakında
-                        </Badge>
+                      
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">1.200 USDT</span></span>
+                        <span className="text-gray-400">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
