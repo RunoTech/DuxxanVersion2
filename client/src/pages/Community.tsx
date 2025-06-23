@@ -1786,14 +1786,20 @@ export default function Community() {
         </div>
 
         {filteredChannels.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-500 dark:text-gray-400 text-lg mb-4">
-              {searchQuery ? 'Arama kriterlerinize uygun kanal bulunamadı' : 'Henüz kanal bulunmuyor'}
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <div className="mb-8">
+              <Users className="h-24 w-24 text-gray-400 dark:text-gray-500 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-4">
+                {searchQuery ? 'Kanal bulunamadı' : 'Henüz kanal bulunmuyor'}
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-8 max-w-md mx-auto">
+                {searchQuery ? 'Arama kriterlerinizi değiştirmeyi deneyin' : 'Kanalları keşfedin ve favori topluluklarınıza katılın'}
+              </p>
             </div>
             <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold">
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all">
+                  <Plus className="h-5 w-5 mr-2" />
                   İlk Kanalı Oluştur
                 </Button>
               </DialogTrigger>
