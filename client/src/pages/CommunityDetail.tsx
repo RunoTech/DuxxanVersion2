@@ -453,8 +453,8 @@ export default function CommunityDetail() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-black" />
               </div>
               <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 $125.000
@@ -465,8 +465,8 @@ export default function CommunityDetail() {
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Award className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Award className="h-5 w-5 sm:h-6 sm:w-6 text-black" />
               </div>
               <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 8
@@ -477,8 +477,8 @@ export default function CommunityDetail() {
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-black" />
               </div>
               <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 95%
@@ -489,8 +489,8 @@ export default function CommunityDetail() {
           
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-black" />
               </div>
               <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 98%
@@ -507,8 +507,8 @@ export default function CommunityDetail() {
             {/* Raffles Section */}
             <div className="space-y-4 lg:space-y-6">
               <div className="flex items-center gap-3 mb-4 lg:mb-6">
-                <div className="w-8 h-8 bg-purple-600 dark:bg-purple-700 rounded-lg flex items-center justify-center">
-                  <Target className="h-4 w-4 text-white" />
+                <div className="w-8 h-8 bg-[#FFC929] dark:bg-[#FFC929] rounded-lg flex items-center justify-center">
+                  <Target className="h-4 w-4 text-black" />
                 </div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                   Kanalda Açılmış Çekilişler
@@ -545,11 +545,11 @@ export default function CommunityDetail() {
                           <span className="text-gray-900 dark:text-white font-medium">89 / 1.200</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-1.5 rounded-full transition-all duration-300" style={{width: '7.4%'}}></div>
+                          <div className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] h-1.5 rounded-full transition-all duration-300" style={{width: '7.4%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
                           <span className="text-gray-500 dark:text-gray-400">7.4% satıldı</span>
-                          <span className="text-green-600 dark:text-green-400 font-medium">Yeni başlıyor!</span>
+                          <span className="text-[#FFC929] dark:text-[#FFC929] font-medium">Yeni başlıyor!</span>
                         </div>
                       </div>
                       
@@ -596,11 +596,11 @@ export default function CommunityDetail() {
                           <span className="text-gray-900 dark:text-white font-medium">2.450 / 5.000</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-300" style={{width: '49%'}}></div>
+                          <div className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] h-1.5 rounded-full transition-all duration-300" style={{width: '49%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
                           <span className="text-gray-500 dark:text-gray-400">49% satıldı</span>
-                          <span className="text-green-600 dark:text-green-400 font-medium">Popüler!</span>
+                          <span className="text-[#FFC929] dark:text-[#FFC929] font-medium">Popüler!</span>
                         </div>
                       </div>
                       
@@ -647,11 +647,11 @@ export default function CommunityDetail() {
                           <span className="text-gray-900 dark:text-white font-medium">3.200 / 4.000</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-green-500 to-teal-500 h-1.5 rounded-full transition-all duration-300" style={{width: '80%'}}></div>
+                          <div className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] h-1.5 rounded-full transition-all duration-300" style={{width: '80%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
                           <span className="text-gray-500 dark:text-gray-400">80% satıldı</span>
-                          <span className="text-red-600 dark:text-red-400 font-medium">Son şans!</span>
+                          <span className="text-orange-600 dark:text-orange-400 font-medium">Son şans!</span>
                         </div>
                       </div>
                       
@@ -740,26 +740,26 @@ export default function CommunityDetail() {
             <Card className="bg-gradient-to-br from-purple-600 to-purple-800 dark:from-purple-700 dark:to-purple-900 text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <TrendingUp className="h-4 w-4 text-purple-200 dark:text-purple-300" />
-                  <h3 className="text-sm font-semibold text-white">Topluluk İstatistikleri</h3>
+                  <TrendingUp className="h-4 w-4 text-black/70 dark:text-white/80" />
+                  <h3 className="text-sm font-semibold text-black dark:text-white">Topluluk İstatistikleri</h3>
                 </div>
                 
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Toplam Çekiliş</span>
-                    <span className="text-xs sm:text-sm font-bold text-white">156</span>
+                    <span className="text-xs sm:text-sm text-black/70 dark:text-white/80">Toplam Çekiliş</span>
+                    <span className="text-xs sm:text-sm font-bold text-black dark:text-white">156</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Toplam Kazanan</span>
-                    <span className="text-xs sm:text-sm font-bold text-white">892</span>
+                    <span className="text-xs sm:text-sm text-black/70 dark:text-white/80">Toplam Kazanan</span>
+                    <span className="text-xs sm:text-sm font-bold text-black dark:text-white">892</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Ortalama Ödül</span>
-                    <span className="text-xs sm:text-sm font-bold text-white">$450</span>
+                    <span className="text-xs sm:text-sm text-black/70 dark:text-white/80">Ortalama Ödül</span>
+                    <span className="text-xs sm:text-sm font-bold text-black dark:text-white">$450</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Aktif Üye</span>
-                    <span className="text-xs sm:text-sm font-bold text-white">1250</span>
+                    <span className="text-xs sm:text-sm text-black/70 dark:text-white/80">Aktif Üye</span>
+                    <span className="text-xs sm:text-sm font-bold text-black dark:text-white">1250</span>
                   </div>
                 </div>
               </CardContent>
@@ -769,48 +769,48 @@ export default function CommunityDetail() {
             <Card className="bg-gradient-to-br from-purple-600 to-purple-800 dark:from-purple-700 dark:to-purple-900 text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <Activity className="h-4 w-4 text-purple-200 dark:text-purple-300" />
-                  <h3 className="text-sm font-semibold text-white">Son Aktiviteler</h3>
+                  <Activity className="h-4 w-4 text-black/70 dark:text-white/80" />
+                  <h3 className="text-sm font-semibold text-black dark:text-white">Son Aktiviteler</h3>
                 </div>
                 
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                      <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium line-clamp-2">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
-                      <p className="text-xs text-purple-200 dark:text-purple-300">2 saat önce</p>
+                      <p className="text-xs text-black dark:text-white font-medium line-clamp-2">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
+                      <p className="text-xs text-black/70 dark:text-white/80">2 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium">250 yeni üye katıldı</p>
-                      <p className="text-xs text-purple-200 dark:text-purple-300">5 saat önce</p>
+                      <p className="text-xs text-black dark:text-white font-medium">250 yeni üye katıldı</p>
+                      <p className="text-xs text-black/70 dark:text-white/80">5 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium line-clamp-2">MacBook Air çekilişi tamamlandı</p>
-                      <p className="text-xs text-purple-200 dark:text-purple-300">1 gün önce</p>
+                      <p className="text-xs text-black dark:text-white font-medium line-clamp-2">MacBook Air çekilişi tamamlandı</p>
+                      <p className="text-xs text-black/70 dark:text-white/80">1 gün önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <BarChart className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                      <BarChart className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium line-clamp-2">Haftalık analiz raporu yayınlandı</p>
-                      <p className="text-xs text-purple-200 dark:text-purple-300">2 gün önce</p>
+                      <p className="text-xs text-black dark:text-white font-medium line-clamp-2">Haftalık analiz raporu yayınlandı</p>
+                      <p className="text-xs text-black/70 dark:text-white/80">2 gün önce</p>
                     </div>
                   </div>
                 </div>
