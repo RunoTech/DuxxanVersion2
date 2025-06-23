@@ -747,25 +747,23 @@ export default function Community() {
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
       {/* Header Section */}
-      <div className="relative h-16 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
-        
-        {/* Channel Name */}
-        <div className="absolute top-3 left-3">
-          <h3 className="text-gray-900 dark:text-gray-900 text-lg font-bold truncate max-w-[200px]">
-            {channel.name}
-          </h3>
-        </div>
-        
-        {/* Actions */}
-        <div className="absolute top-3 right-3">
+      <div className="relative">
+        <div className="flex items-center justify-between p-3">
+          {/* Channel Name */}
+          <div className="bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] rounded-lg px-3 py-2 mr-2">
+            <h3 className="text-gray-900 dark:text-gray-900 text-sm font-bold whitespace-nowrap">
+              {channel.name}
+            </h3>
+          </div>
+          
+          {/* Actions */}
           {isOwner && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleEditChannel(channel);
               }}
-              className="p-2 bg-white/30 dark:bg-black/30 rounded-full backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 transition-colors shadow-lg border border-white/20 dark:border-gray-600/20"
+              className="p-2 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 dark:hover:bg-gray-700/30 transition-colors shadow-lg border border-white/20 dark:border-gray-600/20 flex-shrink-0"
             >
               <Edit className="h-4 w-4 text-white dark:text-white" />
             </button>
@@ -1252,7 +1250,9 @@ export default function Community() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <Card key={i} className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
-                    <div className="h-16 bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30"></div>
+                    <div className="p-3">
+                      <div className="bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30 rounded-lg w-20 h-6"></div>
+                    </div>
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="w-3/4 h-6 bg-gray-600 rounded mb-2"></div>
                       <div className="w-full h-3 bg-gray-600 rounded mb-1"></div>
