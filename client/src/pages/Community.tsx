@@ -286,6 +286,10 @@ export default function Community() {
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [subscribedChannels, setSubscribedChannels] = useState<number[]>([2]);
   const [interestedRaffles, setInterestedRaffles] = useState<number[]>([]);
+  
+  // Subscription states for new functionality
+  const [subscriptions, setSubscriptions] = useState<Set<number>>(new Set());
+  const [memberCounts, setMemberCounts] = useState<Record<number, number>>({});
 
   const channelForm = useForm<CreateChannelForm>({
     resolver: zodResolver(createChannelSchema),
@@ -727,6 +731,7 @@ export default function Community() {
     console.log('Channel:', channel.id, 'Creator:', channel.creatorWalletAddress, 'Current:', address);
     const isOwner = isConnected && address && channel.creatorWalletAddress && 
                    address.toLowerCase() === channel.creatorWalletAddress.toLowerCase();
+    const isSubscribed = subscriptions.has(channel.id);
     console.log('Is owner:', isOwner);
 
     const getCategoryInfo = (channel: any) => {
@@ -737,7 +742,7 @@ export default function Community() {
     };
 
     const categoryInfo = getCategoryInfo(channel);
-    const memberCount = channel.subscriberCount ? parseInt(channel.subscriberCount) : Math.floor(Math.random() * 20000) + 1000;
+    const memberCount = memberCounts[channel.id] ?? (channel.subscriberCount ? parseInt(channel.subscriberCount) : Math.floor(Math.random() * 20000) + 1000);
     const activeCount = Math.floor(memberCount * 0.05) + Math.floor(Math.random() * 100);
 
     return (
