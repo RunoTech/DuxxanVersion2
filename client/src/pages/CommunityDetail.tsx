@@ -450,52 +450,52 @@ export default function CommunityDetail() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
-          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <DollarSign className="h-6 w-6 text-white" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 $125.000
               </div>
-              <div className="text-gray-400 text-sm font-medium">Toplam Ödül</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Toplam Ödül</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Award className="h-6 w-6 text-white" />
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Award className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 8
               </div>
-              <div className="text-gray-400 text-sm font-medium">Aktif Çekiliş</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Aktif Çekiliş</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Activity className="h-6 w-6 text-white" />
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 95%
               </div>
-              <div className="text-gray-400 text-sm font-medium">Topluluk Aktivitesi</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Topluluk Aktivitesi</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <TrendingUp className="h-6 w-6 text-white" />
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 98%
               </div>
-              <div className="text-gray-400 text-sm font-medium">Başarı Oranı</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Başarı Oranı</div>
             </CardContent>
           </Card>
         </div>
