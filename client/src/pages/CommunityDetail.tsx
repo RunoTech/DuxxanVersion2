@@ -740,7 +740,7 @@ export default function CommunityDetail() {
             <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-[#FFC929] dark:to-[#E6B526] text-black dark:text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <TrendingUp className="h-4 w-4 text-black/70 dark:text-white/80" />
+                  <TrendingUp className="h-4 w-4 text-black/70 dark:text-[#FFC929]" />
                   <h3 className="text-sm font-semibold text-black dark:text-white">Topluluk İstatistikleri</h3>
                 </div>
                 
@@ -769,14 +769,14 @@ export default function CommunityDetail() {
             <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-[#FFC929] dark:to-[#E6B526] text-black dark:text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <Activity className="h-4 w-4 text-black/70 dark:text-white/80" />
+                  <Activity className="h-4 w-4 text-black/70 dark:text-[#FFC929]" />
                   <h3 className="text-sm font-semibold text-black dark:text-white">Son Aktiviteler</h3>
                 </div>
                 
                 <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#FFB800] dark:bg-[#FFC929] rounded-full flex items-center justify-center flex-shrink-0">
-                      <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
+                      <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black dark:text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-black dark:text-white font-medium line-clamp-2">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
@@ -786,7 +786,7 @@ export default function CommunityDetail() {
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#FFB800] dark:bg-[#FFC929] rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
+                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black dark:text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-black dark:text-white font-medium">250 yeni üye katıldı</p>
@@ -796,7 +796,7 @@ export default function CommunityDetail() {
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#FFB800] dark:bg-[#FFC929] rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
+                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black dark:text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-black dark:text-white font-medium line-clamp-2">MacBook Air çekilişi tamamlandı</p>
@@ -806,7 +806,7 @@ export default function CommunityDetail() {
                   
                   <div className="flex items-start gap-2">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#FFB800] dark:bg-[#FFC929] rounded-full flex items-center justify-center flex-shrink-0">
-                      <BarChart className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black" />
+                      <BarChart className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-black dark:text-black" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-black dark:text-white font-medium line-clamp-2">Haftalık analiz raporu yayınlandı</p>
