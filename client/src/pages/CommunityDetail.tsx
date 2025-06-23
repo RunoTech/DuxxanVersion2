@@ -219,29 +219,53 @@ export default function CommunityDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
-      {/* Hero Section with Cover Image */}
-      <div className="relative h-80 bg-gradient-to-r from-[#FFC929] via-[#FFB800] to-[#FFA500] overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+      {/* Hero Section with 3D Background */}
+      <div className="relative h-96 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 overflow-hidden">
+        {/* 3D Background Pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 animate-pulse"></div>
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         
         {/* Navigation */}
         <div className="relative z-10 flex items-center justify-between p-6">
-          <Button
-            onClick={() => setLocation('/community')}
-            variant="ghost"
-            className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Topluluklar
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setLocation('/community')}
+              variant="ghost"
+              size="sm"
+              className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+            >
+              Topluluklar
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+            >
+              Çekilişler
+            </Button>
+          </div>
           
           <div className="flex items-center gap-3">
+            <Button
+              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium shadow-lg"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Abone Ol
+            </Button>
             {isChannelCreator && (
               <Dialog open={isEditing} onOpenChange={setIsEditing}>
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
+                    size="sm"
+                    className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
                   >
                     <Settings className="h-4 w-4 mr-2" />
                     Düzenle
@@ -380,45 +404,49 @@ export default function CommunityDetail() {
         
         {/* Hero Content */}
         <div className="absolute bottom-6 left-6 right-6 z-10">
-          <div className="flex items-end gap-6">
-            <Avatar className="h-24 w-24 border-4 border-white/30 shadow-2xl ring-2 ring-[#FFC929]/50">
-              <AvatarImage src={channel?.avatar} alt={channel?.name} />
-              <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black text-2xl font-bold">
-                {(channel?.name || 'C').slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1 text-white">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-4xl font-bold">{channel?.name}</h1>
-                {channel?.isDemo && (
-                  <Badge className="bg-[#FFC929]/90 text-black border-[#FFB800] px-3 py-1 text-sm backdrop-blur-sm font-semibold">
-                    DEMO
-                  </Badge>
-                )}
+          <div className="flex items-end justify-between">
+            <div className="flex items-end gap-6">
+              <Avatar className="h-20 w-20 border-4 border-white/30 shadow-2xl">
+                <AvatarImage src={channel?.avatar} alt={channel?.name} />
+                <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black text-xl font-bold">
+                  {(channel?.name || 'C').slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1 text-white">
+                <h1 className="text-3xl font-bold mb-2">{channel?.name}</h1>
+                <div className="flex items-center gap-3 mb-3 text-sm">
+                  <span className="text-white/80">by {channel?.creator?.username || 'CryptoExpert'}</span>
+                  <span className="text-white/60">📍 Türkiye</span>
+                  <span className="text-white/60">📅 Kurulma: 15.03.2022</span>
+                </div>
+                <p className="text-white/90 text-base leading-relaxed max-w-2xl mb-4">
+                  {channel?.description || 'Türkiye\'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri ile kripto dünyasında doğru bilgiye ulaşın.'}
+                </p>
+                
+                {/* Tags */}
+                <div className="flex gap-2 mb-4">
+                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">BTC</Badge>
+                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">ETH</Badge>
+                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">Analiz</Badge>
+                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">DeFi</Badge>
+                  <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">NFT</Badge>
+                </div>
               </div>
-              <div className="flex items-center gap-4 mb-3">
-                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                  {channel?.category}
-                </Badge>
-                <span className="text-white/80 text-sm flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  {channel?.creator?.username || 'Anonymous'}
-                </span>
-              </div>
-              <p className="text-white/90 text-lg leading-relaxed max-w-2xl">
-                {channel?.description}
-              </p>
             </div>
             
-            <Button
-              onClick={handleJoin}
-              size="lg"
-              className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black border-0 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-            >
-              <Users className="h-5 w-5 mr-2" />
-              Katıl
-            </Button>
+            {/* Member Count and Subscribe Button */}
+            <div className="text-center text-white">
+              <div className="text-2xl font-bold mb-1">15.420</div>
+              <div className="text-sm text-white/80 mb-4">Toplam Üye</div>
+              <Button
+                onClick={handleJoin}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium shadow-lg"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Abone Ol
+              </Button>
+            </div>
           </div>
         </div>
       </div>
