@@ -184,24 +184,51 @@ export default function RaffleDetail() {
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold dark:text-duxxan-text mb-2 text-[#ffc929]">
-              {safeRaffle.title}
-            </h1>
-            <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                {daysLeft} gün kaldı
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                {safeRaffle.ticketsSold} / {safeRaffle.maxTickets} bilet
-              </span>
-              <span className="flex items-center gap-1">
-                <Trophy className="w-4 h-4" />
-                {numericPrizeValue.toLocaleString('tr-TR')} USDT
-              </span>
-            </div>
+          <div className="flex-1">
+            {isEditingCard ? (
+              <div className="space-y-2">
+                <Input
+                  value={editableTitle}
+                  onChange={(e) => setEditableTitle(e.target.value)}
+                  className="text-2xl md:text-3xl font-bold bg-white dark:bg-duxxan-dark border-duxxan-yellow text-[#ffc929]"
+                  placeholder="Çekiliş başlığı..."
+                />
+                <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {daysLeft} gün kaldı
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    {safeRaffle.ticketsSold} / {safeRaffle.maxTickets} bilet
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Trophy className="w-4 h-4" />
+                    {numericPrizeValue.toLocaleString('tr-TR')} USDT
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold dark:text-duxxan-text mb-2 text-[#ffc929]">
+                  {safeRaffle.title}
+                </h1>
+                <div className="flex items-center gap-4 text-gray-600 dark:text-duxxan-text-secondary">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {daysLeft} gün kaldı
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    {safeRaffle.ticketsSold} / {safeRaffle.maxTickets} bilet
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Trophy className="w-4 h-4" />
+                    {numericPrizeValue.toLocaleString('tr-TR')} USDT
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="border-gray-300 dark:border-duxxan-border">
@@ -320,9 +347,19 @@ export default function RaffleDetail() {
                 <CardTitle className="text-gray-900 dark:text-duxxan-yellow">Çekiliş Detayları</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-duxxan-text-secondary leading-relaxed">
-                  {safeRaffle.description}
-                </p>
+                {isEditingCard ? (
+                  <textarea
+                    value={editableDescription}
+                    onChange={(e) => setEditableDescription(e.target.value)}
+                    className="w-full p-3 border border-duxxan-border rounded-lg bg-white dark:bg-duxxan-dark text-gray-600 dark:text-duxxan-text-secondary resize-none"
+                    rows={4}
+                    placeholder="Çekiliş açıklaması..."
+                  />
+                ) : (
+                  <p className="text-gray-600 dark:text-duxxan-text-secondary leading-relaxed">
+                    {safeRaffle.description}
+                  </p>
+                )}
                 <Separator className="my-4 bg-gray-200 dark:bg-duxxan-border" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
