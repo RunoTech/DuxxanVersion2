@@ -43,7 +43,8 @@ import {
   FileText,
   Tag,
   X,
-  Sparkles
+  Sparkles,
+  BarChart
 } from 'lucide-react';
 
 export default function CommunityDetail() {
