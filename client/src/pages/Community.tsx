@@ -830,14 +830,17 @@ export default function Community() {
         {/* Subscribe Button */}
         <div className="mt-auto">
           <Button
-            className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all"
+            className={`w-full font-semibold py-2 rounded-xl border-0 transition-all ${
+              isSubscribed 
+                ? 'bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white dark:text-white' 
+                : 'bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black'
+            }`}
             onClick={(e) => {
               e.stopPropagation();
               handleSubscribe(channel.id);
             }}
           >
-            <Star className="h-4 w-4 mr-2" />
-            Abone Ol
+            {isSubscribed ? 'Abone Olundu' : 'Abone Ol'}
           </Button>
         </div>
       </div>
@@ -846,7 +849,7 @@ export default function Community() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
           <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/10 via-[#FFD700]/5 to-[#FFB800]/10"></div>
@@ -914,7 +917,7 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Section */}
-        <div className="bg-gray-800/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 mb-8 border border-[#FFC929]/20 dark:border-[#FFC929]/20 shadow-lg">
+        <div className="bg-white/20 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 mb-8 border border-[#FFC929]/20 dark:border-[#FFC929]/20 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Filter className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929]" />
