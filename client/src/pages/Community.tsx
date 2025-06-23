@@ -750,13 +750,7 @@ export default function Community() {
       <div className="relative h-32 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
         
-        {/* Status Badge */}
-        <div className="absolute top-3 left-3">
-          <div className="flex items-center gap-1 px-2 py-1 bg-green-600 rounded-full text-xs font-medium text-white shadow-lg">
-            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-            Çevrimiçi
-          </div>
-        </div>
+
         
         {/* Actions */}
         <div className="absolute top-3 right-3 flex gap-2">
