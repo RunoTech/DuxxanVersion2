@@ -501,13 +501,13 @@ export default function CommunityDetail() {
         </div>
 
         {/* Main Content Layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-6 items-start">
           {/* Left Content - Raffles Section */}
           <div className="xl:col-span-3">
             {/* Raffles Section */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+            <div className="space-y-4 lg:space-y-6">
+              <div className="flex items-center gap-3 mb-4 lg:mb-6">
+                <div className="w-8 h-8 bg-purple-600 dark:bg-purple-700 rounded-lg flex items-center justify-center">
                   <Target className="h-4 w-4 text-white" />
                 </div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -523,60 +523,60 @@ export default function CommunityDetail() {
                   </div>
                 </div>
               ) : displayRaffles.length > 0 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                   {/* Active Raffle 1 */}
-                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-base text-white">Harley Davidson</h3>
-                        <div className="flex items-center gap-1">
+                  <Card className="bg-slate-800 dark:bg-slate-900 text-white border-0 shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <h3 className="font-bold text-sm sm:text-base text-white truncate flex-1 mr-2">Harley Davidson</h3>
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <Star className="h-3 w-3 text-yellow-400 fill-current" />
                           <span className="text-white text-xs font-medium">5.0</span>
                         </div>
                       </div>
                       
-                      <p className="text-gray-300 text-xs mb-3 line-clamp-2">
+                      <p className="text-gray-300 dark:text-gray-400 text-xs mb-2 sm:mb-3 line-clamp-2">
                         2024 model Harley Davidson Sportster S. Sıfır kilometre motosiklet.
                       </p>
                       
-                      <div className="mb-3">
+                      <div className="mb-2 sm:mb-3">
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-gray-400">Satılan Biletler</span>
+                          <span className="text-gray-400 dark:text-gray-500">Satılan Biletler</span>
                           <span className="text-white font-medium">89 / 1.200</span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-1.5 rounded-full" style={{width: '7.4%'}}></div>
+                        <div className="w-full bg-gray-700 dark:bg-gray-800 rounded-full h-1.5 mb-1">
+                          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-1.5 rounded-full transition-all duration-300" style={{width: '7.4%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-400">7.4% satıldı</span>
+                          <span className="text-gray-400 dark:text-gray-500">7.4% satıldı</span>
                           <span className="text-green-400 font-medium">Yeni başlıyor!</span>
                         </div>
                       </div>
                       
-                      <div className="flex justify-between items-center mb-3">
+                      <div className="flex justify-between items-center mb-2 sm:mb-3">
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">90</div>
-                          <div className="text-xs text-gray-400">Bilet Fiyatı</div>
+                          <div className="text-base sm:text-lg font-bold text-white">90</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Bilet Fiyatı</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">38</div>
-                          <div className="text-xs text-gray-400">Kalan Gün</div>
+                          <div className="text-base sm:text-lg font-bold text-white">38</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Kalan Gün</div>
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-2 text-sm rounded-xl transition-all duration-300">
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 dark:from-yellow-400 dark:to-orange-400 dark:hover:from-yellow-500 dark:hover:to-orange-500 text-black font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105">
                         Bilet Al
                       </Button>
                       
-                      <div className="flex justify-between items-center mt-3 text-xs">
-                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">420K</span></span>
-                        <span className="text-gray-400">duxxan_admin</span>
+                      <div className="flex justify-between items-center mt-2 sm:mt-3 text-xs">
+                        <span className="text-gray-400 dark:text-gray-500 truncate">Ödül: <span className="text-white font-bold">420K</span></span>
+                        <span className="text-gray-400 dark:text-gray-500 truncate">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
 
                   {/* Active Raffle 2 */}
-                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
+                  <Card className="bg-slate-800 dark:bg-slate-900 text-white border-0 shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="font-bold text-base text-white">iPhone 15 Pro Max</h3>
@@ -627,7 +627,7 @@ export default function CommunityDetail() {
                   </Card>
 
                   {/* Active Raffle 3 */}
-                  <Card className="bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden">
+                  <Card className="bg-slate-800 dark:bg-slate-900 text-white border-0 shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="font-bold text-base text-white">PlayStation 5 Bundle</h3>
@@ -678,7 +678,7 @@ export default function CommunityDetail() {
                   </Card>
 
                   {/* Completed Raffle */}
-                  <Card className="bg-slate-700 text-white border-0 shadow-xl rounded-2xl overflow-hidden opacity-75">
+                  <Card className="bg-slate-700 dark:bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden opacity-75 transition-all duration-300 hover:opacity-90">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="font-bold text-base text-white">MacBook Air M2</h3>
@@ -735,82 +735,82 @@ export default function CommunityDetail() {
           </div>
 
           {/* Right Sidebar - Statistics */}
-          <div className="xl:col-span-1 space-y-6 xl:mt-[57px]">
+          <div className="xl:col-span-1 space-y-4 lg:space-y-6 xl:mt-[57px] order-first xl:order-last">
             {/* Statistics Card */}
-            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="h-4 w-4 text-purple-200" />
+            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 dark:from-purple-700 dark:to-purple-900 text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <TrendingUp className="h-4 w-4 text-purple-200 dark:text-purple-300" />
                   <h3 className="text-sm font-semibold text-white">Topluluk İstatistikleri</h3>
                 </div>
                 
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-purple-100">Toplam Çekiliş</span>
-                    <span className="text-sm font-bold text-white">156</span>
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Toplam Çekiliş</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">156</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-purple-100">Toplam Kazanan</span>
-                    <span className="text-sm font-bold text-white">892</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Toplam Kazanan</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">892</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-purple-100">Ortalama Ödül</span>
-                    <span className="text-sm font-bold text-white">$450</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Ortalama Ödül</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">$450</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-purple-100">Aktif Üye</span>
-                    <span className="text-sm font-bold text-white">1250</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-purple-100 dark:text-purple-200">Aktif Üye</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">1250</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recent Activities Card */}
-            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Activity className="h-4 w-4 text-purple-200" />
+            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 dark:from-purple-700 dark:to-purple-900 text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <Activity className="h-4 w-4 text-purple-200 dark:text-purple-300" />
                   <h3 className="text-sm font-semibold text-white">Son Aktiviteler</h3>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Award className="h-3 w-3 text-white" />
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Award className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
-                      <p className="text-xs text-purple-200">2 saat önce</p>
+                      <p className="text-xs text-white font-medium line-clamp-2">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
+                      <p className="text-xs text-purple-200 dark:text-purple-300">2 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="h-3 w-3 text-white" />
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-white font-medium">250 yeni üye katıldı</p>
-                      <p className="text-xs text-purple-200">5 saat önce</p>
+                      <p className="text-xs text-purple-200 dark:text-purple-300">5 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="h-3 w-3 text-white" />
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium">MacBook Air çekilişi tamamlandı</p>
-                      <p className="text-xs text-purple-200">1 gün önce</p>
+                      <p className="text-xs text-white font-medium line-clamp-2">MacBook Air çekilişi tamamlandı</p>
+                      <p className="text-xs text-purple-200 dark:text-purple-300">1 gün önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <BarChart className="h-3 w-3 text-white" />
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 dark:bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <BarChart className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white font-medium">Haftalık analiz raporu yayınlandı</p>
-                      <p className="text-xs text-purple-200">2 gün önce</p>
+                      <p className="text-xs text-white font-medium line-clamp-2">Haftalık analiz raporu yayınlandı</p>
+                      <p className="text-xs text-purple-200 dark:text-purple-300">2 gün önce</p>
                     </div>
                   </div>
                 </div>
@@ -823,7 +823,7 @@ export default function CommunityDetail() {
 
         {/* Raffle Creation Modal */}
         <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/40 dark:border-[#FFC929]/60 shadow-2xl backdrop-blur-sm">
+          <DialogContent className="max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/40 dark:border-[#FFC929]/60 shadow-2xl backdrop-blur-sm mx-4 sm:mx-auto">
             <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
               <DialogTitle className="text-2xl font-bold text-[#FFC929] dark:text-[#FFC929] flex items-center gap-2">
                 <Award className="h-6 w-6" />
@@ -907,7 +907,7 @@ export default function CommunityDetail() {
               </Card>
 
               {/* Form Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="title" className="text-base font-semibold text-gray-900 dark:text-white">
@@ -1014,7 +1014,7 @@ export default function CommunityDetail() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   onClick={() => setIsCreatingRaffle(false)}
                   variant="outline"
