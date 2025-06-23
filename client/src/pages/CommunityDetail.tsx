@@ -737,7 +737,7 @@ export default function CommunityDetail() {
           {/* Right Sidebar - Statistics */}
           <div className="xl:col-span-1 space-y-4 lg:space-y-6 xl:mt-[57px] order-first xl:order-last">
             {/* Statistics Card */}
-            <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-[#FFC929] dark:to-[#E6B526] text-black dark:text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
+            <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-gray-800 dark:to-gray-900 text-black dark:text-white border-0 dark:border dark:border-[#FFC929]/20 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
                   <TrendingUp className="h-4 w-4 text-black/70 dark:text-[#FFC929]" />
@@ -766,7 +766,7 @@ export default function CommunityDetail() {
             </Card>
 
             {/* Recent Activities Card */}
-            <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-[#FFC929] dark:to-[#E6B526] text-black dark:text-white border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
+            <Card className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] dark:from-gray-800 dark:to-gray-900 text-black dark:text-white border-0 dark:border dark:border-[#FFC929]/20 shadow-xl transition-all duration-300 hover:shadow-2xl">
               <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
                   <Activity className="h-4 w-4 text-black/70 dark:text-[#FFC929]" />
