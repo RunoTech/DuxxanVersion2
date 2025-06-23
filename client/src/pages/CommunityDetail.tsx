@@ -361,18 +361,6 @@ export default function CommunityDetail() {
                 </DialogContent>
               </Dialog>
             )}
-            
-            <div className="relative">
-              <Button
-                ref={shareButtonRef}
-                onClick={handleShare}
-                variant="ghost"
-                className="text-black/80 hover:text-black hover:bg-black/10 backdrop-blur-sm"
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                Paylaş
-              </Button>
-            </div>
           </div>
         </div>
         
@@ -1080,10 +1068,6 @@ export default function CommunityDetail() {
         </div>
       </div>,
       document.body
-    )}
-    </>
-  );
-}
     )}
     </>
   );
