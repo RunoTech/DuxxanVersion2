@@ -1124,40 +1124,40 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Section */}
-        <div className="bg-purple-900/50 dark:bg-purple-900/50 backdrop-blur-sm rounded-2xl p-4 mb-8 border border-purple-600/30 dark:border-purple-600/30">
+        <div className="bg-gradient-to-r from-purple-800 via-purple-900 to-indigo-900 dark:from-purple-800 dark:via-purple-900 dark:to-indigo-900 backdrop-blur-sm rounded-xl p-4 mb-8 border border-purple-700/50 dark:border-purple-700/50 shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-purple-300 dark:text-purple-300" />
-              <span className="text-white dark:text-white font-medium">Filtreler:</span>
+            <div className="flex items-center gap-3">
+              <Filter className="h-5 w-5 text-purple-200 dark:text-purple-200" />
+              <span className="text-purple-100 dark:text-purple-100 font-medium">Filtreler:</span>
             </div>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400 dark:text-purple-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-300 dark:text-purple-300" />
                 <Input
                   type="text"
                   placeholder="Kanal ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-purple-800/30 dark:bg-purple-800/30 border-purple-600/30 dark:border-purple-600/30 text-white dark:text-white placeholder-purple-300 dark:placeholder-purple-300 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-[#FFC929]/20 dark:focus:ring-[#FFC929]/20"
+                  className="pl-10 w-72 h-10 bg-purple-700/50 dark:bg-purple-700/50 border-purple-600/50 dark:border-purple-600/50 text-purple-100 dark:text-purple-100 placeholder-purple-300 dark:placeholder-purple-300 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-32 bg-purple-800/30 dark:bg-purple-800/30 border-purple-600/30 dark:border-purple-600/30 text-white dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-[#FFC929]/20 dark:focus:ring-[#FFC929]/20">
+                <SelectTrigger className="w-28 h-10 bg-purple-700/50 dark:bg-purple-700/50 border-purple-600/50 dark:border-purple-600/50 text-purple-100 dark:text-purple-100 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg">
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600">
-                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Tümü</SelectItem>
+                <SelectContent className="bg-purple-800 dark:bg-purple-800 border-purple-600 dark:border-purple-600">
+                  <SelectItem value="all" className="text-purple-100 dark:text-purple-100 hover:bg-purple-700 dark:hover:bg-purple-700">Tümü</SelectItem>
                   {categories.filter(cat => cat.id !== 'all').map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <SelectItem key={category.id} value={category.id.toString()} className="text-purple-100 dark:text-purple-100 hover:bg-purple-700 dark:hover:bg-purple-700">
                       {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="bg-purple-600/50 dark:bg-purple-600/50 hover:bg-purple-700 dark:hover:bg-purple-700 text-white dark:text-white border-0 backdrop-blur-sm">
+              <Button className="h-10 px-4 bg-purple-600 dark:bg-purple-600 hover:bg-purple-500 dark:hover:bg-purple-500 text-purple-100 dark:text-purple-100 border-0 rounded-lg font-medium">
                 Tümü
               </Button>
-              <Button className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <Button className="h-10 px-4 bg-purple-600 dark:bg-purple-600 hover:bg-purple-500 dark:hover:bg-purple-500 text-purple-100 dark:text-purple-100 border-0 rounded-lg font-medium">
                 Tümü
               </Button>
             </div>
