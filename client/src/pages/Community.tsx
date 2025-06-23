@@ -902,11 +902,6 @@ export default function Community() {
                 </DialogTrigger>
               </Dialog>
               
-              <Button className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
-                <Calendar className="h-5 w-5 mr-2" />
-                Çekiliş Duyuru Ol
-              </Button>
-              
               <Button className="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                 <Heart className="h-5 w-5 mr-2" />
                 Gelecek Çekilişler
