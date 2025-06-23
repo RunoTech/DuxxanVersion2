@@ -700,15 +700,12 @@ export default function CommunityDetail() {
                   <Calendar className="h-12 w-12 text-gray-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  {channel?.isDemo ? 'Demo İçerik Yükleniyor' : 'Henüz Çekiliş Yok'}
+                  Henüz Çekiliş Yok
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                  {channel?.isDemo 
-                    ? 'Demo çekiliş içerikleri hazırlanıyor. Lütfen bekleyin.'
-                    : 'Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor. İlk çekilişi başlatmak için kanal oluşturucusuyla iletişime geçin.'
-                  }
+                  Bu toplulukta henüz aktif veya planlanmış çekiliş bulunmuyor. İlk çekilişi başlatmak için kanal oluşturucusuyla iletişime geçin.
                 </p>
-                {!channel?.isDemo && isChannelCreator && (
+                {isChannelCreator && (
                   <Button 
                     onClick={() => setIsCreatingRaffle(true)}
                     className="mt-4 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
