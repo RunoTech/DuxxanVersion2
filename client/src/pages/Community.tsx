@@ -782,54 +782,54 @@ export default function Community() {
         <div className="flex items-center gap-2 mb-4">
           <Avatar className="h-8 w-8">
             <AvatarImage src={`/api/placeholder/48/48`} />
-            <AvatarFallback className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white font-bold text-xs">
+            <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black dark:text-black font-bold text-xs">
               {channel.creator?.username?.charAt(0)?.toUpperCase() || channel.name?.charAt(0)?.toUpperCase() || 'C'}
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="text-purple-200 text-sm font-medium">
+            <div className="text-white dark:text-white text-sm font-medium">
               {channel.creator?.username || 'CryptoExpert'}
             </div>
-            <div className="text-purple-300 text-xs">
+            <div className="text-gray-400 dark:text-gray-400 text-xs">
               Topluluk Sahibi
             </div>
           </div>
         </div>
 
         {/* Tags */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-4 flex-wrap">
           {categoryInfo.tags.map((tag, index) => (
-            <Badge key={index} className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">
+            <Badge key={index} className="bg-[#FFC929]/20 dark:bg-[#FFC929]/20 text-[#FFC929] dark:text-[#FFC929] border-[#FFC929]/30 dark:border-[#FFC929]/30 text-xs px-2 py-1">
               {tag}
             </Badge>
           ))}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
           <div className="text-center">
-            <div className="text-xl font-bold text-white">{formatCurrency(memberCount)}</div>
-            <div className="text-purple-300 text-xs">Üye</div>
+            <div className="text-lg sm:text-xl font-bold text-white dark:text-white">{formatCurrency(memberCount)}</div>
+            <div className="text-gray-400 dark:text-gray-400 text-xs">Üye</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-bold text-green-400">{activeCount}</div>
-            <div className="text-purple-300 text-xs">Aktif</div>
+            <div className="text-lg sm:text-xl font-bold text-green-400 dark:text-green-400">{activeCount}</div>
+            <div className="text-gray-400 dark:text-gray-400 text-xs">Aktif</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-bold text-yellow-400">{categoryInfo.name}</div>
-            <div className="text-purple-300 text-xs">Kategori</div>
+            <div className="text-lg sm:text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">{categoryInfo.name}</div>
+            <div className="text-gray-400 dark:text-gray-400 text-xs">Kategori</div>
           </div>
         </div>
 
         {/* Location */}
         <div className="flex items-center justify-center gap-1 mb-4">
-          <Globe className="h-3 w-3 text-purple-300" />
-          <span className="text-purple-300 text-xs">Türkiye</span>
+          <Globe className="h-3 w-3 text-gray-400 dark:text-gray-400" />
+          <span className="text-gray-400 dark:text-gray-400 text-xs">Türkiye</span>
         </div>
 
         {/* Subscribe Button */}
         <Button
-          className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl border-0 transition-all"
+          className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all"
           onClick={(e) => {
             e.stopPropagation();
             handleSubscribe(channel.id);
@@ -1247,21 +1247,42 @@ export default function Community() {
             </Dialog>
 
             {channelsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-12 h-12 bg-gray-600 rounded-full"></div>
-                      <div className="space-y-2">
-                        <div className="w-24 h-4 bg-gray-600 rounded"></div>
-                        <div className="w-16 h-3 bg-gray-600 rounded"></div>
+                  <Card key={i} className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
+                    <div className="h-32 bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30"></div>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="w-3/4 h-6 bg-gray-600 rounded mb-2"></div>
+                      <div className="w-full h-3 bg-gray-600 rounded mb-1"></div>
+                      <div className="w-2/3 h-3 bg-gray-600 rounded mb-4"></div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-gray-600 rounded-full"></div>
+                        <div className="space-y-1">
+                          <div className="w-20 h-3 bg-gray-600 rounded"></div>
+                          <div className="w-16 h-2 bg-gray-600 rounded"></div>
+                        </div>
                       </div>
+                      <div className="flex gap-2 mb-4">
+                        <div className="w-12 h-5 bg-gray-600 rounded"></div>
+                        <div className="w-10 h-5 bg-gray-600 rounded"></div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="text-center">
+                          <div className="w-10 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-6 h-2 bg-gray-600 rounded mx-auto"></div>
+                        </div>
+                        <div className="text-center">
+                          <div className="w-8 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-6 h-2 bg-gray-600 rounded mx-auto"></div>
+                        </div>
+                        <div className="text-center">
+                          <div className="w-12 h-5 bg-gray-600 rounded mx-auto mb-1"></div>
+                          <div className="w-8 h-2 bg-gray-600 rounded mx-auto"></div>
+                        </div>
+                      </div>
+                      <div className="w-full h-10 bg-gray-600 rounded-lg mt-auto"></div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="w-full h-3 bg-gray-600 rounded"></div>
-                      <div className="w-3/4 h-3 bg-gray-600 rounded"></div>
-                    </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             ) : (
