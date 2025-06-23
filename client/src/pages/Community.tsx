@@ -777,12 +777,12 @@ export default function Community() {
         </h3>
         
         {/* Description */}
-        <p className="text-gray-300 dark:text-gray-300 text-sm mb-4 flex-1 line-clamp-2">
-          {channel.description || "Türkiye'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri."}
+        <p className="text-gray-300 dark:text-gray-300 text-sm mb-3 line-clamp-1">
+          {channel.description || "Join our vibrant community of blockchain enthusiasts, developers, and investors"}
         </p>
 
         {/* Creator Info */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <Avatar className="h-8 w-8">
             <AvatarImage src={`/api/placeholder/48/48`} />
             <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black dark:text-black font-bold text-xs">
@@ -800,7 +800,7 @@ export default function Community() {
         </div>
 
         {/* Tags */}
-        <div className="flex gap-2 mb-4 flex-wrap">
+        <div className="flex gap-2 mb-3 flex-wrap">
           {categoryInfo.tags.map((tag, index) => (
             <Badge key={index} className="bg-[#FFC929]/20 dark:bg-[#FFC929]/20 text-[#FFC929] dark:text-[#FFC929] border-[#FFC929]/30 dark:border-[#FFC929]/30 text-xs px-2 py-1">
               {tag}
@@ -809,23 +809,23 @@ export default function Community() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+        <div className="grid grid-cols-3 gap-2 mb-3">
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold text-white dark:text-white">{formatCurrency(memberCount)}</div>
+            <div className="text-xl font-bold text-white dark:text-white">{formatCurrency(memberCount)}</div>
             <div className="text-gray-400 dark:text-gray-400 text-xs">Üye</div>
           </div>
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold text-green-400 dark:text-green-400">{activeCount}</div>
+            <div className="text-xl font-bold text-green-400 dark:text-green-400">{activeCount}</div>
             <div className="text-gray-400 dark:text-gray-400 text-xs">Aktif</div>
           </div>
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">{categoryInfo.name}</div>
+            <div className="text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">{categoryInfo.name}</div>
             <div className="text-gray-400 dark:text-gray-400 text-xs">Kategori</div>
           </div>
         </div>
 
         {/* Location */}
-        <div className="flex items-center justify-center gap-1 mb-4">
+        <div className="flex items-center justify-center gap-1 mb-3">
           <Globe className="h-3 w-3 text-gray-400 dark:text-gray-400" />
           <span className="text-gray-400 dark:text-gray-400 text-xs">Türkiye</span>
         </div>
