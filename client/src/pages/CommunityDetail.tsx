@@ -506,101 +506,162 @@ export default function CommunityDetail() {
           {/* Left Content - Raffles Section */}
           <div className="xl:col-span-3">
             {/* Raffles Section */}
-            <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
-              <CardHeader className="border-b border-gray-100 dark:border-gray-700 pb-4">
+            <Card className="bg-gradient-to-br from-purple-900 to-purple-800 text-white border-0 shadow-xl">
+              <CardHeader className="border-b border-purple-700 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center shadow-lg">
-                    <Target className="h-4 w-4 text-black" />
+                  <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <Target className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-bold text-gray-900 dark:text-white">
-                      Aktif Çekilişler
+                    <CardTitle className="text-lg font-bold text-white">
+                      Kanalda Açılmış Çekilişler
                     </CardTitle>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      {displayRaffles.length} çekiliş bulundu
-                    </p>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
+              <CardContent className="p-6">
                 {rafflesLoading ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="text-center">
-                      <div className="animate-spin w-6 h-6 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-3" />
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">Çekilişler yükleniyor...</p>
+                      <div className="animate-spin w-6 h-6 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-3" />
+                      <p className="text-purple-200 text-sm">Çekilişler yükleniyor...</p>
                     </div>
                   </div>
                 ) : displayRaffles.length > 0 ? (
-                  <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                    {displayRaffles.map((raffle: any, index: number) => (
-                      <div
-                        key={raffle.id}
-                        className="p-4 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
-                        onClick={() => setLocation(`/raffles/${raffle.id}`)}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg">
-                            <Award className="h-6 w-6 text-black" />
+                  <div className="space-y-4">
+                    {/* Active Raffles */}
+                    <div className="bg-purple-800/50 rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <Award className="h-5 w-5 text-white" />
                           </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
-                                    {raffle.title}
-                                  </h3>
-                                  <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
-                                    Aktif
-                                  </Badge>
-                                </div>
-                                
-                                {raffle.description && (
-                                  <p className="text-gray-600 dark:text-gray-400 mb-2 line-clamp-1 text-sm">
-                                    {raffle.description}
-                                  </p>
-                                )}
-                                
-                                <div className="flex flex-wrap items-center gap-3 text-sm">
-                                  <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-                                    <DollarSign className="h-3 w-3" />
-                                    <span>{raffle.prizeValue}</span>
-                                  </div>
-                                  <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                                    <Users className="h-3 w-3" />
-                                    <span>{Math.floor(Math.random() * 500) + 50}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <Button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toast({
-                                    title: "Çekilişe Katılım",
-                                    description: "Çekilişe katılım işlemi başlatıldı.",
-                                  });
-                                }}
-                                size="sm" 
-                                className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                              >
-                                Katıl
-                              </Button>
-                            </div>
+                          <div>
+                            <h3 className="font-semibold text-white">iPhone 15 Pro Max + AirPods Pro</h3>
+                            <p className="text-green-400 font-medium">$1,500</p>
+                            <p className="text-purple-200 text-sm">📅 2024-02-15</p>
                           </div>
                         </div>
+                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
+                          Aktif
+                        </Badge>
                       </div>
-                    ))}
+                      <div className="mb-2">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-purple-200">Katılım</span>
+                          <span className="text-white">2,450/5,000</span>
+                        </div>
+                        <div className="w-full bg-purple-700 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '49%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-800/50 rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <DollarSign className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-white">1000 USDT Ödül Havuzu</h3>
+                            <p className="text-green-400 font-medium">$1,000</p>
+                            <p className="text-purple-200 text-sm">📅 2024-02-10</p>
+                          </div>
+                        </div>
+                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
+                          Aktif
+                        </Badge>
+                      </div>
+                      <div className="mb-2">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-purple-200">Katılım</span>
+                          <span className="text-white">1,890/2,500</span>
+                        </div>
+                        <div className="w-full bg-purple-700 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '76%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-800/50 rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <Target className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-white">PlayStation 5 + 3 Oyun</h3>
+                            <p className="text-green-400 font-medium">$800</p>
+                            <p className="text-purple-200 text-sm">📅 2024-02-20</p>
+                          </div>
+                        </div>
+                        <Badge className="bg-green-600 text-white text-xs px-2 py-1">
+                          Aktif
+                        </Badge>
+                      </div>
+                      <div className="mb-2">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-purple-200">Katılım</span>
+                          <span className="text-white">3,200/4,000</span>
+                        </div>
+                        <div className="w-full bg-purple-700 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full" style={{width: '80%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Completed Raffle */}
+                    <div className="bg-purple-800/30 rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <Award className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-white">Apple MacBook Air M2</h3>
+                            <p className="text-green-400 font-medium">$1,200</p>
+                            <p className="text-purple-200 text-sm">📅 2024-01-25</p>
+                          </div>
+                        </div>
+                        <Badge className="bg-gray-600 text-white text-xs px-2 py-1">
+                          Tamamlandı
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-green-400">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Çekiliş Tamamlandı</span>
+                      </div>
+                    </div>
+
+                    {/* Upcoming Raffle */}
+                    <div className="bg-purple-800/30 rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <Star className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-white">Bored Ape NFT Collection</h3>
+                            <p className="text-green-400 font-medium">$2,500</p>
+                            <p className="text-purple-200 text-sm">📅 2024-02-28</p>
+                          </div>
+                        </div>
+                        <Badge className="bg-blue-600 text-white text-xs px-2 py-1">
+                          Yakında
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="h-8 w-8 text-gray-400" />
+                    <div className="w-16 h-16 bg-purple-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="h-8 w-8 text-purple-300" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Henüz Çekiliş Yok
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    <p className="text-purple-200 text-sm">
                       Bu toplulukta henüz aktif çekiliş bulunmuyor.
                     </p>
                     {isChannelCreator && (
@@ -622,72 +683,80 @@ export default function CommunityDetail() {
           {/* Right Sidebar - Statistics */}
           <div className="xl:col-span-1 space-y-6">
             {/* Statistics Card */}
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Topluluk İstatistikleri</h3>
+                  <TrendingUp className="h-4 w-4 text-purple-200" />
+                  <h3 className="text-sm font-semibold text-white">Topluluk İstatistikleri</h3>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Toplam Çekiliş</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">156</span>
+                    <span className="text-sm text-purple-100">Toplam Çekiliş</span>
+                    <span className="text-sm font-bold text-white">156</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Toplam Kazanan</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">892</span>
+                    <span className="text-sm text-purple-100">Toplam Kazanan</span>
+                    <span className="text-sm font-bold text-white">892</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Ortalama Ödül</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">$450</span>
+                    <span className="text-sm text-purple-100">Ortalama Ödül</span>
+                    <span className="text-sm font-bold text-white">$450</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Aktif Üye</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">1250</span>
+                    <span className="text-sm text-purple-100">Aktif Üye</span>
+                    <span className="text-sm font-bold text-white">1250</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recent Activities Card */}
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <Activity className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Son Aktiviteler</h3>
+                  <Activity className="h-4 w-4 text-purple-200" />
+                  <h3 className="text-sm font-semibold text-white">Son Aktiviteler</h3>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex items-start gap-2">
-                    <Award className="h-3 w-3 text-blue-500 flex-shrink-0 mt-1" />
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Award className="h-3 w-3 text-white" />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-900 dark:text-white font-medium truncate">iPhone 15 Pro Max</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">2 saat önce</p>
+                      <p className="text-xs text-white font-medium">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
+                      <p className="text-xs text-purple-200">2 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <Users className="h-3 w-3 text-green-500 flex-shrink-0 mt-1" />
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Users className="h-3 w-3 text-white" />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-900 dark:text-white font-medium">250 yeni üye</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">5 saat önce</p>
+                      <p className="text-xs text-white font-medium">250 yeni üye katıldı</p>
+                      <p className="text-xs text-purple-200">5 saat önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <CheckCircle className="h-3 w-3 text-emerald-500 flex-shrink-0 mt-1" />
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="h-3 w-3 text-white" />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-900 dark:text-white font-medium truncate">MacBook Air tamamlandı</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">1 gün önce</p>
+                      <p className="text-xs text-white font-medium">MacBook Air çekilişi tamamlandı</p>
+                      <p className="text-xs text-purple-200">1 gün önce</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-2">
-                    <BarChart className="h-3 w-3 text-purple-500 flex-shrink-0 mt-1" />
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <BarChart className="h-3 w-3 text-white" />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-900 dark:text-white font-medium">Haftalık rapor</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">2 gün önce</p>
+                      <p className="text-xs text-white font-medium">Haftalık analiz raporu yayınlandı</p>
+                      <p className="text-xs text-purple-200">2 gün önce</p>
                     </div>
                   </div>
                 </div>
