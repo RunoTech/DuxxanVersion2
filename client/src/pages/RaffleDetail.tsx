@@ -38,18 +38,40 @@ export default function RaffleDetail() {
   const { theme } = useTheme();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // All state hooks must be at the top level
   const [ticketCount, setTicketCount] = useState(1);
   const [isClient, setIsClient] = useState(false);
   const [isEditingCard, setIsEditingCard] = useState(false);
   const [editableTitle, setEditableTitle] = useState('');
   const [editableDescription, setEditableDescription] = useState('');
 
-  // Client-side only rendering to prevent SSR issues
+  // All query hooks must be at the top level
+  const { data: raffle, isLoading } = useQuery({
+    queryKey: [`/api/raffles/${id}`],
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
+  });
+
+  const { data: tickets } = useQuery({
+    queryKey: [`/api/raffles/${id}/tickets`],
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
+  });
+
+  // All useEffect hooks must be at the top level
   useEffect(() => {
     setIsClient(true);
     window.scrollTo(0, 0);
     
-    // Global error handling for chart issues
     const handleError = (event: ErrorEvent | PromiseRejectionEvent) => {
       const message = 'message' in event ? event.message : event.reason?.message || '';
       if (message.includes('appendChild') || 
@@ -71,31 +93,49 @@ export default function RaffleDetail() {
     };
   }, []);
 
-  const { data: raffle, isLoading } = useQuery({
-    queryKey: [`/api/raffles/${id}`],
-    enabled: !!id,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    refetchInterval: false,
-    retry: false,
-  });
+  useEffect(() => {
+    if (raffle && !editableTitle) {
+      const safeRaffle = raffle as any;
+      setEditableTitle(safeRaffle.title || '');
+      setEditableDescription(safeRaffle.description || '');
+    }
+  }, [raffle, editableTitle]);
 
-  const { data: tickets } = useQuery({
-    queryKey: [`/api/raffles/${id}/tickets`],
-    enabled: !!id,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    refetchInterval: false,
-    retry: false,
-  });
+  // Define handlers before any conditional returns
+  const handleSaveEdit = async () => {
+    try {
+      const response = await apiRequest('PATCH', `/api/raffles/${id}`, {
+        title: editableTitle,
+        description: editableDescription
+      });
+      
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
+        setIsEditingCard(false);
+        toast({
+          title: 'Başarılı',
+          description: 'Çekiliş bilgileri güncellendi',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: 'Güncelleme başarısız oldu',
+        variant: 'destructive',
+      });
+    }
+  };
 
-  // Gerçek chart verilerini sadece veri varsa kullan
-  const hasRealData = raffle && tickets && Array.isArray(tickets) && tickets.length > 0;
-  const chartData = hasRealData ? [] : []; // Backend'den gelecek
-  const hourlyData = hasRealData ? [] : []; // Backend'den gelecek
+  const handleCancelEdit = () => {
+    if (raffle) {
+      const safeRaffle = raffle as any;
+      setEditableTitle(safeRaffle.title || '');
+      setEditableDescription(safeRaffle.description || '');
+    }
+    setIsEditingCard(false);
+  };
 
+  // Now we can safely do conditional rendering
   if (isLoading) {
     return (
       <div className="min-h-screen bg-duxxan-dark p-4">
@@ -126,13 +166,10 @@ export default function RaffleDetail() {
     );
   }
 
-  // Type guard to ensure raffle has required properties
-  const safeRaffle = raffle as any; // Temporary fix for demo
-  
-  // Ensure numeric values are properly converted
+  // Type guard and calculations
+  const safeRaffle = raffle as any;
   const numericTicketPrice = Number(safeRaffle.ticketPrice || 0);
   const numericPrizeValue = Number(safeRaffle.prizeValue || 0);
-
   const progress = safeRaffle?.ticketsSold && safeRaffle?.maxTickets 
     ? (safeRaffle.ticketsSold / safeRaffle.maxTickets) * 100 
     : 0;
@@ -140,44 +177,6 @@ export default function RaffleDetail() {
     ? new Date(safeRaffle.endDate).getTime() - new Date().getTime() 
     : 0;
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
-
-  // Initialize editable values when raffle data loads
-  useEffect(() => {
-    if (safeRaffle && !editableTitle) {
-      setEditableTitle(safeRaffle.title || '');
-      setEditableDescription(safeRaffle.description || '');
-    }
-  }, [safeRaffle, editableTitle]);
-
-  const handleSaveEdit = async () => {
-    try {
-      const response = await apiRequest('PATCH', `/api/raffles/${id}`, {
-        title: editableTitle,
-        description: editableDescription
-      });
-      
-      if (response.ok) {
-        queryClient.invalidateQueries({ queryKey: [`/api/raffles/${id}`] });
-        setIsEditingCard(false);
-        toast({
-          title: 'Başarılı',
-          description: 'Çekiliş bilgileri güncellendi',
-        });
-      }
-    } catch (error) {
-      toast({
-        title: 'Hata',
-        description: 'Güncelleme başarısız oldu',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditableTitle(safeRaffle.title || '');
-    setEditableDescription(safeRaffle.description || '');
-    setIsEditingCard(false);
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-duxxan-dark">
@@ -610,8 +609,6 @@ export default function RaffleDetail() {
                 }}
               />
             )}
-
-
           </div>
         </div>
       </div>
