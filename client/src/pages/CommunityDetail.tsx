@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation } from 'wouter';
+import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,6 +55,8 @@ export default function CommunityDetail() {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isCreatingRaffle, setIsCreatingRaffle] = useState(false);
+  const shareButtonRef = useRef<HTMLButtonElement>(null);
+  const [shareMenuPosition, setShareMenuPosition] = useState({ top: 0, right: 0 });
   const [editForm, setEditForm] = useState({
     name: '',
     description: '',
@@ -168,6 +171,8 @@ export default function CommunityDetail() {
       minute: '2-digit'
     });
   };
+
+
 
   const handleEditChannel = async () => {
     try {
@@ -1023,10 +1028,9 @@ export default function CommunityDetail() {
                     });
                     setIsCreatingRaffle(false);
                   }}
-                  className="px-8 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="px-6 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
-                  <Plus className="h-5 w-5 mr-2" />
-                  Çekilişi Oluştur
+                  Çekiliş Oluştur
                 </Button>
               </div>
             </div>
@@ -1076,6 +1080,10 @@ export default function CommunityDetail() {
         </div>
       </div>,
       document.body
+    )}
+    </>
+  );
+}
     )}
     </>
   );
