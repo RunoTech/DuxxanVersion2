@@ -1345,45 +1345,10 @@ export default function Community() {
           </Card>
         </div>
 
-        {/* Modern Navigation Tabs - Moved below filters */}
-        <div className="mb-8">
-          <div className="bg-gray-800/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-[#FFC929]/20 dark:border-[#FFC929]/20">
-            <div className="flex">
-              <button
-                onClick={() => setActiveTab('channels')}
-                className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                  activeTab === 'channels'
-                    ? 'bg-[#FFC929] text-black shadow-lg transform scale-[1.02]'
-                    : 'text-white hover:bg-gray-700/50'
-                }`}
-              >
-                <Users className="h-5 w-5" />
-                Kanallar
-                <Badge className={`${activeTab === 'channels' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#FFC929]'} font-bold`}>
-                  {filteredChannels.length}
-                </Badge>
-              </button>
-              <button
-                onClick={() => setActiveTab('upcoming')}
-                className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                  activeTab === 'upcoming'
-                    ? 'bg-[#FFC929] text-black shadow-lg transform scale-[1.02]'
-                    : 'text-white hover:bg-gray-700/50'
-                }`}
-              >
-                <Calendar className="h-5 w-5" />
-                Gelecek Çekilişler
-                <Badge className={`${activeTab === 'upcoming' ? 'bg-black/20 text-black' : 'bg-[#FFC929]/20 text-[#FFC929]'} font-bold`}>
-                  {upcomingRaffles.length}
-                </Badge>
-              </button>
-            </div>
-          </div>
-        </div>
+
 
         {/* Content */}
-        {activeTab === 'channels' && (
-          <div>
+        <div>
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Topluluk Kanalları</h2>
@@ -1716,63 +1681,7 @@ export default function Community() {
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {activeTab === 'upcoming' && (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-2">
-                <Trophy className="h-6 w-6 text-[#FFC929]" />
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Gelecek Çekilişler</h2>
-                <Badge variant="secondary" className="bg-[#FFC929]/20 text-[#FFC929] border border-[#FFC929]/30">
-                  {upcomingRaffles.length}
-                </Badge>
-              </div>
-            </div>
-
-            {rafflesLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-duxxan-card rounded-lg p-6 animate-pulse">
-                    <div className="space-y-4">
-                      <div className="w-3/4 h-6 bg-gray-600 rounded"></div>
-                      <div className="space-y-2">
-                        <div className="w-full h-3 bg-gray-600 rounded"></div>
-                        <div className="w-2/3 h-3 bg-gray-600 rounded"></div>
-                      </div>
-                      <div className="flex justify-between">
-                        <div className="w-20 h-4 bg-gray-600 rounded"></div>
-                        <div className="w-16 h-4 bg-gray-600 rounded"></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcomingRaffles.map((raffle: any) => (
-                  <RaffleCard 
-                    key={raffle.id} 
-                    raffle={raffle} 
-                    isInterested={interestedRaffles.includes(raffle.id)}
-                    onToggleInterest={handleToggleRaffleInterest}
-                  />
-                ))}
-              </div>
-            )}
-
-            {!rafflesLoading && upcomingRaffles.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">Gelecek çekiliş bulunamadı</p>
-                  <p className="text-sm">Yakında yeni duyurular yapılacak</p>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        </div>
 
 
       </div>
