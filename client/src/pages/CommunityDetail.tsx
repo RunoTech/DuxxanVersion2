@@ -501,61 +501,8 @@ export default function CommunityDetail() {
         </div>
 
         {/* Action Bar */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-4">
-          <Card className="flex-1 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
-                    <Activity className="h-5 w-5 mr-2 text-[#FFC929]" />
-                    Topluluk Aktivitesi
-                  </h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      1.2k görüntüleme
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-4 w-4" />
-                      234 beğeni
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    onClick={() => {
-                      toast({
-                        title: "Beğenildi!",
-                        description: "Bu topluluğu beğendiniz.",
-                      });
-                    }}
-                    size="sm" 
-                    variant="outline" 
-                    className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10 transition-all duration-200"
-                  >
-                    <Heart className="h-4 w-4" />
-                    Beğen
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      toast({
-                        title: "Kaydedildi!",
-                        description: "Bu topluluk favorilerinize eklendi.",
-                      });
-                    }}
-                    size="sm" 
-                    variant="outline" 
-                    className="gap-2 border-[#FFC929]/50 text-[#FFC929] hover:bg-[#FFC929]/10 transition-all duration-200"
-                  >
-                    <Bookmark className="h-4 w-4" />
-                    Kaydet
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {isChannelCreator && (
+        {isChannelCreator && (
+          <div className="mb-4">
             <Card className="bg-gradient-to-br from-[#FFC929]/15 to-[#FFB800]/25 dark:from-[#FFC929]/10 dark:to-[#FFB800]/15 border border-[#FFC929]/40 dark:border-[#FFC929]/30 shadow-xl backdrop-blur-sm">
               <CardContent className="p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -584,8 +531,8 @@ export default function CommunityDetail() {
                 </div>
               </CardContent>
             </Card>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Raffles Section */}
         <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl">
