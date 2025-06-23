@@ -504,80 +504,72 @@ export default function CommunityDetail() {
         {/* Community Statistics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Statistics Card */}
-          <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <TrendingUp className="h-6 w-6 text-purple-200" />
-                <h3 className="text-xl font-bold">Topluluk İstatistikleri</h3>
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Topluluk İstatistikleri</h3>
               </div>
               
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-purple-100">Toplam Çekiliş</span>
-                  <span className="text-2xl font-bold">156</span>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">156</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Çekiliş</div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-purple-100">Toplam Kazanan</span>
-                  <span className="text-2xl font-bold">892</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">892</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Kazanan</div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-purple-100">Ortalama Ödül</span>
-                  <span className="text-2xl font-bold">$450</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">$450</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Ortalama Ödül</div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-purple-100">Aktif Üye</span>
-                  <span className="text-2xl font-bold">1250</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">1250</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Aktif Üye</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Recent Activities Card */}
-          <Card className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 shadow-xl">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <Activity className="h-6 w-6 text-purple-200" />
-                <h3 className="text-xl font-bold">Son Aktiviteler</h3>
+              <div className="flex items-center gap-2 mb-4">
+                <Activity className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Son Aktiviteler</h3>
               </div>
               
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Award className="h-4 w-4" />
-                  </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Award className="h-4 w-4 text-blue-500 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white font-medium">Yeni çekiliş başladı: iPhone 15 Pro Max</p>
-                    <p className="text-purple-200 text-sm">2 saat önce</p>
+                    <span className="text-gray-900 dark:text-white">iPhone 15 Pro Max çekilişi</span>
+                    <span className="text-gray-500 dark:text-gray-400 ml-2">2 saat önce</span>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Users className="h-4 w-4" />
-                  </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <Users className="h-4 w-4 text-green-500 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white font-medium">250 yeni üye katıldı</p>
-                    <p className="text-purple-200 text-sm">5 saat önce</p>
+                    <span className="text-gray-900 dark:text-white">250 yeni üye katıldı</span>
+                    <span className="text-gray-500 dark:text-gray-400 ml-2">5 saat önce</span>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <CheckCircle className="h-4 w-4" />
-                  </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white font-medium">MacBook Air çekilişi tamamlandı</p>
-                    <p className="text-purple-200 text-sm">1 gün önce</p>
+                    <span className="text-gray-900 dark:text-white">MacBook Air çekilişi tamamlandı</span>
+                    <span className="text-gray-500 dark:text-gray-400 ml-2">1 gün önce</span>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <BarChart className="h-4 w-4" />
-                  </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <BarChart className="h-4 w-4 text-purple-500 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white font-medium">Haftalık analiz raporu yayınlandı</p>
-                    <p className="text-purple-200 text-sm">2 gün önce</p>
+                    <span className="text-gray-900 dark:text-white">Haftalık rapor yayınlandı</span>
+                    <span className="text-gray-500 dark:text-gray-400 ml-2">2 gün önce</span>
                   </div>
                 </div>
               </div>
