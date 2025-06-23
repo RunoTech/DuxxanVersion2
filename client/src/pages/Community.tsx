@@ -746,11 +746,9 @@ export default function Community() {
       className="group bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96"
       onClick={() => setLocation(`/community/${channel.id}`)}
     >
-      {/* Background Cover */}
-      <div className="relative h-32 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
+      {/* Header Section */}
+      <div className="relative h-16 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
-        
-
         
         {/* Actions */}
         <div className="absolute top-3 right-3 flex gap-2">
@@ -1255,7 +1253,7 @@ export default function Community() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <Card key={i} className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 rounded-2xl overflow-hidden flex flex-col h-96 animate-pulse">
-                    <div className="h-32 bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30"></div>
+                    <div className="h-16 bg-gradient-to-br from-[#FFC929]/30 via-[#FFD700]/30 to-[#FFB800]/30"></div>
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="w-3/4 h-6 bg-gray-600 rounded mb-2"></div>
                       <div className="w-full h-3 bg-gray-600 rounded mb-1"></div>
