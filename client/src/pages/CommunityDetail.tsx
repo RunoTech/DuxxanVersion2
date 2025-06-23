@@ -360,7 +360,7 @@ export default function CommunityDetail() {
               </Button>
               
               {showShareMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl backdrop-blur-sm z-20">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl backdrop-blur-sm z-50">
                   <div className="p-2">
                     <button
                       onClick={copyToClipboard}
