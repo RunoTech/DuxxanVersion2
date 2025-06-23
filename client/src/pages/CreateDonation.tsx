@@ -222,9 +222,13 @@ export default function CreateDonation() {
               Yeni Bağış Oluştur
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Toplumsal fayda için bağış kampanyası başlatın
+              Toplumsal fayda için bağış kampanyası başlatın. 
+              <span className="text-yellow-600 dark:text-yellow-500 font-semibold"> Oluşturma ücreti: {CONTRACT_FEES.DONATION_CREATION_FEE} USDT</span>
             </p>
           </div>
+
+          {/* USDT Requirement Warning */}
+          <USDTRequirement />
 
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Main Form */}
@@ -236,20 +240,24 @@ export default function CreateDonation() {
                 <CardContent>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                      {/* Komisyon Bilgilendirme Kartı */}
+                      {/* Ücret ve Komisyon Bilgilendirme Kartı */}
                       <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
                         <div className="flex items-start space-x-3">
                           <div className="bg-green-100 dark:bg-green-800 p-2 rounded-full">
                             <svg className="w-5 h-5 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">Bağış Komisyon Bilgileri</h3>
+                            <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">Ücret ve Komisyon Bilgileri</h3>
                             <div className="space-y-2 text-sm text-green-800 dark:text-green-200">
                               <div className="flex justify-between">
+                                <span>• Oluşturma Ücreti:</span>
+                                <span className="font-medium">{CONTRACT_FEES.DONATION_CREATION_FEE} USDT (tek seferlik)</span>
+                              </div>
+                              <div className="flex justify-between">
                                 <span>• Platform Komisyonu:</span>
-                                <span className="font-medium">%2 (Bağışçıdan alınır)</span>
+                                <span className="font-medium">%{CONTRACT_FEES.DONATION_COMMISSION_RATE} (her bağıştan)</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>• Para Birimi:</span>
@@ -264,9 +272,14 @@ export default function CreateDonation() {
                                 <span className="font-medium">Anlık cüzdan transferi</span>
                               </div>
                             </div>
-                            <p className="text-xs text-green-700 dark:text-green-300 mt-3 bg-green-100 dark:bg-green-800 p-2 rounded">
-                              ❤️ Bağışlar anlık cüzdanınıza aktarılır! Komisyon bağışçıdan otomatik kesilir.
-                            </p>
+                            <div className="mt-3 space-y-1">
+                              <p className="text-xs text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-800 p-2 rounded">
+                                💰 Bağışlar anlık cüzdanınıza aktarılır! Komisyon bağışçıdan otomatik kesilir.
+                              </p>
+                              <p className="text-xs text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-800 p-2 rounded">
+                                ⚠️ {CONTRACT_FEES.DONATION_CREATION_FEE} USDT oluşturma ücreti iade edilmez ve cüzdanınızdan çekilecektir.
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
