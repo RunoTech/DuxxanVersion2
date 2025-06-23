@@ -581,7 +581,7 @@ export default function CommunityDetail() {
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
                         <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white truncate flex-1 mr-2">iPhone 15 Pro Max</h3>
                         <div className="flex items-center gap-1 flex-shrink-0">
-                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          <Star className="h-3 w-3 text-[#FFC929] fill-current" />
                           <span className="text-gray-900 dark:text-white text-xs font-medium">4.8</span>
                         </div>
                       </div>
@@ -632,7 +632,7 @@ export default function CommunityDetail() {
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
                         <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white truncate flex-1 mr-2">PlayStation 5 Bundle</h3>
                         <div className="flex items-center gap-1 flex-shrink-0">
-                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          <Star className="h-3 w-3 text-[#FFC929] fill-current" />
                           <span className="text-gray-900 dark:text-white text-xs font-medium">4.9</span>
                         </div>
                       </div>
