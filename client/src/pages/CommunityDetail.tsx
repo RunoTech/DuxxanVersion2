@@ -628,78 +628,78 @@ export default function CommunityDetail() {
 
                   {/* Active Raffle 3 */}
                   <Card className="bg-slate-800 dark:bg-slate-900 text-white border-0 shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-base text-white">PlayStation 5 Bundle</h3>
-                        <div className="flex items-center gap-1">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <h3 className="font-bold text-sm sm:text-base text-white truncate flex-1 mr-2">PlayStation 5 Bundle</h3>
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <Star className="h-3 w-3 text-yellow-400 fill-current" />
                           <span className="text-white text-xs font-medium">4.9</span>
                         </div>
                       </div>
                       
-                      <p className="text-gray-300 text-xs mb-3 line-clamp-2">
+                      <p className="text-gray-300 dark:text-gray-400 text-xs mb-2 sm:mb-3 line-clamp-2">
                         PS5 konsol + 3 popüler oyun + ekstra DualSense kontrolcü paketi.
                       </p>
                       
-                      <div className="mb-3">
+                      <div className="mb-2 sm:mb-3">
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-gray-400">Satılan Biletler</span>
+                          <span className="text-gray-400 dark:text-gray-500">Satılan Biletler</span>
                           <span className="text-white font-medium">3.200 / 4.000</span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-1.5 mb-1">
-                          <div className="bg-gradient-to-r from-green-500 to-teal-500 h-1.5 rounded-full" style={{width: '80%'}}></div>
+                        <div className="w-full bg-gray-700 dark:bg-gray-800 rounded-full h-1.5 mb-1">
+                          <div className="bg-gradient-to-r from-green-500 to-teal-500 h-1.5 rounded-full transition-all duration-300" style={{width: '80%'}}></div>
                         </div>
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-400">80% satıldı</span>
+                          <span className="text-gray-400 dark:text-gray-500">80% satıldı</span>
                           <span className="text-red-400 font-medium">Son şans!</span>
                         </div>
                       </div>
                       
-                      <div className="flex justify-between items-center mb-3">
+                      <div className="flex justify-between items-center mb-2 sm:mb-3">
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">15</div>
-                          <div className="text-xs text-gray-400">Bilet Fiyatı</div>
+                          <div className="text-base sm:text-lg font-bold text-white">15</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Bilet Fiyatı</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-lg font-bold text-white">5</div>
-                          <div className="text-xs text-gray-400">Kalan Gün</div>
+                          <div className="text-base sm:text-lg font-bold text-white">5</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Kalan Gün</div>
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-2 text-sm rounded-xl transition-all duration-300">
+                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 dark:from-yellow-400 dark:to-orange-400 dark:hover:from-yellow-500 dark:hover:to-orange-500 text-black font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105">
                         Bilet Al
                       </Button>
                       
-                      <div className="flex justify-between items-center mt-3 text-xs">
-                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">800</span></span>
-                        <span className="text-gray-400">duxxan_admin</span>
+                      <div className="flex justify-between items-center mt-2 sm:mt-3 text-xs">
+                        <span className="text-gray-400 dark:text-gray-500 truncate">Ödül: <span className="text-white font-bold">800</span></span>
+                        <span className="text-gray-400 dark:text-gray-500 truncate">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
 
                   {/* Completed Raffle */}
                   <Card className="bg-slate-700 dark:bg-slate-800 text-white border-0 shadow-xl rounded-2xl overflow-hidden opacity-75 transition-all duration-300 hover:opacity-90">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="font-bold text-base text-white">MacBook Air M2</h3>
-                        <div className="flex items-center gap-1">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <h3 className="font-bold text-sm sm:text-base text-white truncate flex-1 mr-2">MacBook Air M2</h3>
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <CheckCircle className="h-3 w-3 text-green-400" />
                           <span className="text-green-400 text-xs font-medium">Tamamlandı</span>
                         </div>
                       </div>
                       
-                      <p className="text-gray-300 text-xs mb-3 line-clamp-2">
+                      <p className="text-gray-300 dark:text-gray-400 text-xs mb-2 sm:mb-3 line-clamp-2">
                         Apple MacBook Air M2 çip, 256GB SSD, 8GB RAM. Sıfır kutusunda.
                       </p>
                       
-                      <div className="flex items-center gap-2 text-xs text-green-400 mb-3">
+                      <div className="flex items-center gap-2 text-xs text-green-400 mb-2 sm:mb-3">
                         <CheckCircle className="h-3 w-3" />
                         <span>Çekiliş Tamamlandı</span>
                       </div>
                       
-                      <div className="flex justify-between items-center text-xs mt-3">
-                        <span className="text-gray-400">Ödül: <span className="text-white font-bold">1.2K</span></span>
-                        <span className="text-gray-400">duxxan_admin</span>
+                      <div className="flex justify-between items-center text-xs mt-2 sm:mt-3">
+                        <span className="text-gray-400 dark:text-gray-500 truncate">Ödül: <span className="text-white font-bold">1.2K</span></span>
+                        <span className="text-gray-400 dark:text-gray-500 truncate">duxxan_admin</span>
                       </div>
                     </CardContent>
                   </Card>
