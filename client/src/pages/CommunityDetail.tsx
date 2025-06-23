@@ -402,30 +402,34 @@ export default function CommunityDetail() {
           </div>
         </div>
         
-        {/* Hero Content */}
-        <div className="absolute bottom-6 left-6 right-6 z-10">
-          <div className="flex items-end justify-between">
-            <div className="flex items-end gap-6">
-              <Avatar className="h-20 w-20 border-4 border-white/30 shadow-2xl">
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Profile Card */}
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl rounded-2xl p-6 mb-8 -mt-16 relative z-10">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-6">
+              <Avatar className="h-16 w-16 border-4 border-white/30 shadow-2xl">
                 <AvatarImage src={channel?.avatar} alt={channel?.name} />
-                <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black text-xl font-bold">
+                <AvatarFallback className="bg-gradient-to-br from-[#FFC929] to-[#FFB800] text-black text-lg font-bold">
                   {(channel?.name || 'C').slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               
-              <div className="flex-1 text-white">
-                <h1 className="text-3xl font-bold mb-2">{channel?.name}</h1>
-                <div className="flex items-center gap-3 mb-3 text-sm">
-                  <span className="text-white/80">by {channel?.creator?.username || 'CryptoExpert'}</span>
-                  <span className="text-white/60">📍 Türkiye</span>
-                  <span className="text-white/60">📅 Kurulma: 15.03.2022</span>
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{channel?.name}</h1>
+                <div className="flex items-center gap-3 mb-3 text-sm text-gray-600 dark:text-gray-400">
+                  <span>by {channel?.creator?.username || 'CryptoExpert'}</span>
+                  <span>📍 Türkiye</span>
+                  <span>📅 Kurulma: 15.03.2022</span>
                 </div>
-                <p className="text-white/90 text-base leading-relaxed max-w-2xl mb-4">
+                <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed max-w-2xl mb-4">
                   {channel?.description || 'Türkiye\'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri ile kripto dünyasında doğru bilgiye ulaşın.'}
                 </p>
                 
                 {/* Tags */}
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-2">
                   <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">BTC</Badge>
                   <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">ETH</Badge>
                   <Badge className="bg-gray-800/80 text-white border-gray-600 px-3 py-1 text-xs">Analiz</Badge>
@@ -435,64 +439,69 @@ export default function CommunityDetail() {
               </div>
             </div>
             
-            {/* Member Count */}
-            <div className="text-center text-white">
-              <div className="text-2xl font-bold mb-1">15.420</div>
-              <div className="text-sm text-white/80">Toplam Üye</div>
+            {/* Subscribe Button and Member Count */}
+            <div className="flex flex-col items-end gap-3">
+              <Button
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium shadow-lg"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Abone Ol
+              </Button>
+              <div className="text-center">
+                <div className="text-xl font-bold text-gray-900 dark:text-white">15.420</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Toplam Üye</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 -mt-12 relative z-10">
-          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <Users className="h-6 w-6 text-black" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                {(channel?.subscriberCount || 0).toLocaleString()}
-              </div>
-              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Abone</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                 <DollarSign className="h-6 w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                ${(channel?.totalPrizeAmount || 0).toLocaleString()}
+              <div className="text-2xl font-bold text-white mb-1">
+                $125.000
               </div>
-              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Toplam Ödül</div>
+              <div className="text-gray-400 text-sm font-medium">Toplam Ödül</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <Award className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-white mb-1">
+                8
+              </div>
+              <div className="text-gray-400 text-sm font-medium">Aktif Çekiliş</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                 <Activity className="h-6 w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                {channel?.activeRaffleCount || 0}
+              <div className="text-2xl font-bold text-white mb-1">
+                95%
               </div>
-              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Aktif Çekiliş</div>
+              <div className="text-gray-400 text-sm font-medium">Topluluk Aktivitesi</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#FFC929]/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <TrendingUp className="h-6 w-6 text-black" />
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <TrendingUp className="h-6 w-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                {Math.floor(Math.random() * 100)}%
+              <div className="text-2xl font-bold text-white mb-1">
+                98%
               </div>
-              <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">Büyüme</div>
+              <div className="text-gray-400 text-sm font-medium">Başarı Oranı</div>
             </CardContent>
           </Card>
         </div>
