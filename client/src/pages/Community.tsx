@@ -927,11 +927,6 @@ export default function Community() {
                   </Button>
                 </DialogTrigger>
               </Dialog>
-              
-              <Button className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all border border-[#FFC929]/30">
-                <Heart className="h-5 w-5 mr-2" />
-                Gelecek Çekilişler
-              </Button>
             </div>
           </div>
         </div>
