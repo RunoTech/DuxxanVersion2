@@ -253,12 +253,6 @@ export default function CommunityDetail() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium shadow-lg"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Abone Ol
-            </Button>
             {isChannelCreator && (
               <Dialog open={isEditing} onOpenChange={setIsEditing}>
                 <DialogTrigger asChild>
