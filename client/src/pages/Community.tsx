@@ -1123,7 +1123,6 @@ export default function Community() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-
         {/* Filters */}
         {activeTab === 'channels' && (
           <div className="mb-8">
@@ -1677,7 +1676,6 @@ export default function Community() {
             )}
           </div>
         )}
-        </div>
       </div>
     </>
   );
