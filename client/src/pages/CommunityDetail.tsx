@@ -231,7 +231,7 @@ export default function CommunityDetail() {
         </div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FFC929]/40 via-[#FFC929]/10 to-transparent dark:from-black/60 dark:via-black/20 dark:to-transparent" />
         
         {/* Navigation */}
         <div className="relative z-10 flex items-center justify-between p-6">
@@ -518,7 +518,7 @@ export default function CommunityDetail() {
               {rafflesLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
-                    <div className="animate-spin w-6 h-6 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-3" />
+                    <div className="animate-spin w-6 h-6 border-4 border-[#FFC929] border-t-transparent rounded-full mx-auto mb-3" />
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Çekilişler yükleniyor...</p>
                   </div>
                 </div>
