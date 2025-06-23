@@ -923,7 +923,7 @@ export default function Community() {
                 <DialogTrigger asChild>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <Plus className="h-5 w-5 mr-2" />
-                    Kanal Oluştur
+                    Topluluk Oluştur
                   </Button>
                 </DialogTrigger>
               </Dialog>
@@ -1099,7 +1099,7 @@ export default function Community() {
                           ) : (
                             <>
                               <Plus className="w-4 h-4 mr-2" />
-                              Kanal Oluştur
+                              Topluluk Oluştur
                             </>
                           )}
                         </Button>
@@ -1388,7 +1388,7 @@ export default function Community() {
                   ) : (
                     <div className="flex items-center">
                       <Plus className="h-4 w-4 mr-2" />
-                      Kanal Oluştur
+                      Topluluk Oluştur
                     </div>
                   )}
                 </Button>
