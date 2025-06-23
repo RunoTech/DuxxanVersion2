@@ -902,14 +902,9 @@ export default function Community() {
                 </DialogTrigger>
               </Dialog>
               
-              <Button className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
+              <Button className="bg-[#FFC929] hover:bg-[#FFB800] text-black font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
                 <Calendar className="h-5 w-5 mr-2" />
                 Çekiliş Duyuru Ol
-              </Button>
-              
-              <Button className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
-                <Share2 className="h-5 w-5 mr-2" />
-                Duyurular
               </Button>
               
               <Button className="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all">
@@ -1167,9 +1162,9 @@ export default function Community() {
         {/* Communities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Crypto Turkey */}
-          <Card className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 dark:from-purple-900 dark:via-indigo-900 dark:to-purple-800 border border-purple-600/30 dark:border-purple-600/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 dark:hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
-            <div className="relative h-32 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-purple-800/20"></div>
+          <Card className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-[#FFC929]/30 dark:border-[#FFC929]/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/30 dark:hover:shadow-[#FFC929]/30 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
+            <div className="relative h-32 bg-gradient-to-br from-[#FFC929] via-[#FFD700] to-[#FFB800] overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FFC929]/20 via-[#FFD700]/20 to-[#FFB800]/20"></div>
               <div className="absolute top-3 left-3">
                 <div className="flex items-center gap-1 px-2 py-1 bg-green-600 rounded-full text-xs font-medium text-white">
                   <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
@@ -1199,9 +1194,9 @@ export default function Community() {
               </div>
 
               <div className="flex gap-2 mb-4">
-                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">BTC</Badge>
-                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">ETH</Badge>
-                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">Analiz</Badge>
+                <Badge className="bg-[#FFC929]/20 dark:bg-[#FFC929]/20 text-[#FFC929] dark:text-[#FFC929] border-[#FFC929]/30 dark:border-[#FFC929]/30 text-xs px-2 py-1">BTC</Badge>
+                <Badge className="bg-[#FFC929]/20 dark:bg-[#FFC929]/20 text-[#FFC929] dark:text-[#FFC929] border-[#FFC929]/30 dark:border-[#FFC929]/30 text-xs px-2 py-1">ETH</Badge>
+                <Badge className="bg-[#FFC929]/20 dark:bg-[#FFC929]/20 text-[#FFC929] dark:text-[#FFC929] border-[#FFC929]/30 dark:border-[#FFC929]/30 text-xs px-2 py-1">Analiz</Badge>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-4">
