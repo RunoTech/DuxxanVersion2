@@ -435,17 +435,10 @@ export default function CommunityDetail() {
               </div>
             </div>
             
-            {/* Member Count and Subscribe Button */}
+            {/* Member Count */}
             <div className="text-center text-white">
               <div className="text-2xl font-bold mb-1">15.420</div>
-              <div className="text-sm text-white/80 mb-4">Toplam Üye</div>
-              <Button
-                onClick={handleJoin}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium shadow-lg"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Abone Ol
-              </Button>
+              <div className="text-sm text-white/80">Toplam Üye</div>
             </div>
           </div>
         </div>
