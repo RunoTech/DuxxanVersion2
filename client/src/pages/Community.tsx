@@ -921,7 +921,7 @@ export default function Community() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Filter className="h-5 w-5 text-[#FFC929] dark:text-[#FFC929]" />
-              <span className="text-white dark:text-white font-medium">Filtreler:</span>
+              <span className="text-gray-800 dark:text-white font-medium">Filtreler:</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -931,17 +931,17 @@ export default function Community() {
                   placeholder="Kanal ara..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-72 h-10 bg-gray-700/50 dark:bg-gray-700/50 border-gray-600/50 dark:border-gray-600/50 text-white dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg"
+                  className="pl-10 w-72 h-10 bg-white/50 dark:bg-gray-700/50 border-gray-300/50 dark:border-gray-600/50 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-28 h-10 bg-gray-700/50 dark:bg-gray-700/50 border-gray-600/50 dark:border-gray-600/50 text-white dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg">
+                <SelectTrigger className="w-28 h-10 bg-white/50 dark:bg-gray-700/50 border-gray-300/50 dark:border-gray-600/50 text-gray-800 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/30 dark:focus:ring-[#FFC929]/30 rounded-lg">
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 dark:bg-gray-800 border-gray-600 dark:border-gray-600">
-                  <SelectItem value="all" className="text-white dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">Tümü</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="all" className="text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Tümü</SelectItem>
                   {categories.filter(cat => cat.id !== 'all').map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()} className="text-white dark:text-white hover:bg-gray-700 dark:hover:bg-gray-700">
+                    <SelectItem key={category.id} value={category.id.toString()} className="text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                       {category.name}
                     </SelectItem>
                   ))}
