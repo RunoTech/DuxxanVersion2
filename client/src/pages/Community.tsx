@@ -210,8 +210,6 @@ const createChannelSchema = z.object({
   name: z.string().min(3, 'Kanal adı en az 3 karakter olmalı').max(50, 'Kanal adı en fazla 50 karakter olabilir'),
   description: z.string().min(10, 'Açıklama en az 10 karakter olmalı').max(500, 'Açıklama en fazla 500 karakter olabilir'),
   categoryId: z.number().min(1, 'Kategori seçimi zorunlu'),
-  country: z.string().min(1, 'Ülke seçimi zorunlu'),
-  tags: z.string().optional(),
 });
 
 const createUpcomingRaffleSchema = z.object({
@@ -503,10 +501,12 @@ export default function Community() {
   // Create channel mutation
   const createChannelMutation = useMutation({
     mutationFn: async (data: CreateChannelForm) => {
+      console.log('Sending channel data to API:', data);
       const response = await apiRequest('POST', '/api/channels', data);
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
+      console.log('Channel creation success:', result);
       toast({
         title: "Başarılı",
         description: "Kanal başarıyla oluşturuldu",
@@ -515,10 +515,12 @@ export default function Community() {
       setShowCreateChannel(false);
       channelForm.reset();
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Channel creation error:', error);
+      const errorMessage = error.response?.data?.message || error.message || "Kanal oluşturulurken bir hata oluştu";
       toast({
         title: "Hata",
-        description: "Kanal oluşturulurken bir hata oluştu",
+        description: errorMessage,
         variant: "destructive",
       });
     },
@@ -696,6 +698,10 @@ export default function Community() {
   };
 
   const onSubmitChannel = async (data: CreateChannelForm) => {
+    console.log('Form submission data:', data);
+    console.log('Is connected:', isConnected);
+    console.log('Form errors:', channelForm.formState.errors);
+    
     if (!isConnected) {
       toast({
         title: "Uyarı",
@@ -704,6 +710,7 @@ export default function Community() {
       });
       return;
     }
+    
     createChannelMutation.mutate(data);
   };
 
@@ -1080,59 +1087,7 @@ export default function Community() {
                           )}
                         />
                         
-                        <FormField
-                          control={channelForm.control}
-                          name="country"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
-                                <Globe className="w-4 h-4 mr-2" />
-                                Ülke
-                              </FormLabel>
-                              <FormControl>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                  <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
-                                    <SelectValue placeholder="Ülke seçin" />
-                                  </SelectTrigger>
-                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                                    {countries.map((country) => (
-                                      <SelectItem 
-                                        key={country.value} 
-                                        value={country.value}
-                                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
-                                      >
-                                        {country.label}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                       </div>
-                      
-                      <FormField
-                        control={channelForm.control}
-                        name="tags"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
-                              <Tag className="w-4 h-4 mr-2" />
-                              Etiketler (Opsiyonel)
-                            </FormLabel>
-                            <FormControl>
-                              <Input 
-                                {...field} 
-                                placeholder="Örn: kripto, nft, blockchain (virgülle ayırın)"
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                       
                       <div className="flex gap-3 pt-4">
                         <Button
