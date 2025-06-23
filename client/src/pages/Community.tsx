@@ -844,8 +844,7 @@ export default function Community() {
   };
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-purple-800/50"></div>
@@ -906,9 +905,6 @@ export default function Community() {
                 <Heart className="h-5 w-5 mr-2" />
                 Gelecek Çekilişler
               </Button>
-            </div>
-            
-
             </div>
           </div>
         </div>
@@ -1777,7 +1773,147 @@ export default function Community() {
             )}
           </div>
         )}
+
+        {/* Removed old filter section - replaced with new design above */}
+        {/* Modern Navigation Tabs */}
+        {/* Removed navigation tabs section */}
+
+        {/* Communities Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredChannels.map((channel: any) => (
+            <ChannelCard key={channel.id} channel={channel} />
+          ))}
+        </div>
+
+        {filteredChannels.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-500 dark:text-gray-400 text-lg mb-4">
+              {searchQuery ? 'Arama kriterlerinize uygun kanal bulunamadı' : 'Henüz kanal bulunmuyor'}
+            </div>
+            <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold">
+                  <Plus className="h-4 w-4 mr-2" />
+                  İlk Kanalı Oluştur
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+          </div>
+        )}
       </div>
-    </>
+
+      {/* Create Channel Dialog */}
+      <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+        <DialogContent className="max-w-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+          <DialogHeader className="text-center pb-4">
+            <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-[#FFC929] to-[#FFB800] rounded-full flex items-center justify-center">
+              <Users className="w-6 h-6 text-black" />
+            </div>
+            <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[#FFC929] to-[#FFB800] bg-clip-text text-transparent">Yeni Kanal Oluştur</DialogTitle>
+          </DialogHeader>
+          <Form {...channelForm}>
+            <form onSubmit={channelForm.handleSubmit(onSubmitChannel)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={channelForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                        <Users className="w-4 h-4 mr-2" />
+                        Kanal Adı
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          {...field} 
+                          placeholder="Örn: Kripto Tartışmaları"
+                          className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent" 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={channelForm.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Açıklama
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          {...field} 
+                          placeholder="Kanalınızın amacını ve kurallarını açıklayın..."
+                          className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-[#FFC929] focus:border-transparent min-h-[80px]" 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <FormField
+                control={channelForm.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                      <Tag className="w-4 h-4 mr-2" />
+                      Kategori
+                    </FormLabel>
+                    <FormControl>
+                      <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                        <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#FFC929] focus:border-transparent">
+                          <SelectValue placeholder="Kategori seçin" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                          {categories
+                            .filter(cat => cat.id !== 'all')
+                            .map((category: any) => (
+                              <SelectItem 
+                                key={category.id} 
+                                value={category.id.toString()}
+                                className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                              >
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <Button
+                  type="submit"
+                  disabled={createChannelMutation.isPending}
+                  className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold w-full"
+                >
+                  {createChannelMutation.isPending ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
+                      Oluşturuluyor...
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Kanal Oluştur
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
