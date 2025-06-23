@@ -564,7 +564,7 @@ export default function CommunityDetail() {
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                      <Button className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Bilet Al
                       </Button>
                       
@@ -615,7 +615,7 @@ export default function CommunityDetail() {
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                      <Button className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Bilet Al
                       </Button>
                       
@@ -666,7 +666,7 @@ export default function CommunityDetail() {
                         </div>
                       </div>
                       
-                      <Button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                      <Button className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold py-2 text-xs sm:text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Bilet Al
                       </Button>
                       
