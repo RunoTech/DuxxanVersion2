@@ -240,14 +240,14 @@ export default function CommunityDetail() {
               onClick={() => setLocation('/community')}
               variant="ghost"
               size="sm"
-              className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+              className="text-black/80 hover:text-black hover:bg-black/10 backdrop-blur-sm rounded-lg px-3 py-2"
             >
               Topluluklar
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+              className="text-black/80 hover:text-black hover:bg-black/10 backdrop-blur-sm rounded-lg px-3 py-2"
             >
               Çekilişler
             </Button>
@@ -260,7 +260,7 @@ export default function CommunityDetail() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+                    className="text-black/80 hover:text-black hover:bg-black/10 backdrop-blur-sm rounded-lg px-3 py-2"
                   >
                     <Settings className="h-4 w-4 mr-2" />
                     Düzenle
@@ -353,7 +353,7 @@ export default function CommunityDetail() {
               <Button
                 onClick={handleShare}
                 variant="ghost"
-                className="text-white/80 hover:text-white hover:bg-white/10 backdrop-blur-sm"
+                className="text-black/80 hover:text-black hover:bg-black/10 backdrop-blur-sm"
               >
                 <Share2 className="h-4 w-4 mr-2" />
                 Paylaş
