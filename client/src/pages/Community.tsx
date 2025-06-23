@@ -845,7 +845,7 @@ export default function Community() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 transition-all duration-300">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-purple-800/50"></div>
@@ -1124,45 +1124,50 @@ export default function Community() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filter Section */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-purple-300" />
-            <span className="text-white font-medium">Filtreler</span>
-          </div>
-          <div className="flex gap-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
-              <Input
-                type="text"
-                placeholder="Kanal ara..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-64 bg-purple-800/30 border-purple-600/30 text-white placeholder-purple-300"
-              />
+        <div className="bg-purple-900/50 dark:bg-purple-900/50 backdrop-blur-sm rounded-2xl p-4 mb-8 border border-purple-600/30 dark:border-purple-600/30">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Filter className="h-5 w-5 text-purple-300 dark:text-purple-300" />
+              <span className="text-white dark:text-white font-medium">Filtreler:</span>
             </div>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-32 bg-purple-800/30 border-purple-600/30 text-white">
-                <SelectValue placeholder="Tümü" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tümü</SelectItem>
-                {categories.filter(cat => cat.id !== 'all').map((category: any) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white border-0">
-              Tümü
-            </Button>
+            <div className="flex gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400 dark:text-purple-400" />
+                <Input
+                  type="text"
+                  placeholder="Kanal ara..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-64 bg-purple-800/30 dark:bg-purple-800/30 border-purple-600/30 dark:border-purple-600/30 text-white dark:text-white placeholder-purple-300 dark:placeholder-purple-300 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-[#FFC929]/20 dark:focus:ring-[#FFC929]/20"
+                />
+              </div>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-32 bg-purple-800/30 dark:bg-purple-800/30 border-purple-600/30 dark:border-purple-600/30 text-white dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-[#FFC929]/20 dark:focus:ring-[#FFC929]/20">
+                  <SelectValue placeholder="Tümü" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600">
+                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Tümü</SelectItem>
+                  {categories.filter(cat => cat.id !== 'all').map((category: any) => (
+                    <SelectItem key={category.id} value={category.id.toString()} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button className="bg-purple-600/50 dark:bg-purple-600/50 hover:bg-purple-700 dark:hover:bg-purple-700 text-white dark:text-white border-0 backdrop-blur-sm">
+                Tümü
+              </Button>
+              <Button className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                Tümü
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Communities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Crypto Turkey */}
-          <Card className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 border border-purple-600/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
+          <Card className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 dark:from-purple-900 dark:via-indigo-900 dark:to-purple-800 border border-purple-600/30 dark:border-purple-600/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 dark:hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
             <div className="relative h-32 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-purple-800/20"></div>
               <div className="absolute top-3 left-3">
@@ -1179,47 +1184,47 @@ export default function Community() {
             </div>
 
             <div className="p-4 flex-1 flex flex-col">
-              <h3 className="text-white text-lg font-bold mb-2">Crypto Turkey</h3>
-              <p className="text-purple-200 text-sm mb-4 flex-1">Türkiye'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri.</p>
+              <h3 className="text-white dark:text-white text-lg font-bold mb-2">Crypto Turkey</h3>
+              <p className="text-purple-200 dark:text-purple-200 text-sm mb-4 flex-1">Türkiye'nin en büyük kripto para topluluğu. Günlük analizler, çekiliş duyuruları ve eğitim içerikleri.</p>
 
               <div className="flex items-center gap-2 mb-4">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/api/placeholder/48/48" />
-                  <AvatarFallback className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white font-bold text-xs">CE</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-purple-400 to-indigo-400 text-white dark:text-white font-bold text-xs">CE</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-purple-200 text-sm font-medium">CryptoExpert</div>
-                  <div className="text-purple-300 text-xs">Topluluk Sahibi</div>
+                  <div className="text-purple-200 dark:text-purple-200 text-sm font-medium">CryptoExpert</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Topluluk Sahibi</div>
                 </div>
               </div>
 
               <div className="flex gap-2 mb-4">
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">BTC</Badge>
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">ETH</Badge>
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">Analiz</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">BTC</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">ETH</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">Analiz</Badge>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="text-center">
-                  <div className="text-xl font-bold text-white">15.420</div>
-                  <div className="text-purple-300 text-xs">Üye</div>
+                  <div className="text-xl font-bold text-white dark:text-white">15.420</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Üye</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-green-400">1250</div>
-                  <div className="text-purple-300 text-xs">Aktif</div>
+                  <div className="text-xl font-bold text-green-400 dark:text-green-400">1250</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Aktif</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-yellow-400">Kripto</div>
-                  <div className="text-purple-300 text-xs">Kategori</div>
+                  <div className="text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">Kripto</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Kategori</div>
                 </div>
               </div>
 
               <div className="flex items-center justify-center gap-1 mb-4">
-                <Globe className="h-3 w-3 text-purple-300" />
-                <span className="text-purple-300 text-xs">Türkiye</span>
+                <Globe className="h-3 w-3 text-purple-300 dark:text-purple-300" />
+                <span className="text-purple-300 dark:text-purple-300 text-xs">Türkiye</span>
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl border-0 transition-all">
+              <Button className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all">
                 <Star className="h-4 w-4 mr-2" />
                 Abone Ol
               </Button>
@@ -1227,7 +1232,7 @@ export default function Community() {
           </Card>
 
           {/* NFT Collectors Hub */}
-          <Card className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 border border-purple-600/30 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
+          <Card className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 dark:from-purple-900 dark:via-indigo-900 dark:to-purple-800 border border-purple-600/30 dark:border-purple-600/30 hover:border-[#FFC929] dark:hover:border-[#FFC929] hover:shadow-lg hover:shadow-[#FFC929]/20 dark:hover:shadow-[#FFC929]/20 transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden flex flex-col relative h-96">
             <div className="relative h-32 bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-purple-800/20"></div>
               <div className="absolute top-3 left-3">
@@ -1244,47 +1249,47 @@ export default function Community() {
             </div>
 
             <div className="p-4 flex-1 flex flex-col">
-              <h3 className="text-white text-lg font-bold mb-2">NFT Collectors Hub</h3>
-              <p className="text-purple-200 text-sm mb-4 flex-1">NFT koleksiyoncuları için özel topluluk. En yeni projeler, whitelist fırsatları ve özel çekilişler.</p>
+              <h3 className="text-white dark:text-white text-lg font-bold mb-2">NFT Collectors Hub</h3>
+              <p className="text-purple-200 dark:text-purple-200 text-sm mb-4 flex-1">NFT koleksiyoncuları için özel topluluk. En yeni projeler, whitelist fırsatları ve özel çekilişler.</p>
 
               <div className="flex items-center gap-2 mb-4">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/api/placeholder/48/48" />
-                  <AvatarFallback className="bg-gradient-to-br from-orange-400 to-pink-400 text-white font-bold text-xs">NK</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-orange-400 to-pink-400 text-white dark:text-white font-bold text-xs">NK</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-purple-200 text-sm font-medium">NFTKing</div>
-                  <div className="text-purple-300 text-xs">Topluluk Sahibi</div>
+                  <div className="text-purple-200 dark:text-purple-200 text-sm font-medium">NFTKing</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Topluluk Sahibi</div>
                 </div>
               </div>
 
               <div className="flex gap-2 mb-4">
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">NFT</Badge>
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">Art</Badge>
-                <Badge className="bg-purple-600/50 text-purple-200 border-purple-500/30 text-xs px-2 py-1">Collectibles</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">NFT</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">Art</Badge>
+                <Badge className="bg-purple-600/50 dark:bg-purple-600/50 text-purple-200 dark:text-purple-200 border-purple-500/30 dark:border-purple-500/30 text-xs px-2 py-1">Collectibles</Badge>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="text-center">
-                  <div className="text-xl font-bold text-white">8.950</div>
-                  <div className="text-purple-300 text-xs">Üye</div>
+                  <div className="text-xl font-bold text-white dark:text-white">8.950</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Üye</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-green-400">890</div>
-                  <div className="text-purple-300 text-xs">Aktif</div>
+                  <div className="text-xl font-bold text-green-400 dark:text-green-400">890</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Aktif</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-yellow-400">NFT</div>
-                  <div className="text-purple-300 text-xs">Kategori</div>
+                  <div className="text-xl font-bold text-[#FFC929] dark:text-[#FFC929]">NFT</div>
+                  <div className="text-purple-300 dark:text-purple-300 text-xs">Kategori</div>
                 </div>
               </div>
 
               <div className="flex items-center justify-center gap-1 mb-4">
-                <Globe className="h-3 w-3 text-purple-300" />
-                <span className="text-purple-300 text-xs">Global</span>
+                <Globe className="h-3 w-3 text-purple-300 dark:text-purple-300" />
+                <span className="text-purple-300 dark:text-purple-300 text-xs">Global</span>
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl border-0 transition-all">
+              <Button className="w-full bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] dark:from-[#FFC929] dark:to-[#FFB800] dark:hover:from-[#FFB800] dark:hover:to-[#FFA500] text-black dark:text-black font-semibold py-2 rounded-xl border-0 transition-all">
                 <Star className="h-4 w-4 mr-2" />
                 Abone Ol
               </Button>
