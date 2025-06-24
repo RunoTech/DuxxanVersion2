@@ -289,16 +289,21 @@ export function DonationCard({ donation }: DonationCardProps) {
             <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
             <span className="text-xs sm:text-sm">{donation.donorCount} bağışçı</span>
           </div>
-          <Link href={`/donations/${donation.id}`}>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 flex-shrink-0"
-            >
-              <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-              Bağış Yap
-            </Button>
-          </Link>
+          <Button 
+            onClick={(e) => {
+              e.stopPropagation();
+              toast({
+                title: 'Demo Bağış',
+                description: 'Bu demo bir bağış kampanyasıdır. Gerçek bağış için detay sayfasını ziyaret edin.',
+              });
+            }}
+            size="sm" 
+            variant="outline" 
+            className="border-[#FFC929] text-[#FFC929] bg-transparent raffle-button-hover transition-all duration-200 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 flex-shrink-0"
+          >
+            <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            Bağış Yap
+          </Button>
         </div>
         
         {/* Time Left Indicator */}
