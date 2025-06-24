@@ -19,6 +19,8 @@ export default function Raffles() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   // Fetch categories with caching
   const { data: categories = [] } = useQuery({
@@ -81,6 +83,17 @@ export default function Raffles() {
           return 0;
       }
     });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredRaffles.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedRaffles = filteredRaffles.slice(startIndex, endIndex);
+
+  // Reset page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, selectedCountry, sortBy]);
 
   const getActiveRafflesCount = () => {
     const now = new Date();
@@ -219,6 +232,7 @@ export default function Raffles() {
                   setSelectedCategory('all');
                   setSelectedCountry('all');
                   setSortBy('newest');
+                  setCurrentPage(1);
                 }}
                 className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold"
               >
@@ -229,7 +243,7 @@ export default function Raffles() {
             {/* Results Info inside filter card */}
             <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                {filteredRaffles.length} sonuç gösteriliyor ({raffles.length} toplam çekiliş)
+                {filteredRaffles.length} sonuç gösteriliyor • Sayfa {currentPage}/{totalPages} • ({raffles.length} toplam çekiliş)
               </p>
               {searchTerm && (
                 <p className="text-sm text-gray-500 dark:text-gray-500">
@@ -255,11 +269,56 @@ export default function Raffles() {
             ))}
           </div>
         ) : filteredRaffles.length > 0 ? (
-          <div className="grid responsive-grid gap-4 md:gap-6">
-            {filteredRaffles.map((raffle: any) => (
-              <RaffleCard key={raffle.id} raffle={raffle} />
-            ))}
-          </div>
+          <>
+            <div className="grid responsive-grid gap-4 md:gap-6">
+              {paginatedRaffles.map((raffle: any) => (
+                <RaffleCard key={raffle.id} raffle={raffle} />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-12 gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Önceki
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(page => {
+                    const start = Math.max(1, currentPage - 2);
+                    const end = Math.min(totalPages, currentPage + 2);
+                    return page >= start && page <= end;
+                  })
+                  .map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => setCurrentPage(page)}
+                      className={currentPage === page 
+                        ? "bg-yellow-500 hover:bg-yellow-600 text-black font-semibold min-w-[40px]"
+                        : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 min-w-[40px]"
+                      }
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Sonraki
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <Card className="duxxan-card text-center">
             <CardContent className="p-12">
@@ -277,6 +336,7 @@ export default function Raffles() {
                       setSearchTerm('');
                       setSelectedCategory('all');
                       setSelectedCountry('all');
+                      setCurrentPage(1);
                     }}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
                   >
@@ -293,14 +353,7 @@ export default function Raffles() {
           </Card>
         )}
 
-        {/* Load More Button (if needed for pagination) */}
-        {filteredRaffles.length > 0 && filteredRaffles.length < raffles.length && (
-          <div className="text-center mt-12">
-            <Button variant="outline" className="duxxan-button-secondary">
-              Load More Raffles
-            </Button>
-          </div>
-        )}
+
       </div>
     </div>
   );
