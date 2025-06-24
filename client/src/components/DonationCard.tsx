@@ -211,7 +211,12 @@ export function DonationCard({ donation }: DonationCardProps) {
                 {donation.title}
               </CardTitle>
               <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm truncate">
-                @{donation.creator?.username || 'anonim'}
+                @{donation.creator?.name || donation.creator?.username || 'anonim'}
+                {donation.country && (
+                  <span className="ml-2 text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">
+                    {donation.country}
+                  </span>
+                )}
               </p>
             </div>
           </div>

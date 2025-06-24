@@ -186,7 +186,12 @@ export function RaffleCard({ raffle }: RaffleCardProps) {
               </span>
             </span>
             <span className="text-gray-500 dark:text-gray-400">
-              <span className="text-gray-900 dark:text-white font-medium">{raffle.creator.username}</span>
+              <span className="text-gray-900 dark:text-white font-medium">{raffle.creator.name || raffle.creator.username}</span>
+              {raffle.country && (
+                <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded">
+                  {raffle.country}
+                </span>
+              )}
             </span>
           </div>
         </div>
