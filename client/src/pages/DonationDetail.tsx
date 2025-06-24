@@ -349,10 +349,25 @@ export default function DonationDetail() {
                 </div>
 
                 <Button 
+                  onClick={async () => {
+                    if (!isConnected) {
+                      toast({
+                        title: 'Cüzdan Bağlantısı Gerekli',
+                        description: 'Bağış yapmak için önce cüzdanınızı bağlayın',
+                        variant: 'destructive',
+                      });
+                      return;
+                    }
+                    
+                    // Demo için başarılı bağış simülasyonu
+                    toast({
+                      title: 'Demo Bağış Başarılı!',
+                      description: `${donationAmount} USDT bağışınız için teşekkürler (Demo)`,
+                    });
+                  }}
                   className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
-                  disabled={!isConnected}
                 >
-                  {isConnected ? 'Bağış Yap' : 'Cüzdan Bağlayın'}
+                  {isConnected ? 'Bağış Yap (Demo)' : 'Cüzdan Bağlayın'}
                 </Button>
 
                 {!isConnected && (
