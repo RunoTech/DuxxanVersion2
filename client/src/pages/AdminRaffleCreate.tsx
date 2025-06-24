@@ -222,14 +222,13 @@ export default function AdminRaffleCreate() {
                 )}
               />
 
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-                  ⚠️ Manuel Çekiliş Bilgisi
+              <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">
+                  🔒 Gizli Çekiliş Oluştur
                 </h4>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  Bu çekiliş manuel olarak yönetilecektir. Bilet satışları gerçek görünecek ancak 
-                  blockchain entegrasyonu olmayacaktır. İstediğiniz zaman sonlandırabilir ve 
-                  kazananı seçebilirsiniz.
+                <p className="text-sm text-red-700 dark:text-red-300">
+                  Bu çekiliş kullanıcılara tamamen gerçek görünecek. Blockchain entegrasyonu olmaz, 
+                  istediğiniz zaman kontrolü elinizde tutabilirsiniz. Platform yöneticisi kontrolünde.
                 </p>
               </div>
 

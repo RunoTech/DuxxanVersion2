@@ -91,13 +91,13 @@ export default function AdminPanel() {
         </Card>
       </div>
 
-      <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-        <h3 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-          ⚠️ Admin Panel Erişimi
+      <div className="mt-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+        <h3 className="font-medium text-red-800 dark:text-red-200 mb-2">
+          🔒 Gizli Admin Panel
         </h3>
-        <p className="text-sm text-yellow-700 dark:text-yellow-300">
-          Bu panel sadece platform yöneticileri için tasarlanmıştır. Manuel çekilişler 
-          gerçek görünecek ancak blockchain entegrasyonu olmayacaktır.
+        <p className="text-sm text-red-700 dark:text-red-300">
+          Bu panel gizlidir ve sadece URL ile erişilebilir. Manuel çekilişler kullanıcılara 
+          tamamen gerçek görünür. Navigasyonda link bulunmaz.
         </p>
       </div>
     </div>
