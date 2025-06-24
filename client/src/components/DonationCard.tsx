@@ -189,7 +189,8 @@ export function DonationCard({ donation }: DonationCardProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden w-full">
+    <Link href={`/donations/${donation.id}`}>
+      <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-[#FFC929] transition-all duration-300 rounded-2xl overflow-hidden w-full cursor-pointer hover:shadow-lg">
       <CardHeader className="p-3 sm:p-4">
         <div className="flex justify-between items-start mb-3 gap-2">
           <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
@@ -317,5 +318,6 @@ export function DonationCard({ donation }: DonationCardProps) {
         url={`/donations/${donation.id}`}
       />
     </Card>
+    </Link>
   );
 }
