@@ -66,9 +66,8 @@ export function useWallet() {
       }
     }
 
-    // Listen for connection changes
+    // Listen for connection changes - reduced logging
     const handleConnectionChange = (connected: boolean, address?: string) => {
-      console.log('Connection change:', connected, address);
       if (!connected) {
         setConnection(null);
         setUser(null);
@@ -76,13 +75,10 @@ export function useWallet() {
         localStorage.removeItem('wallet_authenticated');
         localStorage.removeItem('wallet_address');
       } else if (address) {
-        // Update connection when address changes
         const walletManager = WalletManager.getInstance();
         const currentConnection = walletManager.getConnection();
-        if (currentConnection) {
-          console.log('Setting connection from listener:', currentConnection);
-          setConnection(null); // Clear first
-          setTimeout(() => setConnection(currentConnection), 10);
+        if (currentConnection && currentConnection.address !== connection?.address) {
+          setConnection(currentConnection);
         }
       }
     };
@@ -179,8 +175,6 @@ export function useWallet() {
             // Only re-authenticate if address matches stored address
             if (wasAuthenticated && storedAddress === connection.address.toLowerCase()) {
               // User was previously authenticated with this address
-              console.log('Restoring authenticated session for:', connection.address);
-              // Create a basic user object from stored data
               setUser({ walletAddress: connection.address.toLowerCase() });
             } else {
               // New address or no previous authentication
