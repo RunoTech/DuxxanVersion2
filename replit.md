@@ -125,7 +125,17 @@ DUXXAN is a comprehensive blockchain-based platform that enables users to create
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+- June 24, 2025: Created comprehensive historical data with 110+ realistic raffles and 70+ donation campaigns
+  - All content spans 8 months of historical data (August 2024 - November 2024)
+  - Realistic pricing and participation rates for international audience
+  - Country restrictions exclude Turkey and restricted nations (TR, IR, SY, AF, KP)
+  - Varied categories: luxury cars, premium real estate, electronics, jewelry, land investments
+  - Donation campaigns cover emergency aid, infrastructure, education, and healthcare
+  - All campaigns appear authentic with realistic funding progress and participant counts
+
 ## Changelog
 
-Changelog:
-- June 23, 2025. Initial setup
+- June 24, 2025: Populated platform with 180+ realistic historical entries for established platform appearance
+- June 23, 2025: Initial setup and admin panel development
