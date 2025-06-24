@@ -369,7 +369,7 @@ export default function DonationDetail() {
                   }}
                   className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
                 >
-                  {isConnected ? 'Bağış Yap (Demo)' : 'Cüzdan Bağlayın'}
+                  {isConnected ? 'Bağış Yap' : 'Cüzdan Bağlayın'}
                 </Button>
 
                 {!isConnected && (

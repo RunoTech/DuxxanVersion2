@@ -1101,32 +1101,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ success: false, message: 'Authentication required' });
       }
 
-      // Only allow demo channel creation, not real channels
       const channelData = { 
         ...req.body, 
         creatorId: req.user.id,
-        isDemo: true,
-        demoContent: JSON.stringify({
-          sampleRaffles: [
-            {
-              title: "Demo Çekiliş 1",
-              description: "Bu bir demo çekilişidir",
-              prizeValue: "100 USDT",
-              endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-            },
-            {
-              title: "Demo Çekiliş 2", 
-              description: "Bu ikinci demo çekilişidir",
-              prizeValue: "250 USDT",
-              endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
-            }
-          ],
-          features: [
-            "Demo içerik görüntüleme",
-            "Örnek çekiliş deneyimi",
-            "Topluluk etkileşimi"
-          ]
-        })
+        isDemo: false
       };
       
       const channel = await storage.createChannel(channelData);

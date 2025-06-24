@@ -108,87 +108,17 @@ export default function ProfileNew() {
   // Use demo data instead of API calls to prevent database overload
   const rawDevices = [];
 
-  const devices = user ? (rawDevices as any[]) : [
-    {
-      id: 1,
-      deviceType: 'desktop',
-      deviceName: 'Chrome Tarayıcı',
-      browser: 'Chrome 120.0',
-      operatingSystem: 'Windows 11',
-      location: 'İstanbul, Türkiye',
-      lastLoginAt: new Date().toISOString(),
-      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 2,
-      deviceType: 'mobile',
-      deviceName: 'iPhone 15',
-      browser: 'Safari Mobile',
-      operatingSystem: 'iOS 17.2',
-      location: 'İstanbul, Türkiye',
-      lastLoginAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-    }
-  ];
+  const devices = user ? (rawDevices as any[]) : [];
 
   // Use demo data to avoid unnecessary API calls
   const rawPhotos = [];
 
   const photos = user ? (rawPhotos as any[]) : [];
 
-  // Demo data for raffle participations
-  const demoParticipatedRaffles = [
-    {
-      id: 1,
-      raffle: {
-        id: 1,
-        title: "iPhone 15 Pro Max Çekilişi",
-        prizeValue: "45000",
-        endDate: "2024-12-31T23:59:59Z",
-        isActive: true,
-        categoryId: 1
-      },
-      quantity: 3,
-      totalAmount: "90.00",
-      createdAt: "2024-12-15T10:30:00Z"
-    },
-    {
-      id: 2,
-      raffle: {
-        id: 2,
-        title: "MacBook Pro M3 Çekilişi",
-        prizeValue: "75000",
-        endDate: "2024-12-25T23:59:59Z",
-        isActive: true,
-        categoryId: 1
-      },
-      quantity: 5,
-      totalAmount: "250.00",
-      createdAt: "2024-12-10T14:15:00Z"
-    }
-  ];
+  const participatedRaffles = [];
+  const wonRaffles = [];
 
-  // Demo data for won raffles
-  const demoWonRaffles = [
-    {
-      id: 3,
-      title: "Samsung Galaxy S24 Ultra Çekilişi",
-      prizeValue: "35000",
-      winnerSelectedAt: "2024-12-18T12:00:00Z",
-      approvalDeadline: "2024-12-24T12:00:00Z",
-      isApprovedByWinner: false,
-      isApprovedByCreator: true,
-      endDate: "2024-12-18T00:00:00Z",
-      categoryId: 1
-    }
-  ];
-
-  // Disable all database queries since we're using demo data
-  // This prevents unnecessary database calls that were causing performance issues
-  const participatedRaffles = demoParticipatedRaffles;
-  const wonRaffles = demoWonRaffles;
-
-  const displayParticipatedRaffles = user ? participatedRaffles : demoParticipatedRaffles;
+  const displayParticipatedRaffles = user ? participatedRaffles : [];
   const displayWonRaffles = user ? wonRaffles : demoWonRaffles;
 
   // Initialize form data when user data loads

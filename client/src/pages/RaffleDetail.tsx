@@ -481,7 +481,7 @@ export default function RaffleDetail() {
                   }}
                   className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
                 >
-                  {isConnected ? 'Bilet Satın Al (Demo)' : 'Bilet Satın Al (Demo)'}
+                  {isConnected ? 'Bilet Satın Al' : 'Bilet Satın Al'}
                 </Button>
 
                 {!isConnected && (
