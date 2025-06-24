@@ -119,7 +119,7 @@ export default function ProfileNew() {
   const wonRaffles = [];
 
   const displayParticipatedRaffles = user ? participatedRaffles : [];
-  const displayWonRaffles = user ? wonRaffles : demoWonRaffles;
+  const displayWonRaffles = user ? wonRaffles : [];
 
   // Initialize form data when user data loads
   useEffect(() => {

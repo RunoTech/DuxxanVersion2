@@ -293,8 +293,8 @@ export function DonationCard({ donation }: DonationCardProps) {
             onClick={(e) => {
               e.stopPropagation();
               toast({
-                title: 'Demo Bağış',
-                description: 'Bu demo bir bağış kampanyasıdır. Gerçek bağış için detay sayfasını ziyaret edin.',
+                title: 'Bağış',
+                description: 'Bağış yapmak için detay sayfasını ziyaret edin.',
               });
             }}
             size="sm" 

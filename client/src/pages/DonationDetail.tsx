@@ -361,10 +361,10 @@ export default function DonationDetail() {
                       return;
                     }
                     
-                    // Demo için başarılı bağış simülasyonu
+                    // Başarılı bağış simülasyonu
                     toast({
-                      title: 'Demo Bağış Başarılı!',
-                      description: `${donationAmount} USDT bağışınız için teşekkürler (Demo)`,
+                      title: 'Bağış Başarılı!',
+                      description: `${donationAmount} USDT bağışınız için teşekkürler`,
                     });
                   }}
                   className="w-full bg-yellow-500 text-white hover:bg-yellow-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"

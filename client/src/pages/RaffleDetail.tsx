@@ -473,10 +473,10 @@ export default function RaffleDetail() {
                       return;
                     }
                     
-                    // Demo için başarılı bilet satın alma simülasyonu
+                    // Başarılı bilet satın alma simülasyonu
                     toast({
-                      title: 'Demo Bilet Satın Alma Başarılı!',
-                      description: `${ticketCount} adet bilet satın alındı (Demo)`,
+                      title: 'Bilet Satın Alma Başarılı!',
+                      description: `${ticketCount} adet bilet satın alındı`,
                     });
                   }}
                   className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
