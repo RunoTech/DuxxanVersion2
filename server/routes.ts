@@ -665,6 +665,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Manual raffle creation endpoint (admin only)
+  app.post('/api/raffles/create-manual', createRateLimit, async (req, res) => {
+    try {
+      const raffleData = req.body;
+      
+      // Create dummy user for manual raffles
+      let adminUser = await storage.getUserByWalletAddress('0x0000000000000000000000000000000000000001');
+      if (!adminUser) {
+        adminUser = await storage.createUser({
+          walletAddress: '0x0000000000000000000000000000000000000001',
+          username: 'admin',
+          name: 'Platform Admin'
+        });
+      }
+
+      const validatedData = insertRaffleSchema.parse({
+        ...raffleData,
+        creatorId: adminUser.id,
+        isManual: true,
+        createdByAdmin: true,
+        transactionHash: null // No blockchain transaction for manual raffles
+      });
+      
+      const raffle = await storage.createRaffle(validatedData);
+      
+      // Store raffle in Redis for real-time tracking
+      const raffleKey = `duxxan:raffle:${raffle.id}:live_stats`;
+      try {
+        await redis.hset(raffleKey, 'raffleId', raffle.id.toString());
+        await redis.hset(raffleKey, 'title', raffle.title);
+        await redis.hset(raffleKey, 'prizeAmount', raffle.prizeValue || '0');
+        await redis.hset(raffleKey, 'ticketPrice', raffle.ticketPrice || '0');
+        await redis.hset(raffleKey, 'maxTickets', raffle.maxTickets?.toString() || '0');
+        await redis.hset(raffleKey, 'totalTickets', '0');
+        await redis.hset(raffleKey, 'status', 'active');
+        await redis.hset(raffleKey, 'createdAt', new Date().toISOString());
+        await redis.hset(raffleKey, 'creatorId', raffle.creatorId.toString());
+        await redis.hset(raffleKey, 'isManual', 'true');
+        
+        console.log(`Manual raffle stored in Redis: ${raffleKey}`);
+      } catch (redisError) {
+        console.warn('Redis manual raffle storage failed:', redisError);
+      }
+      
+      broadcast({ type: 'RAFFLE_CREATED', data: raffle });
+      res.status(201).json(raffle);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: 'Invalid raffle data', errors: error.errors });
+      } else {
+        res.status(500).json({ message: 'Failed to create manual raffle' });
+      }
+    }
+  });
+
   app.put('/api/raffles/:id/approve', strictRateLimit, getUser, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);

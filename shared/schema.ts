@@ -106,7 +106,10 @@ export const raffles = pgTable("raffles", {
   countryRestriction: varchar("country_restriction", { length: 20 }).default("all"), // "all", "selected", "exclude"
   allowedCountries: text("allowed_countries"), // JSON array of ISO country codes
   excludedCountries: text("excluded_countries"), // JSON array of ISO country codes
-  // Blockchain payment verification
+  // Manual raffle system (fake but realistic)
+  isManual: boolean("is_manual").default(false), // Manuel yönetilen çekiliş
+  createdByAdmin: boolean("created_by_admin").default(false), // Admin tarafından oluşturuldu
+  // Blockchain payment verification (not used for manual raffles)
   transactionHash: varchar("transaction_hash", { length: 66 }), // Ethereum transaction hash
   createdAt: timestamp("created_at").defaultNow(),
 });

@@ -24,6 +24,8 @@ import Donations from "@/pages/Donations";
 import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
+import AdminRaffleCreate from "@/pages/AdminRaffleCreate";
+import AdminPanel from "@/pages/AdminPanel";
 import CountryProfile from "@/pages/CountryProfile";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
