@@ -680,11 +680,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Parse and validate data properly for manual raffles
       const validatedData = insertRaffleSchema.parse({
-        ...raffleData,
+        title: raffleData.title,
+        description: raffleData.description,
+        prizeValue: raffleData.prizeValue,
+        ticketPrice: raffleData.ticketPrice,
+        maxTickets: parseInt(raffleData.maxTickets),
+        categoryId: parseInt(raffleData.categoryId),
+        endDate: raffleData.endDate,
         creatorId: adminUser.id,
         isManual: true,
         createdByAdmin: true,
+        countryRestriction: raffleData.countryRestriction || 'all',
+        allowedCountries: raffleData.allowedCountries || null,
+        excludedCountries: raffleData.excludedCountries || null,
         transactionHash: null // No blockchain transaction for manual raffles
       });
       
