@@ -46,9 +46,12 @@ export default function Raffles() {
       
       const response = await apiRequest('GET', `/api/raffles/active?${params.toString()}`);
       const result = await response.json();
-      return result.data || [];
+      console.log('API Response:', result);
+      return result.data || result || [];
     },
-    staleTime: 1 * 60 * 1000, // 1 minute cache
+    staleTime: 0, // No cache
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
     enabled: true
   });
 

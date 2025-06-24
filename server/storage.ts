@@ -320,14 +320,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveRaffles(): Promise<(Raffle & { creator: User; category: Category })[]> {
-    return await db
-      .select()
-      .from(raffles)
-      .innerJoin(users, eq(raffles.creatorId, users.id))
-      .innerJoin(categories, eq(raffles.categoryId, categories.id))
-      .where(and(eq(raffles.isActive, true), gt(raffles.endDate, new Date())))
-      .orderBy(desc(raffles.createdAt))
-      .then(rows => rows.map(row => ({ ...row.raffles, creator: row.users, category: row.categories })));
+    try {
+      console.log('Fetching active raffles...');
+      const rows = await db
+        .select()
+        .from(raffles)
+        .innerJoin(users, eq(raffles.creatorId, users.id))
+        .innerJoin(categories, eq(raffles.categoryId, categories.id))
+        .where(eq(raffles.isActive, true))
+        .orderBy(desc(raffles.createdAt));
+      
+      console.log(`Found ${rows.length} active raffles`);
+      return rows.map(row => ({ ...row.raffles, creator: row.users, category: row.categories }));
+    } catch (error) {
+      console.error('Error in getActiveRaffles:', error);
+      return [];
+    }
   }
 
   async createTicket(ticket: InsertTicket & { userId: number }): Promise<Ticket> {

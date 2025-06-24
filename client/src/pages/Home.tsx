@@ -38,19 +38,35 @@ export default function Home() {
 
   const { data: activeRafflesData } = useQuery({
     queryKey: ['/api/raffles/active'],
-    staleTime: 2 * 60 * 1000, // 2 minutes cache
+    queryFn: async () => {
+      const response = await fetch('/api/raffles/active');
+      const result = await response.json();
+      console.log('Home API Response:', result);
+      return result.data || result || [];
+    },
+    staleTime: 0, // No cache
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
     enabled: true
   });
 
-  const activeRaffles = (activeRafflesData as any)?.data || [];
+  const activeRaffles = activeRafflesData || [];
 
   const { data: activeDonationsData } = useQuery({
     queryKey: ['/api/donations/active'],
-    staleTime: 2 * 60 * 1000, // 2 minutes cache
+    queryFn: async () => {
+      const response = await fetch('/api/donations/active');
+      const result = await response.json();
+      console.log('Donations API Response:', result);
+      return result.data || result || [];
+    },
+    staleTime: 0, // No cache
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
     enabled: true
   });
 
-  const activeDonations = (activeDonationsData as any)?.data || [];
+  const activeDonations = activeDonationsData || [];
 
   const heroSlides = [
     {
