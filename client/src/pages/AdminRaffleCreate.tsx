@@ -21,6 +21,7 @@ const createRaffleSchema = z.object({
   maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
   categoryId: z.string().min(1, 'Kategori seçin'),
   endDate: z.string().min(1, 'Bitiş tarihi gerekli'),
+  image: z.string().optional(),
   countryRestriction: z.string().default('all'),
   allowedCountries: z.array(z.string()).default([]),
   excludedCountries: z.array(z.string()).default([]),
@@ -74,6 +75,7 @@ export default function AdminRaffleCreate() {
       maxTickets: '',
       categoryId: '',
       endDate: '',
+      image: '',
       countryRestriction: 'all',
       allowedCountries: [],
       excludedCountries: [],
@@ -250,6 +252,23 @@ export default function AdminRaffleCreate() {
                         min={new Date().toISOString().slice(0, 16)}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Çekiliş Görseli (İsteğe bağlı)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Görsel URL'si" {...field} />
+                    </FormControl>
+                    <p className="text-sm text-muted-foreground">
+                      Çekiliş ödülünün fotoğrafını ekleyin (URL formatında)
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
