@@ -87,6 +87,8 @@ function Router() {
           <Route path="/country/:countryCode" component={CountryProfile} />
           <Route path="/create-raffle" component={CreateRaffle} />
           <Route path="/create-donation" component={CreateDonation} />
+          <Route path="/admin" component={AdminPanel} />
+          <Route path="/admin/create-raffle" component={AdminRaffleCreate} />
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
           <Route path="/support" component={Support} />
