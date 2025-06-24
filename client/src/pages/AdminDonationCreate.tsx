@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -18,9 +19,35 @@ const createDonationSchema = z.object({
   goalAmount: z.string().min(1, 'Hedef miktar gerekli'),
   endDate: z.string().optional(),
   isUnlimited: z.boolean().default(false),
+  countryRestriction: z.string().default('all'),
+  allowedCountries: z.array(z.string()).default([]),
+  excludedCountries: z.array(z.string()).default([]),
 });
 
 type CreateDonationForm = z.infer<typeof createDonationSchema>;
+
+const countries = [
+  { code: 'TR', name: 'Türkiye' },
+  { code: 'US', name: 'Amerika Birleşik Devletleri' },
+  { code: 'DE', name: 'Almanya' },
+  { code: 'FR', name: 'Fransa' },
+  { code: 'GB', name: 'İngiltere' },
+  { code: 'IT', name: 'İtalya' },
+  { code: 'ES', name: 'İspanya' },
+  { code: 'NL', name: 'Hollanda' },
+  { code: 'BE', name: 'Belçika' },
+  { code: 'CH', name: 'İsviçre' },
+  { code: 'AT', name: 'Avusturya' },
+  { code: 'SE', name: 'İsveç' },
+  { code: 'NO', name: 'Norveç' },
+  { code: 'DK', name: 'Danimarka' },
+  { code: 'FI', name: 'Finlandiya' },
+  { code: 'CA', name: 'Kanada' },
+  { code: 'AU', name: 'Avustralya' },
+  { code: 'JP', name: 'Japonya' },
+  { code: 'KR', name: 'Güney Kore' },
+  { code: 'SG', name: 'Singapur' }
+];
 
 export default function AdminDonationCreate() {
   const { toast } = useToast();
@@ -34,6 +61,9 @@ export default function AdminDonationCreate() {
       goalAmount: '',
       endDate: '',
       isUnlimited: false,
+      countryRestriction: 'all',
+      allowedCountries: [],
+      excludedCountries: [],
     },
   });
 
@@ -45,6 +75,9 @@ export default function AdminDonationCreate() {
           ...data,
           goalAmount: parseFloat(data.goalAmount),
           endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
+          countryRestriction: data.countryRestriction,
+          allowedCountries: JSON.stringify(data.allowedCountries),
+          excludedCountries: JSON.stringify(data.excludedCountries),
         }),
       });
     },

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const createRaffleSchema = z.object({
   title: z.string().min(1, 'Başlık gerekli'),
@@ -20,6 +21,9 @@ const createRaffleSchema = z.object({
   maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
   categoryId: z.string().min(1, 'Kategori seçin'),
   endDate: z.string().min(1, 'Bitiş tarihi gerekli'),
+  countryRestriction: z.string().default('all'),
+  allowedCountries: z.array(z.string()).default([]),
+  excludedCountries: z.array(z.string()).default([]),
 });
 
 type CreateRaffleForm = z.infer<typeof createRaffleSchema>;
@@ -31,6 +35,29 @@ const categories = [
   { id: 4, name: 'Spor & Outdoor' },
   { id: 5, name: 'Kitap & Hobi' },
   { id: 6, name: 'Diğer' }
+];
+
+const countries = [
+  { code: 'TR', name: 'Türkiye' },
+  { code: 'US', name: 'Amerika Birleşik Devletleri' },
+  { code: 'DE', name: 'Almanya' },
+  { code: 'FR', name: 'Fransa' },
+  { code: 'GB', name: 'İngiltere' },
+  { code: 'IT', name: 'İtalya' },
+  { code: 'ES', name: 'İspanya' },
+  { code: 'NL', name: 'Hollanda' },
+  { code: 'BE', name: 'Belçika' },
+  { code: 'CH', name: 'İsviçre' },
+  { code: 'AT', name: 'Avusturya' },
+  { code: 'SE', name: 'İsveç' },
+  { code: 'NO', name: 'Norveç' },
+  { code: 'DK', name: 'Danimarka' },
+  { code: 'FI', name: 'Finlandiya' },
+  { code: 'CA', name: 'Kanada' },
+  { code: 'AU', name: 'Avustralya' },
+  { code: 'JP', name: 'Japonya' },
+  { code: 'KR', name: 'Güney Kore' },
+  { code: 'SG', name: 'Singapur' }
 ];
 
 export default function AdminRaffleCreate() {
@@ -47,6 +74,9 @@ export default function AdminRaffleCreate() {
       maxTickets: '',
       categoryId: '',
       endDate: '',
+      countryRestriction: 'all',
+      allowedCountries: [],
+      excludedCountries: [],
     },
   });
 
@@ -63,6 +93,9 @@ export default function AdminRaffleCreate() {
           endDate: new Date(data.endDate).toISOString(),
           isManual: true,
           createdByAdmin: true,
+          countryRestriction: data.countryRestriction,
+          allowedCountries: JSON.stringify(data.allowedCountries),
+          excludedCountries: JSON.stringify(data.excludedCountries),
         }),
       });
     },
@@ -221,6 +254,98 @@ export default function AdminRaffleCreate() {
                   </FormItem>
                 )}
               />
+
+              {/* Ülke Kısıtlamaları */}
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="countryRestriction"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ülke Kısıtlaması</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Ülke kısıtlaması seçin" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="all">Tüm Ülkeler</SelectItem>
+                          <SelectItem value="selected">Sadece Seçilen Ülkeler</SelectItem>
+                          <SelectItem value="exclude">Seçilen Ülkeler Hariç</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {form.watch('countryRestriction') === 'selected' && (
+                  <FormField
+                    control={form.control}
+                    name="allowedCountries"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>İzin Verilen Ülkeler</FormLabel>
+                        <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded-md p-3">
+                          {countries.map((country) => (
+                            <div key={country.code} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={country.code}
+                                checked={field.value.includes(country.code)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    field.onChange([...field.value, country.code]);
+                                  } else {
+                                    field.onChange(field.value.filter((c: string) => c !== country.code));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={country.code} className="text-sm">
+                                {country.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {form.watch('countryRestriction') === 'exclude' && (
+                  <FormField
+                    control={form.control}
+                    name="excludedCountries"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Hariç Tutulan Ülkeler</FormLabel>
+                        <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded-md p-3">
+                          {countries.map((country) => (
+                            <div key={country.code} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={country.code}
+                                checked={field.value.includes(country.code)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    field.onChange([...field.value, country.code]);
+                                  } else {
+                                    field.onChange(field.value.filter((c: string) => c !== country.code));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={country.code} className="text-sm">
+                                {country.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
 
               <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
                 <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">
