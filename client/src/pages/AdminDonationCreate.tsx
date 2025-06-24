@@ -19,7 +19,7 @@ const createDonationSchema = z.object({
   goalAmount: z.string().min(1, 'Hedef miktar gerekli'),
   endDate: z.string().optional(),
   isUnlimited: z.boolean().default(false),
-  image: z.string().optional(),
+  image: z.any().optional(),
   countryRestriction: z.string().default('all'),
   allowedCountries: z.array(z.string()).default([]),
   excludedCountries: z.array(z.string()).default([]),
@@ -62,7 +62,7 @@ export default function AdminDonationCreate() {
       goalAmount: '',
       endDate: '',
       isUnlimited: false,
-      image: '',
+      image: null,
       countryRestriction: 'all',
       allowedCountries: [],
       excludedCountries: [],
@@ -71,17 +71,27 @@ export default function AdminDonationCreate() {
 
   const createDonationMutation = useMutation({
     mutationFn: async (data: CreateDonationForm) => {
-      return apiRequest('/api/donations/create-manual', {
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('goalAmount', data.goalAmount);
+      formData.append('isUnlimited', data.isUnlimited.toString());
+      formData.append('countryRestriction', data.countryRestriction);
+      formData.append('allowedCountries', JSON.stringify(data.allowedCountries));
+      formData.append('excludedCountries', JSON.stringify(data.excludedCountries));
+      
+      if (data.endDate) {
+        formData.append('endDate', new Date(data.endDate).toISOString());
+      }
+      
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+
+      return fetch('/api/donations/create-manual', {
         method: 'POST',
-        body: JSON.stringify({
-          ...data,
-          goalAmount: parseFloat(data.goalAmount),
-          endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
-          countryRestriction: data.countryRestriction,
-          allowedCountries: JSON.stringify(data.allowedCountries),
-          excludedCountries: JSON.stringify(data.excludedCountries),
-        }),
-      });
+        body: formData,
+      }).then(res => res.json());
     },
     onSuccess: () => {
       toast({
@@ -208,6 +218,30 @@ export default function AdminDonationCreate() {
                   )}
                 />
               )}
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kampanya Görseli (İsteğe bağlı)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          field.onChange(file);
+                        }}
+                      />
+                    </FormControl>
+                    <p className="text-sm text-muted-foreground">
+                      Bağış kampanyasının fotoğrafını yükleyin (JPG, PNG, WebP)
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
                 <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">

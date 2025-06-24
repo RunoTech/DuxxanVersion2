@@ -21,7 +21,7 @@ const createRaffleSchema = z.object({
   maxTickets: z.string().min(1, 'Maksimum bilet sayısı gerekli'),
   categoryId: z.string().min(1, 'Kategori seçin'),
   endDate: z.string().min(1, 'Bitiş tarihi gerekli'),
-  image: z.string().optional(),
+  image: z.any().optional(),
   countryRestriction: z.string().default('all'),
   allowedCountries: z.array(z.string()).default([]),
   excludedCountries: z.array(z.string()).default([]),
@@ -75,7 +75,7 @@ export default function AdminRaffleCreate() {
       maxTickets: '',
       categoryId: '',
       endDate: '',
-      image: '',
+      image: null,
       countryRestriction: 'all',
       allowedCountries: [],
       excludedCountries: [],
@@ -84,22 +84,28 @@ export default function AdminRaffleCreate() {
 
   const createRaffleMutation = useMutation({
     mutationFn: async (data: CreateRaffleForm) => {
-      return apiRequest('/api/raffles/create-manual', {
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('prizeValue', data.prizeValue);
+      formData.append('ticketPrice', data.ticketPrice);
+      formData.append('maxTickets', data.maxTickets);
+      formData.append('categoryId', data.categoryId);
+      formData.append('endDate', new Date(data.endDate).toISOString());
+      formData.append('isManual', 'true');
+      formData.append('createdByAdmin', 'true');
+      formData.append('countryRestriction', data.countryRestriction);
+      formData.append('allowedCountries', JSON.stringify(data.allowedCountries));
+      formData.append('excludedCountries', JSON.stringify(data.excludedCountries));
+      
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+
+      return fetch('/api/raffles/create-manual', {
         method: 'POST',
-        body: JSON.stringify({
-          ...data,
-          prizeValue: parseFloat(data.prizeValue),
-          ticketPrice: parseFloat(data.ticketPrice),
-          maxTickets: parseInt(data.maxTickets),
-          categoryId: parseInt(data.categoryId),
-          endDate: new Date(data.endDate).toISOString(),
-          isManual: true,
-          createdByAdmin: true,
-          countryRestriction: data.countryRestriction,
-          allowedCountries: JSON.stringify(data.allowedCountries),
-          excludedCountries: JSON.stringify(data.excludedCountries),
-        }),
-      });
+        body: formData,
+      }).then(res => res.json());
     },
     onSuccess: () => {
       toast({
@@ -264,10 +270,17 @@ export default function AdminRaffleCreate() {
                   <FormItem>
                     <FormLabel>Çekiliş Görseli (İsteğe bağlı)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Görsel URL'si" {...field} />
+                      <Input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          field.onChange(file);
+                        }}
+                      />
                     </FormControl>
                     <p className="text-sm text-muted-foreground">
-                      Çekiliş ödülünün fotoğrafını ekleyin (URL formatında)
+                      Çekiliş ödülünün fotoğrafını yükleyin (JPG, PNG, WebP)
                     </p>
                     <FormMessage />
                   </FormItem>
