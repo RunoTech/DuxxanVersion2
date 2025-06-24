@@ -115,22 +115,22 @@ export default function Home() {
 
   const platformStats = [
     {
-      value: (stats as any)?.totalRaffles || "0",
-      label: "Toplam Çekiliş",
+      value: Array.isArray(activeRaffles) ? activeRaffles.length : 0,
+      label: "Aktif Çekilişler",
       icon: Gift,
       color: "text-purple-500"
+    },
+    {
+      value: Array.isArray(activeDonations) ? activeDonations.length : 0,
+      label: "Aktif Bağışlar",
+      icon: Heart,
+      color: "text-red-500"
     },
     {
       value: `${formatValue((stats as any)?.totalPrizePool || "0")} USDT`,
       label: "Toplam Ödül Havuzu",
       icon: Coins,
       color: "text-green-500"
-    },
-    {
-      value: `${formatValue((stats as any)?.totalDonations || "0")} USDT`,
-      label: "Toplam Bağış",
-      icon: Heart,
-      color: "text-red-500"
     },
     {
       value: (stats as any)?.totalUsers || "500+",

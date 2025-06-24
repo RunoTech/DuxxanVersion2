@@ -25,6 +25,7 @@ import DonationDetail from "@/pages/DonationDetail";
 import CreateRaffle from "@/pages/CreateRaffle";
 import CreateDonation from "@/pages/CreateDonation";
 import AdminRaffleCreate from "@/pages/AdminRaffleCreate";
+import AdminDonationCreate from "@/pages/AdminDonationCreate";
 import AdminPanel from "@/pages/AdminPanel";
 import CountryProfile from "@/pages/CountryProfile";
 import Terms from "@/pages/Terms";
@@ -89,6 +90,7 @@ function Router() {
           <Route path="/create-donation" component={CreateDonation} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/admin/create-raffle" component={AdminRaffleCreate} />
+          <Route path="/admin/create-donation" component={AdminDonationCreate} />
           <Route path="/terms" component={Terms} />
           <Route path="/privacy" component={Privacy} />
           <Route path="/support" component={Support} />

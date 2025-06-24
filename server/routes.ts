@@ -720,6 +720,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Manual donation creation endpoint (admin only)
+  app.post('/api/donations/create-manual', createRateLimit, async (req, res) => {
+    try {
+      const donationData = req.body;
+      
+      // Create dummy user for manual donations
+      let adminUser = await storage.getUserByWalletAddress('0x0000000000000000000000000000000000000001');
+      if (!adminUser) {
+        adminUser = await storage.createUser({
+          walletAddress: '0x0000000000000000000000000000000000000001',
+          username: 'admin',
+          name: 'Platform Admin'
+        });
+      }
+
+      const validatedData = insertDonationSchema.parse({
+        ...donationData,
+        creatorId: adminUser.id,
+        currentAmount: '0',
+        donorCount: 0,
+      });
+      
+      const donation = await storage.createDonation(validatedData);
+      
+      broadcast({ type: 'DONATION_CREATED', data: donation });
+      res.status(201).json(donation);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: 'Invalid donation data', errors: error.errors });
+      } else {
+        res.status(500).json({ message: 'Failed to create manual donation' });
+      }
+    }
+  });
+
   app.put('/api/raffles/:id/approve', strictRateLimit, getUser, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);

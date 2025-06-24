@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
-import { Plus, Settings, BarChart3, Users } from 'lucide-react';
+import { Plus, Settings, BarChart3, Users, Heart } from 'lucide-react';
 
 export default function AdminPanel() {
   return (
@@ -31,6 +31,26 @@ export default function AdminPanel() {
             <Link href="/admin/create-raffle">
               <Button className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90">
                 Çekiliş Oluştur
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        {/* Manuel Bağış Oluştur */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Heart className="h-5 w-5 text-green-500" />
+              Manuel Bağış
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Platform kontrolünde manuel bağış kampanyası oluşturun
+            </p>
+            <Link href="/admin/create-donation">
+              <Button className="w-full bg-green-600 text-white hover:bg-green-700">
+                Bağış Oluştur
               </Button>
             </Link>
           </CardContent>
