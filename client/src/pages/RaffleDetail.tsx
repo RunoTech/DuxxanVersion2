@@ -463,10 +463,25 @@ export default function RaffleDetail() {
                 </div>
 
                 <Button 
+                  onClick={() => {
+                    if (!isConnected) {
+                      toast({
+                        title: 'Cüzdan Bağlantısı Gerekli',
+                        description: 'Bilet satın almak için önce cüzdanınızı bağlayın',
+                        variant: 'destructive',
+                      });
+                      return;
+                    }
+                    
+                    // Demo için başarılı bilet satın alma simülasyonu
+                    toast({
+                      title: 'Demo Bilet Satın Alma Başarılı!',
+                      description: `${ticketCount} adet bilet satın alındı (Demo)`,
+                    });
+                  }}
                   className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
-                  disabled={!isConnected}
                 >
-                  {isConnected ? 'Bilet Satın Al' : 'Cüzdan Bağlayın'}
+                  {isConnected ? 'Bilet Satın Al (Demo)' : 'Bilet Satın Al (Demo)'}
                 </Button>
 
                 {!isConnected && (

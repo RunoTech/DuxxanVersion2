@@ -9,6 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useWallet } from '@/hooks/useWallet';
+import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { 
   Clock, 
@@ -29,6 +30,7 @@ import { LightweightChart } from '@/components/ui/lightweight-chart';
 export default function DonationDetail() {
   const { id } = useParams();
   const { isConnected } = useWallet();
+  const { toast } = useToast();
   const [donationAmount, setDonationAmount] = useState(10);
 
   const { data: donation, isLoading } = useQuery({
