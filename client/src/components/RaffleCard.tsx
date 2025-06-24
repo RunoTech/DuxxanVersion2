@@ -1,210 +1,309 @@
-import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { useWallet } from '@/hooks/useWallet';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import { blockchainService } from '@/lib/blockchain';
-import { ShareModal } from '@/components/ShareModal';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from 'wouter';
-import { Share2 } from 'lucide-react';
+import { Clock, Users, Trophy, Star, MapPin, Calendar, DollarSign, Zap, Sparkles, TrendingUp, Award } from 'lucide-react';
 
 interface RaffleCardProps {
-  raffle: {
-    id: number;
-    title: string;
-    description: string;
-    prizeValue: string;
-    ticketPrice: string;
-    maxTickets: number;
-    ticketsSold: number;
-    endDate: string;
-    category: {
-      name: string;
-      slug: string;
-    };
-    creator: {
-      username: string;
-      rating: string;
-    };
-  };
+  raffle: any;
+  viewMode: 'grid' | 'list';
 }
 
-export function RaffleCard({ raffle }: RaffleCardProps) {
-  const { isConnected, getApiHeaders } = useWallet();
-  const { toast } = useToast();
-  const [showShareModal, setShowShareModal] = useState(false);
+export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
+  const progress = raffle?.ticketsSold && raffle?.maxTickets 
+    ? (raffle.ticketsSold / raffle.maxTickets) * 100 
+    : 0;
 
-  const progress = (raffle.ticketsSold / raffle.maxTickets) * 100;
-  const endDate = new Date(raffle.endDate);
-  const timeLeft = endDate.getTime() - Date.now();
-  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+  const timeLeft = raffle?.endDate 
+    ? new Date(raffle.endDate).getTime() - new Date().getTime() 
+    : 0;
+  const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
-  const getCategoryImage = (slug: string) => {
-    const images: Record<string, string> = {
-      'cars': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop&crop=center',
-      'electronics': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=600&h=400&fit=crop&crop=center',
-      'jewelry': 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&h=400&fit=crop&crop=center',
-      'real-estate': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop&crop=center',
-      'art': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center',
-      'home': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&crop=center',
+  const isHot = progress > 75 || daysLeft <= 3;
+
+  const getCountryName = (countryCode: string) => {
+    const countries: { [key: string]: string } = {
+      'US': 'Amerika',
+      'GB': 'İngiltere',
+      'FR': 'Fransa',
+      'DE': 'Almanya',
+      'IT': 'İtalya',
+      'ES': 'İspanya',
+      'JP': 'Japonya',
+      'KR': 'Güney Kore',
+      'CN': 'Çin',
+      'RU': 'Rusya',
+      'BR': 'Brezilya',
+      'CA': 'Kanada',
+      'AU': 'Avustralya',
+      'IN': 'Hindistan',
+      'MX': 'Meksika',
+      'SA': 'Suudi Arabistan',
+      'AE': 'BAE',
+      'NL': 'Hollanda',
+      'CH': 'İsviçre',
+      'SE': 'İsveç',
+      'NO': 'Norveç',
+      'DK': 'Danimarka',
+      'AT': 'Avusturya',
+      'BE': 'Belçika',
+      'FI': 'Finlandiya',
+      'IE': 'İrlanda',
+      'PT': 'Portekiz',
+      'GR': 'Yunanistan',
+      'PL': 'Polonya',
+      'CZ': 'Çek Cumhuriyeti',
+      'HU': 'Macaristan',
+      'RO': 'Romanya',
+      'BG': 'Bulgaristan',
+      'HR': 'Hırvatistan',
+      'SK': 'Slovakya',
+      'SI': 'Slovenya',
+      'LT': 'Litvanya',
+      'LV': 'Letonya',
+      'EE': 'Estonya',
+      'MT': 'Malta',
+      'CY': 'Kıbrıs',
+      'LU': 'Lüksemburg',
+      'IS': 'İzlanda',
+      'LI': 'Liechtenstein',
+      'MC': 'Monako',
+      'SM': 'San Marino',
+      'VA': 'Vatikan',
+      'AD': 'Andorra'
     };
-    return images[slug] || 'https://images.unsplash.com/photo-1549399597-07e1f647b045?w=600&h=400&fit=crop&crop=center';
+    return countries[countryCode] || countryCode;
   };
 
-  const getCategoryColor = (slug: string) => {
-    const colors: Record<string, string> = {
-      'cars': 'from-red-600 to-red-800',
-      'electronics': 'from-blue-600 to-blue-800',
-      'jewelry': 'from-purple-600 to-purple-800',
-      'real-estate': 'from-green-600 to-green-800',
-      'art': 'from-pink-600 to-pink-800',
-      'home': 'from-orange-600 to-orange-800',
-    };
-    return colors[slug] || 'from-gray-600 to-gray-800';
-  };
-
-  const buyTickets = async (quantity: number = 1) => {
-    if (!isConnected) {
-      toast({
-        title: 'Wallet Required',
-        description: 'Please connect your wallet to buy tickets',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      // First, handle blockchain transaction
-      const transactionHash = await blockchainService.buyTickets(
-        raffle.id,
-        quantity,
-        raffle.ticketPrice
-      );
-
-      // Then record in database
-      const response = await apiRequest('POST', '/api/tickets', {
-        raffleId: raffle.id,
-        quantity,
-        totalAmount: (parseFloat(raffle.ticketPrice) * quantity).toString(),
-        transactionHash,
-      });
-
-      toast({
-        title: 'Biletler Satın Alındı!',
-        description: `${quantity} bilet başarıyla satın alındı`,
-      });
-    } catch (error: any) {
-      toast({
-        title: 'Satın Alma Başarısız',
-        description: error.message || 'Bilet satın alma başarısız',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  return (
-    <Link href={`/raffles/${raffle.id}`}>
-      <Card className="border border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-400 bg-white dark:bg-gray-800 rounded-xl overflow-hidden h-[360px] flex flex-col hover:shadow-lg transition-all duration-300">
-        <div className="h-32 relative overflow-hidden">
-          <img 
-            src={getCategoryImage(raffle.category.slug)} 
-            alt={raffle.category.name}
-            className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-yellow-500 text-black font-semibold px-3 py-1 rounded-md">
-                {raffle.category.name}
-              </Badge>
+  if (viewMode === 'list') {
+    return (
+      <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+        <CardContent className="p-0">
+          <div className="flex items-center">
+            {/* Left side - Image/Icon */}
+            <div className="flex-shrink-0 p-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
+                <Trophy className="w-10 h-10 text-white" />
+              </div>
+            </div>
+            
+            {/* Main content */}
+            <div className="flex-1 p-6 pl-0">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Link href={`/raffles/${raffle.id}`}>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 hover:text-orange-500 transition-colors duration-200">
+                        {raffle.title}
+                      </h3>
+                    </Link>
+                    {isHot && <Badge className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">🔥 HOT</Badge>}
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
+                    {raffle.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-6 mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Ödül</div>
+                        <div className="text-sm font-bold text-green-600 dark:text-green-400">
+                          ${Number(raffle.prizeValue).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Katılımcı</div>
+                        <div className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                          {raffle.ticketsSold}/{raffle.maxTickets}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Kalan</div>
+                        <div className="text-sm font-bold text-orange-600 dark:text-orange-400">
+                          {daysLeft} gün
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">İlerleme</span>
+                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">%{progress.toFixed(1)}</span>
+                    </div>
+                    <Progress 
+                      value={progress} 
+                      className="h-2 bg-gray-200 dark:bg-gray-700"
+                    />
+                  </div>
+                </div>
+                
+                {/* Right side - Price and Action */}
+                <div className="flex flex-col items-end gap-3 ml-6">
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Bilet Fiyatı</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      ${Number(raffle.ticketPrice).toFixed(2)}
+                    </div>
+                  </div>
+                  <Link href={`/raffles/${raffle.id}`}>
+                    <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105">
+                      Katıl
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 group rounded-xl overflow-hidden">
+      <CardHeader className="p-0">
+        <div className="relative">
+          {/* Prize Value Badge */}
+          <div className="absolute top-4 left-4 z-10">
+            <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm px-3 py-1 rounded-full shadow-lg">
+              ${Number(raffle.prizeValue).toLocaleString()}
+            </Badge>
+          </div>
+          
+          {/* Hot Badge */}
+          {isHot && (
+            <div className="absolute top-4 right-4 z-10">
+              <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-3 py-1 rounded-full shadow-lg">
+                🔥 HOT
+              </Badge>
+            </div>
+          )}
+          
+          {/* Gradient Background */}
+          <div className="h-52 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-t-xl flex items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10 text-center">
+              <Trophy className="w-20 h-20 text-white mb-2 mx-auto" />
+              <div className="text-white/90 text-sm font-semibold">GRAND PRIZE</div>
+            </div>
+            <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+            <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full animate-pulse"></div>
+          </div>
         </div>
+      </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col p-3">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{raffle.title}</h3>
-          <div className="flex items-center space-x-1">
-            <span className="text-yellow-500 text-sm">★</span>
-            <span className="text-sm text-gray-600 dark:text-gray-400">{raffle.creator.rating}</span>
+      <CardContent className="p-6">
+        <div className="mb-4">
+          <Link href={`/raffles/${raffle.id}`}>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 hover:text-orange-500 transition-colors duration-200 line-clamp-2 mb-3 group-hover:text-orange-500">
+              {raffle.title}
+            </h3>
+          </Link>
+          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+            {raffle.description}
+          </p>
+        </div>
+        
+        {/* Creator Info */}
+        <div className="flex items-center mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <Avatar className="w-10 h-10 mr-3">
+            <AvatarImage src={raffle.creator?.profileImage || ''} />
+            <AvatarFallback className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold">
+              {raffle.creator?.name?.substring(0, 2) || 'UN'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              {raffle.creator?.name || 'Unknown'}
+            </p>
+            <div className="flex items-center">
+              <MapPin className="w-3 h-3 text-gray-400 mr-1" />
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {getCountryName(raffle.creator?.country || raffle.country)}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center">
+            <Star className="w-4 h-4 text-yellow-400 mr-1" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">4.9</span>
           </div>
         </div>
         
-        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-2">
-          {raffle.description}
-        </p>
-
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+              {raffle.ticketsSold}
+            </div>
+            <div className="text-xs text-blue-500 dark:text-blue-400">
+              Satıldı
+            </div>
+          </div>
+          <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+            <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+              {raffle.maxTickets}
+            </div>
+            <div className="text-xs text-purple-500 dark:text-purple-400">
+              Maksimum
+            </div>
+          </div>
+          <div className="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+            <div className="text-lg font-bold text-orange-600 dark:text-orange-400">
+              {daysLeft}
+            </div>
+            <div className="text-xs text-orange-500 dark:text-orange-400">
+              Gün Kaldı
+            </div>
+          </div>
+        </div>
+        
+        {/* Progress */}
+        <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Satılan Biletler</span>
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">
-              {raffle.ticketsSold.toLocaleString()} / {raffle.maxTickets.toLocaleString()}
-            </span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">İlerleme</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">%{progress.toFixed(1)}</span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mb-2">
-            <div 
-              className="bg-yellow-500 h-2 rounded-full transition-all duration-300" 
-              style={{ width: `${Math.min(progress, 100)}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-            <span>{progress.toFixed(1)}% satıldı</span>
-            <span>{progress < 50 ? 'Yeni başlıyor!' : progress < 80 ? 'Kızışıyor!' : 'Neredeyse tükendi!'}</span>
-          </div>
+          <Progress 
+            value={progress} 
+            className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
+          />
         </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-4 mt-auto">
-          <div className="text-center">
-            <div className="text-lg font-bold text-gray-900 dark:text-white">
-              {parseFloat(raffle.ticketPrice).toLocaleString()}
+        
+        {/* Action Button */}
+        <div className="flex items-center justify-between">
+          <div className="text-left">
+            <div className="text-xs text-gray-500 dark:text-gray-400">Bilet Fiyatı</div>
+            <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
+              ${Number(raffle.ticketPrice).toFixed(2)}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Bilet Fiyatı (USDT)</div>
           </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-gray-900 dark:text-white">
-              {daysLeft > 0 ? daysLeft : 0}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Kalan Gün</div>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <Button
-            onClick={() => buyTickets(1)}
-            disabled={!isConnected || daysLeft <= 0}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2.5 rounded-lg"
-          >
-            Bilet Al
-          </Button>
-
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600 dark:text-gray-400">
-              Ödül: <span className="text-gray-900 dark:text-white font-medium">
-                {parseFloat(raffle.prizeValue).toLocaleString()} USDT
-              </span>
-            </span>
-            <span className="text-gray-500 dark:text-gray-400">
-              <span className="text-gray-900 dark:text-white font-medium">{raffle.creator.name || raffle.creator.username}</span>
-              {raffle.country && (
-                <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded">
-                  {raffle.country}
-                </span>
-              )}
-            </span>
-          </div>
+          <Link href={`/raffles/${raffle.id}`}>
+            <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Katıl
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
-    
-    <ShareModal
-      isOpen={showShareModal}
-      onClose={() => setShowShareModal(false)}
-      title={raffle.title}
-      description={raffle.description}
-      url={`/raffles/${raffle.id}`}
-    />
-    </Link>
   );
 }

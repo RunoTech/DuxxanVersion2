@@ -1,360 +1,332 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RaffleCard } from '@/components/RaffleCard';
-import { WalletStatus } from '@/components/WalletStatus';
-import { AnimatedCard } from '@/components/ui/AnimatedCard';
-import { AnimatedList } from '@/components/ui/AnimatedList';
-import { Link } from 'wouter';
-import { useWalletFixed as useWallet } from '@/hooks/useWalletFixed';
-import { Search, Filter, Globe } from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient';
+import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { apiRequest } from '@/lib/queryClient'
+import { RaffleCard } from '@/components/RaffleCard'
+import { Link } from 'wouter'
+import { Plus, Search, Filter, Grid, List, TrendingUp, Star, Clock, Trophy, Users, Zap, SlidersHorizontal, Sparkles, Award } from 'lucide-react'
 
 export default function Raffles() {
-  const { isConnected } = useWallet();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCountry, setSelectedCountry] = useState('all');
-  const [sortBy, setSortBy] = useState('newest');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('endDate')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const itemsPerPage = 12
 
-  // Fetch categories with caching
-  const { data: categories = [] } = useQuery({
-    queryKey: ['/api/categories'],
-    staleTime: 10 * 60 * 1000, // 10 minutes cache
-    enabled: true
-  });
-
-  // Fetch countries with caching
-  const { data: countries = [] } = useQuery({
-    queryKey: ['/api/countries'],
-    staleTime: 30 * 60 * 1000, // 30 minutes cache
-    enabled: true
-  });
-
-  // Fetch active raffles with filters
-  const { data: rafflesData, isLoading } = useQuery({
-    queryKey: ['/api/raffles/active', searchTerm, selectedCategory, selectedCountry, sortBy],
+  const { data: raffles, isLoading } = useQuery({
+    queryKey: ['/api/raffles/active'],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (selectedCategory !== 'all') params.append('category', selectedCategory);
-      if (selectedCountry !== 'all') params.append('country', selectedCountry);
-      if (sortBy) params.append('sort', sortBy);
-      
-      const response = await apiRequest('GET', `/api/raffles/active?${params.toString()}`);
+      const response = await apiRequest('GET', '/api/raffles/active');
       const result = await response.json();
-      console.log('API Response:', result);
       return result.data || result || [];
     },
-    staleTime: 0, // No cache
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    enabled: true
-  });
-
-  const raffles = rafflesData || [];
-
-  // Filter and sort raffles
-  const filteredRaffles = raffles.filter((raffle: any) => {
-    const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         raffle.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
   })
-    .sort((a: any, b: any) => {
-      switch (sortBy) {
-        case 'newest':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        case 'ending-soon':
-          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-        case 'highest-value':
-          return parseFloat(b.prizeValue) - parseFloat(a.prizeValue);
-        case 'most-tickets':
-          return b.ticketsSold - a.ticketsSold;
-        case 'lowest-price':
-          return parseFloat(a.ticketPrice) - parseFloat(b.ticketPrice);
-        default:
-          return 0;
-      }
-    });
+
+  const { data: categories } = useQuery({
+    queryKey: ['/api/categories'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/categories');
+      const result = await response.json();
+      return result.data || result || [];
+    },
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    retry: false,
+  })
+
+  // Filter and sort logic
+  const filteredRaffles = raffles?.filter((raffle: any) => {
+    const matchesSearch = raffle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         raffle.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = selectedCategory === 'all' || raffle.categoryId.toString() === selectedCategory
+    return matchesSearch && matchesCategory
+  }).sort((a: any, b: any) => {
+    switch (sortBy) {
+      case 'prizeValue':
+        return Number(b.prizeValue) - Number(a.prizeValue)
+      case 'createdAt':
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      case 'ticketsSold':
+        return b.ticketsSold - a.ticketsSold
+      case 'endDate':
+      default:
+        return new Date(a.endDate).getTime() - new Date(b.endDate).getTime()
+    }
+  }) || []
 
   // Pagination
-  const totalPages = Math.ceil(filteredRaffles.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedRaffles = filteredRaffles.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredRaffles.length / itemsPerPage)
+  const paginatedRaffles = filteredRaffles.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
-  // Reset page when filters change
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory, selectedCountry, sortBy]);
-
-  const getActiveRafflesCount = () => {
-    const now = new Date();
-    return raffles.filter((raffle: any) => new Date(raffle.endDate) > now && raffle.isActive).length;
-  };
-
-  const getTotalPrizePool = () => {
-    return raffles
-      .filter((raffle: any) => raffle.isActive)
-      .reduce((sum: number, raffle: any) => sum + parseFloat(raffle.prizeValue), 0);
-  };
+  // Stats calculations
+  const totalPrize = raffles?.reduce((sum: number, raffle: any) => sum + Number(raffle.prizeValue), 0) || 0
+  const totalParticipants = raffles?.reduce((sum: number, raffle: any) => sum + raffle.ticketsSold, 0) || 0
+  const endingSoon = raffles?.filter((raffle: any) => {
+    const timeLeft = new Date(raffle.endDate).getTime() - new Date().getTime()
+    const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24))
+    return daysLeft <= 3 && daysLeft > 0
+  }).length || 0
 
   return (
-    <div className="min-h-screen bg-duxxan-page py-8 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Wallet Status */}
-        <div className="mb-6">
-          <WalletStatus />
-        </div>
-
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Tüm Çekilişler</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Muhteşem ödülleri keşfedin ve heyecan verici çekilişlere katılın
-            </p>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Modern Header */}
+        <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 dark:from-yellow-600 dark:via-orange-600 dark:to-red-600 rounded-2xl p-8 mb-8 text-white">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="mb-6 lg:mb-0">
+              <div className="flex items-center gap-3 mb-3">
+                <Sparkles className="w-8 h-8" />
+                <h1 className="text-4xl font-bold">Çekilişler</h1>
+              </div>
+              <p className="text-white/90 text-lg">
+                Büyük ödüller için çekilişlere katılın ve şansınızı deneyin
+              </p>
+              <div className="flex items-center gap-6 mt-4">
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5" />
+                  <span className="font-semibold">{raffles?.length || 0} Aktif</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  <span className="font-semibold">15,000+ Katılımcı</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="w-5 h-5" />
+                  <span className="font-semibold">$2.5M+ Ödül</span>
+                </div>
+              </div>
+            </div>
+            <Link href="/create-raffle">
+              <Button className="bg-white text-orange-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl shadow-lg">
+                <Plus className="w-5 h-5 mr-2" />
+                Çekiliş Oluştur
+              </Button>
+            </Link>
           </div>
-          <Link href="/create-raffle">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white border-2 border-yellow-500 mt-4 md:mt-0">
-              Yeni Çekiliş Oluştur
-            </Button>
-          </Link>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-3 md:p-4 text-center">
-              <div className="text-lg md:text-xl font-bold text-yellow-500 mb-2 break-words">
-                {getActiveRafflesCount()}
-              </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Aktif Çekilişler</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-lg md:text-2xl font-bold text-green-500 mb-2 break-words">
-                ${getTotalPrizePool().toLocaleString()}
-              </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Toplam Ödül Havuzu</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4 md:p-6 text-center">
-              <div className="text-xl md:text-2xl font-bold text-orange-500 mb-2 break-words">
-                {Array.isArray(raffles) ? raffles.length : 0}
-              </div>
-              <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">Tüm Zamanlar Çekiliş</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-8">
-          <CardHeader className="pb-6">
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
-              <Filter className="w-5 h-5" />
-              Filtreler ve Arama
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pb-6">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-4">
-              {/* Search */}
+        {/* Modern Filters */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   placeholder="Çekiliş ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-10 focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20"
+                  className="pl-12 h-12 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100"
                 />
               </div>
-
-              {/* Category Filter */}
+            </div>
+            
+            <div className="flex gap-3">
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
-                  <SelectValue placeholder="Tüm Kategoriler" />
+                <SelectTrigger className="w-48 h-12 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-600 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-4 h-4 text-gray-500" />
+                    <SelectValue placeholder="Kategori" />
+                  </div>
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">Tüm Kategoriler</SelectItem>
-                  {(Array.isArray(categories) ? categories : []).map((category: any) => (
-                    <SelectItem key={category.id} value={category.id.toString()} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
+                <SelectContent>
+                  <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                  {categories?.map((category: any) => (
+                    <SelectItem key={category.id} value={category.id.toString()}>
                       {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-
-              {/* Country Filter */}
-              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
-                  <Globe className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
-                  <SelectValue placeholder="Tüm Ülkeler" />
-                </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <SelectItem value="all" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">🌍 Tüm Ülkeler</SelectItem>
-                  {countries.map((country: any) => (
-                    <SelectItem key={country.code} value={country.code} className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700">
-                      {country.flag} {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Sort By */}
+              
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:border-[#FFC929] dark:focus:border-[#FFC929] focus:ring-2 focus:ring-[#FFC929]/20">
-                  <SelectValue placeholder="Sırala" />
+                <SelectTrigger className="w-48 h-12 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-600 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4 text-gray-500" />
+                    <SelectValue placeholder="Sırala" />
+                  </div>
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
-                  <SelectItem value="newest" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yeni</SelectItem>
-                  <SelectItem value="ending-soon" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sona Erme</SelectItem>
-                  <SelectItem value="highest-value" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Yüksek Ödül</SelectItem>
-                  <SelectItem value="most-tickets" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Popüler</SelectItem>
-                  <SelectItem value="lowest-price" className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">En Düşük Fiyat</SelectItem>
+                <SelectContent>
+                  <SelectItem value="endDate">Bitiş Tarihi</SelectItem>
+                  <SelectItem value="prizeValue">Ödül Miktarı</SelectItem>
+                  <SelectItem value="createdAt">Yeni Olanlar</SelectItem>
+                  <SelectItem value="ticketsSold">Popüler</SelectItem>
                 </SelectContent>
               </Select>
+              
+              <div className="flex bg-gray-100 dark:bg-gray-700 rounded-xl p-1">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className={`rounded-lg ${viewMode === 'grid' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-white/50 dark:hover:bg-gray-600/50'}`}
+                >
+                  <Grid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className={`rounded-lg ${viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm' : 'hover:bg-white/50 dark:hover:bg-gray-600/50'}`}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              {/* Clear Filters */}
-              <Button
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                  setSelectedCountry('all');
-                  setSortBy('newest');
-                  setCurrentPage(1);
-                }}
-                className="h-11 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-semibold"
-              >
-                Filtreleri Temizle
-              </Button>
-            </div>
-            
-            {/* Results Info inside filter card */}
-            <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                {filteredRaffles.length} sonuç gösteriliyor • Sayfa {currentPage}/{totalPages} • ({raffles.length} toplam çekiliş)
-              </p>
-              {searchTerm && (
-                <p className="text-sm text-gray-500 dark:text-gray-500">
-                  "{searchTerm}" için arama sonuçları
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Modern Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-sm font-medium">Toplam Ödül</p>
+                  <p className="text-3xl font-bold">${totalPrize.toLocaleString()}</p>
+                  <p className="text-white/70 text-xs mt-1">+12% bu ay</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Trophy className="w-8 h-8" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-sm font-medium">Aktif Çekiliş</p>
+                  <p className="text-3xl font-bold">{raffles?.length || 0}</p>
+                  <p className="text-white/70 text-xs mt-1">Canlı</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Zap className="w-8 h-8" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-green-500 to-emerald-500 text-white border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-sm font-medium">Katılımcı</p>
+                  <p className="text-3xl font-bold">{totalParticipants.toLocaleString()}</p>
+                  <p className="text-white/70 text-xs mt-1">+284 bugün</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Users className="w-8 h-8" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-purple-500 to-pink-500 text-white border-0 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-sm font-medium">Bitiyor</p>
+                  <p className="text-3xl font-bold">{endingSoon}</p>
+                  <p className="text-white/70 text-xs mt-1">24 saat içinde</p>
+                </div>
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Clock className="w-8 h-8" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Raffles Grid */}
         {isLoading ? (
-          <div className="grid responsive-grid gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="responsive-card">
-                <div className="h-48 loading-skeleton rounded-t-xl"></div>
-                <CardContent className="p-4 md:p-6">
-                  <div className="h-4 loading-skeleton rounded w-3/4 mb-2"></div>
-                  <div className="h-3 loading-skeleton rounded w-full mb-4"></div>
-                  <div className="h-3 loading-skeleton rounded w-1/2"></div>
+              <Card key={i} className="animate-pulse bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
+                <CardContent className="p-6">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                  <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        ) : filteredRaffles.length > 0 ? (
-          <>
-            <div className="grid responsive-grid gap-4 md:gap-6">
-              {paginatedRaffles.map((raffle: any) => (
-                <RaffleCard key={raffle.id} raffle={raffle} />
-              ))}
+        ) : filteredRaffles?.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+              <Trophy className="w-12 h-12 text-gray-400 dark:text-gray-500" />
             </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center mt-12 gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  Önceki
-                </Button>
-                
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(page => {
-                    const start = Math.max(1, currentPage - 2);
-                    const end = Math.min(totalPages, currentPage + 2);
-                    return page >= start && page <= end;
-                  })
-                  .map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      onClick={() => setCurrentPage(page)}
-                      className={currentPage === page 
-                        ? "bg-yellow-500 hover:bg-yellow-600 text-black font-semibold min-w-[40px]"
-                        : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 min-w-[40px]"
-                      }
-                    >
-                      {page}
-                    </Button>
-                  ))}
-                
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  Sonraki
-                </Button>
-              </div>
-            )}
-          </>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              Henüz çekiliş bulunamadı
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              Filtrenizi kontrol edin veya daha sonra tekrar deneyin.
+            </p>
+          </div>
         ) : (
-          <Card className="duxxan-card text-center">
-            <CardContent className="p-12">
-              <h3 className="text-xl font-bold mb-4">No Raffles Found</h3>
-              <p className="text-duxxan-text-secondary mb-6">
-                {searchTerm || selectedCategory !== 'all' 
-                  ? 'Try adjusting your search criteria or filters'
-                  : 'Be the first to create an exciting raffle on DUXXAN!'
-                }
-              </p>
-              <div className="flex justify-center gap-4">
-                {(searchTerm || selectedCategory !== 'all' || selectedCountry !== 'all') && (
-                  <Button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSelectedCategory('all');
-                      setSelectedCountry('all');
-                      setCurrentPage(1);
-                    }}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
-                  >
-                    Filtreleri Temizle
-                  </Button>
-                )}
-                <Link href="/create-raffle">
-                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium">
-                    Çekiliş Oluştur
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+          <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' : 'space-y-6'}>
+            {paginatedRaffles.map((raffle) => (
+              <RaffleCard 
+                key={raffle.id} 
+                raffle={raffle} 
+                viewMode={viewMode}
+              />
+            ))}
+          </div>
         )}
 
-
+        {/* Modern Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2 mt-12">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl px-6 py-3 disabled:opacity-50"
+            >
+              Önceki
+            </Button>
+            
+            {[...Array(totalPages)].map((_, i) => (
+              <Button
+                key={i + 1}
+                variant={currentPage === i + 1 ? "default" : "outline"}
+                onClick={() => setCurrentPage(i + 1)}
+                className={currentPage === i + 1 
+                  ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 rounded-xl px-4 py-3 shadow-lg" 
+                  : "border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl px-4 py-3"
+                }
+              >
+                {i + 1}
+              </Button>
+            ))}
+            
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl px-6 py-3 disabled:opacity-50"
+            >
+              Sonraki
+            </Button>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 }
