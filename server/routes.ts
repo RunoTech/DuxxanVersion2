@@ -561,9 +561,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!raffle) {
         return res.status(404).json({ message: 'Raffle not found' });
       }
-      res.json(raffle);
+      res.json({
+        success: true,
+        message: 'Raffle retrieved successfully',
+        data: raffle
+      });
     } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch raffle' });
+      console.error('Error fetching raffle:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Failed to fetch raffle',
+        data: null
+      });
     }
   });
 
