@@ -528,13 +528,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/raffles/active', async (req, res) => {
     try {
-      // Cache active raffles for 1 minute with stale-while-revalidate
-      res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+      // Clear cache headers to prevent stale data
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
       
       const raffles = await storage.getActiveRaffles();
-      res.json(raffles);
+      res.json({
+        success: true,
+        message: 'Active raffles retrieved successfully',
+        data: raffles
+      });
     } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch active raffles' });
+      console.error('Error fetching active raffles:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Failed to fetch active raffles',
+        data: []
+      });
     }
   });
 
