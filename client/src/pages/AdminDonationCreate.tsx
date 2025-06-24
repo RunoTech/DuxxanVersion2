@@ -12,6 +12,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Eye, Calendar, Target, DollarSign, Heart } from 'lucide-react';
 
 const createDonationSchema = z.object({
   title: z.string().min(1, 'Başlık gerekli'),
@@ -53,6 +56,8 @@ const countries = [
 export default function AdminDonationCreate() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const form = useForm<CreateDonationForm>({
     resolver: zodResolver(createDonationSchema),
@@ -115,6 +120,114 @@ export default function AdminDonationCreate() {
   };
 
   const isUnlimited = form.watch('isUnlimited');
+
+  const handleImageChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null);
+    }
+  };
+
+  const formatCountryRestriction = (restriction: string, allowed: string[], excluded: string[]) => {
+    if (restriction === 'all') return 'Tüm ülkeler';
+    if (restriction === 'selected') return `${allowed.length} ülke seçildi`;
+    if (restriction === 'exclude') return `${excluded.length} ülke hariç`;
+    return 'Tüm ülkeler';
+  };
+
+  const PreviewCard = () => {
+    const formData = form.getValues();
+    const currentAmount = 0; // Always 0 for new campaigns
+    const progress = formData.goalAmount ? (currentAmount / parseFloat(formData.goalAmount)) * 100 : 0;
+    
+    return (
+      <Card className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div className="relative">
+          {previewImage ? (
+            <img 
+              src={previewImage} 
+              alt={formData.title || 'Kampanya görseli'} 
+              className="w-full h-48 object-cover rounded-t-lg"
+            />
+          ) : (
+            <div className="w-full h-48 bg-gradient-to-br from-green-500/20 to-emerald-600/20 rounded-t-lg flex items-center justify-center">
+              <Heart className="w-16 h-16 text-green-500" />
+            </div>
+          )}
+          <div className="absolute top-3 left-3">
+            <Badge className="bg-green-600 text-white font-bold">
+              Bağış Kampanyası
+            </Badge>
+          </div>
+          {formData.isUnlimited && (
+            <div className="absolute top-3 right-3">
+              <Badge variant="secondary" className="bg-blue-600 text-white">
+                Süresiz
+              </Badge>
+            </div>
+          )}
+        </div>
+        
+        <CardContent className="p-4">
+          <div className="space-y-3">
+            <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-2">
+              {formData.title || 'Bağış Kampanyası Başlığı'}
+            </h3>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+              {formData.description || 'Kampanya açıklaması buraya gelecek...'}
+            </p>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Toplanan</span>
+                <span className="font-bold text-green-600">{currentAmount} USDT</span>
+              </div>
+              
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div 
+                  className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1">
+                  <Target className="w-3 h-3 text-green-500" />
+                  <span>Hedef: {formData.goalAmount || '0'} USDT</span>
+                </div>
+                <span className="text-gray-500">
+                  %{Math.round(progress)}
+                </span>
+              </div>
+            </div>
+            
+            {!formData.isUnlimited && formData.endDate && (
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <Calendar className="w-3 h-3" />
+                <span>
+                  Bitiş: {new Date(formData.endDate).toLocaleDateString('tr-TR')}
+                </span>
+              </div>
+            )}
+            
+            <div className="text-xs text-gray-400">
+              <div>Ülke kısıtı: {formatCountryRestriction(
+                formData.countryRestriction,
+                formData.allowedCountries,
+                formData.excludedCountries
+              )}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
@@ -232,6 +345,7 @@ export default function AdminDonationCreate() {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           field.onChange(file);
+                          handleImageChange(file || null);
                         }}
                       />
                     </FormControl>
@@ -253,13 +367,36 @@ export default function AdminDonationCreate() {
                 </p>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
-                disabled={createDonationMutation.isPending}
-              >
-                {createDonationMutation.isPending ? 'Oluşturuluyor...' : 'Bağış Kampanyası Oluştur'}
-              </Button>
+              <div className="flex gap-3">
+                <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      className="flex-1"
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Önizleme
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle>Kampanya Önizlemesi</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <PreviewCard />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
+                  disabled={createDonationMutation.isPending}
+                >
+                  {createDonationMutation.isPending ? 'Oluşturuluyor...' : 'Bağış Kampanyası Oluştur'}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

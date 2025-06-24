@@ -12,6 +12,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Eye, Calendar, Users, DollarSign, Trophy } from 'lucide-react';
 
 const createRaffleSchema = z.object({
   title: z.string().min(1, 'Başlık gerekli'),
@@ -64,6 +67,8 @@ const countries = [
 export default function AdminRaffleCreate() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const form = useForm<CreateRaffleForm>({
     resolver: zodResolver(createRaffleSchema),
@@ -126,6 +131,107 @@ export default function AdminRaffleCreate() {
 
   const onSubmit = (data: CreateRaffleForm) => {
     createRaffleMutation.mutate(data);
+  };
+
+  const handleImageChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null);
+    }
+  };
+
+  const getSelectedCategoryName = (categoryId: string) => {
+    const category = categories.find(c => c.id.toString() === categoryId);
+    return category?.name || 'Kategori';
+  };
+
+  const formatCountryRestriction = (restriction: string, allowed: string[], excluded: string[]) => {
+    if (restriction === 'all') return 'Tüm ülkeler';
+    if (restriction === 'selected') return `${allowed.length} ülke seçildi`;
+    if (restriction === 'exclude') return `${excluded.length} ülke hariç`;
+    return 'Tüm ülkeler';
+  };
+
+  const PreviewCard = () => {
+    const formData = form.getValues();
+    
+    return (
+      <Card className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div className="relative">
+          {previewImage ? (
+            <img 
+              src={previewImage} 
+              alt={formData.title || 'Çekiliş görseli'} 
+              className="w-full h-48 object-cover rounded-t-lg"
+            />
+          ) : (
+            <div className="w-full h-48 bg-gradient-to-br from-duxxan-yellow/20 to-orange-500/20 rounded-t-lg flex items-center justify-center">
+              <Trophy className="w-16 h-16 text-duxxan-yellow" />
+            </div>
+          )}
+          <div className="absolute top-3 right-3">
+            <Badge className="bg-duxxan-yellow text-duxxan-dark font-bold">
+              {getSelectedCategoryName(formData.categoryId)}
+            </Badge>
+          </div>
+        </div>
+        
+        <CardContent className="p-4">
+          <div className="space-y-3">
+            <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-2">
+              {formData.title || 'Çekiliş Başlığı'}
+            </h3>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+              {formData.description || 'Çekiliş açıklaması buraya gelecek...'}
+            </p>
+            
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="flex items-center gap-1">
+                <DollarSign className="w-3 h-3 text-green-500" />
+                <span className="font-medium">{formData.prizeValue || '0'} USDT</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="w-3 h-3 text-blue-500" />
+                <span>{formData.maxTickets || '0'} bilet</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <Calendar className="w-3 h-3" />
+              <span>
+                {formData.endDate 
+                  ? new Date(formData.endDate).toLocaleDateString('tr-TR')
+                  : 'Bitiş tarihi'
+                }
+              </span>
+            </div>
+            
+            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-500">Bilet Fiyatı:</span>
+                <span className="font-bold text-duxxan-yellow">
+                  {formData.ticketPrice || '0'} USDT
+                </span>
+              </div>
+            </div>
+            
+            <div className="text-xs text-gray-400">
+              <div>Ülke kısıtı: {formatCountryRestriction(
+                formData.countryRestriction,
+                formData.allowedCountries,
+                formData.excludedCountries
+              )}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   };
 
   return (
@@ -276,6 +382,7 @@ export default function AdminRaffleCreate() {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           field.onChange(file);
+                          handleImageChange(file || null);
                         }}
                       />
                     </FormControl>
@@ -389,13 +496,36 @@ export default function AdminRaffleCreate() {
                 </p>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
-                disabled={createRaffleMutation.isPending}
-              >
-                {createRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Çekiliş Oluştur'}
-              </Button>
+              <div className="flex gap-3">
+                <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      className="flex-1"
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Önizleme
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle>Çekiliş Önizlemesi</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <PreviewCard />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-duxxan-yellow text-duxxan-dark hover:bg-duxxan-yellow/90"
+                  disabled={createRaffleMutation.isPending}
+                >
+                  {createRaffleMutation.isPending ? 'Oluşturuluyor...' : 'Çekiliş Oluştur'}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
