@@ -50,10 +50,16 @@ export function RaffleManagement() {
   const [participants, setParticipants] = useState<Participant[]>([]);
 
   // Raffles Query
-  const { data: raffles, isLoading: rafflesLoading } = useQuery({
+  const { data: raffles, isLoading: rafflesLoading, error: rafflesError } = useQuery({
     queryKey: ['/api/admin/raffles'],
     queryFn: () => apiRequest('GET', '/api/admin/raffles'),
   });
+
+  // Debug logging
+  console.log('RaffleManagement - raffles data:', raffles);
+  console.log('RaffleManagement - raffles type:', typeof raffles);
+  console.log('RaffleManagement - raffles.data type:', typeof raffles?.data);
+  console.log('RaffleManagement - error:', rafflesError);
 
   // Winner selection mutation
   const selectWinnerMutation = useMutation({
@@ -124,13 +130,22 @@ export function RaffleManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5" />
-            Çekilişler ({(raffles?.data || []).length})
+            Çekilişler ({Array.isArray(raffles?.data) ? raffles.data.length : 0})
           </CardTitle>
         </CardHeader>
         <CardContent>
           {rafflesLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full" />
+            </div>
+          ) : rafflesError ? (
+            <div className="text-center py-8">
+              <p className="text-red-500">Veri yüklenirken hata oluştu</p>
+              <p className="text-sm text-muted-foreground">{rafflesError?.message}</p>
+            </div>
+          ) : !raffles?.data ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Veri bulunamadı</p>
             </div>
           ) : (
             <Table>
@@ -146,7 +161,7 @@ export function RaffleManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(raffles?.data || []).map((raffle: RaffleData) => (
+                {Array.isArray(raffles?.data) ? raffles.data.map((raffle: RaffleData) => (
                   <TableRow key={raffle.id}>
                     <TableCell>
                       <div>
@@ -218,7 +233,13 @@ export function RaffleManagement() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-4">
+                      Veri formatı hatalı: {typeof raffles?.data}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           )}
