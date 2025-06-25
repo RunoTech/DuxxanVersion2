@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from 'wouter';
-import { Clock, Users, Trophy, Star, MapPin, Calendar, DollarSign, Zap, Sparkles, TrendingUp, Award } from 'lucide-react';
+import { Clock, Users, Trophy, Star, MapPin, Calendar, DollarSign, Zap, Sparkles, TrendingUp, Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 interface RaffleCardProps {
   raffle: any;
@@ -12,6 +13,8 @@ interface RaffleCardProps {
 }
 
 export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
   const progress = raffle?.ticketsSold && raffle?.maxTickets 
     ? (raffle.ticketsSold / raffle.maxTickets) * 100 
     : 0;
@@ -22,6 +25,23 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
   const isHot = progress > 75 || daysLeft <= 3;
+
+  // Get images array or default
+  const images = raffle?.images && Array.isArray(raffle.images) && raffle.images.length > 0 
+    ? raffle.images 
+    : [];
+
+  const nextImage = () => {
+    if (images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (images.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+  };
 
   const getCountryName = (countryCode: string) => {
     const countries: { [key: string]: string } = {
@@ -84,8 +104,28 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
           <div className="flex items-center">
             {/* Left side - Image/Icon */}
             <div className="flex-shrink-0 p-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Trophy className="w-10 h-10 text-white" />
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden shadow-lg">
+                {images.length > 0 ? (
+                  <div className="relative w-full h-full">
+                    <img 
+                      src={images[currentImageIndex]} 
+                      alt={raffle.title}
+                      className="w-full h-full object-cover"
+                    />
+                    {images.length > 1 && (
+                      <>
+                        <div className="absolute inset-0 bg-black/20"></div>
+                        <div className="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-1 rounded">
+                          {currentImageIndex + 1}/{images.length}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center">
+                    <Trophy className="w-10 h-10 text-white" />
+                  </div>
+                )}
               </div>
             </div>
             
@@ -197,16 +237,69 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
             </div>
           )}
           
-          {/* Gradient Background */}
-          <div className="h-52 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-t-xl flex items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative z-10 text-center">
-              <Trophy className="w-20 h-20 text-white mb-2 mx-auto" />
-              <div className="text-white/90 text-sm font-semibold">GRAND PRIZE</div>
-            </div>
-            <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
-            <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full animate-pulse"></div>
+          {/* Image Carousel or Gradient Background */}
+          <div className="h-52 rounded-t-xl relative overflow-hidden">
+            {images.length > 0 ? (
+              <div className="relative w-full h-full">
+                <img 
+                  src={images[currentImageIndex]} 
+                  alt={raffle.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20"></div>
+                
+                {/* Navigation Arrows */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+                
+                {/* Image Counter */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
+                    {currentImageIndex + 1} / {images.length}
+                  </div>
+                )}
+                
+                {/* Overlay Content */}
+                <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
+                  <div className="text-white">
+                    <div className="text-white/90 text-sm font-semibold">GRAND PRIZE</div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="relative z-10 text-center">
+                  <Trophy className="w-20 h-20 text-white mb-2 mx-auto" />
+                  <div className="text-white/90 text-sm font-semibold">GRAND PRIZE</div>
+                </div>
+                <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full animate-pulse"></div>
+              </div>
+            )}
           </div>
         </div>
       </CardHeader>
