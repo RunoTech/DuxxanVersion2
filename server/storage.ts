@@ -296,13 +296,32 @@ export class DatabaseStorage implements IStorage {
 
   async getRaffleById(id: number): Promise<(Raffle & { creator: User; category: Category }) | undefined> {
     const [result] = await db
-      .select()
+      .select({
+        raffle: raffles,
+        creator: users,
+        category: categories
+      })
       .from(raffles)
       .innerJoin(users, eq(raffles.creatorId, users.id))
       .innerJoin(categories, eq(raffles.categoryId, categories.id))
       .where(eq(raffles.id, id));
     
-    return result ? { ...result.raffles, creator: result.users, category: result.categories } : undefined;
+    if (!result) return undefined;
+    
+    const raffleData = {
+      ...result.raffle,
+      creator: result.creator,
+      category: result.category
+    };
+    
+    console.log('Storage getRaffleById - returning:', {
+      id: raffleData.id,
+      title: raffleData.title,
+      images: raffleData.images,
+      imagesType: typeof raffleData.images
+    });
+    
+    return raffleData;
   }
 
   async createRaffle(raffle: InsertRaffle & { creatorId: number }): Promise<Raffle> {
@@ -323,7 +342,11 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log('Fetching active raffles...');
       const rows = await db
-        .select()
+        .select({
+          raffle: raffles,
+          creator: users,
+          category: categories
+        })
         .from(raffles)
         .innerJoin(users, eq(raffles.creatorId, users.id))
         .innerJoin(categories, eq(raffles.categoryId, categories.id))
@@ -331,7 +354,11 @@ export class DatabaseStorage implements IStorage {
         .orderBy(desc(raffles.createdAt));
       
       console.log(`Found ${rows.length} active raffles`);
-      return rows.map(row => ({ ...row.raffles, creator: row.users, category: row.categories }));
+      return rows.map(row => ({ 
+        ...row.raffle, 
+        creator: row.creator, 
+        category: row.category 
+      }));
     } catch (error) {
       console.error('Error in getActiveRaffles:', error);
       return [];

@@ -27,7 +27,14 @@ export class RaffleService extends BaseService {
     try {
       // Skip Redis for now and get directly from database
       const raffles = await storage.getActiveRaffles();
-      return raffles || [];
+      
+      // Ensure images field is present for each raffle
+      const rafflesWithImages = (raffles || []).map(raffle => ({
+        ...raffle,
+        images: raffle.images || null
+      }));
+      
+      return rafflesWithImages;
     } catch (error) {
       console.error('Error getting active raffles:', error);
       // Return empty array instead of throwing error
@@ -45,10 +52,23 @@ export class RaffleService extends BaseService {
       const raffle = await storage.getRaffleById(id);
       
       if (raffle) {
-        await redis.set(`raffle:${id}`, raffle, 300);
+        // Ensure images field is present and log for debugging
+        const raffleWithImages = {
+          ...raffle,
+          images: raffle.images || null
+        };
+        console.log('RaffleService - getRaffleById - Raffle data:', {
+          id: raffleWithImages.id,
+          title: raffleWithImages.title,
+          images: raffleWithImages.images,
+          imagesType: typeof raffleWithImages.images
+        });
+        
+        await redis.set(`raffle:${id}`, raffleWithImages, 300);
+        return raffleWithImages;
       }
       
-      return raffle || null;
+      return null;
     } catch (error) {
       return this.handleError(error, 'Failed to get raffle');
     }
