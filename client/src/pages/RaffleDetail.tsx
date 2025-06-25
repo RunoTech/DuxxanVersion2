@@ -204,14 +204,36 @@ export default function RaffleDetail() {
     console.log('No images field found in raffle data');
   }
   
-  // Fallback test images for BMW X5
-  if (images.length === 0 && safeRaffle?.title?.toLowerCase().includes('bmw')) {
-    images = [
-      'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800',
-      'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800', 
-      'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800'
-    ];
-    console.log('Using fallback BMW images:', images);
+  // Fallback images based on title
+  if (images.length === 0) {
+    const title = safeRaffle?.title?.toLowerCase() || '';
+    if (title.includes('bmw')) {
+      images = [
+        'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800',
+        'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800', 
+        'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800'
+      ];
+    } else if (title.includes('tesla')) {
+      images = [
+        'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800',
+        'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800',
+        'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800'
+      ];
+    } else if (title.includes('iphone') || title.includes('macbook') || title.includes('ipad')) {
+      images = [
+        'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800',
+        'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=800',
+        'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800'
+      ];
+    } else {
+      // Default fallback
+      images = [
+        'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800',
+        'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800',
+        'https://images.unsplash.com/photo-1560472355-536de3962603?w=800'
+      ];
+    }
+    console.log('Using fallback images for:', title, images);
   }
 
   const nextImage = () => {
