@@ -28,6 +28,7 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
 
   // Get images array or default - handle both string and array formats
   let images = [];
+  
   if (raffle?.images) {
     if (typeof raffle.images === 'string') {
       try {
