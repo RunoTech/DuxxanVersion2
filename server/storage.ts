@@ -800,8 +800,31 @@ export class DatabaseStorage implements IStorage {
 
   // Community Channel Methods
   async createChannel(channelData: InsertChannel & { creatorId: number }): Promise<Channel> {
-    const [channel] = await db.insert(channels).values(channelData).returning();
-    return channel;
+    console.log('DatabaseStorage.createChannel - channelData:', channelData);
+    
+    try {
+      const insertData = {
+        name: channelData.name,
+        description: channelData.description,
+        categoryId: channelData.categoryId,
+        creatorId: channelData.creatorId,
+        subscriberCount: 0,
+        isActive: true,
+        isDemo: channelData.isDemo || false,
+        totalPrizeAmount: '0',
+        activeRaffleCount: 0
+      };
+      
+      console.log('DatabaseStorage.createChannel - insertData:', insertData);
+      
+      const [channel] = await db.insert(channels).values(insertData).returning();
+      
+      console.log('DatabaseStorage.createChannel - created channel:', channel);
+      return channel;
+    } catch (error) {
+      console.error('DatabaseStorage.createChannel - error:', error);
+      throw error;
+    }
   }
 
   async getChannels(): Promise<Channel[]> {
