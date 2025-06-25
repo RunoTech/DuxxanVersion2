@@ -356,27 +356,11 @@ export default function AdminPanel() {
           </TabsContent>
 
           <TabsContent value="donations" className="mt-6">
-            <div className="text-center py-12">
-              <Heart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                Bağış Yönetimi
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Bağış kampanyalarını buradan yönetebilirsiniz.
-              </p>
-            </div>
+            {renderDonations()}
           </TabsContent>
 
           <TabsContent value="wallets" className="mt-6">
-            <div className="text-center py-12">
-              <Wallet className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                Cüzdan Yönetimi
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Kullanıcı cüzdanlarını ve bakiyelerini buradan görüntüleyebilirsiniz.
-              </p>
-            </div>
+            {renderWallets()}
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">

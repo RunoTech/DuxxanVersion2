@@ -125,6 +125,21 @@ export class AdminController extends BaseController {
     })
   ];
 
+  // Perform donation actions
+  donationAction = [
+    this.requireAdmin(),
+    this.asyncHandler(async (req: Request, res: Response) => {
+      const { donationId, action } = req.body;
+
+      if (!donationId || !action) {
+        return this.sendError(res, 'Donation ID and action are required', 400);
+      }
+
+      const result = await this.adminService.performDonationAction(donationId, action);
+      this.sendSuccess(res, result, 'Donation action completed successfully');
+    })
+  ];
+
   // Get system logs
   getLogs = [
     this.requireAuth(),

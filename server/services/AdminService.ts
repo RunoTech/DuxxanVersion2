@@ -266,7 +266,7 @@ export class AdminService extends BaseService {
       // Get total count
       const [totalResult] = await db.select({ count: count() }).from(donations);
 
-      return {
+      const response = {
         data: donationsData,
         pagination: {
           page: filters.page,
@@ -275,6 +275,9 @@ export class AdminService extends BaseService {
           pages: Math.ceil(totalResult.count / filters.limit)
         }
       };
+
+      console.log('AdminService.getDonations - returning:', response.data.length, 'donations, total:', response.pagination.total);
+      return response;
     } catch (error) {
       return this.handleError(error, 'Failed to get donations');
     }
@@ -296,7 +299,7 @@ export class AdminService extends BaseService {
         .groupBy(users.id)
         .orderBy(desc(sql`COALESCE(SUM(${tickets.totalAmount}), 0)`));
 
-      return {
+      const response = {
         data: result.map(row => ({
           ...row.user,
           walletStats: {
@@ -309,6 +312,9 @@ export class AdminService extends BaseService {
           }
         }))
       };
+
+      console.log('AdminService.getWalletData - returning:', response.data.length, 'wallets');
+      return response;
     } catch (error) {
       return this.handleError(error, 'Failed to get wallet data');
     }

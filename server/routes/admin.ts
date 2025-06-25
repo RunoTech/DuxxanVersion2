@@ -23,6 +23,7 @@ router.post('/raffles/create', adminController.createManualRaffle);
 
 // Donation management
 router.get('/donations', adminController.getDonations);
+router.post('/donations/action', adminController.donationAction);
 router.post('/donations/create', adminController.createManualDonation);
 
 // Wallet management
