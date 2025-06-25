@@ -16,6 +16,8 @@ import { useToast } from '@/hooks/use-toast';
 import { StatsCard } from '@/components/admin/StatsCard';
 import { UserManagement } from '@/components/admin/UserManagement';
 import { RaffleManagement } from '@/components/admin/RaffleManagement';
+import { DonationManagement } from '@/components/admin/DonationManagement';
+import { WalletManagement } from '@/components/admin/WalletManagement';
 import { 
   Users, 
   Trophy, 
@@ -294,6 +296,10 @@ export default function AdminPanel() {
   const renderUsers = () => <UserManagement />;
 
   const renderRaffles = () => <RaffleManagement />;
+  
+  const renderDonations = () => <DonationManagement />;
+  
+  const renderWallets = () => <WalletManagement />;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
