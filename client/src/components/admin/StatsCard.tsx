@@ -13,6 +13,9 @@ interface StatsCardProps {
 }
 
 export function StatsCard({ title, value, description, icon: Icon, trend }: StatsCardProps) {
+  // Debug logging
+  console.log(`StatsCard "${title}" - value:`, value, 'type:', typeof value);
+  
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
