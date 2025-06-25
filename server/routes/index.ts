@@ -4,6 +4,7 @@ import { RaffleController } from '../controllers/RaffleController';
 import { DonationController } from '../controllers/DonationController';
 import { UpcomingRaffleController } from '../controllers/UpcomingRaffleController';
 import { translationService } from '../../lib/translation';
+import adminRoutes from './admin';
 
 // Initialize controllers
 const userController = new UserController();
@@ -13,6 +14,9 @@ const upcomingRaffleController = new UpcomingRaffleController();
 
 // Create router
 const router = Router();
+
+// Admin routes (protected)
+router.use('/admin', adminRoutes);
 
 // User routes
 router.get('/users/me', userController.getCurrentUser);

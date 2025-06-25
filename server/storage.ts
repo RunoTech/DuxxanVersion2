@@ -317,8 +317,8 @@ export class DatabaseStorage implements IStorage {
     console.log('Storage getRaffleById - returning:', {
       id: raffleData.id,
       title: raffleData.title,
-      images: raffleData.images || 'undefined',
-      imagesType: typeof raffleData.images
+      images: (raffleData as any).images || 'undefined',
+      imagesType: typeof (raffleData as any).images
     });
     
     return raffleData;
