@@ -231,6 +231,10 @@ export class AdminService extends BaseService {
       };
 
       console.log('AdminService.getRaffles - returning:', response.data.length, 'raffles, total:', response.pagination.total);
+      console.log('AdminService.getRaffles - first raffle sample:', response.data[0] ? { 
+        id: response.data[0].id, 
+        title: response.data[0].title 
+      } : 'no data');
       
       return response;
     } catch (error) {
