@@ -59,6 +59,8 @@ export function RaffleManagement() {
   console.log('RaffleManagement - raffles data:', raffles);
   console.log('RaffleManagement - raffles type:', typeof raffles);
   console.log('RaffleManagement - raffles.data type:', typeof raffles?.data);
+  console.log('RaffleManagement - raffles.data.data type:', typeof raffles?.data?.data);
+  console.log('RaffleManagement - raffles.data.data length:', raffles?.data?.data?.length);
   console.log('RaffleManagement - error:', rafflesError);
 
   // Winner selection mutation
@@ -130,7 +132,7 @@ export function RaffleManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5" />
-            Çekilişler ({Array.isArray(raffles?.data) ? raffles.data.length : 0})
+            Çekilişler ({Array.isArray(raffles?.data?.data) ? raffles.data.data.length : 0})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -143,7 +145,7 @@ export function RaffleManagement() {
               <p className="text-red-500">Veri yüklenirken hata oluştu</p>
               <p className="text-sm text-muted-foreground">{rafflesError?.message}</p>
             </div>
-          ) : !raffles?.data ? (
+          ) : !raffles?.data?.data ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">Veri bulunamadı</p>
             </div>
@@ -161,7 +163,7 @@ export function RaffleManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.isArray(raffles?.data) ? raffles.data.map((raffle: RaffleData) => (
+                {Array.isArray(raffles?.data?.data) ? raffles.data.data.map((raffle: RaffleData) => (
                   <TableRow key={raffle.id}>
                     <TableCell>
                       <div>
@@ -236,7 +238,7 @@ export function RaffleManagement() {
                 )) : (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-4">
-                      Veri formatı hatalı: {typeof raffles?.data}
+                      Veri formatı hatalı: {typeof raffles?.data?.data}
                     </TableCell>
                   </TableRow>
                 )}
