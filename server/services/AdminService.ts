@@ -191,6 +191,8 @@ export class AdminService extends BaseService {
     try {
       const offset = (filters.page - 1) * filters.limit;
       
+      console.log('AdminService.getRaffles - fetching raffles with filters:', filters);
+      
       const result = await db
         .select({
           raffle: raffles,
@@ -207,6 +209,8 @@ export class AdminService extends BaseService {
         .limit(filters.limit)
         .offset(offset);
 
+      console.log('AdminService.getRaffles - found raffles:', result.length);
+
       const rafflesData = result.map(row => ({
         ...row.raffle,
         creator: row.creator,
@@ -216,7 +220,7 @@ export class AdminService extends BaseService {
       // Get total count
       const [totalResult] = await db.select({ count: count() }).from(raffles);
 
-      return {
+      const response = {
         data: rafflesData,
         pagination: {
           page: filters.page,
@@ -225,7 +229,12 @@ export class AdminService extends BaseService {
           pages: Math.ceil(totalResult.count / filters.limit)
         }
       };
+
+      console.log('AdminService.getRaffles - returning:', response.data.length, 'raffles, total:', response.pagination.total);
+      
+      return response;
     } catch (error) {
+      console.error('AdminService.getRaffles - error:', error);
       return this.handleError(error, 'Failed to get raffles');
     }
   }
