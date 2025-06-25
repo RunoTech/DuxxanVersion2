@@ -28,7 +28,10 @@ import {
   DollarSign,
   Edit3,
   Save,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Image as ImageIcon
 } from 'lucide-react';
 import { MutualApprovalSystem } from '@/components/MutualApprovalSystem';
 
@@ -45,6 +48,7 @@ export default function RaffleDetail() {
   const [isEditingCard, setIsEditingCard] = useState(false);
   const [editableTitle, setEditableTitle] = useState('');
   const [editableDescription, setEditableDescription] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // All query hooks must be at the top level
   const { data: raffle, isLoading } = useQuery({
@@ -178,6 +182,32 @@ export default function RaffleDetail() {
     : 0;
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
+  // Process images
+  let images = [];
+  if (safeRaffle?.images) {
+    if (typeof safeRaffle.images === 'string') {
+      try {
+        images = JSON.parse(safeRaffle.images);
+      } catch (e) {
+        images = [];
+      }
+    } else if (Array.isArray(safeRaffle.images)) {
+      images = safeRaffle.images;
+    }
+  }
+
+  const nextImage = () => {
+    if (images.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (images.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-duxxan-dark">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
@@ -238,6 +268,72 @@ export default function RaffleDetail() {
             </Button>
           </div>
         </div>
+
+        {/* Image Gallery */}
+        {images.length > 0 && (
+          <div className="mb-8">
+            <Card className="overflow-hidden">
+              <div className="relative h-96 bg-gray-100 dark:bg-gray-800">
+                <img 
+                  src={images[currentImageIndex]} 
+                  alt={safeRaffle.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800';
+                  }}
+                />
+                
+                {/* Navigation Arrows */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 z-10"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 z-10"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
+                
+                {/* Image Counter */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white text-sm px-4 py-2 rounded-full">
+                    {currentImageIndex + 1} / {images.length}
+                  </div>
+                )}
+                
+                {/* Image Thumbnails */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-4 right-4 flex gap-2">
+                    {images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                          index === currentImageIndex 
+                            ? 'border-white shadow-lg' 
+                            : 'border-white/50 hover:border-white/80'
+                        }`}
+                      >
+                        <img 
+                          src={image} 
+                          alt={`${safeRaffle.title} ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Ana İçerik */}
