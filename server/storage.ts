@@ -933,8 +933,33 @@ export class DatabaseStorage implements IStorage {
 
   // Upcoming Raffle Methods
   async createUpcomingRaffle(raffleData: InsertUpcomingRaffle & { creatorId: number }): Promise<UpcomingRaffle> {
-    const [raffle] = await db.insert(upcomingRaffles).values(raffleData).returning();
-    return raffle;
+    console.log('DatabaseStorage.createUpcomingRaffle - raffleData:', raffleData);
+    
+    try {
+      const insertData = {
+        title: raffleData.title,
+        description: raffleData.description,
+        prizeValue: raffleData.prizeValue,
+        ticketPrice: raffleData.ticketPrice,
+        maxTickets: raffleData.maxTickets,
+        startDate: raffleData.startDate,
+        categoryId: raffleData.categoryId,
+        creatorId: raffleData.creatorId,
+        channelId: raffleData.channelId || null,
+        interestedCount: 0,
+        isActive: true
+      };
+      
+      console.log('DatabaseStorage.createUpcomingRaffle - insertData:', insertData);
+      
+      const [raffle] = await db.insert(upcomingRaffles).values(insertData).returning();
+      
+      console.log('DatabaseStorage.createUpcomingRaffle - created raffle:', raffle);
+      return raffle;
+    } catch (error) {
+      console.error('DatabaseStorage.createUpcomingRaffle - error:', error);
+      throw error;
+    }
   }
 
   async getUpcomingRaffles(): Promise<UpcomingRaffle[]> {
