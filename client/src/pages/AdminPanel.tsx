@@ -13,6 +13,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Progress } from '@/components/ui/progress';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { StatsCard } from '@/components/admin/StatsCard';
+import { UserManagement } from '@/components/admin/UserManagement';
+import { RaffleManagement } from '@/components/admin/RaffleManagement';
 import { 
   Users, 
   Trophy, 
@@ -194,57 +197,37 @@ export default function AdminPanel() {
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Toplam Kullanıcı</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{adminStats?.totalUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              +12% geçen aydan
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aktif Çekilişler</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{adminStats?.activeRaffles || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              {adminStats?.totalRaffles || 0} toplam
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aktif Bağışlar</CardTitle>
-            <Heart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{adminStats?.activeDonations || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              {adminStats?.totalDonations || 0} toplam
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Toplam Gelir</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${adminStats?.totalRevenue || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              USDT cinsinden
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          title="Toplam Kullanıcı"
+          value={adminStats?.totalUsers || 0}
+          description={`${adminStats?.todaySignups || 0} bugün katıldı`}
+          icon={Users}
+          trend={{ value: "12% bu ay", isPositive: true }}
+        />
+        
+        <StatsCard
+          title="Aktif Çekilişler"
+          value={adminStats?.activeRaffles || 0}
+          description={`${adminStats?.totalRaffles || 0} toplam`}
+          icon={Trophy}
+          trend={{ value: `${adminStats?.todayRaffles || 0} bugün`, isPositive: true }}
+        />
+        
+        <StatsCard
+          title="Aktif Bağışlar"
+          value={adminStats?.activeDonations || 0}
+          description={`${adminStats?.totalDonations || 0} toplam`}
+          icon={Heart}
+          trend={{ value: `${adminStats?.todayDonations || 0} bugün`, isPositive: true }}
+        />
+        
+        <StatsCard
+          title="Platform Geliri"
+          value={`$${adminStats?.totalRevenue || 0}`}
+          description="USDT cinsinden komisyon"
+          icon={DollarSign}
+          trend={{ value: `Ort. $${adminStats?.averageTicketPrice || 0} bilet`, isPositive: true }}
+        />
       </div>
 
       {/* Quick Actions */}
@@ -308,202 +291,9 @@ export default function AdminPanel() {
     </div>
   );
 
-  const renderUsers = () => (
-    <div className="space-y-6">
-      {/* Search and Filter */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <Label htmlFor="search">Kullanıcı Ara</Label>
-              <Input
-                id="search"
-                placeholder="Cüzdan adresi, kullanıcı adı veya email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="status">Durum Filtresi</Label>
-              <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tümü</SelectItem>
-                  <SelectItem value="active">Aktif</SelectItem>
-                  <SelectItem value="pending">Beklemede</SelectItem>
-                  <SelectItem value="suspended">Askıya Alınmış</SelectItem>
-                  <SelectItem value="banned">Yasaklı</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+  const renderUsers = () => <UserManagement />;
 
-      {/* Users Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Kullanıcılar ({users?.data?.length || 0})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Kullanıcı</TableHead>
-                <TableHead>Cüzdan</TableHead>
-                <TableHead>Durum</TableHead>
-                <TableHead>Tip</TableHead>
-                <TableHead>Harcama</TableHead>
-                <TableHead>Kazanç</TableHead>
-                <TableHead>İşlemler</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users?.data?.map((user: UserData) => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{user.username}</div>
-                      <div className="text-sm text-muted-foreground">{user.name}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <code className="text-xs bg-muted px-2 py-1 rounded">
-                      {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                    </code>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.accountStatus === 'active' ? 'default' : 'secondary'}>
-                      {user.accountStatus}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">
-                      {user.organizationType}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>${user.totalSpent}</TableCell>
-                  <TableCell>${user.totalWon}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Edit3 className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Ban className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const renderRaffles = () => (
-    <div className="space-y-6">
-      {/* Raffles Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Çekilişler ({raffles?.data?.length || 0})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Başlık</TableHead>
-                <TableHead>Oluşturan</TableHead>
-                <TableHead>Ödül Değeri</TableHead>
-                <TableHead>Bilet Satışı</TableHead>
-                <TableHead>Durum</TableHead>
-                <TableHead>Kazanan</TableHead>
-                <TableHead>İşlemler</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {raffles?.data?.map((raffle: RaffleData) => (
-                <TableRow key={raffle.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{raffle.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        #{raffle.id}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="text-sm">{raffle.creator.username}</div>
-                      {raffle.createdByAdmin && (
-                        <Badge variant="secondary" className="text-xs">Admin</Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>${raffle.prizeValue}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div>{raffle.ticketsSold}/{raffle.maxTickets}</div>
-                      <Progress 
-                        value={(raffle.ticketsSold / raffle.maxTickets) * 100} 
-                        className="w-16 h-2"
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={raffle.isActive ? 'default' : 'secondary'}>
-                      {raffle.isActive ? 'Aktif' : 'Pasif'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {raffle.winnerId ? (
-                      <Badge variant="outline">Seçildi</Badge>
-                    ) : (
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleSelectWinner(raffle)}
-                        disabled={!raffle.isActive}
-                      >
-                        <Crown className="h-4 w-4 mr-1" />
-                        Kazanan Seç
-                      </Button>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Edit3 className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => raffleActionMutation.mutate({ 
-                          raffleId: raffle.id, 
-                          action: raffle.isActive ? 'deactivate' : 'activate' 
-                        })}
-                      >
-                        {raffle.isActive ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  const renderRaffles = () => <RaffleManagement />;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
