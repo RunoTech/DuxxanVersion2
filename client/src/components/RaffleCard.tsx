@@ -26,10 +26,19 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
 
   const isHot = progress > 75 || daysLeft <= 3;
 
-  // Get images array or default
-  const images = raffle?.images && Array.isArray(raffle.images) && raffle.images.length > 0 
-    ? raffle.images 
-    : [];
+  // Get images array or default - handle both string and array formats
+  let images = [];
+  if (raffle?.images) {
+    if (typeof raffle.images === 'string') {
+      try {
+        images = JSON.parse(raffle.images);
+      } catch (e) {
+        images = [];
+      }
+    } else if (Array.isArray(raffle.images)) {
+      images = raffle.images;
+    }
+  }
 
   const nextImage = () => {
     if (images.length > 0) {
@@ -111,10 +120,33 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
                       src={images[currentImageIndex]} 
                       alt={raffle.title}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500';
+                      }}
                     />
                     {images.length > 1 && (
                       <>
                         <div className="absolute inset-0 bg-black/20"></div>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            prevImage();
+                          }}
+                          className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-all duration-200"
+                        >
+                          <ChevronLeft className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            nextImage();
+                          }}
+                          className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-all duration-200"
+                        >
+                          <ChevronRight className="w-3 h-3" />
+                        </button>
                         <div className="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-1 rounded">
                           {currentImageIndex + 1}/{images.length}
                         </div>
@@ -245,6 +277,9 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
                   src={images[currentImageIndex]} 
                   alt={raffle.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500';
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/20"></div>
                 
@@ -257,7 +292,7 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
                         e.stopPropagation();
                         prevImage();
                       }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200"
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 z-20"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
@@ -267,7 +302,7 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
                         e.stopPropagation();
                         nextImage();
                       }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 z-20"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -276,7 +311,7 @@ export function RaffleCard({ raffle, viewMode }: RaffleCardProps) {
                 
                 {/* Image Counter */}
                 {images.length > 1 && (
-                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full z-20">
                     {currentImageIndex + 1} / {images.length}
                   </div>
                 )}
