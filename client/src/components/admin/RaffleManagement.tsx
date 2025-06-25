@@ -124,7 +124,7 @@ export function RaffleManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5" />
-            Çekilişler ({raffles?.data?.length || 0})
+            Çekilişler ({(raffles?.data || []).length})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -146,7 +146,7 @@ export function RaffleManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {raffles?.data?.map((raffle: RaffleData) => (
+                {(raffles?.data || []).map((raffle: RaffleData) => (
                   <TableRow key={raffle.id}>
                     <TableCell>
                       <div>

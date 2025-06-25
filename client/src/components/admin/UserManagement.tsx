@@ -110,7 +110,7 @@ export function UserManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Kullanıcılar ({users?.data?.length || 0})
+            Kullanıcılar ({(users?.data || []).length})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -132,7 +132,7 @@ export function UserManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.data?.map((user: UserData) => (
+                {(users?.data || []).map((user: UserData) => (
                   <TableRow key={user.id}>
                     <TableCell>
                       <div>
