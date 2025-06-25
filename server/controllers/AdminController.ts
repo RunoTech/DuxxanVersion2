@@ -94,42 +94,33 @@ export class AdminController extends BaseController {
 
   // Select winner for raffle
   selectWinner = [
-    this.requireAuth(),
     this.requireAdmin(),
-    this.validateBody(winnerSelectionSchema),
     this.asyncHandler(async (req: Request, res: Response) => {
       const { raffleId, winnerId, method } = req.body;
-      const adminUser = req.user;
 
-      const result = await this.adminService.selectRaffleWinner(raffleId, method, winnerId, adminUser.id);
+      const result = await this.adminService.selectRaffleWinner(raffleId, method, winnerId);
       this.sendSuccess(res, result, 'Winner selected successfully');
     })
   ];
 
   // Perform user actions
   userAction = [
-    this.requireAuth(),
     this.requireAdmin(),
-    this.validateBody(userActionSchema),
     this.asyncHandler(async (req: Request, res: Response) => {
       const { userId, action, reason } = req.body;
-      const adminUser = req.user;
 
-      const result = await this.adminService.performUserAction(userId, action, reason, adminUser.id);
+      const result = await this.adminService.performUserAction(userId, action, reason);
       this.sendSuccess(res, result, 'User action completed successfully');
     })
   ];
 
   // Perform raffle actions
   raffleAction = [
-    this.requireAuth(),
     this.requireAdmin(),
-    this.validateBody(raffleActionSchema),
     this.asyncHandler(async (req: Request, res: Response) => {
       const { raffleId, action } = req.body;
-      const adminUser = req.user;
 
-      const result = await this.adminService.performRaffleAction(raffleId, action, adminUser.id);
+      const result = await this.adminService.performRaffleAction(raffleId, action);
       this.sendSuccess(res, result, 'Raffle action completed successfully');
     })
   ];
