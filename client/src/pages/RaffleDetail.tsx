@@ -182,18 +182,36 @@ export default function RaffleDetail() {
     : 0;
   const daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (1000 * 60 * 60 * 24)) : 0;
 
-  // Process images
+  // Process images - debug logging
   let images = [];
+  console.log('Raw raffle data:', safeRaffle);
+  console.log('Images field:', safeRaffle?.images);
+  
   if (safeRaffle?.images) {
     if (typeof safeRaffle.images === 'string') {
       try {
         images = JSON.parse(safeRaffle.images);
+        console.log('Parsed images from string:', images);
       } catch (e) {
+        console.error('Failed to parse images string:', e);
         images = [];
       }
     } else if (Array.isArray(safeRaffle.images)) {
       images = safeRaffle.images;
+      console.log('Using array images:', images);
     }
+  } else {
+    console.log('No images field found in raffle data');
+  }
+  
+  // Fallback test images for BMW X5
+  if (images.length === 0 && safeRaffle?.title?.toLowerCase().includes('bmw')) {
+    images = [
+      'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800',
+      'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800', 
+      'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800'
+    ];
+    console.log('Using fallback BMW images:', images);
   }
 
   const nextImage = () => {

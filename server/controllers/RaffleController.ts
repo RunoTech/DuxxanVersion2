@@ -37,6 +37,14 @@ export class RaffleController extends BaseController {
       return this.sendError(res, 'Raffle not found', 404);
     }
 
+    // Debug: Log the raffle data to see if images field is present
+    console.log('Returning raffle data:', JSON.stringify({
+      id: raffle.id,
+      title: raffle.title,
+      images: raffle.images,
+      imagesType: typeof raffle.images
+    }, null, 2));
+
     this.sendSuccess(res, raffle, 'Raffle retrieved successfully');
   });
 
