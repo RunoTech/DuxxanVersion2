@@ -201,6 +201,89 @@ export default function CommunityDetail() {
     }));
   };
 
+  const handleCreateRaffle = async () => {
+    try {
+      if (!channel) {
+        toast({
+          title: "Hata",
+          description: "Kanal bilgisi bulunamadı",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!raffleForm.title || !raffleForm.description || !raffleForm.prizeValue) {
+        toast({
+          title: "Eksik Bilgi",
+          description: "Lütfen gerekli alanları doldurun.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Create upcoming raffle data with channelId
+      const raffleData = {
+        title: raffleForm.title,
+        description: raffleForm.description,
+        prizeValue: raffleForm.prizeValue,
+        ticketPrice: '10', // Default ticket price
+        maxTickets: parseInt(raffleForm.maxParticipants) || 100,
+        startDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+        categoryId: channel.categoryId,
+        channelId: channel.id // Critical: Include channelId
+      };
+
+      console.log('Creating upcoming raffle with data:', raffleData);
+      
+      const response = await fetch('/api/upcoming-raffles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(raffleData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Upcoming raffle created:', result);
+      
+      toast({
+        title: "Başarılı!",
+        description: "Çekiliş duyurusu başarıyla oluşturuldu",
+      });
+      
+      setIsCreatingRaffle(false);
+      setRaffleForm({
+        title: '',
+        description: '',
+        prizeValue: '',
+        prizeDescription: '',
+        duration: '7',
+        maxParticipants: '',
+        requirements: ''
+      });
+      
+      // Refresh both channel data and raffles data
+      refetch();
+      refetchRaffles();
+      
+      // Give some time for the API to respond and refresh again
+      setTimeout(() => {
+        refetchRaffles();
+      }, 1000);
+    } catch (error) {
+      console.error('Error creating raffle:', error);
+      toast({
+        title: "Hata",
+        description: "Çekiliş oluşturulurken bir hata oluştu",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (channelLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
@@ -990,32 +1073,7 @@ export default function CommunityDetail() {
                   İptal
                 </Button>
                 <Button
-                  onClick={() => {
-                    if (!raffleForm.title || !raffleForm.description || !raffleForm.prizeValue) {
-                      toast({
-                        title: "Eksik Bilgi",
-                        description: "Lütfen gerekli alanları doldurun.",
-                        variant: "destructive"
-                      });
-                      return;
-                    }
-                    
-                    toast({
-                      title: "Çekiliş Oluşturuldu!",
-                      description: `"${raffleForm.title}" başlıklı çekiliş başarıyla oluşturuldu.`,
-                    });
-                    
-                    setRaffleForm({
-                      title: '',
-                      description: '',
-                      prizeValue: '',
-                      prizeDescription: '',
-                      duration: '7',
-                      maxParticipants: '',
-                      requirements: ''
-                    });
-                    setIsCreatingRaffle(false);
-                  }}
+                  onClick={handleCreateRaffle}
                   className="px-6 py-3 bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   Çekiliş Oluştur
