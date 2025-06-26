@@ -322,7 +322,8 @@ export default function CommunityDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
       {/* Hero Section with 3D Background */}
       <div className="relative h-96 bg-gradient-to-br from-[#FFC929] via-[#FFB800] to-[#FFA500] dark:from-[#FFC929] dark:via-[#FFB800] dark:to-[#FFA500] overflow-hidden">
         {/* Background Pattern */}
@@ -891,8 +892,9 @@ export default function CommunityDetail() {
             </Card>
           </div>
         </div>
+      </div>
 
-        {/* Raffle Creation Modal */}
+      {/* Raffle Creation Modal */}
         <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
           <DialogContent className="max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/40 dark:border-[#FFC929]/60 shadow-2xl backdrop-blur-sm mx-4 sm:mx-auto">
             <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -1147,6 +1149,6 @@ export default function CommunityDetail() {
           document.body
         )}
       </div>
-    </div>
+    </>
   );
 }
