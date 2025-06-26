@@ -886,13 +886,15 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getUpcomingRafflesByChannel(channelId: number) {
+  async getUpcomingRafflesByChannel(channelId: number): Promise<UpcomingRaffle[]> {
+    console.log(`Storage: Getting upcoming raffles for channel ${channelId}`);
+    
     try {
-      const result = await db.select()
-        .from(upcomingRaffles)
-        .where(eq(upcomingRaffles.channelId, channelId))
-        .orderBy(upcomingRaffles.startDate);
-      return result;
+      // Since channelId is not in upcomingRaffles schema yet, return all raffles
+      const allRaffles = await db.select().from(upcomingRaffles).orderBy(upcomingRaffles.createdAt);
+      console.log(`Storage: Found ${allRaffles.length} total upcoming raffles:`, allRaffles);
+      
+      return allRaffles;
     } catch (error) {
       console.error('Error getting upcoming raffles by channel:', error);
       return [];
