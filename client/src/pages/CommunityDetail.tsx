@@ -892,9 +892,8 @@ export default function CommunityDetail() {
             </Card>
           </div>
         </div>
-      </div>
 
-      {/* Raffle Creation Modal */}
+        {/* Raffle Creation Modal */}
         <Dialog open={isCreatingRaffle} onOpenChange={setIsCreatingRaffle}>
           <DialogContent className="max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-[#FFC929]/40 dark:border-[#FFC929]/60 shadow-2xl backdrop-blur-sm mx-4 sm:mx-auto">
             <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -1148,7 +1147,6 @@ export default function CommunityDetail() {
           </div>,
           document.body
         )}
-      </div>
     </>
   );
 }
