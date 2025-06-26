@@ -322,7 +322,6 @@ export default function CommunityDetail() {
   }
 
   return (
-    <>
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
       {/* Hero Section with 3D Background */}
       <div className="relative h-96 bg-gradient-to-br from-[#FFC929] via-[#FFB800] to-[#FFA500] dark:from-[#FFC929] dark:via-[#FFB800] dark:to-[#FFA500] overflow-hidden">
@@ -1109,47 +1108,46 @@ export default function CommunityDetail() {
 
         {/* Share Menu Portal */}
         {showShareMenu && createPortal(
-      <div 
-        className="fixed w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl backdrop-blur-sm z-[9999]"
-        style={{
-          top: `${shareMenuPosition.top}px`,
-          right: `${shareMenuPosition.right}px`
-        }}
-      >
-        <div className="p-2">
-          <button
-            onClick={copyToClipboard}
-            className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+          <div 
+            className="fixed w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl backdrop-blur-sm z-[9999]"
+            style={{
+              top: `${shareMenuPosition.top}px`,
+              right: `${shareMenuPosition.right}px`
+            }}
           >
-            <Copy className="h-4 w-4 mr-2" />
-            Bağlantıyı Kopyala
-          </button>
-          <button
-            onClick={() => shareToSocial('twitter')}
-            className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-          >
-            <Twitter className="h-4 w-4 mr-2" />
-            Twitter'da Paylaş
-          </button>
-          <button
-            onClick={() => shareToSocial('facebook')}
-            className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-          >
-            <Facebook className="h-4 w-4 mr-2" />
-            Facebook'ta Paylaş
-          </button>
-          <button
-            onClick={() => shareToSocial('telegram')}
-            className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-          >
-            <Send className="h-4 w-4 mr-2" />
-            Telegram'da Paylaş
-          </button>
-        </div>
+            <div className="p-2">
+              <button
+                onClick={copyToClipboard}
+                className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Bağlantıyı Kopyala
+              </button>
+              <button
+                onClick={() => shareToSocial('twitter')}
+                className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              >
+                <Twitter className="h-4 w-4 mr-2" />
+                Twitter'da Paylaş
+              </button>
+              <button
+                onClick={() => shareToSocial('facebook')}
+                className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              >
+                <Facebook className="h-4 w-4 mr-2" />
+                Facebook'ta Paylaş
+              </button>
+              <button
+                onClick={() => shareToSocial('telegram')}
+                className="w-full flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Telegram'da Paylaş
+              </button>
+            </div>
           </div>,
           document.body
         )}
-      </div>
-    </>
+    </div>
   );
 }
