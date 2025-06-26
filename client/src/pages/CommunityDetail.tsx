@@ -92,6 +92,8 @@ export default function CommunityDetail() {
   console.log('CommunityDetail - Channel ID:', id);
   console.log('CommunityDetail - Raw channel data:', channelData);
   console.log('CommunityDetail - Parsed channel:', channel);
+  console.log('CommunityDetail - Raffles data:', rafflesData);
+  console.log('CommunityDetail - Parsed raffles:', raffles);
   console.log('CommunityDetail - Loading:', channelLoading);
   console.log('CommunityDetail - Error:', channelError);
   

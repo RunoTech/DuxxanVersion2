@@ -1207,7 +1207,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/channels/:id/raffles', async (req, res) => {
     try {
       const channelId = parseInt(req.params.id);
+      console.log(`Fetching raffles for channel ${channelId}`);
+      
       const raffles = await storage.getUpcomingRafflesByChannel(channelId);
+      console.log(`Found ${raffles.length} raffles for channel ${channelId}:`, raffles);
+      
       res.json({ success: true, data: raffles });
     } catch (error) {
       console.error('Error fetching channel raffles:', error);
