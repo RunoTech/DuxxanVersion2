@@ -79,7 +79,7 @@ export default function CommunityDetail() {
   });
 
   // Fetch channel raffles
-  const { data: rafflesData, isLoading: rafflesLoading } = useQuery({
+  const { data: rafflesData, isLoading: rafflesLoading, refetch: refetchRaffles } = useQuery({
     queryKey: [`/api/channels/${id}/raffles`],
     enabled: !!id,
   });
@@ -247,7 +247,8 @@ export default function CommunityDetail() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
