@@ -100,6 +100,8 @@ export default function CommunityDetail() {
   // Parse demo content if available
   const demoContent = channel?.demoContent ? JSON.parse(channel.demoContent) : null;
   const displayRaffles = channel?.isDemo && demoContent?.sampleRaffles ? demoContent.sampleRaffles : raffles;
+  
+  console.log('CommunityDetail - Display raffles:', displayRaffles);
 
   // Check if current user is the channel creator (simplified for demo)
   const isChannelCreator = true; // In real app, check against authenticated user ID
@@ -788,6 +790,22 @@ export default function CommunityDetail() {
                 </Card>
               )}
             </div>
+            
+            {/* Add Raffle Button - Always visible for channel creators */}
+            {isChannelCreator && (
+              <div className="mt-6 flex justify-center">
+                <Button 
+                  onClick={() => setIsCreatingRaffle(true)}
+                  className="bg-gradient-to-r from-[#FFC929] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFA500] text-black font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  size="lg"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Kanala Çekiliş Ekle
+                </Button>
+              </div>
+            )}
+          </div>
+            </div>
           </div>
 
           {/* Right Sidebar - Statistics */}
@@ -1088,11 +1106,9 @@ export default function CommunityDetail() {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
-    </div>
-    
-    {/* Share Menu Portal */}
-    {showShareMenu && createPortal(
+
+        {/* Share Menu Portal */}
+        {showShareMenu && createPortal(
       <div 
         className="fixed w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl backdrop-blur-sm z-[9999]"
         style={{
@@ -1130,9 +1146,10 @@ export default function CommunityDetail() {
             Telegram'da Paylaş
           </button>
         </div>
-      </div>,
-      document.body
-    )}
+          </div>,
+          document.body
+        )}
+      </div>
     </>
   );
 }
