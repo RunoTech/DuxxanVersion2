@@ -222,10 +222,13 @@ export default function CommunityDetail() {
       }
 
       // Create upcoming raffle data with channelId
+      // Extract numeric value from prizeValue (remove currency symbols)
+      const numericPrizeValue = raffleForm.prizeValue.replace(/[^\d.]/g, '') || '0';
+      
       const raffleData = {
         title: raffleForm.title,
         description: raffleForm.description,
-        prizeValue: raffleForm.prizeValue,
+        prizeValue: numericPrizeValue, // Send only numeric value
         ticketPrice: '10', // Default ticket price
         maxTickets: parseInt(raffleForm.maxParticipants) || 100,
         startDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
